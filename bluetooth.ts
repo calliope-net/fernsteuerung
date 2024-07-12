@@ -1,4 +1,4 @@
-
+//% color=#E3008C weight=95 icon="\uf012" block="Fernsteuerung"
 namespace radio { // bluetooth.ts
 
     let a_StorageBuffer = Buffer.create(4) // lokaler Speicher 4 Byte NumberFormat.UInt32LE
@@ -11,7 +11,7 @@ namespace radio { // bluetooth.ts
 
     export let n_sendReset = false
 
-    //% group="calliope-net.github.io/fernsteuerung" subcategory="Bluetooth"
+    //% group="calliope-net.github.io/fernsteuerung"
     //% block="beim Start Funkgruppe / Flash %storagei32" weight=9
     //% storagei32.min=160 storagei32.max=191 storagei32.defl=175
     export function beimStart(storagei32: number) {
@@ -46,7 +46,7 @@ namespace radio { // bluetooth.ts
 
 
 
-    //% group="calliope-net.github.io/fernsteuerung" subcategory="Bluetooth" 
+    //% group="calliope-net.github.io/fernsteuerung"
     //% block="Funkgruppe ändern %e" weight=7
     export function setFunkgruppeButton(e: eFunkgruppeButton) {
 
@@ -65,7 +65,7 @@ namespace radio { // bluetooth.ts
 
 
 
-    //% group="Flash Speicher (Storage)" subcategory="Bluetooth" color=#FFBB00 deprecated=true
+    //% group="Flash Speicher (Storage)" deprecated=true
     //% block="Flash speichern" weight=2
     export function storageBufferGet() {
         return a_StorageBuffer.getNumber(NumberFormat.UInt32LE, 0)
@@ -78,15 +78,15 @@ namespace radio { // bluetooth.ts
     let a_sendBuffer19 = Buffer.create(19) // wird gesendet mit radio.sendBuffer
 
     //% blockId=radio_sendBuffer19
-    //% group="Bluetooth senden (19 Byte)" subcategory="Bluetooth"
+    //% group="Bluetooth senden (19 Byte)"
     //% block="sendData" color="#7E84F7" weight=5
     export function radio_sendBuffer19(): Buffer { return a_sendBuffer19 }
 
-    //% group="Bluetooth senden (19 Byte)" subcategory="Bluetooth"
+    //% group="Bluetooth senden (19 Byte)"
     //% block="sendData löschen" weight=3
     export function fill_sendBuffer19() { a_sendBuffer19.fill(0) }
 
-    //% group="Bluetooth senden (19 Byte)" subcategory="Bluetooth"
+    //% group="Bluetooth senden (19 Byte)"
     //% block="Buffer senden %sendBuffer" weight=1
     //% sendBuffer.shadow="radio_sendBuffer19"
     export function sendData(sendBuffer: Buffer) {
@@ -148,7 +148,7 @@ namespace radio { // bluetooth.ts
 
     // sichtbarer Event-Block
 
-    //% group="Bluetooth empfangen (19 Byte)" subcategory="Bluetooth"
+    //% group="Bluetooth empfangen (19 Byte)"
     //% block="wenn Datenpaket empfangen" weight=9
     //% draggableParameters=reporter
     export function onReceivedData(cb: (receivedData: Buffer) => void) {
@@ -162,12 +162,12 @@ namespace radio { // bluetooth.ts
 
 
     //% blockId=radio_receivedBuffer19
-    //% group="Bluetooth empfangen (19 Byte)" subcategory="Bluetooth"
+    //% group="Bluetooth empfangen (19 Byte)"
     //% block="receivedData" weight=8
     export function radio_receivedBuffer19() { return a_receivedBuffer19 }
 
 
-    //% group="Bluetooth empfangen (19 Byte)" subcategory="Bluetooth"
+    //% group="Bluetooth empfangen (19 Byte)"
     //% block="timeout > %ms ms || abschalten %abschalten" weight=7
     //% abschalten.shadow="toggleYesNo"
     //% ms.defl=1000
@@ -186,7 +186,7 @@ namespace radio { // bluetooth.ts
 
 
 
-    // group="Flash Speicher (Storage)" subcategory="Bluetooth" color=#FFBB00 deprecated=true
+    // group="Flash Speicher (Storage)" deprecated=true
     // block="Flash einlesen %i32" weight=3
     // zeigeFunkgruppe.shadow="toggleYesNo"
 

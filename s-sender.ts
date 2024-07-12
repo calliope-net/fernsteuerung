@@ -1,5 +1,5 @@
 
-//% color=#008CE3 icon="\uf012" block="Sender" weight=95
+//% color=#008CE3 icon="\uf012" block="Sender" weight=94
 namespace sender { // s-sender.ts
     //radio: color=#E3008C weight=96 icon="\uf012" groups='["Group", "Broadcast", "Send", "Receive"]'
     // BF3F7F

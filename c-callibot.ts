@@ -1,4 +1,4 @@
-//% color=#00C040 icon="\uf188" block="Calli:bot 2" weight=93
+//% color=#00C040 icon="\uf188" block="Calli:bot 2" weight=92
 namespace cb2 { // c-callibot.ts 005F7F
 
 
