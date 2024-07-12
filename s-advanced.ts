@@ -20,7 +20,7 @@ namespace sender { // s-advanced.ts
 
     //% group="Bluetooth empfangen (Text)" advanced=true
     //% block="Status empfangen aktivieren" weight=5
-    export function receivedStringRegisterEvent() {
+     function receivedStringRegisterEvent() {
 
         radio.onReceivedString(function (receivedString) {
             n_receivedStringChanged = n_receivedString != receivedString
