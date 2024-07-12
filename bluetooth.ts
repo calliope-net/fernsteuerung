@@ -16,6 +16,7 @@ namespace radio { // bluetooth.ts
     //% storagei32.min=160 storagei32.max=191 storagei32.defl=175
     export function beimStart(storagei32: number) {
         setStorageBuffer(storagei32, 175)
+        storage.putBuffer(a_StorageBuffer)
         beimStartintern()
     }
 
