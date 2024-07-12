@@ -31,43 +31,24 @@ namespace radio {
         // onReceivedStringHandler = cb;
     }
 
-
-    export function putNumber(key: StorageSlots, value: number): void {
-        let managedValue = Math.floor(value * 100);
-        storage.putValueInt(storagesInt[key], managedValue);
-    }
-
-    let storagesInt = ['i1', 'i2', 'i3', 'i4', 'i5', 'i6', 'i7']
-
-    export enum StorageSlots {
-        //% block="Slot 1"
-        s1 = 0,
-        //% block="Slot 2"
-        s2 = 1,
-        //% block="Slot 3"
-        s3 = 2,
-        //% block="Slot 4"
-        s4 = 3,
-        //% block="Slot 5"
-        s5 = 4,
-        //% block="Slot 6"
-        s6 = 5,
-        //% block="Slot 7"
-        s7 = 6,
-    }
 }
 
 namespace storage {
 
-    export function putBuffer(value: Buffer): void {
+    //% block
+    export function putBuffer(buffer: Buffer): void {
         // let managedValue = Math.floor(value * 100);
         // storage.putValueInt(storagesInt[key], managedValue);
+        storage.putValueInt("i2", buffer.getNumber(NumberFormat.UInt32LE, 0))
     }
 
+    //% block
     export function getBuffer(): Buffer {
-       // let value = getValueInt(storagesInt[key]);
-       // return value / 100;
-       return Buffer.create(4)
+        // let value = getValueInt(storagesInt[key]);
+        // return value / 100;
+        let buffer = Buffer.create(4)
+        buffer.setNumber(NumberFormat.UInt32LE, 0, storage.getValueInt("i2"))
+        return buffer
     }
 
 }
