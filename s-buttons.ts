@@ -185,6 +185,12 @@ namespace sender { // s-buttons.ts
     }
 
 
+    //% group="Ereignisse" subcategory="Knopf A B"
+    //% block="%e"
+    //% e.defl=ButtonEvent.Hold
+    export function buttonEvent(e: ButtonEvent) {
+        return e
+    }
 
 
     // ========== Bilder für Auswahl Modell
