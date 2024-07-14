@@ -44,35 +44,37 @@ namespace cb2 { // c-beispiele.ts
             writeMotorenStop()
             return false
         } else {
-          //  writeLed(eLed.redl, false)
-          //  writeLed(eLed.redr, false)
+            //  writeLed(eLed.redl, false)
+            //  writeLed(eLed.redr, false)
 
             let langsamfahren = btf.motorProzent(motor128, 50)
             let lenken = Math.abs(servo16 - 16)  // 16-16=0 / 1-16=15 / 31-16=15
 
-            if (readSpursensor(eDH.dunkel, eDH.dunkel, eI2C.x21)) {
+            readInputs(eI2C.x21)
+
+            if (readSpursensor(eDH.dunkel, eDH.dunkel)) {
                 writeMotor128Servo16(motor128, 16) // nicht lenken
 
-            } 
-         //   else if (readSpursensor(eDH.dunkel, eDH.hell)) { // 0% Rad steht bei voller Lenkung (1 oder 31)
-         //       writeMotor128Servo16(langsamfahren, 16 - lenken, 0) // links lenken <16 = 1
-         //       m_lenken = 16 + lenken
-         //       writeLed(eLed.redr, true)
-         //   }
+            }
+            //   else if (readSpursensor(eDH.dunkel, eDH.hell)) { // 0% Rad steht bei voller Lenkung (1 oder 31)
+            //       writeMotor128Servo16(langsamfahren, 16 - lenken, 0) // links lenken <16 = 1
+            //       m_lenken = 16 + lenken
+            //       writeLed(eLed.redr, true)
+            //   }
             else if (readSpursensor(eDH.hell, eDH.dunkel)) { // 0% Rad steht bei voller Lenkung (1 oder 31)
                 writeMotor128Servo16(langsamfahren, 16 + lenken, 0) // rechts lenken >16 = 31
                 m_lenken = 16 - lenken
-         //       writeLed(eLed.redl, true)
+                //       writeLed(eLed.redl, true)
             }
-          //  else if (m_lenken) {
+            //  else if (m_lenken) {
 
             //    writeMotor128Servo16(langsamfahren, m_lenken, 0) // entgegen lenken
-          //  }
+            //  }
 
             else {
-                writeMotor128Servo16(langsamfahren, 16 + lenken, 0) // rechts lenken >16 = 31
-          //      writeLed(eLed.redl, true)
-          //      writeLed(eLed.redr, true)
+                writeMotor128Servo16(langsamfahren, 16 - lenken, 0) // rechts lenken >16 = 31
+                //      writeLed(eLed.redl, true)
+                //      writeLed(eLed.redr, true)
             }
 
             return true
