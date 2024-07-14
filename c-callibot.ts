@@ -18,7 +18,7 @@ namespace cb2 { // c-callibot.ts 005F7F
     //  let qFernsteuerungStop: boolean = false
 
     export const c_MotorStop = 128
-   // export const c_Servo_geradeaus = 90 = 16
+    // export const c_Servo_geradeaus = 90 = 16
 
     export let n_EncoderFaktor = 31.25 // Impulse = 31.25 * Fahrstrecke in cm
     // let n_MotorPWM_0_255 = 0
@@ -319,7 +319,8 @@ namespace cb2 { // c-callibot.ts 005F7F
     export function readSpursensor(l: eDH, r: eDH, i2c?: eI2C) {
         if (i2c != undefined)
             readInputs(i2c)
-        return (n_Inputs & 0x03) == (l << 1 & r)
+        return (n_Inputs & 0x03) == (l << 1 | r)
+        // return (n_Inputs & 0x03) == (l * 2 + r)
     }
 
 
