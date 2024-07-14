@@ -64,10 +64,10 @@ namespace cb2 { // c-beispiele.ts
                 m_lenken = 16 - lenken
          //       writeLed(eLed.redl, true)
             }
-            else if (m_lenken) {
+          //  else if (m_lenken) {
 
-                writeMotor128Servo16(langsamfahren, m_lenken, 0) // entgegen lenken
-            }
+            //    writeMotor128Servo16(langsamfahren, m_lenken, 0) // entgegen lenken
+          //  }
 
             else {
                 writeMotor128Servo16(langsamfahren, 16 + lenken, 0) // rechts lenken >16 = 31
