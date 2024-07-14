@@ -71,7 +71,7 @@ namespace cb2 { // c-beispiele.ts
             //    writeMotor128Servo16(langsamfahren, m_lenken, 0) // entgegen lenken
             //  }
 
-            else {
+            else if (readSpursensor(eDH.hell, eDH.hell)) {
                 writeMotor128Servo16(langsamfahren, m_lenken, 0) // rechts lenken >16 = 31
                 //      writeLed(eLed.redl, true)
                 //      writeLed(eLed.redr, true)
