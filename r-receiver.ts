@@ -83,9 +83,9 @@ namespace receiver { // r-receiver.ts
 
         pinRelay(true) // Relais an schalten (braucht gültiges n_Modell, um den Pin zu finden)
 
-        radio.setStorageBuffer(storagei32, a_ModellFunkgruppe[n_Hardware]) // prüft und speichert in a_StorageBuffer
+        btf.setStorageBuffer(storagei32, a_ModellFunkgruppe[n_Hardware]) // prüft und speichert in a_StorageBuffer
         if (zf)
-            radio.zeigeFunkgruppe()
+            btf.zeigeFunkgruppe()
 
         pins.servoWritePin(a_PinServo[n_Hardware], n_ServoGeradeaus)
 
@@ -94,7 +94,7 @@ namespace receiver { // r-receiver.ts
         if (encoder)
             encoderRegisterEvent(radDmm)
 
-        radio.beimStartintern() // setzt auch n_start true, muss deshalb zuletzt stehen
+        btf.beimStartintern() // setzt auch n_start true, muss deshalb zuletzt stehen
 
     }
 
@@ -102,7 +102,7 @@ namespace receiver { // r-receiver.ts
     //% group="calliope-net.github.io/fernsteuerung"
     //% block="Flash speichern" weight=7
     export function storageBufferGet() {
-        return radio.storageBufferGet()
+        return btf.storageBufferGet()
     }
 
 
@@ -131,10 +131,10 @@ namespace receiver { // r-receiver.ts
     //% speed.min=0 speed.max=255 speed.defl=128
     export function dualMotor128(motor: eDualMotor, speed: number) { // sendet nur an MotorChip, wenn der Wert sich ändert
         //  if (n_MotorPower) {
-        if (radio.between(speed, 1, 255)) {
+        if (btf.between(speed, 1, 255)) {
             //let duty_percent = (speed == c_MotorStop ? 0 : Math.map(speed, 1, 255, -100, 100))
             //            let duty_percent = Math.round(Math.map(speed, 1, 255, -100, 100))
-            let duty_percent = radio.mapInt32(speed, 1, 255, -100, 100)
+            let duty_percent = btf.mapInt32(speed, 1, 255, -100, 100)
             //n_StatusString = duty_percent.toString()
 
             if (motor == eDualMotor.M0 && speed != a_DualMotorSpeed[eDualMotor.M0]) {
@@ -193,7 +193,7 @@ namespace receiver { // r-receiver.ts
     export function pinServo90(winkel: number) {
         // Richtung ändern: 180-winkel
         // (0+14)*3=42 keine Änderung, gültige Werte im Buffer 1-31  (1+14)*3=45  (16+14)*3=90  (31+14)*3=135
-        if (radio.between(winkel, 45, 135) && n_ServoWinkel != winkel) {
+        if (btf.between(winkel, 45, 135) && n_ServoWinkel != winkel) {
             n_ServoWinkel = winkel
             pins.servoWritePin(a_PinServo[n_Hardware], winkel + n_ServoGeradeaus - c_Servo_geradeaus)
         }
@@ -203,7 +203,7 @@ namespace receiver { // r-receiver.ts
     //% block="Servo (1 ↖ 16 ↗ 31) %winkel" weight=3
     //% winkel.min=1 winkel.max=31 winkel.defl=16
     export function pinServo16(winkel: number) {
-        if (radio.between(winkel, 1, 31))
+        if (btf.between(winkel, 1, 31))
             // Formel: (x+14)*3
             // winkel 1..16..31 links und rechts tauschen (32-winkel) 32-1=31 32-16=16 32-31=1
             // winkel 31..16..1

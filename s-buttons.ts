@@ -44,10 +44,10 @@ namespace sender { // s-buttons.ts
         if (n_Funktion == eFunktion.ng) {
             // wenn nicht gestartet, kann Modell geändert werden
             modellChanged = true
-            if (radio.getStorageModell() > 0)
-                radio.setStorageModell(radio.getStorageModell() - 1)
+            if (btf.getStorageModell() > 0)
+                btf.setStorageModell(btf.getStorageModell() - 1)
 
-            radio.zeigeImage(a_ModellImages[radio.getStorageModell()])
+            btf.zeigeImage(a_ModellImages[btf.getStorageModell()])
         }
         // Calli:bot && Funktion Beispiele (Modell Nummer ++)
         else if (isModell(eModell.cb2e && n_Funktion == eFunktion.mc_md_callibot_beispiele)) {
@@ -84,10 +84,10 @@ namespace sender { // s-buttons.ts
         if (n_Funktion == eFunktion.ng) {
             // wenn nicht gestartet, kann Modell geändert werden
             modellChanged = true
-            if (radio.getStorageModell() < a_ModellImages.length - 1)
-                radio.setStorageModell(radio.getStorageModell() + 1)
+            if (btf.getStorageModell() < a_ModellImages.length - 1)
+                btf.setStorageModell(btf.getStorageModell() + 1)
 
-            radio.zeigeImage(a_ModellImages[radio.getStorageModell()])
+            btf.zeigeImage(a_ModellImages[btf.getStorageModell()])
 
         }
         // Calli:bot && Funktion Beispiele (mit A gewählte Modell Nummer starten)
@@ -132,7 +132,7 @@ namespace sender { // s-buttons.ts
 
             a_ButtonAB_Switch[eButtonAB_Switch.B] = false // Beispiel noch nicht aktiv senden; erst nach B geklickt
             n_Funktion = eFunktion.mc_md_callibot_beispiele
-            if (!radio.between(n_ButtonAB_Counter, 1, 3))
+            if (!btf.between(n_ButtonAB_Counter, 1, 3))
                 n_ButtonAB_Counter = 1
         }
         // mkcg Maker Kit Car ohne und mit Gabelstapler
@@ -170,8 +170,8 @@ namespace sender { // s-buttons.ts
     //% group="aktuelles Modell" subcategory="Knopf A B"
     //% block="%pModell" weight=4
     export function isModell(pModell: eModell) {
-        // return radio.isModell(pModell)
-        return radio.getStorageModell() == pModell
+        // return btf.isModell(pModell)
+        return btf.getStorageModell() == pModell
     }
 
 

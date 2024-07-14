@@ -176,7 +176,7 @@ namespace receiver { // r-qwiicmotor.ts
     export function qwiicMotor128(pMotor: eQwiicMotor, speed: number) {
         let e = false
         // addStatusHEX(speed)
-        if (radio.between(speed, 1, 255)) {
+        if (btf.between(speed, 1, 255)) {
             if (speed != a_QwiicMotorSpeed[pMotor]) { // sendet nur, wenn der Wert sich ändert
                 a_QwiicMotorSpeed[pMotor] = speed
 

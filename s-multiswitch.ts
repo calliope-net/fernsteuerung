@@ -13,7 +13,7 @@ namespace sender { // s-multiswitch.ts
             n_GroveMultiswitchConnected = pins.i2cWriteBuffer(i2cGroveMultiswitch_x03, Buffer.fromArray([i2c_CMD_GET_DEV_EVENT]), true) == 0
 
             if (!n_GroveMultiswitchConnected)
-                radio.zeigeHex(i2cGroveMultiswitch_x03)
+                btf.zeigeHex(i2cGroveMultiswitch_x03)
 
             else {
                 let bu = pins.i2cReadBuffer(i2cGroveMultiswitch_x03, 10) // 4 Byte + 6 Schalter = 10

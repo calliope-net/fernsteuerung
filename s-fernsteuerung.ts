@@ -6,47 +6,47 @@ namespace sender { // s-fernsteuerung.ts
 
     //% group="00 Sender" subcategory="Fernsteuerung"
     //% block="%buffer M0 Fahren und Lenken" weight=5
-    //% buffer.shadow="radio_sendBuffer19"
+    //% buffer.shadow="btf_sendBuffer19"
     export function sendM0(buffer: Buffer) {
-        radio.setBetriebsart(radio.radio_sendBuffer19(), radio.e0Betriebsart.p0)
-        radio.setByte(radio.radio_sendBuffer19(), radio.eBufferPointer.m0, radio.eBufferOffset.b0_Motor, joystickValue(eJoystickValue.xmotor))
-        radio.setByte(radio.radio_sendBuffer19(), radio.eBufferPointer.m0, radio.eBufferOffset.b1_Servo, joystickValue(eJoystickValue.servo16))
-        radio.setaktiviert(radio.radio_sendBuffer19(), radio.e3aktiviert.m0, true)
+        btf.setBetriebsart(btf.btf_sendBuffer19(), btf.e0Betriebsart.p0)
+        btf.setByte(btf.btf_sendBuffer19(), btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor, joystickValue(eJoystickValue.xmotor))
+        btf.setByte(btf.btf_sendBuffer19(), btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo, joystickValue(eJoystickValue.servo16))
+        btf.setaktiviert(btf.btf_sendBuffer19(), btf.e3aktiviert.m0, true)
     }
 
     //% group="00 Sender" subcategory="Fernsteuerung"
     //% block="%buffer M0 Fahren M1 Gabelstapler || * %prozent \\%" weight=4
-    //% buffer.shadow="radio_sendBuffer19"
+    //% buffer.shadow="btf_sendBuffer19"
     //% prozent.min=10 prozent.max=100 prozent.defl=100
     export function sendM01(buffer: Buffer, prozent = 100) {
-        radio.setBetriebsart(radio.radio_sendBuffer19(), radio.e0Betriebsart.p0)
-        radio.setByte(radio.radio_sendBuffer19(), radio.eBufferPointer.m0, radio.eBufferOffset.b0_Motor, radio.motorProzent(joystickValue(eJoystickValue.xmotor), prozent))
-        radio.setByte(radio.radio_sendBuffer19(), radio.eBufferPointer.m0, radio.eBufferOffset.b1_Servo, n_ButtonAB_Counter)
-        radio.setByte(radio.radio_sendBuffer19(), radio.eBufferPointer.m1, radio.eBufferOffset.b0_Motor, joystickValue(eJoystickValue.ymotor))
-        radio.setaktiviert(radio.radio_sendBuffer19(), radio.e3aktiviert.m0, true)
-        radio.setaktiviert(radio.radio_sendBuffer19(), radio.e3aktiviert.m1, true)
+        btf.setBetriebsart(btf.btf_sendBuffer19(), btf.e0Betriebsart.p0)
+        btf.setByte(btf.btf_sendBuffer19(), btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor, btf.motorProzent(joystickValue(eJoystickValue.xmotor), prozent))
+        btf.setByte(btf.btf_sendBuffer19(), btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo, n_ButtonAB_Counter)
+        btf.setByte(btf.btf_sendBuffer19(), btf.eBufferPointer.m1, btf.eBufferOffset.b0_Motor, joystickValue(eJoystickValue.ymotor))
+        btf.setaktiviert(btf.btf_sendBuffer19(), btf.e3aktiviert.m0, true)
+        btf.setaktiviert(btf.btf_sendBuffer19(), btf.e3aktiviert.m1, true)
     }
 
     //% group="00 Sender" subcategory="Fernsteuerung"
     //% block="%buffer MA Seilrolle MB Drehkranz" weight=3
-    //% buffer.shadow="radio_sendBuffer19"
+    //% buffer.shadow="btf_sendBuffer19"
     export function sendMAB(buffer: Buffer) {
-        radio.setBetriebsart(radio.radio_sendBuffer19(), radio.e0Betriebsart.p0)
-        radio.setByte(radio.radio_sendBuffer19(), radio.eBufferPointer.ma, radio.eBufferOffset.b0_Motor, joystickValue(eJoystickValue.xmotor))
-        radio.setByte(radio.radio_sendBuffer19(), radio.eBufferPointer.mb, radio.eBufferOffset.b0_Motor, joystickValue(eJoystickValue.ymotor))
-        radio.setaktiviert(radio.radio_sendBuffer19(), radio.e3aktiviert.ma, true)
-        radio.setaktiviert(radio.radio_sendBuffer19(), radio.e3aktiviert.mb, true)
+        btf.setBetriebsart(btf.btf_sendBuffer19(), btf.e0Betriebsart.p0)
+        btf.setByte(btf.btf_sendBuffer19(), btf.eBufferPointer.ma, btf.eBufferOffset.b0_Motor, joystickValue(eJoystickValue.xmotor))
+        btf.setByte(btf.btf_sendBuffer19(), btf.eBufferPointer.mb, btf.eBufferOffset.b0_Motor, joystickValue(eJoystickValue.ymotor))
+        btf.setaktiviert(btf.btf_sendBuffer19(), btf.e3aktiviert.ma, true)
+        btf.setaktiviert(btf.btf_sendBuffer19(), btf.e3aktiviert.mb, true)
     }
 
     //% group="00 Sender" subcategory="Fernsteuerung"
     //% block="%buffer MC Zahnstange MB Drehkranz" weight=2
-    //% buffer.shadow="radio_sendBuffer19"
+    //% buffer.shadow="btf_sendBuffer19"
     export function sendMCB(buffer: Buffer) {
-        radio.setBetriebsart(radio.radio_sendBuffer19(), radio.e0Betriebsart.p0)
-        radio.setByte(radio.radio_sendBuffer19(), radio.eBufferPointer.mc, radio.eBufferOffset.b0_Motor, joystickValue(eJoystickValue.xmotor))
-        radio.setByte(radio.radio_sendBuffer19(), radio.eBufferPointer.mb, radio.eBufferOffset.b0_Motor, joystickValue(eJoystickValue.ymotor))
-        radio.setaktiviert(radio.radio_sendBuffer19(), radio.e3aktiviert.mc, true)
-        radio.setaktiviert(radio.radio_sendBuffer19(), radio.e3aktiviert.mb, true)
+        btf.setBetriebsart(btf.btf_sendBuffer19(), btf.e0Betriebsart.p0)
+        btf.setByte(btf.btf_sendBuffer19(), btf.eBufferPointer.mc, btf.eBufferOffset.b0_Motor, joystickValue(eJoystickValue.xmotor))
+        btf.setByte(btf.btf_sendBuffer19(), btf.eBufferPointer.mb, btf.eBufferOffset.b0_Motor, joystickValue(eJoystickValue.ymotor))
+        btf.setaktiviert(btf.btf_sendBuffer19(), btf.e3aktiviert.mc, true)
+        btf.setaktiviert(btf.btf_sendBuffer19(), btf.e3aktiviert.mb, true)
     }
 
 } // s-fernsteuerung.ts

@@ -62,7 +62,7 @@ namespace r_callibot { // r_callibot.ts
         let pRichtung = (pwm < 0 ? eDirection.r : eDirection.v)
         pwm = Math.trunc(Math.abs(pwm) * 255 / 100)
 
-        if (!radio.between(pwm, 0, 255)) { // falscher Parameter -> beide Stop
+        if (!btf.between(pwm, 0, 255)) { // falscher Parameter -> beide Stop
             pMotor = eMotor.beide
             pwm = 0
         }
@@ -121,7 +121,7 @@ namespace r_callibot { // r_callibot.ts
     export function setLed1(pLed: eLed, on: boolean, blink = false, pwm?: number) {
         if (!on)
             pwm = 0 // LED aus schalten
-        else if (!radio.between(pwm, 0, 16))
+        else if (!btf.between(pwm, 0, 16))
             pwm = 16 // bei ungültigen Werten max. Helligkeit
 
         if (pLed == eLed.redb) {
@@ -389,7 +389,7 @@ namespace r_callibot { // r_callibot.ts
     //% pwm1.min=0 pwm1.max=255 pwm1.defl=128 pwm2.min=0 pwm2.max=255 pwm2.defl=128
     //% inlineInputMode=inline
     export function setMotoren(pwm1: number, pRichtung1: eDirection, pwm2: number, pRichtung2: eDirection) {
-        if (radio.between(pwm1, 0, 255) && radio.between(pwm2, 0, 255))
+        if (btf.between(pwm1, 0, 255) && btf.between(pwm2, 0, 255))
             i2cWriteBuffer(Buffer.fromArray([eRegister.SET_MOTOR, eMotor.beide, pRichtung1, pwm1, pRichtung2, pwm2]))
         else // falscher Parameter -> beide Stop
             i2cWriteBuffer(Buffer.fromArray([eRegister.SET_MOTOR, eMotor.beide, 0, 0, 0, 0]))
@@ -466,7 +466,7 @@ namespace r_callibot { // r_callibot.ts
 
 
         // max Geschwindigkeit wenn Buffer[2] (10 .. 100)
-        if (radio.between(joyProzent, 1, 8)) {
+        if (btf.between(joyProzent, 1, 8)) {
             fahren_0_255 *= (joyProzent + 1) / 10 // (0,2 .. 0,9)
         }
 

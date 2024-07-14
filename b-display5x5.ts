@@ -18,7 +18,7 @@ namespace btf { // b-dispaly5x5.ts
 
     //% group="BIN" subcategory="Display 5x5" color=#54C9C9
     //% block="zeige ↑↑↕.. aktive Motoren %buffer" weight=8
-    //% buffer.shadow="radio_sendBuffer19"
+    //% buffer.shadow="btf_sendBuffer19"
     export function zeige5x5Buffer(buffer: Buffer) {
         // 2 Bit oben links Betriebsart, die sind bei Funkgruppe frei
         if (n5x5_x01y0 != (buffer[0] & 0x30)) {
@@ -42,7 +42,7 @@ namespace btf { // b-dispaly5x5.ts
 
     //% group="BIN" subcategory="Display 5x5" color=#54C9C9
     //% block="zeige ...↕↕ Joystick %buffer" weight=7
-    //% buffer.shadow="radio_sendBuffer19"
+    //% buffer.shadow="btf_sendBuffer19"
     export function zeige5x5Joystick(buffer: Buffer) {
         if (isBetriebsart(buffer, e0Betriebsart.p0)) {
             // Betriebsart: 00 Fernsteuerung Motoren
@@ -170,7 +170,7 @@ namespace btf { // b-dispaly5x5.ts
 
     //% group="Text" subcategory="Display 5x5" color=#54C9C9
     //% block="zeige Text wenn geändert %text" weight=1
-    //% text.shadow="radio_text"
+    //% text.shadow="btf_text"
     export function zeigeText(text: any) {
         let tx = convertToText(text)
         if (n_showString != tx) {

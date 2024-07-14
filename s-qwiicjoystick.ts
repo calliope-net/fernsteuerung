@@ -45,11 +45,11 @@ namespace sender { // s-qwiicjoystick.ts
             n_qwiicJoystickConnected = pins.i2cWriteBuffer(i2cqwiicJoystick_x20, Buffer.fromArray([3]), true) == 0
 
             if (!n_qwiicJoystickConnected)
-                radio.zeigeHex(i2cqwiicJoystick_x20)
+                btf.zeigeHex(i2cqwiicJoystick_x20)
 
             else {
-                // n_128 = radio.between(p128, 0, 8) ? p128 : 0
-                n_max = radio.between(pmax, 0, 20) ? pmax : 0
+                // n_128 = btf.between(p128, 0, 8) ? p128 : 0
+                n_max = btf.between(pmax, 0, 20) ? pmax : 0
 
                 let bu = pins.i2cReadBuffer(i2cqwiicJoystick_x20, 6)
                 n_x = bu[0] // X_MSB = 0x03,       // Current Horizontal Position (MSB First)
@@ -58,7 +58,7 @@ namespace sender { // s-qwiicjoystick.ts
 
                 if (n_xNull == 0) {
                     // einmalig kalibrieren, wenn Joystick wahrscheinlich in Mittelstellung
-                    if (radio.between(n_x, 120, 136) && radio.between(n_y, 120, 136)) {
+                    if (btf.between(n_x, 120, 136) && btf.between(n_y, 120, 136)) {
                         n_xNull = n_x
                         n_yNull = n_y
                     } else
@@ -87,9 +87,9 @@ namespace sender { // s-qwiicjoystick.ts
                 let xMotor = n_x
                 if (n_x == 0)
                     xMotor = 1
-                //else if (radio.between(n_x, 128 - n_128, 128 + n_128)) // Joystick Ruhestellung (p128=4) 124..132 -> 128
+                //else if (btf.between(n_x, 128 - n_128, 128 + n_128)) // Joystick Ruhestellung (p128=4) 124..132 -> 128
                 //    xMotor = 128
-                else if (radio.between(n_x, n_xNull - 2, n_xNull + 2)) // Joystick Ruhestellung (n_xNull=125) 123..127 -> 128
+                else if (btf.between(n_x, n_xNull - 2, n_xNull + 2)) // Joystick Ruhestellung (n_xNull=125) 123..127 -> 128
                     xMotor = 128
 
                 return xMotor
@@ -98,9 +98,9 @@ namespace sender { // s-qwiicjoystick.ts
                 let yMotor = n_y
                 if (n_y == 0)
                     yMotor = 1
-                //else if (radio.between(n_y, 128 - n_128, 128 + n_128)) // Joystick Ruhestellung (p128=4) 124..132 -> 128
+                //else if (btf.between(n_y, 128 - n_128, 128 + n_128)) // Joystick Ruhestellung (p128=4) 124..132 -> 128
                 //    yMotor = 128
-                else if (radio.between(n_y, n_yNull - 2, n_yNull + 2)) // Joystick Ruhestellung (n_yNull=126) 124..128 -> 128
+                else if (btf.between(n_y, n_yNull - 2, n_yNull + 2)) // Joystick Ruhestellung (n_yNull=126) 124..128 -> 128
                     yMotor = 128
 
                 return yMotor
@@ -109,7 +109,7 @@ namespace sender { // s-qwiicjoystick.ts
             case eJoystickValue.servo90: {
                 let yServo = 90
 
-                if (radio.between(n_y, n_yNull - 2, n_yNull + 2)) // Joystick Ruhestellung (n_yNull=126) 124..128 -> 128
+                if (btf.between(n_y, n_yNull - 2, n_yNull + 2)) // Joystick Ruhestellung (n_yNull=126) 124..128 -> 128
                     yServo = 90 // geradeaus 90°
 
                 else if (n_y < (0 + n_max)) // Werte < 0 + pmax wie 0 behandeln (max links)
@@ -117,7 +117,7 @@ namespace sender { // s-qwiicjoystick.ts
                 else if (n_y > (255 - n_max)) // Werte > 235 wie 255 behandeln (max rechts)
                     yServo = 135
                 else {
-                    yServo = radio.mapInt32(n_y, 0 + n_max, 255 - n_max, 45, 135)
+                    yServo = btf.mapInt32(n_y, 0 + n_max, 255 - n_max, 45, 135)
                 }
                 return yServo // (45° ↖ 90° ↗ 135°)
             }
@@ -125,10 +125,10 @@ namespace sender { // s-qwiicjoystick.ts
                 return Math.idiv(joystickValue(eJoystickValue.servo90), 3) - 14
             }
             case eJoystickValue.xmotor100: {
-                return radio.mapInt32(joystickValue(eJoystickValue.xmotor), 1, 255, -100, 100)
+                return btf.mapInt32(joystickValue(eJoystickValue.xmotor), 1, 255, -100, 100)
             }
             case eJoystickValue.ymotor100: {
-                return radio.mapInt32(joystickValue(eJoystickValue.ymotor), 1, 255, -100, 100)
+                return btf.mapInt32(joystickValue(eJoystickValue.ymotor), 1, 255, -100, 100)
             }
 
             default:

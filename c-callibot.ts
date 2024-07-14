@@ -29,19 +29,19 @@ namespace cb2 { // c-callibot.ts 005F7F
     //% inlineInputMode=external
     export function beimStart(zf: boolean, storagei32: number) {
 
-        radio.setStorageBuffer(storagei32, 180) // prüft und speichert in a_StorageBuffer
+        btf.setStorageBuffer(storagei32, 180) // prüft und speichert in a_StorageBuffer
 
         if (zf)
-            radio.zeigeFunkgruppe()
+            btf.zeigeFunkgruppe()
 
-        radio.beimStartintern() // setzt auch n_start true, muss deshalb zuletzt stehen
+        btf.beimStartintern() // setzt auch n_start true, muss deshalb zuletzt stehen
     }
 
 
     //% group="calliope-net.github.io/fernsteuerung"
     //% block="Flash speichern" weight=7
     export function storageBufferGet() {
-        return radio.storageBufferGet()
+        return btf.storageBufferGet()
     }
 
     // aktuelle Werte // I²C nur bei Änderung
@@ -102,10 +102,10 @@ namespace cb2 { // c-callibot.ts 005F7F
                } */
 
             // lenken (ein Motor wird langsamer)
-            if (radio.between(y1_16_31, 1, 15)) { // links
+            if (btf.between(y1_16_31, 1, 15)) { // links
                 setMotorBuffer[3] *= Math.map(y1_16_31, 0, 16, prozent / 100, 1) // 0=linkslenken50% // 16=nichtlenken=100%
             }
-            else if (radio.between(y1_16_31, 17, 31)) { // rechts
+            else if (btf.between(y1_16_31, 17, 31)) { // rechts
                 setMotorBuffer[5] *= Math.map(y1_16_31, 16, 32, 1, prozent / 100) // 16=nichtlenken=100% // 32=rechtslenken50%
             }
             //else { // wenn y lenken 0, 16 oder mehr als 5 Bit
@@ -127,8 +127,8 @@ namespace cb2 { // c-callibot.ts 005F7F
             n_m1_1_128_255 = m1_1_128_255
             n_m2_1_128_255 = m2_1_128_255 // I²C nur bei Änderung
 
-            let m1 = radio.between(m1_1_128_255, 1, 255)
-            let m2 = radio.between(m2_1_128_255, 1, 255)
+            let m1 = btf.between(m1_1_128_255, 1, 255)
+            let m2 = btf.between(m2_1_128_255, 1, 255)
             // if (m1 || m2) {
             let setMotorBuffer: Buffer
             let offset = 0
@@ -147,21 +147,21 @@ namespace cb2 { // c-callibot.ts 005F7F
             }
 
             // M1 offset 2:Richtung, 3:PWM
-            if (m1 && (m1_1_128_255 & 0x80) == 0x80) { //     if (m1 && radio.between(m1_1_128_255, 128, 255)) { // M1 vorwärts
+            if (m1 && (m1_1_128_255 & 0x80) == 0x80) { //     if (m1 && btf.between(m1_1_128_255, 128, 255)) { // M1 vorwärts
                 setMotorBuffer[offset++] = 0
-                setMotorBuffer[offset++] = m1_1_128_255 << 1// radio.mapInt32(m1_1_128_255, 128, 255, 0, 255)
+                setMotorBuffer[offset++] = m1_1_128_255 << 1// btf.mapInt32(m1_1_128_255, 128, 255, 0, 255)
             } else if (m1) { // 1..127 M1 rückwärts
                 setMotorBuffer[offset++] = 1
-                setMotorBuffer[offset++] = ~(m1_1_128_255 << 1) // radio.mapInt32(m1_1_128_255, 1, 128, 255, 0)
+                setMotorBuffer[offset++] = ~(m1_1_128_255 << 1) // btf.mapInt32(m1_1_128_255, 1, 128, 255, 0)
             }
 
             // M2 wenn !m1 offset 2:Richtung, 3:PWM sonst offset 4:Richtung, 5:PWM
-            if (m2 && (m2_1_128_255 & 0x80) == 0x80) { //    if (m2 && radio.between(m2_1_128_255, 128, 255)) { // M2 vorwärts
+            if (m2 && (m2_1_128_255 & 0x80) == 0x80) { //    if (m2 && btf.between(m2_1_128_255, 128, 255)) { // M2 vorwärts
                 setMotorBuffer[offset++] = 0
-                setMotorBuffer[offset++] = m2_1_128_255 << 1// radio.mapInt32(m2_1_128_255, 128, 255, 0, 255)
+                setMotorBuffer[offset++] = m2_1_128_255 << 1// btf.mapInt32(m2_1_128_255, 128, 255, 0, 255)
             } else if (m2) { // 1..127 M2 rückwärts
                 setMotorBuffer[offset++] = 1
-                setMotorBuffer[offset++] = ~(m2_1_128_255 << 1) // radio.mapInt32(m2_1_128_255, 1, 128, 255, 0)
+                setMotorBuffer[offset++] = ~(m2_1_128_255 << 1) // btf.mapInt32(m2_1_128_255, 1, 128, 255, 0)
             }
 
             if (setMotorBuffer)
@@ -242,7 +242,7 @@ namespace cb2 { // c-callibot.ts 005F7F
     export function writeLed(pLed: eLed, on: boolean, blink = false, pwm?: number) {
         if (!on)
             pwm = 0 // LED aus schalten
-        else if (!radio.between(pwm, 0, 16))
+        else if (!btf.between(pwm, 0, 16))
             pwm = 16 // bei ungültigen Werten max. Helligkeit
 
         if (pLed == eLed.redb) {
@@ -296,10 +296,10 @@ namespace cb2 { // c-callibot.ts 005F7F
 
     //% group="INPUT digital" subcategory="Sensoren"
     //% block="%n %e || I²C %i2c" weight=7
-    export function getInputs(n: radio.eNOT, e: cb2.eINPUTS, i2c?: eI2C): boolean {
+    export function getInputs(n: btf.eNOT, e: cb2.eINPUTS, i2c?: eI2C): boolean {
         if (i2c != undefined)
             readInputs(i2c)
-        if (n == radio.eNOT.t)
+        if (n == btf.eNOT.t)
             return (n_Inputs & e) == e
         else
             return (n_Inputs & e) == 0
@@ -365,8 +365,8 @@ namespace cb2 { // c-callibot.ts 005F7F
 
     //% group="Programmieren" subcategory="Fahrstrecke"
     //% block="fahre Motor (1 ↓ 128 ↑ 255) %motor Servo (1 ↖ 16 ↗ 31) %servo %zehntelsekunden" weight=4
-    //% motor.shadow=radio_speedPicker
-    //% servo.shadow=radio_protractorPicker
+    //% motor.shadow=btf_speedPicker
+    //% servo.shadow=btf_protractorPicker
     //% zehntelsekunden.shadow=cb2_zehntelsekunden
     export function fahreZeit(motor: number, servo: number, zehntelsekunden: number) {
         cb2.writeMotor128Servo16(motor, servo)
@@ -378,9 +378,9 @@ namespace cb2 { // c-callibot.ts 005F7F
     //% group="Programmieren" subcategory="Fahrstrecke"
     //% block="fahre Motor (1 ↓ 128 ↑ 255) %motor Servo (1 ↖ 16 ↗ 31) %servo Strecke (cm) %strecke" weight=3
     // motor.min=0 motor.max=255 motor.defl=128
-    //% motor.shadow=radio_speedPicker
+    //% motor.shadow=btf_speedPicker
     // servo.min=1 servo.max=31 servo.defl=16
-    //% servo.shadow=radio_protractorPicker
+    //% servo.shadow=btf_protractorPicker
     //% strecke.min=0 strecke.max=255 strecke.defl=20
     //% inlineInputMode=inline
     export function fahreStrecke(motor: number, servo: number, strecke: number) { // cm oder zehntelsekunden
@@ -425,7 +425,7 @@ namespace cb2 { // c-callibot.ts 005F7F
             n_Callibot2_x22Connected = pins.i2cWriteBuffer(eI2C.x22, bu) == 0
 
             if (!n_Callibot2_x22Connected)
-                radio.zeigeHex(eI2C.x22)
+                btf.zeigeHex(eI2C.x22)
         }
         return n_Callibot2_x22Connected
     }

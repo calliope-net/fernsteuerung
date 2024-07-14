@@ -77,10 +77,10 @@ namespace btf { // b-fernsteuerung.ts
 
     let a_sendBuffer19 = Buffer.create(19) // wird gesendet mit radio.sendBuffer
 
-    //% blockId=radio_sendBuffer19
+    //% blockId=btf_sendBuffer19
     //% group="Bluetooth senden (19 Byte)"
     //% block="sendData" color="#7E84F7" weight=5
-    export function radio_sendBuffer19(): Buffer { return a_sendBuffer19 }
+    export function btf_sendBuffer19(): Buffer { return a_sendBuffer19 }
 
     //% group="Bluetooth senden (19 Byte)"
     //% block="sendData löschen" weight=3
@@ -88,7 +88,7 @@ namespace btf { // b-fernsteuerung.ts
 
     //% group="Bluetooth senden (19 Byte)"
     //% block="Buffer senden %sendBuffer" weight=1
-    //% sendBuffer.shadow="radio_sendBuffer19"
+    //% sendBuffer.shadow="btf_sendBuffer19"
     export function sendData(sendBuffer: Buffer) {
         if (n_sendReset) {
             setSchalter(sendBuffer, e0Schalter.b7, true)
@@ -161,10 +161,10 @@ namespace btf { // b-fernsteuerung.ts
     }
 
 
-    //% blockId=radio_receivedBuffer19
+    //% blockId=btf_receivedBuffer19
     //% group="Bluetooth empfangen (19 Byte)"
     //% block="receivedData" weight=8
-    export function radio_receivedBuffer19() { return a_receivedBuffer19 }
+    export function btf_receivedBuffer19() { return a_receivedBuffer19 }
 
 
     //% group="Bluetooth empfangen (19 Byte)"

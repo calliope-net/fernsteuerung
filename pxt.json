@@ -9,8 +9,12 @@
         "main.blocks",
         "main.ts",
         "README.md",
+        "b-fernsteuerung.ts",
+        "b-datenpaket.ts",
+        "b-display5x5.ts",
+        "b-enums.ts",
+        "b-advanced.ts",
         "bluetooth.ts",
-        "blue-v3.ts",
         "datenpaket.ts",
         "display5x5.ts",
         "enums.ts",
@@ -33,19 +37,18 @@
         "c-callibot.ts",
         "c-beispiele.ts",
         "r_callibot.ts",
-        "r_callibot-enums.ts",
-        "b-fernsteuerung.ts",
-        "b-advanced.ts",
-        "b-enums.ts",
-        "b-datenpaket.ts",
-        "b-display5x5.ts"
+        "r_callibot-enums.ts"
     ],
     "testFiles": [
         "test.ts"
     ],
     "fileDependencies": {
         "r-calliope-v3.ts": "v3",
-        "blue-v3.ts": "!v3"
+        "bluetooth.ts": "v3",
+        "datenpaket.ts": "v3",
+        "display5x5.ts": "v3",
+        "enums.ts": "v3",
+        "advanced.ts": "v3"
     },
     "targetVersions": {
         "target": "4.0.29",

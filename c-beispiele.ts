@@ -8,8 +8,8 @@ namespace cb2 { // c-beispiele.ts
 
     //% group="1 Spurfolger (1 ↓ 128 ↑ 255)" subcategory=Beispiele
     //% block="Spurfolger Motoren %motoren lenkender Motor %langsamer Stop %stopbeiabstand bei Abstand < (cm) %abstand" weight=2
-    //% motoren.shadow=radio_speedPicker
-    //% langsamer.shadow=radio_speedPicker
+    //% motoren.shadow=btf_speedPicker
+    //% langsamer.shadow=btf_speedPicker
     //% stopbeiabstand.shadow=toggleYesNo
     //% abstand.min=0 abstand.max=50 abstand.defl=15
     export function beispielSpurfolger(motoren: number, langsamer: number, stopbeiabstand: boolean, abstand: number) {
@@ -48,7 +48,7 @@ namespace cb2 { // c-beispiele.ts
 
 
     function setMotoren0Prozent(pwm1: number, pwm2: number) { // (-100% .. 0 .. +100%)
-        writeMotoren128(radio.speedPicker(pwm1), radio.speedPicker(pwm2))
+        writeMotoren128(btf.speedPicker(pwm1), btf.speedPicker(pwm2))
     }
 
     // ========== group="2 fahren und drehen" subcategory=Beispiele ⅒s • 

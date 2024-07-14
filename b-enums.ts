@@ -4,9 +4,6 @@ namespace btf { // b-enums.ts
 
     // ========== Buffer offset
 
-    // group="Enums" advanced=true
-    // block="%bufferpointer" weight=2
-    //function radio_bufferpointer(bufferpointer: eBufferPointer) { return bufferpointer }
     export enum eBufferPointer {
         //% block="[1] M0"
         m0 = 1,
@@ -58,9 +55,6 @@ namespace btf { // b-enums.ts
         p5 = 16
     }
 
-    // group="Enums" advanced=true
-    // block="%bufferoffset" weight=1
-    //function radio_bufferoffset(bufferoffset: eBufferOffset) { return bufferoffset }
     export enum eBufferOffset { // 3 Byte (b0-b1-b2) ab n_BufferPointer
         //% block="Motor (1 ↓ 128 ↑ 255)"
         b0_Motor = 0, // 1..128..255
@@ -75,9 +69,6 @@ namespace btf { // b-enums.ts
 
     // ========== Steuer-Byte 3
 
-    // group="Enums" advanced=true
-    // block="[3] %motorbit aktiviert" weight=4
-    //function radio_aktiviert(motorbit: e3aktiviert) { return motorbit }
     export enum e3aktiviert {
 
         //% block="Motor M0"
@@ -155,12 +146,8 @@ namespace btf { // b-enums.ts
     }
 
 
-
     // ========== Steuer-Byte 0
 
-    // group="Enums" advanced=true
-    // block="[0] Betriebsart %betriebsart" weight=6
-    //function radio_betriebsart(betriebsart: e0Betriebsart) { return betriebsart }
     export enum e0Betriebsart {
         //% block="00 Fernsteuerung Motoren"
         p0 = 0x00,
@@ -172,10 +159,6 @@ namespace btf { // b-enums.ts
         p3 = 0x30
     }
 
-
-    // group="Enums" advanced=true
-    // block="[0] Schalter %schalter" weight=5
-    //function radio_schalter(schalter: e0Schalter) { return schalter }
     export enum e0Schalter {
         //% block="0 Hupe"
         b0 = 0x01,
@@ -190,7 +173,6 @@ namespace btf { // b-enums.ts
         //% block="7 zurücksetzen"
         b7 = 0x80
     }
-
 
     export enum eNOT {
         //% block=" "

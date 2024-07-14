@@ -14,7 +14,7 @@ für CalliBot, MakerKitCar, CaR4
 
     //% group="Datenpaket zum Senden vorbereiten" subcategory="Datenpaket"
     //% block="%buffer [0] Betriebsart %betriebsart" weight=6
-    //% buffer.shadow="radio_sendBuffer19"
+    //% buffer.shadow="btf_sendBuffer19"
     export function setBetriebsart(buffer: Buffer, betriebsart: e0Betriebsart) {
         buffer[0] &= 0b11001111 // AND Bit 7-6-3-2-1-0 bleiben; 5-4 auf 0 setzen
         buffer[0] |= (betriebsart & 0b00110000) // OR Bit 7-6-3-2-1-0 bleiben; 5-4 auf pByte setzen
@@ -39,7 +39,7 @@ für CalliBot, MakerKitCar, CaR4
 
     //% group="Datenpaket zum Senden vorbereiten" subcategory="Datenpaket"
     //% block="%buffer [0] Schalter %schalter %bit" weight=5
-    //% buffer.shadow="radio_sendBuffer19"
+    //% buffer.shadow="btf_sendBuffer19"
     //% bit.shadow="toggleOnOff"
     export function setSchalter(buffer: Buffer, schalter: e0Schalter, bit: boolean) {
         if (bit)
@@ -60,7 +60,7 @@ für CalliBot, MakerKitCar, CaR4
 
     //% group="Datenpaket zum Senden vorbereiten" subcategory="Datenpaket"
     //% block="%buffer [3] %motorBit aktiviert %bit" weight=4
-    //% buffer.shadow="radio_sendBuffer19"
+    //% buffer.shadow="btf_sendBuffer19"
     //% bit.shadow="toggleOnOff"
     export function setaktiviert(buffer: Buffer, motorBit: e3aktiviert, bit: boolean) {
         if (bit)
@@ -79,13 +79,13 @@ für CalliBot, MakerKitCar, CaR4
 
     //% group="Datenpaket zum Senden vorbereiten" subcategory="Datenpaket"
     //% block="%buffer [3] Ultraschall Abstand %e" weight=3
-    //% buffer.shadow="radio_sendBuffer19"
+    //% buffer.shadow="btf_sendBuffer19"
     export function setAbstand(buffer: Buffer, e: e3Abstand) {
         buffer[eBufferPointer.p0 + eBufferOffset.b2_Fahrstrecke] &= 0b00111111 // AND Bit 5-4-3-2-1-0 bleiben; 7-6 auf 0 setzen
         buffer[eBufferPointer.p0 + eBufferOffset.b2_Fahrstrecke] |= (e & 0b11000000) // OR Bit 5-4-3-2-1-0 bleiben; 7-6 auf e setzen
     }
 
-    //% blockId=radio_getAbstand
+    //% blockId=btf_getAbstand
     //% group="Datenpaket auslesen (receivedData oder sendData)" subcategory="Datenpaket"
     //% block="%buffer [3] Ultraschall Abstand in cm" weight=3
     export function getAbstand(buffer: Buffer) {
@@ -109,7 +109,7 @@ für CalliBot, MakerKitCar, CaR4
 
     //% group="Datenpaket zum Senden vorbereiten" subcategory="Datenpaket"
     //% block="%buffer %bufferPointer %sensor %bit" weight=2
-    //% buffer.shadow="radio_sendBuffer19"
+    //% buffer.shadow="btf_sendBuffer19"
     //% bit.shadow="toggleOnOff"
     //% inlineInputMode=inline 
     export function setSensor(buffer: Buffer, bufferPointer: eBufferPointer, sensor: eSensor, bit: boolean) {
@@ -134,7 +134,7 @@ für CalliBot, MakerKitCar, CaR4
 
     //% group="Datenpaket zum Senden vorbereiten" subcategory="Datenpaket"
     //% block="%buffer %bufferPointer %bufferOffset Byte %byte" weight=1
-    //% buffer.shadow="radio_sendBuffer19"
+    //% buffer.shadow="btf_sendBuffer19"
     //% byte.min=0 byte.max=255
     //% inlineInputMode=inline 
     export function setByte(buffer: Buffer, bufferPointer: eBufferPointer, bufferOffset: eBufferOffset, byte: number) {

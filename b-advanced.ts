@@ -3,12 +3,12 @@ namespace btf { // b-advanced.ts
 
     // ========== group="Funktionen" advanced=true
 
-    //% blockId=radio_text block="%s" blockHidden=true
-    export function radio_text(s: string): string { return s }
+    //% blockId=btf_text block="%s" blockHidden=true
+    export function btf_text(s: string): string { return s }
 
     //% group="Funktionen" advanced=true
     //% block="// %text" weight=9
-    //% text.shadow="radio_text"
+    //% text.shadow="btf_text"
     export function comment(text: any): void { }
 
     //% group="Funktionen" advanced=true
@@ -42,7 +42,7 @@ namespace btf { // b-advanced.ts
     }
 
 
-    //% blockId=radio_speedPicker
+    //% blockId=btf_speedPicker
     //% group="speedPicker (-100..0..+100) → (1 ↓ 128 ↑ 255)" advanced=true
     //% block="%speed \\%" weight=4
     //% speed.shadow="speedPicker" speed.defl=0
@@ -51,7 +51,7 @@ namespace btf { // b-advanced.ts
         return mapInt32(speed, -100, 100, 1, 255)
     }
 
-    //% blockId=radio_protractorPicker
+    //% blockId=btf_protractorPicker
     //% group="protractorPicker (0..90..180) → (1 ↖ 16 ↗ 31)" advanced=true
     //% block="%angle °" weight=3
     //% angle.shadow="protractorPicker" angle.defl=90

@@ -8,7 +8,7 @@ namespace sender { // s-advanced.ts
     //% reset.shadow="toggleYesNo"
     export function setSendReset(reset = false) {
         if (isFunktion(sender.eFunktion.ng)) // nicht nicht gestartet
-            radio.n_sendReset = reset
+            btf.n_sendReset = reset
     }
 
 

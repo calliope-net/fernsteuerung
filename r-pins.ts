@@ -73,18 +73,18 @@ namespace receiver { // r-pins.ts
 
     //% group="Spursensor" subcategory="Pins, Sensoren"
     //% block="Spursensor links %n hell" weight=3
-    export function pinSpurlinks(n: radio.eNOT) {
+    export function pinSpurlinks(n: btf.eNOT) {
         if (a_PinSpurlinks.length > n_Hardware)
-            return pins.digitalReadPin(a_PinSpurlinks[n_Hardware]) == (n = radio.eNOT.t ? 1 : 0) // 0 ist schwarz
+            return pins.digitalReadPin(a_PinSpurlinks[n_Hardware]) == (n = btf.eNOT.t ? 1 : 0) // 0 ist schwarz
         else
             return false
     }
 
     //% group="Spursensor" subcategory="Pins, Sensoren"
     //% block="Spursensor rechts %n hell" weight=3
-    export function pinSpurrechts(n: radio.eNOT) {
+    export function pinSpurrechts(n: btf.eNOT) {
         if (a_PinSpurrechts.length > n_Hardware)
-            return pins.digitalReadPin(a_PinSpurrechts[n_Hardware]) == (n = radio.eNOT.t ? 1 : 0) // 0 ist schwarz
+            return pins.digitalReadPin(a_PinSpurrechts[n_Hardware]) == (n = btf.eNOT.t ? 1 : 0) // 0 ist schwarz
         else
             return false
     }
@@ -130,9 +130,9 @@ namespace receiver { // r-pins.ts
 
     //% blockId=receiver_getAbstand blockHidden=true
     //% block="%buffer Abstand in cm" weight=3
-    //% buffer.shadow="radio_receivedBuffer19"
+    //% buffer.shadow="btf_receivedBuffer19"
     export function receiver_getAbstand(buffer: Buffer) {
-        return radio.getAbstand(buffer)
+        return btf.getAbstand(buffer)
         //  return a_Abstand[buffer[eBufferPointer.p0 + eBufferOffset.b2_Fahrstrecke] >>> 6]
         // return (buffer[eBufferPointer.p0 + eBufferOffset.b2_Fahrstrecke] & 0b11000000)
     }
