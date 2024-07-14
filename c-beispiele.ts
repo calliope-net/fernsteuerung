@@ -45,14 +45,14 @@ namespace cb2 { // c-beispiele.ts
             return false
         } else {
 
-            let lenken = Math.abs(servo16 - c_Servo_geradeaus)  // 16-16=0 / 1-16=15 / 31-16=15
+            let lenken = Math.abs(servo16 - 16)  // 16-16=0 / 1-16=15 / 31-16=15
 
             if (readSpursensor(eDH.dunkel, eDH.dunkel, eI2C.x21)) {
-                writeMotor128Servo16(motor128, c_Servo_geradeaus, 50) // nicht lenken
+                writeMotor128Servo16(motor128, 16, 50) // nicht lenken
             } else if (readSpursensor(eDH.dunkel, eDH.hell)) {
-                writeMotor128Servo16(motor128, c_Servo_geradeaus + lenken, 50) // rechts lenken >16 = 31
+                writeMotor128Servo16(motor128, 16 + lenken, 50) // rechts lenken >16 = 31
             } else {
-                writeMotor128Servo16(motor128, c_Servo_geradeaus - lenken, 50) // links lenken <16 = 1
+                writeMotor128Servo16(motor128, 16 - lenken, 50) // links lenken <16 = 1
             }
             return true
         }
