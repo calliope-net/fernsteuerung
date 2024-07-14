@@ -42,9 +42,12 @@ namespace cb2 { // c-beispiele.ts
 
         if (abstand && (readUltraschallAbstand() < abstand)) { // if (abstand) ist false bei 0
             writeMotorenStop()
+            m_lenken = undefined
+            m_inSpur = false
             return false
-        } else {
-           
+        }
+        else {
+
             let langsamfahren = btf.motorProzent(motor128, 50)
             let lenken = Math.abs(servo16 - 16)  // 16-16=0 / 1-16=15 / 31-16=15
 
@@ -64,13 +67,13 @@ namespace cb2 { // c-beispiele.ts
                 if (m_inSpur)
                     m_lenken = 16 + lenken
             }
-            else if (m_lenken && readSpursensor(eDH.hell, eDH.hell)) {
+            else if (m_lenken ) {//&& readSpursensor(eDH.hell, eDH.hell)
                 writeMotor128Servo16(langsamfahren, m_lenken, 0) // rechts lenken >16 = 31
-                m_inSpur = false
+                m_inSpur = false // hell hell
             }
-            else if (!m_lenken && readSpursensor(eDH.hell, eDH.hell)) {
-                writeMotor128Servo16(langsamfahren, 16, 0) // rechts lenken >16 = 31
-                m_inSpur = false
+            else  {//if (!m_lenken && readSpursensor(eDH.hell, eDH.hell))
+                writeMotor128Servo16(motor128, 16, 0) // rechts lenken >16 = 31
+                m_inSpur = false // hell hell
             }
 
             return true
