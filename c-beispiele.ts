@@ -64,6 +64,11 @@ namespace cb2 { // c-beispiele.ts
 
                 writeMotor128Servo16(langsamfahren, m_lenken, 0) // entgegen lenken
             }
+
+            else {
+                writeMotor128Servo16(langsamfahren, 16 + lenken, 0) // rechts lenken >16 = 31
+            }
+
             return true
         }
     }
