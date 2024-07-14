@@ -14,11 +14,6 @@
         "b-display5x5.ts",
         "b-enums.ts",
         "b-advanced.ts",
-        "bluetooth.ts",
-        "datenpaket.ts",
-        "display5x5.ts",
-        "enums.ts",
-        "advanced.ts",
         "s-sender.ts",
         "s-fernsteuerung.ts",
         "s-buttons.ts",
@@ -43,12 +38,7 @@
         "test.ts"
     ],
     "fileDependencies": {
-        "r-calliope-v3.ts": "v3",
-        "bluetooth.ts": "v3",
-        "datenpaket.ts": "v3",
-        "display5x5.ts": "v3",
-        "enums.ts": "v3",
-        "advanced.ts": "v3"
+        "r-calliope-v3.ts": "v3"
     },
     "targetVersions": {
         "target": "4.0.29",
