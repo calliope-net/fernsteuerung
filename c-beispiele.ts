@@ -54,16 +54,19 @@ namespace cb2 { // c-beispiele.ts
 
             if (readSpursensor(eDH.dunkel, eDH.dunkel)) {
                 writeMotor128Servo16(motor128, 16) // nicht lenken
+                m_inSpur = true
 
             }
             else if (readSpursensor(eDH.dunkel, eDH.hell)) { // 0% Rad steht bei voller Lenkung (1 oder 31)
                 writeMotor128Servo16(langsamfahren, 16 - lenken, 0) // links lenken <16 = 1
-                m_lenken = 16 + lenken
+                if (m_inSpur)
+                    m_lenken = 16 + lenken
                 //       writeLed(eLed.redr, true)
             }
             else if (readSpursensor(eDH.hell, eDH.dunkel)) { // 0% Rad steht bei voller Lenkung (1 oder 31)
                 writeMotor128Servo16(langsamfahren, 16 + lenken, 0) // rechts lenken >16 = 31
-                m_lenken = 16 - lenken
+                if (m_inSpur)
+                    m_lenken = 16 - lenken
                 //       writeLed(eLed.redl, true)
             }
             //  else if (m_lenken) {
@@ -71,8 +74,9 @@ namespace cb2 { // c-beispiele.ts
             //    writeMotor128Servo16(langsamfahren, m_lenken, 0) // entgegen lenken
             //  }
 
-            else if (readSpursensor(eDH.hell, eDH.hell)) {
+            else if (m_lenken && readSpursensor(eDH.hell, eDH.hell)) {
                 writeMotor128Servo16(langsamfahren, m_lenken, 0) // rechts lenken >16 = 31
+                m_inSpur = false
                 //      writeLed(eLed.redl, true)
                 //      writeLed(eLed.redr, true)
             }
@@ -82,7 +86,7 @@ namespace cb2 { // c-beispiele.ts
     }
 
     let m_lenken: number
-
+    let m_inSpur = false
 
     // blockId=cb2_speedPicker block="%speed" blockHidden=true
     // speed.shadow="speedPicker"
