@@ -229,14 +229,19 @@ namespace cb2 { // c-callibot.ts 005F7F
         if (rv) writeRgbLedBlink(eRgbLed.rv, buffer, blink)
     }
 
-    // blinken
+    // blinken und I²C nur wenn geändert
     function writeRgbLedBlink(pRgbLed: eRgbLed, buffer: Buffer, blink: boolean) {
         if (blink && a_LEDs[pRgbLed] == buffer.getNumber(NumberFormat.UInt32BE, 1))
             buffer.setNumber(NumberFormat.UInt32BE, 1, 0) // alle Farben aus
-        a_LEDs[pRgbLed] = buffer.getNumber(NumberFormat.UInt32BE, 1)
-        buffer[1] = pRgbLed // Led-Index 1,2,3,4 für RGB
-        i2cWriteBuffer(buffer)
-        basic.pause(10) // ms
+
+        if (a_LEDs[pRgbLed] != buffer.getNumber(NumberFormat.UInt32BE, 1)) {
+
+            a_LEDs[pRgbLed] = buffer.getNumber(NumberFormat.UInt32BE, 1)
+
+            buffer[1] = pRgbLed // Led-Index 1,2,3,4 für RGB
+            i2cWriteBuffer(buffer)
+            basic.pause(10) // ms
+        }
     }
 
 
@@ -257,7 +262,7 @@ namespace cb2 { // c-callibot.ts 005F7F
             writeLed(eLed.redr, on, blink, pwm)
         }
         else {
-
+            // blinken und I²C nur wenn geändert
             if (blink && a_LEDs[pLed] == pwm)
                 a_LEDs[pLed] = 0
             // i2cWriteBuffer(Buffer.fromArray([eRegister.SET_LED, pLed, pwm]))
