@@ -257,10 +257,16 @@ namespace cb2 { // c-callibot.ts 005F7F
             writeLed(eLed.redr, on, blink, pwm)
         }
         else {
+
             if (blink && a_LEDs[pLed] == pwm)
-                pwm = 0
-            i2cWriteBuffer(Buffer.fromArray([eRegister.SET_LED, pLed, pwm]))
-            a_LEDs[pLed] = pwm
+                a_LEDs[pLed] = 0
+            // i2cWriteBuffer(Buffer.fromArray([eRegister.SET_LED, pLed, pwm]))
+            // a_LEDs[pLed] = pwm
+
+            if (a_LEDs[pLed] != pwm) {
+                a_LEDs[pLed] = pwm
+                i2cWriteBuffer(Buffer.fromArray([eRegister.SET_LED, pLed, a_LEDs[pLed]]))
+            }
         }
     }
 
