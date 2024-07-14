@@ -173,17 +173,21 @@ namespace cb2 { // c-callibot.ts 005F7F
     //% group="Motor"
     //% block="Motoren Stop" weight=1
     export function writeMotorenStop() {
-        let setMotorBuffer = Buffer.create(6)
-        setMotorBuffer[0] = eRegister.SET_MOTOR   // 2
-        setMotorBuffer[1] = 3 // ec2Motor.beide     // 3
-        setMotorBuffer.fill(0, 2)
+        if (n_x1_128_255 != c_MotorStop || n_m1_1_128_255 != c_MotorStop || n_m2_1_128_255 != c_MotorStop) {
 
-        n_x1_128_255 = undefined
-        n_y1_16_31 = undefined
-        n_m1_1_128_255 = undefined
-        n_m2_1_128_255 = undefined
+            n_x1_128_255 = c_MotorStop
+            n_y1_16_31 = undefined // die anderen zwischengespeicherten Werte ungültig machen
 
-        i2cWriteBuffer(setMotorBuffer)
+            n_m1_1_128_255 = c_MotorStop
+            n_m2_1_128_255 = c_MotorStop // I²C nur bei Änderung
+
+            let setMotorBuffer = Buffer.create(6)
+            setMotorBuffer[0] = eRegister.SET_MOTOR   // 2
+            setMotorBuffer[1] = 3 // ec2Motor.beide     // 3
+            setMotorBuffer.fill(0, 2)
+
+            i2cWriteBuffer(setMotorBuffer)
+        }
     }
 
 
