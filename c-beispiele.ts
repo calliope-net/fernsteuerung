@@ -56,10 +56,10 @@ namespace cb2 { // c-beispiele.ts
                 m_lenken = 16 + lenken
 
             }
-            //else if (readSpursensor(eDH.hell, eDH.dunkel)) { // 0% Rad steht bei voller Lenkung (1 oder 31)
-            //    writeMotor128Servo16(langsamfahren, 16 + lenken, 0) // rechts lenken >16 = 31
-            //    m_lenken = 16 - lenken
-            //}
+            else if (readSpursensor(eDH.hell, eDH.dunkel)) { // 0% Rad steht bei voller Lenkung (1 oder 31)
+                writeMotor128Servo16(langsamfahren, 16 + lenken, 0) // rechts lenken >16 = 31
+                m_lenken = 16 - lenken
+            }
             else if (m_lenken) {
 
                 writeMotor128Servo16(langsamfahren, m_lenken, 0) // entgegen lenken
