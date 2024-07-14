@@ -186,10 +186,10 @@ namespace sender { // s-buttons.ts
 
 
     //% group="Ereignisse" subcategory="Knopf A B"
-    //% block="%e"
-    //% e.defl=ButtonEvent.Hold
-    export function buttonEvent(e: ButtonEvent) {
-        return e
+    //% block="%id"
+    //% id.defl=ButtonEvent.Hold
+    export function buttonEventValue(id: ButtonEvent): number {
+        return id
     }
 
 
