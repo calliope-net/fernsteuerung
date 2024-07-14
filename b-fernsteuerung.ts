@@ -224,6 +224,7 @@ namespace btf { // b-fernsteuerung.ts
     export function setStorageModell(pModell: number) {
         //n_StorageModell = pModell
         a_StorageBuffer[eStorageBuffer.modell] = pModell
+        storage.putBuffer(a_StorageBuffer)
     }
 
     //let n_StorageModell: number // lokaler Speicher, um nicht immer aus Storage zu lesen

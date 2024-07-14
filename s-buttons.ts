@@ -40,10 +40,10 @@ namespace sender { // s-buttons.ts
     //% group="in Eingabe Ereignisse einfügen" subcategory="Knopf A B"
     //% block="Knopf A geklickt" weight=7
     export function buttonA() {
-        let modellChanged = false
+       // let modellChanged = false
         if (n_Funktion == eFunktion.ng) {
             // wenn nicht gestartet, kann Modell geändert werden
-            modellChanged = true
+         //   modellChanged = true
             if (btf.getStorageModell() > 0)
                 btf.setStorageModell(btf.getStorageModell() - 1)
 
@@ -73,17 +73,17 @@ namespace sender { // s-buttons.ts
         else {
             a_ButtonAB_Switch[eButtonAB_Switch.A] = !a_ButtonAB_Switch[eButtonAB_Switch.A] // Standardwert immer wechseln true-false
         }
-        return modellChanged
+      //  return modellChanged
     }
 
 
     //% group="in Eingabe Ereignisse einfügen" subcategory="Knopf A B"
     //% block="Knopf B geklickt" weight=6
     export function buttonB() {
-        let modellChanged = false
+     //   let modellChanged = false
         if (n_Funktion == eFunktion.ng) {
             // wenn nicht gestartet, kann Modell geändert werden
-            modellChanged = true
+       //     modellChanged = true
             if (btf.getStorageModell() < a_ModellImages.length - 1)
                 btf.setStorageModell(btf.getStorageModell() + 1)
 
@@ -115,7 +115,7 @@ namespace sender { // s-buttons.ts
             a_ButtonAB_Switch[eButtonAB_Switch.B] = !a_ButtonAB_Switch[eButtonAB_Switch.B] // Standardwert immer wechseln true-false
             // mit B Licht, wenn oben nichts anderes steht
         }
-        return modellChanged
+     //   return modellChanged
     }
 
 

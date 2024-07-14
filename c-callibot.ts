@@ -29,6 +29,8 @@ namespace cb2 { // c-callibot.ts 005F7F
     // inlineInputMode=external
     export function beimStart(zf = true, modellFunkgruppe?: number) {
 
+        writeReset() // Reset Motoren, LEDs
+
         btf.setStorageBuffer(modellFunkgruppe) // prüft und speichert in a_StorageBuffer
 
         if (zf)
