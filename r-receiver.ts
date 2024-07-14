@@ -99,11 +99,11 @@ namespace receiver { // r-receiver.ts
     }
 
 
-    //% group="calliope-net.github.io/fernsteuerung"
-    //% block="Flash speichern" weight=7
-    export function storageBufferGet() {
+    // group="calliope-net.github.io/fernsteuerung"
+    // block="Flash speichern" weight=7
+    /* export function storageBufferGet() {
         return btf.storageBufferGet()
-    }
+    } */
 
 
     // ========== group="Motor"

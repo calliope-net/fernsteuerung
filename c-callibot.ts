@@ -38,11 +38,11 @@ namespace cb2 { // c-callibot.ts 005F7F
     }
 
 
-    //% group="calliope-net.github.io/fernsteuerung"
-    //% block="Flash speichern" weight=7
-    export function storageBufferGet() {
+    // group="calliope-net.github.io/fernsteuerung"
+    // block="Flash speichern" weight=7
+    /* export function storageBufferGet() {
         return btf.storageBufferGet()
-    }
+    } */
 
     // aktuelle Werte // I²C nur bei Änderung
     let n_x1_128_255: number

@@ -59,6 +59,8 @@ namespace btf { // b-fernsteuerung.ts
 
         radio.setGroup(a_StorageBuffer[eStorageBuffer.funkgruppe])
 
+        storage.putBuffer(a_StorageBuffer)
+
         zeigeFunkgruppe()
 
     }
@@ -67,9 +69,9 @@ namespace btf { // b-fernsteuerung.ts
 
     //% group="Flash Speicher (Storage)" deprecated=true
     //% block="Flash speichern" weight=2
-    export function storageBufferGet() {
+    /* export function storageBufferGet() {
         return a_StorageBuffer.getNumber(NumberFormat.UInt32LE, 0)
-    }
+    } */
 
 
 
