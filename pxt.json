@@ -33,7 +33,12 @@
         "c-callibot.ts",
         "c-beispiele.ts",
         "r_callibot.ts",
-        "r_callibot-enums.ts"
+        "r_callibot-enums.ts",
+        "b-fernsteuerung.ts",
+        "b-advanced.ts",
+        "b-enums.ts",
+        "b-datenpaket.ts",
+        "b-display5x5.ts"
     ],
     "testFiles": [
         "test.ts"
