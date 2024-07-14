@@ -18,6 +18,7 @@ namespace cb2 { // c-callibot.ts 005F7F
     //  let qFernsteuerungStop: boolean = false
 
     export const c_MotorStop = 128
+    export const c_Servo_geradeaus = 90
 
     export let n_EncoderFaktor = 31.25 // Impulse = 31.25 * Fahrstrecke in cm
     // let n_MotorPWM_0_255 = 0

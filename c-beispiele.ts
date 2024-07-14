@@ -12,6 +12,7 @@ namespace cb2 { // c-beispiele.ts
     //% langsamer.shadow=btf_speedPicker
     //% stopbeiabstand.shadow=toggleYesNo
     //% abstand.min=0 abstand.max=50 abstand.defl=15
+    //% inlineInputMode=inline
     export function beispielSpurfolger(motoren: number, langsamer: number, stopbeiabstand: boolean, abstand: number) {
 
         if (stopbeiabstand && (readUltraschallAbstand() < abstand)) { //  if (this.bitINPUT_US(eVergleich.lt, stop)) {
@@ -30,6 +31,32 @@ namespace cb2 { // c-beispiele.ts
         }
     }
 
+
+    //% group="1 Spurfolger (1 ↓ 128 ↑ 255)" subcategory=Beispiele
+    //% block="Spurfolger Motor %motor128 Servo %servo16 || Stop bei Abstand < %abstand cm" weight=2
+    //% motor128.shadow=btf_speedPicker
+    //% servo16.shadow=btf_protractorPicker
+    //% abstand.min=0 abstand.max=50
+    //% inlineInputMode=inline
+    export function beispielSpurfolger16(motor128: number, servo16: number, abstand?: number) {
+
+        if (abstand && (readUltraschallAbstand() < abstand)) { // if (abstand) ist false bei 0
+            writeMotorenStop()
+            return false
+        } else {
+
+            let lenken = Math.abs(servo16 - c_Servo_geradeaus)  // 16-16=0 / 1-16=15 / 31-16=15
+
+            if (readSpursensor(eDH.dunkel, eDH.dunkel, eI2C.x21)) {
+                writeMotor128Servo16(motor128, c_Servo_geradeaus, 50) // nicht lenken
+            } else if (readSpursensor(eDH.dunkel, eDH.hell)) {
+                writeMotor128Servo16(motor128, c_Servo_geradeaus + lenken, 50) // rechts lenken >16 = 31
+            } else {
+                writeMotor128Servo16(motor128, c_Servo_geradeaus - lenken, 50) // links lenken <16 = 1
+            }
+            return true
+        }
+    }
 
 
     // blockId=cb2_speedPicker block="%speed" blockHidden=true
