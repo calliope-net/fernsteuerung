@@ -20,11 +20,11 @@ namespace cb2 { // c-beispiele.ts
         } else {
 
             if (readSpursensor(eDH.dunkel, eDH.dunkel, eI2C.x21)) { //     if (this.bitINPUTS(calli2bot.eINPUTS.sp0)) {
-                writeMotoren128(motoren, langsamer)//         setMotoren0Prozent(pwm1, pwm1) // dunkel,dunkel
+                writeMotoren128(motoren, motoren)//         setMotoren0Prozent(pwm1, pwm1) // dunkel,dunkel
             } else if (readSpursensor(eDH.dunkel, eDH.hell)) { // if (this.bitINPUTS(calli2bot.eINPUTS.sp1r)) {
-                writeMotoren128(128, langsamer)//      setMotoren0Prozent(0, pwm2)
+                writeMotoren128(c_MotorStop, langsamer)//      setMotoren0Prozent(0, pwm2)
             } else {
-                writeMotoren128(langsamer, 128)//      setMotoren0Prozent(pwm2, 0)
+                writeMotoren128(langsamer, c_MotorStop)//      setMotoren0Prozent(pwm2, 0)
             }
             //return true
         }
