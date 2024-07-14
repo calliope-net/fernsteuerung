@@ -23,13 +23,13 @@ namespace cb2 { // c-callibot.ts 005F7F
     // let n_MotorPWM_0_255 = 0
 
     //% group="calliope-net.github.io/fernsteuerung"
-    //% block="beim Start: Calli:bot 2 | zeige Funkgruppe | %zf Funkgruppe (aus Flash lesen) | %storagei32" weight=8
+    //% block="beim Start: Calli:bot 2 || Funkgruppe anzeigen %zf %modellFunkgruppe" weight=8
     //% zf.shadow="toggleYesNo" zf.defl=1
-    //% storagei32.min=160 storagei32.max=191 storagei32.defl=180
-    //% inlineInputMode=external
-    export function beimStart(zf: boolean, storagei32: number) {
+    //% modellFunkgruppe.min=160 modellFunkgruppe.max=191
+    // inlineInputMode=external
+    export function beimStart(zf = true, modellFunkgruppe?: number) {
 
-        btf.setStorageBuffer(storagei32, 180) // prüft und speichert in a_StorageBuffer
+        btf.setStorageBuffer(modellFunkgruppe) // prüft und speichert in a_StorageBuffer
 
         if (zf)
             btf.zeigeFunkgruppe()

@@ -70,26 +70,26 @@ namespace receiver { // r-receiver.ts
 
 
     //% group="calliope-net.github.io/fernsteuerung"
-    //% block="beim Start: Empfänger | %modell Servo ↑ ° %servoGeradeaus Encoder %encoder Rad Durchmesser mm %radDmm Funkgruppe || anzeigen %zf Funkgruppe (aus Flash lesen) | %storagei32" weight=8
+    //% block="beim Start: Empfänger | %modell Servo ↑ ° %servoGeradeaus Encoder %encoder Rad Durchmesser mm %radDmm Funkgruppe || anzeigen %zf Funkgruppe %modellFunkgruppe" weight=8
     //% servoGeradeaus.min=81 servoGeradeaus.max=99 servoGeradeaus.defl=90
     //% encoder.shadow="toggleOnOff"
     //% radDmm.min=60 radDmm.max=80 radDmm.defl=65
     //% zf.shadow="toggleYesNo" zf.defl=1
-    //% storagei32.min=160 storagei32.max=191
+    //% modellFunkgruppe.min=160 modellFunkgruppe.max=191
     // inlineInputMode=inline
-    export function beimStart(modell: eHardware, servoGeradeaus: number, encoder: boolean, radDmm: number, zf = true, storagei32?: number) {
+    export function beimStart(modell: eHardware, servoGeradeaus: number, encoder: boolean, radDmm: number, zf = true, modellFunkgruppe?: number) {
         n_Hardware = modell
         n_ServoGeradeaus = servoGeradeaus // Parameter
 
         pinRelay(true) // Relais an schalten (braucht gültiges n_Modell, um den Pin zu finden)
 
-        btf.setStorageBuffer(storagei32, a_ModellFunkgruppe[n_Hardware]) // prüft und speichert in a_StorageBuffer
+        btf.setStorageBuffer(modellFunkgruppe) // prüft und speichert in a_StorageBuffer
         if (zf)
             btf.zeigeFunkgruppe()
 
         pins.servoWritePin(a_PinServo[n_Hardware], n_ServoGeradeaus)
 
-        qwiicMotorReset() // true wenn qwiicmotor bereit, false wenn Kran nicht angeschlossen
+        qwiicMotorReset() // dauert länger als 2 Sekunden
 
         if (encoder)
             encoderRegisterEvent(radDmm)

@@ -6,13 +6,13 @@ namespace sender { // s-sender.ts
 
 
     //% group="calliope-net.github.io/fernsteuerung"
-    //% block="beim Start: Sender | zeige Modell und Funkgruppe | %zf Funkgruppe (aus Flash lesen) | %storagei32" weight=8
+    //% block="beim Start: Sender || Modell und Funkgruppe anzeigen %zf %modellFunkgruppe" weight=8
     //% zf.shadow="toggleYesNo" zf.defl=1
-    //% storagei32.min=160 storagei32.max=191 storagei32.defl=175
-    //% inlineInputMode=external
-    export function beimStart(zf: boolean, storagei32: number) {
+    //% modellFunkgruppe.min=160 modellFunkgruppe.max=191
+    // inlineInputMode=external
+    export function beimStart(zf = true, modellFunkgruppe?: number) {
         if (!btf.simulator()) {
-            btf.setStorageBuffer(storagei32, 175) // prüft und speichert in a_StorageBuffer
+            btf.setStorageBuffer(modellFunkgruppe) // prüft und speichert in a_StorageBuffer
 
 
             if (!btf.between(btf.getStorageModell(), 0, a_ModellImages.length - 1))
