@@ -44,47 +44,47 @@ namespace btf { // b-dispaly5x5.ts
     //% block="zeige ...↕↕ Joystick %buffer" weight=7
     //% buffer.shadow="btf_sendBuffer19"
     export function zeige5x5Joystick(buffer: Buffer) {
-        if (isBetriebsart(buffer, e0Betriebsart.p0)) {
-            // Betriebsart: 00 Fernsteuerung Motoren
+        //if (isBetriebsart(buffer, e0Betriebsart.p0)) {
+        // Betriebsart: 00 Fernsteuerung Motoren
 
-            if (getaktiviert(buffer, e3aktiviert.m0)) {
-                // fahren und lenken mit Servo
-                zeigeBINx3Motor_map255(buffer[eBufferPointer.m0])
-                zeigeBINx4Servo_31(buffer[eBufferPointer.m0 + eBufferOffset.b1_Servo] & 0x1F)
-
-            } else {
-                // die ersten 2 aktivierten Motoren ohne Servo
-                let bin: number[] = []
-                if (bin.length < 2 && getaktiviert(buffer, e3aktiviert.m1))
-                    bin.push(buffer[eBufferPointer.m1]) // Motor M1
-
-                if (bin.length < 2 && getaktiviert(buffer, e3aktiviert.ma))
-                    bin.push(buffer[eBufferPointer.ma]) // Motor MA
-
-                if (bin.length < 2 && getaktiviert(buffer, e3aktiviert.mb))
-                    bin.push(buffer[eBufferPointer.mb]) // Motor MB
-
-                if (bin.length < 2 && getaktiviert(buffer, e3aktiviert.mc))
-                    bin.push(buffer[eBufferPointer.mc]) // Motor MC
-
-                if (bin.length < 2 && getaktiviert(buffer, e3aktiviert.md)) {
-                    bin.push(buffer[eBufferPointer.md]) // Motor MD
-
-                    if (bin.length < 2) // offset 17 (Servo) enthält Callibot Beispiel Nummer
-                        zeigeBINx4Servo_31(buffer[eBufferPointer.md + eBufferOffset.b1_Servo] & 0x1F)
-                    // zeigt als letztes direkt 0..31 an, mit Motor würde das gemapt werden
-                }
-
-                if (bin.length >= 1)
-                    zeigeBINx3Motor_map255(bin[0]) // in 5x5 LED Matrix x=3
-                if (bin.length >= 2)
-                    zeigeBINx4Motor_map255(bin[1]) // in 5x5 LED Matrix x=4
-            }
-        } else {
-            // andere Betriebsarten als '00 Fernsteuerung Motoren'
+        if (getaktiviert(buffer, e3aktiviert.m0)) {
+            // fahren und lenken mit Servo
             zeigeBINx3Motor_map255(buffer[eBufferPointer.m0])
             zeigeBINx4Servo_31(buffer[eBufferPointer.m0 + eBufferOffset.b1_Servo] & 0x1F)
+
+        } else {
+            // die ersten 2 aktivierten Motoren ohne Servo
+            let bin: number[] = []
+            if (bin.length < 2 && getaktiviert(buffer, e3aktiviert.m1))
+                bin.push(buffer[eBufferPointer.m1]) // Motor M1
+
+            if (bin.length < 2 && getaktiviert(buffer, e3aktiviert.ma))
+                bin.push(buffer[eBufferPointer.ma]) // Motor MA
+
+            if (bin.length < 2 && getaktiviert(buffer, e3aktiviert.mb))
+                bin.push(buffer[eBufferPointer.mb]) // Motor MB
+
+            if (bin.length < 2 && getaktiviert(buffer, e3aktiviert.mc))
+                bin.push(buffer[eBufferPointer.mc]) // Motor MC
+
+            if (bin.length < 2 && getaktiviert(buffer, e3aktiviert.md)) {
+                bin.push(buffer[eBufferPointer.md]) // Motor MD
+
+                if (bin.length < 2) // offset 17 (Servo) enthält Callibot Beispiel Nummer
+                    zeigeBINx4Servo_31(buffer[eBufferPointer.md + eBufferOffset.b1_Servo] & 0x1F)
+                // zeigt als letztes direkt 0..31 an, mit Motor würde das gemapt werden
+            }
+
+            if (bin.length >= 1)
+                zeigeBINx3Motor_map255(bin[0]) // in 5x5 LED Matrix x=3
+            if (bin.length >= 2)
+                zeigeBINx4Motor_map255(bin[1]) // in 5x5 LED Matrix x=4
         }
+        //} else {
+        //    // andere Betriebsarten als '00 Fernsteuerung Motoren'
+        //    zeigeBINx3Motor_map255(buffer[eBufferPointer.m0])
+        //    zeigeBINx4Servo_31(buffer[eBufferPointer.m0 + eBufferOffset.b1_Servo] & 0x1F)
+        //}
     }
 
     function zeigeBINx3Motor_map255(x3: number) {

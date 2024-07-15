@@ -4,7 +4,7 @@ namespace sender { // s-buttons.ts
     export enum eButtonAB_Switch { A, B, AB }
     export let a_ButtonAB_Switch = [false, false, false] // so viele Elemente wie Member in der Enum eSchalter
     //  export let n_CalliBotBeispielButtonAB = 0
-    export let n_ButtonAB_Counter = 16 // 1..16..31 mit A- B+ ändern
+    export let n_ButtonAB_Counter = 0 // 1..16..31 mit A- B+ ändern
 
     export enum eModell { // zuletzt gewähltes Modell wird im offset 1 dauerhaft gespeiechert
         //% block="Calli:Bot"
