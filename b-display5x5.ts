@@ -4,7 +4,7 @@ namespace btf { // b-dispaly5x5.ts
 
     // ========== group="25 LED Display" advanced=true color=#54C9C9
 
-  export  let n5x5_setClearScreen = false // wenn ein Image angezeigt wird, merken dass z.B. Funkgruppe wieder angezeigt werden muss
+    export let n5x5_setClearScreen = false // wenn ein Image angezeigt wird, merken dass z.B. Funkgruppe wieder angezeigt werden muss
 
     let n5x5_x01y0 = 0 // Bit 5-4 Betriebsart in x=0-1 y=0
     let n5x5_x2 = 0 // Bit 5-4-3-2-1 Motor Power in x=2
@@ -184,11 +184,11 @@ namespace btf { // b-dispaly5x5.ts
         zeigeText(Buffer.fromArray([n]).toHex())
     }
 
-    //% group="Image" subcategory="Display 5x5" color=#54C9C9
-    //% block="zeige Bild %image" weight=1
-    export function zeigeImage(image: Image) {
+    // group="Image" subcategory="Display 5x5" color=#54C9C9
+    // block="zeige Bild %image" weight=1
+    /* export function zeigeImage(image: Image) {
         image.showImage(0)
         n5x5_setClearScreen = true
-    }
+    } */
 
 } // b-dispaly5x5.ts

@@ -22,7 +22,7 @@ namespace sender { // s-sender.ts
             if (zf) {
                 // Bild anzeigen mit Pause 1500ms, Image-Array in s-auswahl.ts
                 zeigeImage(btf.getStorageModell())
-            //   btf.zeigeImage(a_ModellImages[btf.getStorageModell()])
+                //   btf.zeigeImage(a_ModellImages[btf.getStorageModell()])
                 basic.pause(1500)
                 btf.zeigeFunkgruppe()
             }
