@@ -203,7 +203,7 @@ namespace sender { // s-buttons.ts
     . . . . .
     # # # # #
     . # . # .
-    `),
+    `)/* ,
         images.createImage(`
     . . # . .
     . . # . .
@@ -224,14 +224,7 @@ namespace sender { // s-buttons.ts
     # . . . #
     # # # # #
     . # . # .
-    `)/* ,
-        images.createImage(`
-    . . . . .
-    . # . # .
-    # . . . #
-    . # . # .
-    . . . . .
-    `), */
+    `) */
     ]
 
 } // s-buttons.ts
