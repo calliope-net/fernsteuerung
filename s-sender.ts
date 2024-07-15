@@ -15,13 +15,14 @@ namespace sender { // s-sender.ts
             btf.setStorageBuffer(modellFunkgruppe) // prüft und speichert in a_StorageBuffer
 
 
-            if (!btf.between(btf.getStorageModell(), 0, a_ModellImages.length - 1))
+            if (!btf.between(btf.getStorageModell(), 0, c_ModellCount - 1))
                 // wenn ungültig, Standardwert setzen
                 btf.setStorageModell(eModell.cb2e)
 
             if (zf) {
                 // Bild anzeigen mit Pause 1500ms, Image-Array in s-auswahl.ts
-                btf.zeigeImage(a_ModellImages[btf.getStorageModell()])
+                zeigeImage(btf.getStorageModell())
+            //   btf.zeigeImage(a_ModellImages[btf.getStorageModell()])
                 basic.pause(1500)
                 btf.zeigeFunkgruppe()
             }

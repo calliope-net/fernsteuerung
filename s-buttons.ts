@@ -16,7 +16,7 @@ namespace sender { // s-buttons.ts
         //% block="Calliope auf Rädern 4"
         car4  // CaR 4
     } // so viele Images müssen im Array sein - Bilder am Ende dieser Datei
-
+    export const c_ModellCount = 4
 
     // Funktion: wird je nach Modell mit Tasten geändert, steht nicht im Flash
 
@@ -40,14 +40,15 @@ namespace sender { // s-buttons.ts
     //% group="in Eingabe Ereignisse einfügen" subcategory="Knopf A B"
     //% block="Knopf A geklickt" weight=7
     export function buttonA() {
-       // let modellChanged = false
+        // let modellChanged = false
         if (n_Funktion == eFunktion.ng) {
             // wenn nicht gestartet, kann Modell geändert werden
-         //   modellChanged = true
+            //   modellChanged = true
             if (btf.getStorageModell() > 0)
                 btf.setStorageModell(btf.getStorageModell() - 1)
 
-            btf.zeigeImage(a_ModellImages[btf.getStorageModell()])
+            zeigeImage(btf.getStorageModell())
+            // btf.zeigeImage(a_ModellImages[btf.getStorageModell()])
         }
         // Calli:bot && Funktion Beispiele (Modell Nummer ++)
         else if (isModell(eModell.cb2e && n_Funktion == eFunktion.mc_md_callibot_beispiele)) {
@@ -73,21 +74,22 @@ namespace sender { // s-buttons.ts
         else {
             a_ButtonAB_Switch[eButtonAB_Switch.A] = !a_ButtonAB_Switch[eButtonAB_Switch.A] // Standardwert immer wechseln true-false
         }
-      //  return modellChanged
+        //  return modellChanged
     }
 
 
     //% group="in Eingabe Ereignisse einfügen" subcategory="Knopf A B"
     //% block="Knopf B geklickt" weight=6
     export function buttonB() {
-     //   let modellChanged = false
+        //   let modellChanged = false
         if (n_Funktion == eFunktion.ng) {
             // wenn nicht gestartet, kann Modell geändert werden
-       //     modellChanged = true
-            if (btf.getStorageModell() < a_ModellImages.length - 1)
+            //     modellChanged = true
+            if (btf.getStorageModell() < c_ModellCount - 1)
                 btf.setStorageModell(btf.getStorageModell() + 1)
 
-            btf.zeigeImage(a_ModellImages[btf.getStorageModell()])
+            zeigeImage(btf.getStorageModell())
+            //   btf.zeigeImage(a_ModellImages[btf.getStorageModell()])
 
         }
         // Calli:bot && Funktion Beispiele (mit A gewählte Modell Nummer starten)
@@ -115,7 +117,7 @@ namespace sender { // s-buttons.ts
             a_ButtonAB_Switch[eButtonAB_Switch.B] = !a_ButtonAB_Switch[eButtonAB_Switch.B] // Standardwert immer wechseln true-false
             // mit B Licht, wenn oben nichts anderes steht
         }
-     //   return modellChanged
+        //   return modellChanged
     }
 
 
@@ -196,14 +198,17 @@ namespace sender { // s-buttons.ts
     // ========== Bilder für Auswahl Modell
 
 
-    export let a_ModellImages = [
-        images.createImage(`
+    //% group="Image" subcategory="Display 5x5" color=#54C9C9
+    //% block="zeige Bild %image" weight=1
+    export function zeigeImage(index: number) {
+
+        [images.createImage(`
     . # . # .
     . . . . .
     . . . . .
     # # # # #
     . # . # .
-    `)/* ,
+    `),
         images.createImage(`
     . . # . .
     . . # . .
@@ -224,7 +229,41 @@ namespace sender { // s-buttons.ts
     # . . . #
     # # # # #
     . # . # .
-    `) */
-    ]
+    `)
+        ][index].showImage(0)
+
+        btf.n5x5_setClearScreen = true
+    }
+
+    /*  export let a_ModellImages_ = [
+         images.createImage(`
+     . # . # .
+     . . . . .
+     . . . . .
+     # # # # #
+     . # . # .
+     `),
+         images.createImage(`
+     . . # . .
+     . . # . .
+     . . # # #
+     . . # . .
+     # # # . .
+     `),
+         images.createImage(`
+     . # # # #
+     . # . . #
+     . # . . .
+     . # . . .
+     # # # # .
+     `),
+         images.createImage(`
+     . . . . .
+     . # # # .
+     # . . . #
+     # # # # #
+     . # . # .
+     `)
+     ] */
 
 } // s-buttons.ts
