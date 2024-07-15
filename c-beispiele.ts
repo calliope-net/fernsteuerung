@@ -1,9 +1,67 @@
 
 namespace cb2 { // c-beispiele.ts
 
-
-
     // ========== subcategory=Beispiele
+
+    // ========== group="1 Spurfolger (1 ↓ 128 ↑ 255) (1 ↖ 16 ↗ 31)" subcategory=Beispiele
+
+    let m_lenken: number
+    let m_inSpur = false
+
+    //% group="1 Spurfolger (1 ↓ 128 ↑ 255) (1 ↖ 16 ↗ 31)" subcategory=Beispiele
+    //% block="Spurfolger | fahren %motor128 lenken %servo16 Wiederholung %repeat Stop bei Abstand < (cm) %abstand" weight=2
+    //% motor128.shadow=btf_speedPicker
+    //% servo16.shadow=btf_protractorPicker
+    //% repeat.shadow="toggleYesNo" repeat.defl=1
+    //% abstand.min=10 abstand.max=50 abstand.defl=20
+    // inlineInputMode=inline
+    export function beispielSpurfolger16(motor128: number, servo16: number, repeat: boolean, abstand: number) {
+        // repeat ist false beim ersten Durchlauf der Schleife, true bei Wiederholungen
+        if (!repeat) {
+            m_lenken = undefined // gespeicherte Werte löschen
+            m_inSpur = false
+        }
+
+
+        if (!repeat || (abstand > 0 && (readUltraschallAbstand() < abstand))) { // if (abstand) ist false bei 0
+            writeMotorenStop()
+            writeRgbLed(Colors.Orange)
+            //  return false
+        }
+        else {
+            writeRgbLed(Colors.Off)
+            
+            let langsamfahren = btf.motorProzent(motor128, 50)
+            let lenken = Math.abs(servo16 - 16)  // 16-16=0 / 1-16=15 / 31-16=15
+
+            readInputs(eI2C.x21)
+
+            if (readSpursensor(eDH.dunkel, eDH.dunkel)) {
+                writeMotor128Servo16(motor128, 16) // nicht lenken
+                m_inSpur = true
+            }
+            else if (readSpursensor(eDH.dunkel, eDH.hell)) { // 0% Rad steht bei voller Lenkung (1 oder 31)
+                writeMotor128Servo16(langsamfahren, 16 - lenken, 0) // links lenken <16 = 1
+                if (m_inSpur)
+                    m_lenken = 16 - lenken
+            }
+            else if (readSpursensor(eDH.hell, eDH.dunkel)) { // 0% Rad steht bei voller Lenkung (1 oder 31)
+                writeMotor128Servo16(langsamfahren, 16 + lenken, 0) // rechts lenken >16 = 31
+                if (m_inSpur)
+                    m_lenken = 16 + lenken
+            }
+            else if (m_lenken) {
+                writeMotor128Servo16(langsamfahren, m_lenken, 0) // lenken wie zuletzt gespeichert
+                m_inSpur = false // hell hell
+            }
+            else {
+                writeMotor128Servo16(motor128, 16, 0) // geradeaus fahren bis zur schwarzen Linie
+                m_inSpur = false // hell hell
+            }
+
+            //   return true
+        }
+    }
 
 
     //% group="1 Spurfolger (1 ↓ 128 ↑ 255)" subcategory=Beispiele
@@ -32,56 +90,6 @@ namespace cb2 { // c-beispiele.ts
     }
 
 
-    //% group="1 Spurfolger (1 ↓ 128 ↑ 255)" subcategory=Beispiele
-    //% block="Spurfolger Motor %motor128 Servo %servo16 || Stop bei Abstand < %abstand cm" weight=2
-    //% motor128.shadow=btf_speedPicker
-    //% servo16.shadow=btf_protractorPicker
-    //% abstand.min=0 abstand.max=50
-    //% inlineInputMode=inline
-    export function beispielSpurfolger16(motor128: number, servo16: number, abstand?: number) {
-
-        if (abstand && (readUltraschallAbstand() < abstand)) { // if (abstand) ist false bei 0
-            writeMotorenStop()
-            m_lenken = undefined
-            m_inSpur = false
-            return false
-        }
-        else {
-
-            let langsamfahren = btf.motorProzent(motor128, 50)
-            let lenken = Math.abs(servo16 - 16)  // 16-16=0 / 1-16=15 / 31-16=15
-
-            readInputs(eI2C.x21)
-
-            if (readSpursensor(eDH.dunkel, eDH.dunkel)) {
-                writeMotor128Servo16(motor128, 16) // nicht lenken
-                m_inSpur = true
-            }
-            else if (readSpursensor(eDH.dunkel, eDH.hell)) { // 0% Rad steht bei voller Lenkung (1 oder 31)
-                writeMotor128Servo16(langsamfahren, 16 - lenken, 0) // links lenken <16 = 1
-                if (m_inSpur)
-                    m_lenken = 16 - lenken
-            }
-            else if (readSpursensor(eDH.hell, eDH.dunkel)) { // 0% Rad steht bei voller Lenkung (1 oder 31)
-                writeMotor128Servo16(langsamfahren, 16 + lenken, 0) // rechts lenken >16 = 31
-                if (m_inSpur)
-                    m_lenken = 16 + lenken
-            }
-            else if (m_lenken ) {//&& readSpursensor(eDH.hell, eDH.hell)
-                writeMotor128Servo16(langsamfahren, m_lenken, 0) // rechts lenken >16 = 31
-                m_inSpur = false // hell hell
-            }
-            else  {//if (!m_lenken && readSpursensor(eDH.hell, eDH.hell))
-                writeMotor128Servo16(motor128, 16, 0) // rechts lenken >16 = 31
-                m_inSpur = false // hell hell
-            }
-
-            return true
-        }
-    }
-
-    let m_lenken: number
-    let m_inSpur = false
 
     // blockId=cb2_speedPicker block="%speed" blockHidden=true
     // speed.shadow="speedPicker"
