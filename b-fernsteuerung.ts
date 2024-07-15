@@ -7,7 +7,7 @@ namespace btf { // b-fernsteuerung.ts
     let n_start = false
 
     export let n_lastconnectedTime = input.runningTime()  // ms seit Start
-    let n_programm = false // autonomes fahren nach Programm, kein Bluetooth timeout
+    let n_localProgram = false // autonomes fahren nach Programm, kein Bluetooth timeout
 
     export let n_sendReset = false
 
@@ -124,7 +124,10 @@ namespace btf { // b-fernsteuerung.ts
             if ((receivedBuffer[0] & 0x80) == 0x80) // Bit 7 reset
                 control.reset() // Soft-Reset, Calliope zurücksetzen
 
-            n_programm = (receivedBuffer[0] & 0x20) == 0x20 // Bit 5 Programm=1 / Fernsteuerung=0
+            //  n_programm = (receivedBuffer[0] & 0x20) == 0x20 // Bit 5 Programm=1 / Fernsteuerung=0
+
+            n_localProgram = ((receivedBuffer[0] & 0x20) == 0x20) // Bit 5 Programm=1 / Betriebsart ..10.... oder ..11....
+                || (((receivedBuffer[0] & 0x30) == 0x10) && ((receivedBuffer[3] & 0x01) == 0x00)) // Betriebsart 01 und Joystick nicht aktiv ([3]Bit 0=0)
 
             //if (!n_connected) {
             //licht(false, false) //  Licht aus und Blinken beenden
@@ -175,12 +178,19 @@ namespace btf { // b-fernsteuerung.ts
     //% ms.defl=1000
     export function timeout(ms: number, abschalten = false) {
         if (!abschalten) // kurzes Fernsteuerung-timeout (1s) nur bei Joystick, nicht auslösen wenn n_programm=true
-            return !n_programm && ((input.runningTime() - n_lastconnectedTime) > ms)
+            return !n_localProgram && ((input.runningTime() - n_lastconnectedTime) > ms)
         else // längeres Programm-timeout (60s) immer auslösen falls Programm hängt (zum aus schalten)
             return ((input.runningTime() - n_lastconnectedTime) > ms)
     }
 
 
+
+    //% group="lokales Programm (kein Bluetooth Timeout)"
+    //% block="Timeout deaktivieren %localProgram"
+    //% localProgram.shadow="toggleYesNo"
+    export function set_localProgram(localProgram: boolean) {
+        n_localProgram = localProgram
+    }
 
 
 
