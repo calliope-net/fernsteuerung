@@ -34,7 +34,7 @@ namespace cb2 { // c-beispiele.ts
             let langsamfahren = btf.motorProzent(motor128, 50)
             let lenken = Math.abs(servo16 - 16)  // 16-16=0 / 1-16=15 / 31-16=15
 
-            readInputs(eI2C.x21)
+            readInputs(eI2C.x22)
 
             if (readSpursensor(eDH.dunkel, eDH.dunkel)) {
                 writeMotor128Servo16(motor128, 16) // nicht lenken
