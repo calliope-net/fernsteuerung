@@ -9,13 +9,15 @@ namespace cb2 { // c-beispiele.ts
     let m_inSpur = false
 
     //% group="1 Spurfolger (1 ↓ 128 ↑ 255) (1 ↖ 16 ↗ 31)" subcategory=Beispiele
-    //% block="Spurfolger | fahren %motor128 lenken %servo16 Wiederholung %repeat Stop bei Abstand < (cm) %abstand" weight=2
-    //% motor128.shadow=btf_speedPicker
-    //% servo16.shadow=btf_protractorPicker
+    //% block="Spurfolger | fahren (1↓128↑255) %motor128 lenken (1↖16↗31) %servo16 Wiederholung %repeat Stop bei Abstand < (cm) %abstand %i2c" weight=2
+    // motor128.shadow=btf_speedPicker
+    //% motor128.min=1 motor128.max=255 motor128.defl=192
+    // servo16.shadow=btf_protractorPicker
+    //% servo16.min=1 servo16.max=31 servo16.defl=31
     //% repeat.shadow="toggleYesNo" repeat.defl=1
     //% abstand.min=10 abstand.max=50 abstand.defl=20
     // inlineInputMode=inline
-    export function beispielSpurfolger16(motor128: number, servo16: number, repeat: boolean, abstand: number) {
+    export function beispielSpurfolger16(motor128: number, servo16: number, repeat: boolean, abstand: number, i2cSpur: eI2C) {
         // repeat ist false beim ersten Durchlauf der Schleife, true bei Wiederholungen
         if (!repeat) {
             m_lenken = undefined // gespeicherte Werte löschen
@@ -30,11 +32,11 @@ namespace cb2 { // c-beispiele.ts
         }
         else {
             writeRgbLed(Colors.Off)
-            
+
             let langsamfahren = btf.motorProzent(motor128, 50)
             let lenken = Math.abs(servo16 - 16)  // 16-16=0 / 1-16=15 / 31-16=15
 
-            readInputs(eI2C.x22)
+            readInputs(i2cSpur)
 
             if (readSpursensor(eDH.dunkel, eDH.dunkel)) {
                 writeMotor128Servo16(motor128, 16) // nicht lenken
