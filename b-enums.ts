@@ -181,4 +181,33 @@ namespace btf { // b-enums.ts
         f
     }
 
+
+    export enum ePause {
+        //% block="1 Sekunde"
+        s1 = 10,
+        //% block="0,5 Sekunden"
+        s05 = 5,
+        //% block="2 Sekunden"
+        s2 = 20,
+        //% block="5 Sekunden"
+        s5 = 50,
+        //% block="10 Sekunden"
+        s10 = 100,
+        //% block="15 Sekunden"
+        s15 = 150,
+        //% block="20 Sekunden"
+        s20 = 200,
+        //% block="25 Sekunden"
+        s25 = 250
+    }
+
+    // blockId=btf_sekunden 
+    // block="%pause" blockHidden=true
+    // export function btf_sekunden(pause: ePause): number { return pause / 10 }
+
+    //% blockId=btf_zehntelsekunden
+    //% block="%pause" blockHidden=true
+    export function btf_zehntelsekunden(pause: ePause): number { return pause }
+
+
 } // b-enums.ts

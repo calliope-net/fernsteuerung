@@ -33,13 +33,14 @@ namespace btf { // b-advanced.ts
 
 
     //% group="Funktionen" advanced=true
-    //% block="mapInt32 %value|from low %fromLow|high %fromHigh|to low %toLow|high %toHigh" weight=1
+    //% block="mapInt32 %value|from low %fromLow|high %fromHigh|to low %toLow|high %toHigh" weight=4
     //% fromLow.defl=1 fromHigh.defl=255 toLow.defl=-100 toHigh.defl=100
     //% inlineInputMode=inline
     export function mapInt32(value: number, fromLow: number, fromHigh: number, toLow: number, toHigh: number): number {
         // return ((value - fromLow) * (toHigh - toLow)) / (fromHigh - fromLow) + toLow
         return Math.idiv(Math.imul(value - fromLow, toHigh - toLow), fromHigh - fromLow) + toLow
     }
+
 
 
     //% blockId=btf_speedPicker
@@ -53,12 +54,38 @@ namespace btf { // b-advanced.ts
 
     //% blockId=btf_protractorPicker
     //% group="protractorPicker (0..90..180) → (1 ↖ 16 ↗ 31)" advanced=true
-    //% block="%angle °" weight=3
+    //% block="%angle °" weight=8
     //% angle.shadow="protractorPicker" angle.defl=90
     export function protractorPicker(angle: number) {
         // 0..90..180 umwandeln in (1 ↖ 16 ↗ 31)
         return mapInt32(angle, 0, 180, 1, 31)
     }
+
+
+
+    //% blockId=btf_programmPicker
+    //% group="protractorPicker (0..90..180) → (1 ↖ 16 ↗ 31)" advanced=true
+    //% block="Motor %motor Servo %servo Zeit %zehntelsekunden" weight=6
+    //% motor.shadow="btf_speedPicker"
+    //% servo.shadow="btf_protractorPicker"
+    //% zehntelsekunden.shadow=btf_zehntelsekunden
+    export function programmPicker(motor: number, servo: number, zehntelsekunden: number) {
+        return Buffer.fromArray([motor, servo, zehntelsekunden])
+    }
+
+
+    //% blockId=btf_programmSchritt
+    //% group="protractorPicker (0..90..180) → (1 ↖ 16 ↗ 31)" advanced=true
+    //% block="Motor (1↓128↑255) %motor Servo (1↖16↗31) %servo Strecke %strecke cm" weight=5
+    //% motor.min=1 motor.max=255 motor.defl=128
+    //% servo.min=1 servo.max=31 servo.defl=16
+    //% strecke.min=10 strecke.max=255 strecke.defl=20
+    export function programmSchritt(motor: number, servo: number, strecke: number) {
+        return Buffer.fromArray([motor, servo, strecke])
+    }
+
+
+
 
 
     // ========== group="Buffer" advanced=true

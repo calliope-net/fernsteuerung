@@ -63,7 +63,7 @@ namespace cb2 { // c-callibot.ts 005F7F
         n_m1_1_128_255 = undefined
         n_m2_1_128_255 = undefined // die anderen zwischengespeicherten Werte ungültig machen
 
-        if (n_x1_128_255 != x1_128_255 || n_y1_16_31 != y1_16_31) {
+        if ((n_x1_128_255 != x1_128_255 || n_y1_16_31 != y1_16_31) && x1_128_255 != 0 && y1_16_31 != 0) {
             n_x1_128_255 = x1_128_255
             n_y1_16_31 = y1_16_31 // I²C nur bei Änderung
 
@@ -126,7 +126,7 @@ namespace cb2 { // c-callibot.ts 005F7F
         n_x1_128_255 = undefined
         n_y1_16_31 = undefined // die anderen zwischengespeicherten Werte ungültig machen
 
-        if (n_m1_1_128_255 != m1_1_128_255 || n_m2_1_128_255 != m2_1_128_255) {
+        if ((n_m1_1_128_255 != m1_1_128_255 || n_m2_1_128_255 != m2_1_128_255) && m1_1_128_255 != 0 && m2_1_128_255 != 0) {
             n_m1_1_128_255 = m1_1_128_255
             n_m2_1_128_255 = m2_1_128_255 // I²C nur bei Änderung
 
