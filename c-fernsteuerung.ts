@@ -10,16 +10,21 @@ namespace cb2 { // c-fahrstrecke.ts
     export function fahreJoystick(buffer: Buffer, prozent = 50) {
         let bufferPointer = btf.eBufferPointer.m0
 
-        if (btf.getSensor(buffer, bufferPointer, btf.eSensor.b6Abstand))
-            writeRgbLed(Colors.Yellow, false, true, false, false) // lh
-        else
-            writeRgbLed(Colors.Off, false, true, false, false) // lh
+        writeRgbLedOnOff(eRgbLed.lh, Colors.Yellow, btf.getSensor(buffer, bufferPointer, btf.eSensor.b6Abstand))
 
-        if (btf.getSensor(buffer, bufferPointer, btf.eSensor.b5Spur))
-            writeRgbLed(Colors.White, false, false, true, false) // rh
-        else
-            writeRgbLed(Colors.Off, false, false, true, false) // rh
+        writeRgbLedOnOff(eRgbLed.rh, Colors.White, btf.getSensor(buffer, bufferPointer, btf.eSensor.b5Spur))
 
+
+        /*  if (btf.getSensor(buffer, bufferPointer, btf.eSensor.b6Abstand))
+             writeRgbLed(Colors.Yellow, false, true, false, false) // lh
+         else
+             writeRgbLed(Colors.Off, false, true, false, false) // lh
+ 
+         if (btf.getSensor(buffer, bufferPointer, btf.eSensor.b5Spur))
+             writeRgbLed(Colors.White, false, false, true, false) // rh
+         else
+             writeRgbLed(Colors.Off, false, false, true, false) // rh
+  */
         /*   writeRgbLed(Colors.Yellow,
               false,
               btf.getSensor(buffer, bufferPointer, btf.eSensor.b6Abstand),
@@ -34,7 +39,9 @@ namespace cb2 { // c-fahrstrecke.ts
 
             writeMotorenStop()
 
-            writeRgbLed(Colors.Red, false, true, false, false, true) // lh
+            writeRgbLedOnOff(eRgbLed.lh, Colors.Red, btf.getSensor(buffer, bufferPointer, btf.eSensor.b6Abstand), true)
+
+            //writeRgbLed(Colors.Red, false, true, false, false, true) // lh
         }
         else if (btf.getSensor(buffer, bufferPointer, btf.eSensor.b5Spur) // Spursensor aktiviert
             &&
@@ -42,7 +49,9 @@ namespace cb2 { // c-fahrstrecke.ts
 
             writeMotorenStop()
 
-            writeRgbLed(Colors.White, getInputs(btf.eNOT.f, eINPUTS.spl), false, true, getInputs(btf.eNOT.f, eINPUTS.spr), true)
+            writeRgbLedOnOff(eRgbLed.rh, Colors.White, btf.getSensor(buffer, bufferPointer, btf.eSensor.b5Spur), true)
+
+            //   writeRgbLed(Colors.White, getInputs(btf.eNOT.f, eINPUTS.spl), false, true, getInputs(btf.eNOT.f, eINPUTS.spr), true)
         }
         // Stoßstange noch abfragen
         else {
