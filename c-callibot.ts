@@ -244,6 +244,26 @@ namespace cb2 { // c-callibot.ts 005F7F
         }
     }
 
+    //% group="LED"
+    //% block="RGB LED %rgbled %color %on || blinken %blink" weight=6
+    //% on.shadow=toggleOnOff
+    //% color.shadow="cb2_colorPicker"
+    //% blink.shadow=toggleYesNo
+    //% inlineInputMode=inline 
+    export function writeRgbLedOnOff(rgbled: eRgbLed, color: number, on: boolean, blink = false) {
+        if (!on)
+            color = Colors.Off
+
+        let buffer = Buffer.create(5)
+        buffer[0] = eRegister.SET_LED
+        buffer.setNumber(NumberFormat.UInt32BE, 1, color) // [1]=0 [2]=r [3]=g [4]=b
+        buffer[2] = buffer[2] >>> 4 // durch 16, gültige rgb Werte für callibot: 0-15
+        buffer[3] = buffer[3] >>> 4
+        buffer[4] = buffer[4] >>> 4
+
+        writeRgbLedBlink(eRgbLed.lv, buffer, blink)
+
+    }
 
     //% group="LED"
     //% block="LED %led %onoff || blinken %blink Helligkeit %pwm" weight=2
@@ -444,9 +464,7 @@ namespace cb2 { // c-callibot.ts 005F7F
         poweron = 0
     }
 
-    enum eRgbLed {
-        //% block="alle (4)"
-        alle = 0,
+    export enum eRgbLed {
         //% block="links vorne"
         lv = 1,
         //% block="links hinten"
@@ -456,6 +474,8 @@ namespace cb2 { // c-callibot.ts 005F7F
         //% block="rechts vorne"
         rv = 4
     }
+    // block="alle (4)"
+    // alle = 0,
 
 
     export enum eINPUTS {

@@ -11,20 +11,20 @@ namespace cb2 { // c-fahrstrecke.ts
         let bufferPointer = btf.eBufferPointer.m0
 
         if (btf.getSensor(buffer, bufferPointer, btf.eSensor.b6Abstand))
-            writeRgbLed(Colors.Yellow, false, true, false, false, true)
+            writeRgbLed(Colors.Yellow, false, true, false, false) // lh
         else
-            writeRgbLed(Colors.Off, false, true, false, false, true)
+            writeRgbLed(Colors.Off, false, true, false, false) // lh
 
         if (btf.getSensor(buffer, bufferPointer, btf.eSensor.b5Spur))
-            writeRgbLed(Colors.White, false, false, true, false, true)
+            writeRgbLed(Colors.White, false, false, true, false) // rh
         else
-            writeRgbLed(Colors.Off, false, false, true, false, true)
+            writeRgbLed(Colors.Off, false, false, true, false) // rh
 
-      /*   writeRgbLed(Colors.Yellow,
-            false,
-            btf.getSensor(buffer, bufferPointer, btf.eSensor.b6Abstand),
-            btf.getSensor(buffer, bufferPointer, btf.eSensor.b5Spur),
-            false) */
+        /*   writeRgbLed(Colors.Yellow,
+              false,
+              btf.getSensor(buffer, bufferPointer, btf.eSensor.b6Abstand),
+              btf.getSensor(buffer, bufferPointer, btf.eSensor.b5Spur),
+              false) */
 
         if (btf.getSensor(buffer, bufferPointer, btf.eSensor.b6Abstand) // Abstandssensor aktiviert
             &&
@@ -34,7 +34,7 @@ namespace cb2 { // c-fahrstrecke.ts
 
             writeMotorenStop()
 
-            writeRgbLed(Colors.Red, false, true, false, false, true)
+            writeRgbLed(Colors.Red, false, true, false, false, true) // lh
         }
         else if (btf.getSensor(buffer, bufferPointer, btf.eSensor.b5Spur) // Spursensor aktiviert
             &&
