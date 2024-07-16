@@ -3,24 +3,34 @@ namespace cb2 { // c-fahrstrecke.ts
 
 
 
-    //% group="Strecke fahren (Fernsteuerung)" subcategory="Fernsteuerung"
+    //% group="Strecke fahren (Fernsteuerung) reagiert auf Sensoren" subcategory="Fernsteuerung"
     //% block="fahre mit Joystick aus Datenpaket %buffer lenken %prozent \\%" weight=8
     //% buffer.shadow=btf_receivedBuffer19
     //% prozent.min=10 prozent.max=90 prozent.defl=50
     export function fahreJoystick(buffer: Buffer, prozent = 50) {
-        if (btf.getSensor(buffer, btf.eBufferPointer.m0, btf.eSensor.b6Abstand) // Abstandssensor aktiviert
+        let bufferPointer = btf.eBufferPointer.m0
+
+        if (btf.getSensor(buffer, bufferPointer, btf.eSensor.b6Abstand) // Abstandssensor aktiviert
             &&
-            (btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor) > 128 // Fahrtrichtung vorwärts
-                &&
-                readUltraschallAbstand() < btf.getAbstand(buffer))) { // Abstand messen
+            btf.getByte(buffer, bufferPointer, btf.eBufferOffset.b0_Motor) > 128 // Fahrtrichtung vorwärts
+            &&
+            readUltraschallAbstand() < btf.getAbstand(buffer)) { // Abstand messen
 
             writeMotorenStop()
+        }
+        else if (btf.getSensor(buffer, bufferPointer, btf.eSensor.b5Spur)) { // Spursensor aktiviert
 
-        } else {
+            readInputs() // I²C default Adresse einlesen
 
-            writeMotor128Servo16(
-                btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor),
-                btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo),
+            if (!readSpursensor(eDH.hell, eDH.hell)) // schwarze Linie erkannt / nicht hell, hell
+
+                writeMotorenStop()
+        }
+        else {
+
+            writeMotor128Servo16( 
+                btf.getByte(buffer, bufferPointer, btf.eBufferOffset.b0_Motor),
+                btf.getByte(buffer, bufferPointer, btf.eBufferOffset.b1_Servo),
                 prozent
             )
         }
