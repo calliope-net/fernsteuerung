@@ -18,13 +18,15 @@ namespace cb2 { // c-fahrstrecke.ts
 
             writeMotorenStop()
         }
-        else if (btf.getSensor(buffer, bufferPointer, btf.eSensor.b5Spur)) { // Spursensor aktiviert
+        else if (btf.getSensor(buffer, bufferPointer, btf.eSensor.b5Spur) // Spursensor aktiviert
+            &&
+            !readSpursensor(eDH.hell, eDH.hell, eI2C.x22)) { // schwarze Linie erkannt / nicht hell, hell
 
-            readInputs() // I²C default Adresse einlesen
+            //readInputs() // I²C default Adresse einlesen
 
-            if (!readSpursensor(eDH.hell, eDH.hell)) // schwarze Linie erkannt / nicht hell, hell
+            // if (!readSpursensor(eDH.hell, eDH.hell)) // schwarze Linie erkannt / nicht hell, hell
 
-                writeMotorenStop()
+            writeMotorenStop()
         }
         // Stoßstange noch abfragen
         else {

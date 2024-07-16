@@ -40,15 +40,13 @@ namespace sender { // s-buttons.ts
     //% group="in Eingabe Ereignisse einfügen" subcategory="Knopf A B"
     //% block="Knopf A geklickt" weight=7
     export function buttonA() {
-        // let modellChanged = false
+      
         if (n_Funktion == eFunktion.ng) {
-            // wenn nicht gestartet, kann Modell geändert werden
-            //   modellChanged = true
             if (btf.getStorageModell() > 0)
                 btf.setStorageModell(btf.getStorageModell() - 1)
 
             zeigeImage(btf.getStorageModell())
-            // btf.zeigeImage(a_ModellImages[btf.getStorageModell()])
+           
         }
         // Calli:bot && Funktion Beispiele (Modell Nummer ++)
         else if (isModell(eModell.cb2e && n_Funktion == eFunktion.mc_md_callibot_beispiele)) {
@@ -66,31 +64,23 @@ namespace sender { // s-buttons.ts
             if (n_ButtonAB_Counter > 1)  // M0 und M1, Servo über Tasten A- B+ (Gabelstapler)
                 n_ButtonAB_Counter--
         }
-
-        //else if (n_Funktion == eFunktion.m0_m1_s0 && n_ServoWinkelButtonAB > 1) { // M0 und M1, Servo über Tasten A- B+ (Gabelstapler)
-        //    n_ServoWinkelButtonAB--
-        //}
-
+        // Standardwerte    
         else {
             a_ButtonAB_Switch[eButtonAB_Switch.A] = !a_ButtonAB_Switch[eButtonAB_Switch.A] // Standardwert immer wechseln true-false
         }
-        //  return modellChanged
     }
 
 
     //% group="in Eingabe Ereignisse einfügen" subcategory="Knopf A B"
     //% block="Knopf B geklickt" weight=6
     export function buttonB() {
-        //   let modellChanged = false
+     
         if (n_Funktion == eFunktion.ng) {
-            // wenn nicht gestartet, kann Modell geändert werden
-            //     modellChanged = true
             if (btf.getStorageModell() < c_ModellCount - 1)
                 btf.setStorageModell(btf.getStorageModell() + 1)
 
             zeigeImage(btf.getStorageModell())
-            //   btf.zeigeImage(a_ModellImages[btf.getStorageModell()])
-
+           
         }
         // Calli:bot && Funktion Beispiele (mit A gewählte Modell Nummer starten)
         else if (isModell(eModell.cb2e && n_Funktion == eFunktion.mc_md_callibot_beispiele)) {
@@ -104,15 +94,7 @@ namespace sender { // s-buttons.ts
             if (n_ButtonAB_Counter < 31)  // M0 und M1, Servo über Tasten A- B+ (Gabelstapler)
                 n_ButtonAB_Counter++
         }
-
-
-        //else if (n_Funktion == eFunktion.m0_m1_s0 && n_ServoWinkelButtonAB < 31) { // M0 und M1, Servo über Tasten A- B+ (Gabelstapler)
-        //    n_ServoWinkelButtonAB++
-        //}
-        //else if (n_Funktion == eFunktion.ma_mb) { // MA und MB (Seilrolle und Drehkranz)
-        //}
-        //else if (n_Funktion == eFunktion.mc_mb) { // MC und MB (Zahnstange und Drehkranz)
-        //}
+        // Standardwerte       
         else {
             a_ButtonAB_Switch[eButtonAB_Switch.B] = !a_ButtonAB_Switch[eButtonAB_Switch.B] // Standardwert immer wechseln true-false
             // mit B Licht, wenn oben nichts anderes steht
@@ -195,8 +177,8 @@ namespace sender { // s-buttons.ts
     }
 
 
-    // ========== Bilder für Auswahl Modell
 
+    // ========== Bilder für Auswahl Modell
 
     //% group="Image" subcategory="Display 5x5" color=#54C9C9
     //% block="zeige Bild %image" weight=1
