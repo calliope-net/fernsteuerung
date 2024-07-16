@@ -151,7 +151,7 @@ namespace btf { // b-enums.ts
     export enum e0Betriebsart {
         //% block="00 Fernsteuerung Motoren"
         p0 = 0x00,
-        //% block="10 Fernsteuerung Motor M0 bis Sensor"
+        //% block="10 Fernsteuerung lokale Programme"
         p1 = 0x10,
         //% block="20 Programm 5 Strecken"
         p2 = 0x20,
