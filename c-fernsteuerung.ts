@@ -10,11 +10,21 @@ namespace cb2 { // c-fahrstrecke.ts
     export function fahreJoystick(buffer: Buffer, prozent = 50) {
         let bufferPointer = btf.eBufferPointer.m0
 
-        writeRgbLed(Colors.Yellow,
+        if (btf.getSensor(buffer, bufferPointer, btf.eSensor.b6Abstand))
+            writeRgbLed(Colors.Yellow, false, true, false, false, true)
+        else
+            writeRgbLed(Colors.Off, false, true, false, false, true)
+
+        if (btf.getSensor(buffer, bufferPointer, btf.eSensor.b5Spur))
+            writeRgbLed(Colors.White, false, false, true, false, true)
+        else
+            writeRgbLed(Colors.Off, false, false, true, false, true)
+
+      /*   writeRgbLed(Colors.Yellow,
             false,
             btf.getSensor(buffer, bufferPointer, btf.eSensor.b6Abstand),
             btf.getSensor(buffer, bufferPointer, btf.eSensor.b5Spur),
-            false)
+            false) */
 
         if (btf.getSensor(buffer, bufferPointer, btf.eSensor.b6Abstand) // Abstandssensor aktiviert
             &&
@@ -31,8 +41,8 @@ namespace cb2 { // c-fahrstrecke.ts
             !readSpursensor(eDH.hell, eDH.hell, eI2C.x22)) { // schwarze Linie erkannt / nicht hell, hell
 
             writeMotorenStop()
-         
-            writeRgbLed(Colors.Red, getInputs(btf.eNOT.t, eINPUTS.spl), false, true, getInputs(btf.eNOT.t, eINPUTS.spr), true)
+
+            writeRgbLed(Colors.White, getInputs(btf.eNOT.f, eINPUTS.spl), false, true, getInputs(btf.eNOT.f, eINPUTS.spr), true)
         }
         // Stoßstange noch abfragen
         else {
