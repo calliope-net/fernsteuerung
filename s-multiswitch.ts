@@ -7,15 +7,17 @@ namespace sender { // s-multiswitch.ts
     let n_GroveMultiswitchConnected = true // Antwort von i2cWriteBuffer == 0 wenn angeschlossen
 
     //% group="Grove Multiswitch 0x03"
-    //% block="Schalter einlesen und Funktion umschalten" weight=8
-    export function multiswitchGrove() {
+    //% block="Multiswitch einlesen und Funktion umschalten || zeige I²C Fehler %zeigeFehler" weight=8
+    //% zeigeFehler.shadow=toggleYesNo
+    export function multiswitchGrove(zeigeFehler = false) {
         if (n_GroveMultiswitchConnected) {
             n_GroveMultiswitchConnected = pins.i2cWriteBuffer(i2cGroveMultiswitch_x03, Buffer.fromArray([i2c_CMD_GET_DEV_EVENT]), true) == 0
 
-            if (!n_GroveMultiswitchConnected)
-                btf.zeigeHex(i2cGroveMultiswitch_x03)
+            //if (!n_GroveMultiswitchConnected)
+            //    btf.zeigeHex(i2cGroveMultiswitch_x03)
+            //else 
 
-            else {
+            if (n_GroveMultiswitchConnected) {
                 let bu = pins.i2cReadBuffer(i2cGroveMultiswitch_x03, 10) // 4 Byte + 6 Schalter = 10
                 // Byte 0-3: 32 Bit UInt32LE; Byte 4:Schalter 1 ... Byte 9:Schalter 6
                 // Byte 4-9: 00000001:Schalter OFF; 00000000:Schalter ON; Bit 1-7 löschen & 0x01
@@ -34,17 +36,20 @@ namespace sender { // s-multiswitch.ts
                         n_Funktion = eFunktion.mc_mb // MC und MB (Zahnstange und Drehkranz)
                     }
                     else if (bu[3 + 2] == 0) { // 2 nach links
-                      
+
                         if (isModell(eModell.mkcg) && n_Funktion == eFunktion.m0_m1_s0)
                             a_ButtonAB_Switch[eButtonAB_Switch.A] = false // n_Magnet = false
                     }
                     else if (bu[3 + 4] == 0) { // 4 nach rechts
-                      
+
                         if (isModell(eModell.mkcg) && n_Funktion == eFunktion.m0_m1_s0)
                             a_ButtonAB_Switch[eButtonAB_Switch.A] = true // n_Magnet = true
                     }
                 }
             }
+            else if (zeigeFehler)
+                btf.zeigeHex(i2cGroveMultiswitch_x03)
+
         }
         return n_GroveMultiswitchConnected
 
