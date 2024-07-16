@@ -246,7 +246,7 @@ namespace cb2 { // c-callibot.ts 005F7F
 
     //% group="LED"
     //% block="RGB LED %rgbled %color %on || blinken %blink" weight=6
-    //% on.shadow=toggleOnOff
+    //% on.shadow=toggleOnOff on.defl=1
     //% color.shadow="cb2_colorPicker"
     //% blink.shadow=toggleYesNo
     //% inlineInputMode=inline 
@@ -261,7 +261,7 @@ namespace cb2 { // c-callibot.ts 005F7F
         buffer[3] = buffer[3] >>> 4
         buffer[4] = buffer[4] >>> 4
 
-        writeRgbLedBlink(eRgbLed.lv, buffer, blink)
+        writeRgbLedBlink(rgbled, buffer, blink)
 
     }
 
