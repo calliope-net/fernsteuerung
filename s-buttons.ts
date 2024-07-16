@@ -49,7 +49,7 @@ namespace sender { // s-buttons.ts
            
         }
         // Calli:bot && Funktion Beispiele (Modell Nummer ++)
-        /* else if (isModell(eModell.cb2e && n_Funktion == eFunktion.mc_md_callibot_beispiele)) {
+        else if (isModell(eModell.cb2e) && n_Funktion == eFunktion.mc_md_callibot_beispiele) {
 
             a_ButtonAB_Switch[eButtonAB_Switch.B] = false // Beispiel noch nicht aktiv senden; erst nach B geklickt
 
@@ -57,7 +57,7 @@ namespace sender { // s-buttons.ts
                 n_ButtonAB_Counter += 1
             else
                 n_ButtonAB_Counter = 1
-        } */
+        }
         // Maker Kit Car && Gabelstapler (lenken mit Tasten)
         else if (isModell(eModell.mkcg) && n_Funktion == eFunktion.m0_m1_s0) {
 
@@ -84,7 +84,7 @@ namespace sender { // s-buttons.ts
            
         }
         // Calli:bot && Funktion Beispiele (mit A gewählte Modell Nummer starten)
-        else if (isModell(eModell.cb2e && n_Funktion == eFunktion.mc_md_callibot_beispiele)) {
+        else if (isModell(eModell.cb2e) && n_Funktion == eFunktion.mc_md_callibot_beispiele) {
 
             a_ButtonAB_Switch[eButtonAB_Switch.B] = !a_ButtonAB_Switch[eButtonAB_Switch.B] // Beispiel jetzt aktiv senden
 
