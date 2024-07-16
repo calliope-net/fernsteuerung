@@ -9,15 +9,18 @@ namespace cb2 { // c-beispiele.ts
     let m_inSpur = false
 
     //% group="1 Spurfolger (1 ↓ 128 ↑ 255) (1 ↖ 16 ↗ 31)" subcategory=Beispiele
-    //% block="Spurfolger | fahren (1↓128↑255) %motor128 lenken (1↖16↗31) %servo16 Wiederholung %repeat Stop bei Abstand < (cm) %abstand %i2c" weight=2
+    //% block="Spurfolger | fahren (1↓128↑255) %motor128 langsam fahren \\% %motorProzent lenken (1↖16↗31) %servo16 lenken Motor \\% %lenkenProzent Wiederholung %repeat Stop %stop bei Abstand < (cm) %abstand I²C %i2c" weight=2
     // motor128.shadow=btf_speedPicker
     //% motor128.min=1 motor128.max=255 motor128.defl=192
     // servo16.shadow=btf_protractorPicker
     //% servo16.min=1 servo16.max=31 servo16.defl=31
+    //% motorProzent.min=10 motorProzent.max=90 motorProzent.defl=50
+    //% lenkenProzent.min=10 lenkenProzent.max=90 lenkenProzent.defl=0
     //% repeat.shadow="toggleYesNo" repeat.defl=1
+    //% stop.shadow="toggleYesNo" stop.defl=1
     //% abstand.min=10 abstand.max=50 abstand.defl=20
     // inlineInputMode=inline
-    export function beispielSpurfolger16(motor128: number, servo16: number, repeat: boolean, abstand: number, i2cSpur: eI2C) {
+    export function beispielSpurfolger16(motor128: number, motorProzent: number, servo16: number, lenkenProzent: number, repeat: boolean, stop: boolean, abstand: number, i2cSpur: eI2C) {
         // repeat ist false beim ersten Durchlauf der Schleife, true bei Wiederholungen
         if (!repeat) {
             m_lenken = undefined // gespeicherte Werte löschen
@@ -25,7 +28,7 @@ namespace cb2 { // c-beispiele.ts
         }
 
 
-        if (!repeat || (abstand > 0 && (readUltraschallAbstand() < abstand))) { // if (abstand) ist false bei 0
+        if (stop && (abstand > 0 && (readUltraschallAbstand() < abstand))) { // if (abstand) ist false bei 0
             writeMotorenStop()
             writeRgbLed(Colors.Orange)
             //  return false
@@ -33,7 +36,7 @@ namespace cb2 { // c-beispiele.ts
         else {
             writeRgbLed(Colors.Off)
 
-            let langsamfahren = btf.motorProzent(motor128, 50)
+            let langsamfahren = btf.motorProzent(motor128, motorProzent)
             let lenken = Math.abs(servo16 - 16)  // 16-16=0 / 1-16=15 / 31-16=15
 
             readInputs(i2cSpur)
@@ -43,17 +46,17 @@ namespace cb2 { // c-beispiele.ts
                 m_inSpur = true
             }
             else if (readSpursensor(eDH.dunkel, eDH.hell)) { // 0% Rad steht bei voller Lenkung (1 oder 31)
-                writeMotor128Servo16(langsamfahren, 16 - lenken, 0) // links lenken <16 = 1
+                writeMotor128Servo16(langsamfahren, 16 - lenken, lenkenProzent) // links lenken <16 = 1
                 if (m_inSpur)
                     m_lenken = 16 - lenken
             }
             else if (readSpursensor(eDH.hell, eDH.dunkel)) { // 0% Rad steht bei voller Lenkung (1 oder 31)
-                writeMotor128Servo16(langsamfahren, 16 + lenken, 0) // rechts lenken >16 = 31
+                writeMotor128Servo16(langsamfahren, 16 + lenken, lenkenProzent) // rechts lenken >16 = 31
                 if (m_inSpur)
                     m_lenken = 16 + lenken
             }
             else if (m_lenken) {
-                writeMotor128Servo16(langsamfahren, m_lenken, 0) // lenken wie zuletzt gespeichert
+                writeMotor128Servo16(langsamfahren, m_lenken, lenkenProzent) // lenken wie zuletzt gespeichert
                 m_inSpur = false // hell hell
             }
             else {

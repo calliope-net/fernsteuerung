@@ -55,7 +55,7 @@ namespace cb2 { // c-callibot.ts 005F7F
 
 
     //% group="Motor"
-    //% block="fahren (1 ↓ 128 ↑ 255) %x1_128_255 lenken (1 ↖ 16 ↗ 31) %y1_16_31 || (10\\%..90\\%) %prozent" weight=4
+    //% block="fahren (1 ↓ 128 ↑ 255) %x1_128_255 lenken (1 ↖ 16 ↗ 31) %y1_16_31 || lenken %prozent \\%" weight=4
     //% x1_128_255.min=1 x1_128_255.max=255 x1_128_255.defl=128 
     //% y1_16_31.min=1 y1_16_31.max=31 y1_16_31.defl=16
     //% prozent.min=10 prozent.max=90 prozent.defl=50

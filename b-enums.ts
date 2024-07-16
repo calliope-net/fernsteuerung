@@ -138,11 +138,11 @@ namespace btf { // b-enums.ts
 
     export enum eSensor {
         //% block="Stop bei Spursensor"
-        b5 = 0x20,
+        b5Spur = 0x20,
         //% block="Stop bei Ultraschallsensor"
-        b6 = 0x40,
+        b6Abstand = 0x40,
         //% block="Encoder Impulse"
-        b7 = 0x80
+        b7Impulse = 0x80
     }
 
 

@@ -2,6 +2,44 @@
 namespace cb2 { // c-fahrstrecke.ts
 
 
+
+    //% group="Strecke fahren (Fernsteuerung)" subcategory="Fernsteuerung"
+    //% block="fahre mit Joystick aus Datenpaket %buffer lenken %prozent \\%" weight=8
+    //% buffer.shadow=btf_receivedBuffer19
+    //% prozent.min=10 prozent.max=90 prozent.defl=50
+    export function fahreJoystick(buffer: Buffer, prozent = 50) {
+        if (btf.getSensor(buffer, btf.eBufferPointer.m0, btf.eSensor.b6Abstand) // Abstandssensor aktiviert
+            &&
+            (btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor) > 128 // Fahrtrichtung vorwärts
+                &&
+                readUltraschallAbstand() < btf.getAbstand(buffer))) { // Abstand messen
+
+            writeMotorenStop()
+
+        } else {
+
+            writeMotor128Servo16(
+                btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor),
+                btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo),
+                prozent
+            )
+        }
+    }
+
+
+    //% group="Strecke fahren (Fernprogrammierung)" subcategory="Fernsteuerung"
+    //% block="fahre Strecke 1-5 aus Datenpaket %buffer" weight=4
+    //% buffer.shadow=btf_receivedBuffer19
+    export function fahreBuffer19(buffer: Buffer) {
+        for (let iBufferPointer: btf.eBufferPointer = btf.eBufferPointer.p1; iBufferPointer < 19; iBufferPointer += 3) { // 4, 7, 10, 13, 16
+            fahreStrecke(buffer.slice(iBufferPointer, 3))
+        }
+    }
+
+
+
+
+
     //% group="Strecke fahren (Stop nach 1/10s)" subcategory="Fernsteuerung"
     //% block="Strecke %buffer" weight=6
     // block="fahre Motor (1↓128↑255) %motor Servo (1↖16↗31) %servo Zeit %zehntelsekunden" weight=4
@@ -63,19 +101,6 @@ namespace cb2 { // c-fahrstrecke.ts
         }
     }
 
-
-
-
-    //% group="Strecke fahren (Fernsteuerung)" subcategory="Fernsteuerung"
-    // group="Fernsteuerung" subcategory="Programmieren"
-    //% block="fahre Strecke 1-5 aus Datenpaket %buffer" weight=4
-    //% buffer.shadow=btf_receivedBuffer19
-    export function fahreBuffer19(buffer: Buffer) {
-        //   let lmotor: number, lservo: number, lstrecke: number
-        for (let iBufferPointer: btf.eBufferPointer = btf.eBufferPointer.p1; iBufferPointer < 19; iBufferPointer += 3) { // 4, 7, 10, 13, 16
-            fahreStrecke(buffer.slice(iBufferPointer, 3))
-        }
-    }
 
 
 
