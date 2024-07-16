@@ -9,7 +9,7 @@ namespace btf { // b-fernsteuerung.ts
     export let n_lastconnectedTime = input.runningTime()  // ms seit Start
     let n_localProgram = false // autonomes fahren nach Programm, kein Bluetooth timeout
 
-    export let n_sendReset = false
+    export let n_sendReset = false // true sendet zurücksetzen zum Empfänger wenn connected
 
     //% group="calliope-net.github.io/fernsteuerung"
     //% block="beim Start || Funkgruppe %modellFunkgruppe" weight=9
