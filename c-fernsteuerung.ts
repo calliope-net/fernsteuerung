@@ -10,6 +10,12 @@ namespace cb2 { // c-fahrstrecke.ts
     export function fahreJoystick(buffer: Buffer, prozent = 50) {
         let bufferPointer = btf.eBufferPointer.m0
 
+        if (btf.getSensor(buffer, bufferPointer, btf.eSensor.b6Abstand))
+            writeRgbLed(Colors.Yellow)
+        else
+            writeRgbLed(Colors.Violet)
+
+
         if (btf.getSensor(buffer, bufferPointer, btf.eSensor.b6Abstand) // Abstandssensor aktiviert
             &&
             btf.getByte(buffer, bufferPointer, btf.eBufferOffset.b0_Motor) > 128 // Fahrtrichtung vorwärts
