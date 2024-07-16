@@ -26,9 +26,10 @@ namespace cb2 { // c-fahrstrecke.ts
 
                 writeMotorenStop()
         }
+        // Stoßstange noch abfragen
         else {
 
-            writeMotor128Servo16( 
+            writeMotor128Servo16(
                 btf.getByte(buffer, bufferPointer, btf.eBufferOffset.b0_Motor),
                 btf.getByte(buffer, bufferPointer, btf.eBufferOffset.b1_Servo),
                 prozent
