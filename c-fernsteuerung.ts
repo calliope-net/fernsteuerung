@@ -11,9 +11,9 @@ namespace cb2 { // c-fahrstrecke.ts
         let bufferPointer = btf.eBufferPointer.m0
 
         if (btf.getSensor(buffer, bufferPointer, btf.eSensor.b6Abstand))
-            writeRgbLed(Colors.Yellow)
+            writeRgbLed(Colors.Red)
         else
-            writeRgbLed(Colors.Violet)
+            writeRgbLed(Colors.Green)
 
 
         if (btf.getSensor(buffer, bufferPointer, btf.eSensor.b6Abstand) // Abstandssensor aktiviert
