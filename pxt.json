@@ -30,9 +30,8 @@
         "r-advanced.ts",
         "r-calliope-v3.ts",
         "c-callibot.ts",
-        "c-fahrstrecke.ts",
-        "c-beispiele.ts",
-        "c-fernsteuerung.ts"
+        "c-fernsteuerung.ts",
+        "c-beispiele.ts"
     ],
     "testFiles": [
         "test.ts"
