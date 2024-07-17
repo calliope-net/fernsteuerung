@@ -1,5 +1,5 @@
 // Hier kann man Tests durchführen; diese Datei wird nicht kompiliert, wenn dieses Paket als Erweiterung verwendet wird.
-
+/* 
 namespace radio {
 
     export function setGroup(id: number): void {
@@ -32,7 +32,7 @@ namespace radio {
     }
 
 }
-
+ */
 // Hier kann man Tests durchführen; diese Datei wird nicht kompiliert, wenn dieses Paket als Erweiterung verwendet wird.
 
 namespace storage {
