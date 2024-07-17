@@ -32,19 +32,13 @@ namespace btf { // b-fernsteuerung.ts
 
 
     export enum eFunkgruppeButton {
-        //% block="lesen"
-        // lesen,
-        //% block="lesen und anzeigen"
-        //  anzeigen,
         //% block="-1 und anzeigen"
         minus,
         //% block="+1 und anzeigen"
         plus,
-        //% block="175 0xAF und anzeigen"
-        reset
+        // block="175 0xAF und anzeigen"
+        //reset
     }
-
-
 
     //% group="calliope-net.github.io/fernsteuerung"
     //% block="Funkgruppe ändern %e" weight=7
@@ -54,8 +48,8 @@ namespace btf { // b-fernsteuerung.ts
             a_StorageBuffer[eStorageBuffer.funkgruppe]--
         else if (e == eFunkgruppeButton.plus && a_StorageBuffer[eStorageBuffer.funkgruppe] < 0xBF)
             a_StorageBuffer[eStorageBuffer.funkgruppe]++
-        else if (e == eFunkgruppeButton.reset)
-            a_StorageBuffer[eStorageBuffer.funkgruppe] = 0xAF
+        //else if (e == eFunkgruppeButton.reset)
+        //    a_StorageBuffer[eStorageBuffer.funkgruppe] = 0xAF
 
         radio.setGroup(a_StorageBuffer[eStorageBuffer.funkgruppe])
 
@@ -66,30 +60,24 @@ namespace btf { // b-fernsteuerung.ts
     }
 
 
-
-    //% group="Flash Speicher (Storage)" deprecated=true
-    //% block="Flash speichern" weight=2
-    /* export function storageBufferGet() {
-        return a_StorageBuffer.getNumber(NumberFormat.UInt32LE, 0)
-    } */
-
+    //% group="calliope-net.github.io/fernsteuerung"
+    //% block="%id" color="#7E84F7" weight=5
+    //% id.defl=ButtonEvent.Hold
+    export function buttonEventValue(id: ButtonEvent): number {
+        return id
+    }
 
 
     // ========== group="Bluetooth senden" subcategory="Bluetooth"
 
     let a_sendBuffer19 = Buffer.create(19) // wird gesendet mit radio.sendBuffer
 
-    //% blockId=btf_sendBuffer19
     //% group="Bluetooth senden (19 Byte)"
-    //% block="sendData" color="#7E84F7" weight=5
-    export function btf_sendBuffer19(): Buffer { return a_sendBuffer19 }
-
-    //% group="Bluetooth senden (19 Byte)"
-    //% block="sendData löschen" weight=3
+    //% block="sendData löschen" weight=7
     export function fill_sendBuffer19() { a_sendBuffer19.fill(0) }
 
     //% group="Bluetooth senden (19 Byte)"
-    //% block="Buffer senden %sendBuffer" weight=1
+    //% block="Buffer senden %sendBuffer" weight=5
     //% sendBuffer.shadow="btf_sendBuffer19"
     export function sendData(sendBuffer: Buffer) {
         if (n_sendReset) {
@@ -99,6 +87,10 @@ namespace btf { // b-fernsteuerung.ts
         radio.sendBuffer(sendBuffer)
     }
 
+    //% blockId=btf_sendBuffer19
+    //% group="Bluetooth senden (19 Byte)"
+    //% block="sendData" color="#7E84F7" weight=3
+    export function btf_sendBuffer19(): Buffer { return a_sendBuffer19 }
 
 
     // ========== Bluetooth Event radio.onReceivedBuffer behandeln ==========
