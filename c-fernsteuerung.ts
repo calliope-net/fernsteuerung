@@ -10,7 +10,7 @@ namespace cb2 { // c-fahrstrecke.ts
     export function fahreJoystick(buffer: Buffer, prozent = 50) {
         let bufferPointer = btf.eBufferPointer.m0
 
-        writeRgbLed(eRgbLed.lh, Colors.Yellow, btf.getSensor(buffer, bufferPointer, btf.eSensor.b6Abstand))
+        writeRgbLed(eRgbLed.lv, Colors.Yellow, btf.getSensor(buffer, bufferPointer, btf.eSensor.b6Abstand))
 
         writeRgbLed(eRgbLed.rh, Colors.White, btf.getSensor(buffer, bufferPointer, btf.eSensor.b5Spur))
 
