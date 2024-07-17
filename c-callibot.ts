@@ -1,27 +1,20 @@
 //% color=#00C040 icon="\uf188" block="Calli:bot 2" weight=92
 namespace cb2 { // c-callibot.ts 005F7F
 
-
-
     // ========== I²C ==========
-    //export enum eADDR {
-    //    CB2_x22 = 0x22 //, WR_MOTOR_x20 = 0x20, WR_LED_x21 = 0x21, RD_SENSOR_x21
-    //}
     export enum eI2C { x21 = 0x21, x22 = 0x22 }
-    //const i2cCallibot2_x22 = 0x22
-    //const i2cCallibot_x21 = 0x21
 
-    let n_Callibot2_x22Connected = true // I²C Device ist angesteckt
+    let n_Callibot2_x22Connected = true // I²C Device ist angesteckt (und Calli:bot ist an geschaltet)
     let n_Callibot2_x22hasEncoder = false // 2:CB2 3:CB2E 4:CB2A=Gymnasium
-
-    // let n_c2MotorPower = true
-    //  let qFernsteuerungStop: boolean = false
 
     export const c_MotorStop = 128
     // export const c_Servo_geradeaus = 16
 
     export let n_EncoderFaktor = 31.25 // Impulse = 31.25 * Fahrstrecke in cm
-    // let n_MotorPWM_0_255 = 0
+
+
+
+    // ========== group="calliope-net.github.io/fernsteuerung"
 
     //% group="calliope-net.github.io/fernsteuerung"
     //% block="beim Start: Calli:bot 2 || Funkgruppe anzeigen %zf %modellFunkgruppe" weight=8
@@ -40,19 +33,21 @@ namespace cb2 { // c-callibot.ts 005F7F
         btf.beimStartintern() // setzt auch n_start true, muss deshalb zuletzt stehen
     }
 
+    //% group="calliope-net.github.io/fernsteuerung"
+    //% block="Reset Motoren, LEDs" weight=4
+    export function writeReset() {
+        i2cWriteBuffer(Buffer.fromArray([eRegister.RESET_OUTPUTS]))
+    }
 
-    // group="calliope-net.github.io/fernsteuerung"
-    // block="Flash speichern" weight=7
-    /* export function storageBufferGet() {
-        return btf.storageBufferGet()
-    } */
+
+
+    // ========== group="Motor"
 
     // aktuelle Werte // I²C nur bei Änderung
     let n_x1_128_255: number
     let n_y1_16_31: number
     let n_m1_1_128_255: number
     let n_m2_1_128_255: number
-
 
     //% group="Motor"
     //% block="fahren (1 ↓ 128 ↑ 255) %x1_128_255 lenken (1 ↖ 16 ↗ 31) %y1_16_31 || lenken %prozent \\%" weight=4
@@ -172,7 +167,6 @@ namespace cb2 { // c-callibot.ts 005F7F
         }
     }
 
-
     //% group="Motor"
     //% block="Motoren Stop" weight=1
     export function writeMotorenStop() {
@@ -194,19 +188,19 @@ namespace cb2 { // c-callibot.ts 005F7F
     }
 
 
+
     // ========== group="LED"
 
+    // aktuelle Werte // I²C nur bei Änderung
     let a_LEDs = [0, 0, 0, 0, 0, 0, 0, 0, 0] // LED Wert in Register 0x03 merken zum blinken
 
-
-    //% blockId=cb2_colorPicker block="%value"
-    //% blockHidden=true
+    //% blockId=cb2_colorPicker block="%value" blockHidden=true
     //% shim=TD_ID
     //% value.fieldEditor="colornumber" value.fieldOptions.decompileLiterals=true
     //% value.fieldOptions.colours='["#0000ff","#00ff00","#00ffdc","#ff0000","#a300ff","#ffff00","#ffffff","#000000"]'
     //% value.fieldOptions.columns=4 value.fieldOptions.className='rgbColorPicker'  
     export function cb2_colorPicker(value: number) { return value }
-
+    // von "callibot": "github:MKleinSB/pxt-callibot#v2.1.1"
 
     //% group="LED"
     //% block="RGB LEDs %color %on || ↖ %lv ↙ %lh ↘ %rh ↗ %rv blinken %blink" weight=7
@@ -251,19 +245,6 @@ namespace cb2 { // c-callibot.ts 005F7F
          }
      } */
 
-    /*  function createColorBuffer(color: number, on: boolean) {
-         let buffer = Buffer.create(5)
-         buffer[0] = eRegister.SET_LED // 3
-         if (on && color != Colors.Off) {
-             buffer.setNumber(NumberFormat.UInt32BE, 1, color) // [1]=0 [2]=r [3]=g [4]=b
-             buffer[2] = buffer[2] >>> 4 // durch 16, gültige rgb Werte für callibot: 0-15
-             buffer[3] = buffer[3] >>> 4
-             buffer[4] = buffer[4] >>> 4
-         } else
-             buffer.setNumber(NumberFormat.UInt32BE, 1, 0) // 4 Byte 0 0 0 0
-         return buffer
-     } */
-
     //% group="LED"
     //% block="RGB LED %led %color %on || blinken %blink" weight=6
     //% on.shadow=toggleOnOff on.defl=1
@@ -272,13 +253,11 @@ namespace cb2 { // c-callibot.ts 005F7F
     //% inlineInputMode=inline 
     export function writeRgbLed(led: eRgbLed, color: number, on: boolean, blink = false) {
         if (blink && a_LEDs[led] == color)
-            color = Colors.Off // alle Farben aus
+            color = Colors.Off // alle Farben aus = 0
 
         if (a_LEDs[led] != color) { // I²C nur wenn Farbe geändert
 
             a_LEDs[led] = color
-
-            // let buffer = createColorBuffer(color, on)
 
             let buffer = Buffer.create(5)
             buffer[0] = eRegister.SET_LED // 3
@@ -341,27 +320,10 @@ namespace cb2 { // c-callibot.ts 005F7F
 
 
 
+    // ========== group="INPUT digital" subcategory="Sensoren"
 
-    // ========== group="Reset"
-
-    //% group="Reset"
-    //% block="Reset Motoren, LEDs" weight=4
-    export function writeReset() {
-        i2cWriteBuffer(Buffer.fromArray([eRegister.RESET_OUTPUTS]))
-        // n_c2MotorPower = false
-    }
-
-
-
-
-    // ========== group="Sensoren" subcategory="Sensoren"
-
-
-
-    // interner Speicher für Sensoren
+    // interner Speicher für digitale Sensoren (eRegister.GET_INPUTS)
     let n_Inputs: number
-
-
 
     //% group="INPUT digital" subcategory="Sensoren"
     //% block="Digitaleingänge einlesen || I²C %i2c" weight=8
@@ -399,7 +361,8 @@ namespace cb2 { // c-callibot.ts 005F7F
     }
 
 
-    //  export enum eDist { cm, mm }
+
+    // ========== group="Ultraschall Sensor" subcategory="Sensoren"
 
     //% group="Ultraschall Sensor" subcategory="Sensoren"
     //% block="Abstand cm" weight=4
@@ -410,9 +373,10 @@ namespace cb2 { // c-callibot.ts 005F7F
 
 
 
+    // ========== group="Encoder (Calli:bot 2E)" subcategory="Sensoren"
 
-    //% group="Encoder (Call:bot 2E)" subcategory="Sensoren"
-    //% block="Encoder Test und Zähler löschen" weight=2
+    //% group="Encoder (Calli:bot 2E)" subcategory="Sensoren"
+    //% block="Encoder Test und Zähler löschen" weight=3
     export function writeEncoderReset() {
         n_Callibot2_x22hasEncoder = readVersionArray().get(1) == 3 // 2:CB2 3:CB2E 4:CB2A=Gymnasium
         if (n_Callibot2_x22hasEncoder)
@@ -421,8 +385,8 @@ namespace cb2 { // c-callibot.ts 005F7F
         return n_Callibot2_x22hasEncoder
     }
 
-    //% group="Encoder (Call:bot 2E)" subcategory="Sensoren"
-    //% block="Encoder Werte [l,r]" weight=1
+    //% group="Encoder (Calli:bot 2E)" subcategory="Sensoren"
+    //% block="Encoder Werte [l,r]" weight=2
     export function readEncoderValues() {
         if (n_Callibot2_x22hasEncoder) {
             i2cWriteBuffer(Buffer.fromArray([eRegister.GET_ENCODER_VALUE]))
@@ -432,6 +396,8 @@ namespace cb2 { // c-callibot.ts 005F7F
             return [0, 0]
     }
 
+    //% group="Encoder (Calli:bot 2E)" subcategory="Sensoren"
+    //% block="Encoder Mittelwert" weight=1
     export function getEncoderMittelwert() {
         let encoderValues = readEncoderValues()
         return Math.idiv(Math.abs(encoderValues[0]) + Math.abs(encoderValues[1]), 2)
@@ -439,8 +405,10 @@ namespace cb2 { // c-callibot.ts 005F7F
 
 
 
+    // ========== group="Calli:bot Version" subcategory="Sensoren"
+
     //% group="Calli:bot Version" subcategory="Sensoren"
-    //% block="Call:bot Typ & FW & SN Array[10]" weight=3
+    //% block="Calli:bot Typ & FW & SN Array[10]" weight=3
     export function readVersionArray() { // [1]=4:CB2(Gymnasium) =3:CB2E (=2:soll CB2 sein)
         i2cWriteBuffer(Buffer.fromArray([eRegister.GET_FW_VERSION]))
         return i2cReadBuffer(10).toArray(NumberFormat.UInt8LE)
@@ -450,9 +418,9 @@ namespace cb2 { // c-callibot.ts 005F7F
 
     // ========== I²C nur diese Datei Callibot
 
-    export function i2cWriteBuffer(bu: Buffer) { // repeat funktioniert nicht bei Callibot
+    function i2cWriteBuffer(buffer: Buffer) { // repeat funktioniert nicht bei Callibot
         if (n_Callibot2_x22Connected) {
-            n_Callibot2_x22Connected = pins.i2cWriteBuffer(eI2C.x22, bu) == 0
+            n_Callibot2_x22Connected = pins.i2cWriteBuffer(eI2C.x22, buffer) == 0
 
             if (!n_Callibot2_x22Connected)
                 btf.zeigeHex(eI2C.x22)
@@ -460,7 +428,7 @@ namespace cb2 { // c-callibot.ts 005F7F
         return n_Callibot2_x22Connected
     }
 
-    export function i2cReadBuffer(size: number): Buffer { // repeat funktioniert nicht bei Callibot
+    function i2cReadBuffer(size: number): Buffer { // repeat funktioniert nicht bei Callibot
         if (n_Callibot2_x22Connected)
             return pins.i2cReadBuffer(eI2C.x22, size)
         else
@@ -468,6 +436,8 @@ namespace cb2 { // c-callibot.ts 005F7F
     }
 
 
+
+    // ========== Calli:bot ENUMs
 
     enum eRegister {
         // Write
@@ -491,7 +461,6 @@ namespace cb2 { // c-callibot.ts 005F7F
         GET_LINE_SEN_VALUE = 0x84, // Spursensoren links / rechts Werte (5 Byte 2x16 Bit)
         GET_ENCODER_VALUE = 0x91 // 9 Byte links[1-4] rechts [5-8] 2* INT32BE mit Vorzeichen
     }
-
 
     export enum eLed {
         //% block="linke rote LED"
@@ -521,7 +490,6 @@ namespace cb2 { // c-callibot.ts 005F7F
     // block="alle (4)"
     // alle = 0,
 
-
     export enum eINPUTS {
         //% block="Spursensor rechts hell"
         spr = 0b00000001,
@@ -541,6 +509,5 @@ namespace cb2 { // c-callibot.ts 005F7F
     }
     // block="Spursensor beide hell"
     // spb = 0b00000011,
-
 
 } // c-callibot.ts

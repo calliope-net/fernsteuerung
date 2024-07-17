@@ -171,7 +171,7 @@ namespace sender { // s-buttons.ts
 
 
     //% group="Ereignisse" subcategory="Knopf A B"
-    //% block="%id"
+    //% block="%id" deprecated=true
     //% id.defl=ButtonEvent.Hold
     export function buttonEventValue(id: ButtonEvent): number {
         return id
