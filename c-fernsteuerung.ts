@@ -10,10 +10,7 @@ namespace cb2 { // c-fahrstrecke.ts
     export function fahreJoystick(buffer: Buffer, prozent = 50) {
         let bufferPointer = btf.eBufferPointer.m0
 
-        writeRgbLed(eRgbLed.lv, Colors.Yellow, btf.getSensor(buffer, bufferPointer, btf.eSensor.b6Abstand))
-
-        writeRgbLed(eRgbLed.rh, Colors.White, btf.getSensor(buffer, bufferPointer, btf.eSensor.b5Spur))
-
+ 
 
         /*  if (btf.getSensor(buffer, bufferPointer, btf.eSensor.b6Abstand))
              writeRgbLed(Colors.Yellow, false, true, false, false) // lh
@@ -39,7 +36,7 @@ namespace cb2 { // c-fahrstrecke.ts
 
             writeMotorenStop()
 
-            writeRgbLed(eRgbLed.lh, Colors.Red, btf.getSensor(buffer, bufferPointer, btf.eSensor.b6Abstand), true)
+            writeRgbLed(eRgbLed.lh, Colors.Red, true, true)
 
             //writeRgbLed(Colors.Red, false, true, false, false, true) // lh
         }
@@ -49,7 +46,7 @@ namespace cb2 { // c-fahrstrecke.ts
 
             writeMotorenStop()
 
-            writeRgbLed(eRgbLed.rh, Colors.White, btf.getSensor(buffer, bufferPointer, btf.eSensor.b5Spur), true)
+            writeRgbLed(eRgbLed.rh, Colors.White, true, true)
 
             //   writeRgbLed(Colors.White, getInputs(btf.eNOT.f, eINPUTS.spl), false, true, getInputs(btf.eNOT.f, eINPUTS.spr), true)
         }
@@ -61,6 +58,11 @@ namespace cb2 { // c-fahrstrecke.ts
                 btf.getByte(buffer, bufferPointer, btf.eBufferOffset.b1_Servo),
                 prozent
             )
+            
+            writeRgbLed(eRgbLed.lv, Colors.Yellow, btf.getSensor(buffer, bufferPointer, btf.eSensor.b6Abstand))
+
+            writeRgbLed(eRgbLed.rh, Colors.White, btf.getSensor(buffer, bufferPointer, btf.eSensor.b5Spur))
+
         }
     }
 
