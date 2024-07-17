@@ -4,7 +4,8 @@
     "description": "",
     "dependencies": {
         "core": "*",
-        "radio": "*"
+        "radio": "*",
+        "storageBuffer": "github:calliope-net/storagebuffer#v0.1.0"
     },
     "files": [
         "main.blocks",
