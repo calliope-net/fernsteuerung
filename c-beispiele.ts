@@ -30,11 +30,11 @@ namespace cb2 { // c-beispiele.ts
 
         if (stop && (abstand > 0 && (readUltraschallAbstand() < abstand))) { // if (abstand) ist false bei 0
             writeMotorenStop()
-            writeRgbLed(Colors.Orange)
+            writeRgbLeds(Colors.Orange, true)
             //  return false
         }
         else {
-            writeRgbLed(Colors.Off)
+            writeRgbLeds(Colors.Off, false)
 
             let langsamfahren = btf.motorProzent(motor128, motorProzent)
             let lenken = Math.abs(servo16 - 16)  // 16-16=0 / 1-16=15 / 31-16=15

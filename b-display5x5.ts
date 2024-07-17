@@ -130,8 +130,8 @@ namespace btf { // b-dispaly5x5.ts
     }
 
     //% group="BIN" subcategory="Display 5x5" color=#54C9C9
-    //% block="zeige ↕↕↕↕↕ %int %format ←x %x" weight=2
-    //% x.min=0 x.max=4 x.defl=4
+    //% block="zeige ↕↕↕↕↕ %int %format ←x %xLed" weight=2
+    //% xLed.min=0 xLed.max=4 xLed.defl=4
     export function zeigeBIN(int: number, format: ePlot, xLed: number) {
         int = Math.imul(int, 1) // 32 bit signed integer
         xLed = Math.imul(xLed, 1) // entfernt mögliche Kommastellen

@@ -203,71 +203,115 @@ namespace cb2 { // c-callibot.ts 005F7F
     //% blockHidden=true
     //% shim=TD_ID
     //% value.fieldEditor="colornumber" value.fieldOptions.decompileLiterals=true
-    //% value.fieldOptions.colours='["#000000","#0000ff","#00ff00","#00ffdc","#ff0000","#a300ff","#ffff00","#ffffff"]'
+    //% value.fieldOptions.colours='["#0000ff","#00ff00","#00ffdc","#ff0000","#a300ff","#ffff00","#ffffff","#000000"]'
     //% value.fieldOptions.columns=4 value.fieldOptions.className='rgbColorPicker'  
     export function cb2_colorPicker(value: number) { return value }
 
 
     //% group="LED"
-    //% block="RGB LED %color || ↖ %lv ↙ %lh ↘ %rh ↗ %rv blinken %blink" weight=7
+    //% block="RGB LEDs %color %on || ↖ %lv ↙ %lh ↘ %rh ↗ %rv blinken %blink" weight=7
     //% color.shadow="cb2_colorPicker"
+    //% on.shadow=toggleOnOff on.defl=1
     //% lv.shadow="toggleYesNo" lh.shadow="toggleYesNo" rh.shadow="toggleYesNo" rv.shadow="toggleYesNo"
     //% blink.shadow="toggleYesNo"
     //% inlineInputMode=inline expandableArgumentMode="toggle"
-    export function writeRgbLed(color: number, lv = true, lh = true, rh = true, rv = true, blink = false) {
-        //basic.showString(lv.toString())
-        let buffer = Buffer.create(5)
-        buffer[0] = eRegister.SET_LED
-        buffer.setNumber(NumberFormat.UInt32BE, 1, color) // [1]=0 [2]=r [3]=g [4]=b
-        buffer[2] = buffer[2] >>> 4 // durch 16, gültige rgb Werte für callibot: 0-15
-        buffer[3] = buffer[3] >>> 4
-        buffer[4] = buffer[4] >>> 4
+    export function writeRgbLeds(color: number, on: boolean, lv = true, lh = true, rh = true, rv = true, blink = false) {
 
-        if (lv) writeRgbLedBlink(eRgbLed.lv, buffer, blink)
-        if (lh) writeRgbLedBlink(eRgbLed.lh, buffer, blink)
-        if (rh) writeRgbLedBlink(eRgbLed.rh, buffer, blink)
-        if (rv) writeRgbLedBlink(eRgbLed.rv, buffer, blink)
+        if (lv) writeRgbLed(eRgbLed.lv, color, on, blink)
+        if (lh) writeRgbLed(eRgbLed.lh, color, on, blink)
+        if (rh) writeRgbLed(eRgbLed.rh, color, on, blink)
+        if (rv) writeRgbLed(eRgbLed.rv, color, on, blink)
+
+        /* 
+          let buffer = Buffer.create(5)
+          buffer[0] = eRegister.SET_LED
+          buffer.setNumber(NumberFormat.UInt32BE, 1, color) // [1]=0 [2]=r [3]=g [4]=b
+          buffer[2] = buffer[2] >>> 4 // durch 16, gültige rgb Werte für callibot: 0-15
+          buffer[3] = buffer[3] >>> 4
+          buffer[4] = buffer[4] >>> 4
+  
+          if (lv) writeRgbLedBlink(eRgbLed.lv, buffer, blink)
+          if (lh) writeRgbLedBlink(eRgbLed.lh, buffer, blink)
+          if (rh) writeRgbLedBlink(eRgbLed.rh, buffer, blink)
+          if (rv) writeRgbLedBlink(eRgbLed.rv, buffer, blink) */
     }
 
     // blinken und I²C nur wenn geändert
-    function writeRgbLedBlink(pRgbLed: eRgbLed, buffer: Buffer, blink: boolean) {
-        if (blink && a_LEDs[pRgbLed] == buffer.getNumber(NumberFormat.UInt32BE, 1))
-            buffer.setNumber(NumberFormat.UInt32BE, 1, 0) // alle Farben aus
+    /*  function writeRgbLedBlink(led: eRgbLed, buffer: Buffer, blink: boolean) {
+         if (blink && a_LEDs[led] == buffer.getNumber(NumberFormat.UInt32BE, 1))
+             buffer.setNumber(NumberFormat.UInt32BE, 1, 0) // alle Farben aus
+ 
+         if (a_LEDs[led] != buffer.getNumber(NumberFormat.UInt32BE, 1)) {
+ 
+             a_LEDs[led] = buffer.getNumber(NumberFormat.UInt32BE, 1)
+ 
+             buffer[1] = led // Led-Index 1,2,3,4 für RGB
+             i2cWriteBuffer(buffer)
+             basic.pause(10) // ms
+         }
+     } */
 
-        if (a_LEDs[pRgbLed] != buffer.getNumber(NumberFormat.UInt32BE, 1)) {
-
-            a_LEDs[pRgbLed] = buffer.getNumber(NumberFormat.UInt32BE, 1)
-
-            buffer[1] = pRgbLed // Led-Index 1,2,3,4 für RGB
-            i2cWriteBuffer(buffer)
-            basic.pause(10) // ms
-        }
-    }
+    /*  function createColorBuffer(color: number, on: boolean) {
+         let buffer = Buffer.create(5)
+         buffer[0] = eRegister.SET_LED // 3
+         if (on && color != Colors.Off) {
+             buffer.setNumber(NumberFormat.UInt32BE, 1, color) // [1]=0 [2]=r [3]=g [4]=b
+             buffer[2] = buffer[2] >>> 4 // durch 16, gültige rgb Werte für callibot: 0-15
+             buffer[3] = buffer[3] >>> 4
+             buffer[4] = buffer[4] >>> 4
+         } else
+             buffer.setNumber(NumberFormat.UInt32BE, 1, 0) // 4 Byte 0 0 0 0
+         return buffer
+     } */
 
     //% group="LED"
-    //% block="RGB LED %rgbled %color %on || blinken %blink" weight=6
+    //% block="RGB LED %led %color %on || blinken %blink" weight=6
     //% on.shadow=toggleOnOff on.defl=1
     //% color.shadow="cb2_colorPicker"
     //% blink.shadow=toggleYesNo
     //% inlineInputMode=inline 
-    export function writeRgbLedOnOff(rgbled: eRgbLed, color: number, on: boolean, blink = false) {
-        if (!on)
-            color = Colors.Off
+    export function writeRgbLed(led: eRgbLed, color: number, on: boolean, blink = false) {
+        if (blink && a_LEDs[led] == color)
+            color = Colors.Off // alle Farben aus
 
-        let buffer = Buffer.create(5)
-        buffer[0] = eRegister.SET_LED
-        buffer.setNumber(NumberFormat.UInt32BE, 1, color) // [1]=0 [2]=r [3]=g [4]=b
-        buffer[2] = buffer[2] >>> 4 // durch 16, gültige rgb Werte für callibot: 0-15
-        buffer[3] = buffer[3] >>> 4
-        buffer[4] = buffer[4] >>> 4
+        if (a_LEDs[led] != color) { // I²C nur wenn Farbe geändert
 
-        writeRgbLedBlink(rgbled, buffer, blink)
+            a_LEDs[led] = color
 
+            // let buffer = createColorBuffer(color, on)
+
+            let buffer = Buffer.create(5)
+            buffer[0] = eRegister.SET_LED // 3
+            if (on && color != Colors.Off) {
+                buffer.setNumber(NumberFormat.UInt32BE, 1, color) // [1]=0 [2]=r [3]=g [4]=b
+                buffer[2] = buffer[2] >>> 4 // durch 16, gültige rgb Werte für callibot: 0-15
+                buffer[3] = buffer[3] >>> 4
+                buffer[4] = buffer[4] >>> 4
+            } else
+                buffer.setNumber(NumberFormat.UInt32BE, 1, 0) // 4 Byte 0 0 0 0
+
+            buffer[1] = led // Led-Index 1,2,3,4 für RGB
+            i2cWriteBuffer(buffer)
+            basic.pause(10) // ms
+        }
+
+        /*   if (!on)
+              color = Colors.Off
+  
+          let buffer = Buffer.create(5)
+          buffer[0] = eRegister.SET_LED
+          buffer.setNumber(NumberFormat.UInt32BE, 1, color) // [1]=0 [2]=r [3]=g [4]=b
+          buffer[2] = buffer[2] >>> 4 // durch 16, gültige rgb Werte für callibot: 0-15
+          buffer[3] = buffer[3] >>> 4
+          buffer[4] = buffer[4] >>> 4
+  
+          writeRgbLedBlink(led, buffer, blink)
+   */
     }
 
     //% group="LED"
-    //% block="LED %led %onoff || blinken %blink Helligkeit %pwm" weight=2
-    //% onoff.shadow="toggleOnOff"
+    //% block="LED %led %on || blinken %blink Helligkeit %pwm" weight=2
+    //% on.shadow="toggleOnOff"
     //% blink.shadow="toggleYesNo"
     //% pwm.min=1 pwm.max=16 pwm.defl=16
     //% inlineInputMode=inline 
@@ -465,13 +509,13 @@ namespace cb2 { // c-callibot.ts 005F7F
     }
 
     export enum eRgbLed {
-        //% block="links vorne"
+        //% block="links ↖ vorne"
         lv = 1,
-        //% block="links hinten"
+        //% block="links ↙ hinten"
         lh = 2,
-        //% block="rechts hinten"
+        //% block="rechts ↘ hinten"
         rh = 3,
-        //% block="rechts vorne"
+        //% block="rechts ↗ vorne"
         rv = 4
     }
     // block="alle (4)"
