@@ -9,24 +9,24 @@ namespace cb2 { // c-beispiele.ts
     let m_inSpur = false
 
     //% group="1 Spurfolger (1 ↓ 128 ↑ 255) (1 ↖ 16 ↗ 31)" subcategory=Beispiele
-    //% block="Spurfolger | fahren (1↓128↑255) %motor128 langsam fahren \\% %motorProzent lenken (1↖16↗31) %servo16 lenken Motor \\% %lenkenProzent Wiederholung %repeat Stop %stop bei Abstand < (cm) %abstand I²C %i2c" weight=2
+    //% block="Spurfolger: Calli:bot | fahren (1↓128↑255) %motor128 langsam fahren %langsamfahren lenken (1↖16↗31) %servo16 lenkender Motor \\% %lenkenProzent Wiederholung %repeat Stop %stop bei Abstand < (cm) %abstand I²C %i2c" weight=2
     // motor128.shadow=btf_speedPicker
     //% motor128.min=1 motor128.max=255 motor128.defl=192
     // servo16.shadow=btf_protractorPicker
     //% servo16.min=1 servo16.max=31 servo16.defl=31
-    //% motorProzent.min=10 motorProzent.max=90 motorProzent.defl=50
+    // motorProzent.min=10 motorProzent.max=90 motorProzent.defl=50
+    //% langsamfahren.min=1 langsamfahren.max=255 langsamfahren.defl=160
     //% lenkenProzent.min=10 lenkenProzent.max=90 lenkenProzent.defl=0
     //% repeat.shadow="toggleYesNo" repeat.defl=1
     //% stop.shadow="toggleYesNo" stop.defl=1
     //% abstand.min=10 abstand.max=50 abstand.defl=20
     // inlineInputMode=inline
-    export function beispielSpurfolger16(motor128: number, motorProzent: number, servo16: number, lenkenProzent: number, repeat: boolean, stop: boolean, abstand: number, i2cSpur: eI2C) {
+    export function beispielSpurfolger16(motor128: number, langsamfahren: number, servo16: number, lenkenProzent: number, repeat: boolean, stop: boolean, abstand: number, i2cSpur: eI2C) {
         // repeat ist false beim ersten Durchlauf der Schleife, true bei Wiederholungen
         if (!repeat) {
             m_lenken = undefined // gespeicherte Werte löschen
-            m_inSpur = false
+            m_inSpur = false     // beim ersten Durchlauf der Schleife
         }
-
 
         if (stop && (abstand > 0 && (readUltraschallAbstand() < abstand))) { // if (abstand) ist false bei 0
             writeMotorenStop()
@@ -36,7 +36,7 @@ namespace cb2 { // c-beispiele.ts
         else {
             writeRgbLeds(Colors.Off, false)
 
-            let langsamfahren = btf.motorProzent(motor128, motorProzent)
+            //  let langsamfahren = btf.motorProzent(motor128, motorProzent)
             let lenken = Math.abs(servo16 - 16)  // 16-16=0 / 1-16=15 / 31-16=15
 
             readInputs(i2cSpur)
@@ -63,11 +63,13 @@ namespace cb2 { // c-beispiele.ts
                 writeMotor128Servo16(motor128, 16, 0) // geradeaus fahren bis zur schwarzen Linie
                 m_inSpur = false // hell hell
             }
-
             //   return true
         }
     }
 
+
+
+    // ========== group="1 Spurfolger (1 ↓ 128 ↑ 255)" subcategory=Beispiele
 
     //% group="1 Spurfolger (1 ↓ 128 ↑ 255)" subcategory=Beispiele
     //% block="Spurfolger Motoren %motoren lenkender Motor %langsamer Stop %stopbeiabstand bei Abstand < (cm) %abstand" weight=2
@@ -96,26 +98,11 @@ namespace cb2 { // c-beispiele.ts
 
 
 
-    // blockId=cb2_speedPicker block="%speed" blockHidden=true
-    // speed.shadow="speedPicker"
-    //export function cb2_speedPicker(speed: number) { // defl ist 50%
-    //    return radio.speedPicker(speed)
-    //}
-
-    // blockId=cb2_protractorPicker block="%angle" blockHidden=true
-    // angle.shadow="protractorPicker" angle.defl=90
-    //export function cb2_protractorPicker(angle: number) { // defl ist 0°
-    //    return radio.protractorPicker(angle)
-    //}
-
-
-
+    // ========== group="2 fahren und drehen" subcategory=Beispiele ⅒s • 
 
     function setMotoren0Prozent(pwm1: number, pwm2: number) { // (-100% .. 0 .. +100%)
         writeMotoren128(btf.speedPicker(pwm1), btf.speedPicker(pwm2))
     }
-
-    // ========== group="2 fahren und drehen" subcategory=Beispiele ⅒s • 
 
     //% group="2 fahren und drehen" subcategory=Beispiele
     //% block="Motoren fahren %sf s • drehen %sd s • nach %rl" weight=8
@@ -135,8 +122,11 @@ namespace cb2 { // c-beispiele.ts
         setMotoren0Prozent(0, 0)
     }
 
-    let n_StopandGoMotoran: boolean = false // für seite4StopandGo()
 
+
+    // ========== group="4 Lautstärke, Stop and Go" subcategory=Beispiele
+
+    let n_StopandGoMotoran: boolean = false // für seite4StopandGo()
 
     //% group="4 Lautstärke, Stop and Go" subcategory=Beispiele
     //% block="Stop and Go Motoren l %pwm1 \\% r %pwm2 \\% Lautstärke > %soundLevel || Pause %sekunden" weight=1
@@ -174,9 +164,8 @@ namespace cb2 { // c-beispiele.ts
     }
 
 
-    // ========== 
 
-
+    // ========== group="9 Linienfolger" subcategory=Beispiele
 
     //% group="9 Linienfolger" subcategory=Beispiele
     //% block="Linienfolger fahren %pwm1 \\% • drehen %pwm2 \\% • stop %stop cm" weight=2
@@ -209,6 +198,8 @@ namespace cb2 { // c-beispiele.ts
 
 
 
+    // ========== group="Pause" subcategory=Beispiele
+
     //% group="Pause" subcategory=Beispiele
     //% block="Pause %sekunden" weight=1
     //% sekunden.shadow=cb2_sekunden
@@ -216,6 +207,10 @@ namespace cb2 { // c-beispiele.ts
         basic.pause(sekunden * 1000)
         // control.waitMicros(sekunden * 1000000)
     }
+
+
+
+    // ========== Calli:bot ENUMs
 
     export enum ePause {
         //% block="1 Sekunde"
@@ -243,7 +238,6 @@ namespace cb2 { // c-beispiele.ts
     //% blockId=cb2_zehntelsekunden
     //% block="%pause" blockHidden=true
     export function cb2_zehntelsekunden(pause: ePause): number { return pause }
-
 
 
     export enum eRL { rechts = 0, links = 1 } // Index im Array

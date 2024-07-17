@@ -78,8 +78,8 @@ namespace cb2 { // c-fahrstrecke.ts
 
 
 
-    //% group="Strecke fahren (Stop nach 1/10s)" subcategory="Fernsteuerung"
-    //% block="Strecke %buffer" weight=6
+    //% group="Strecke fahren (Stop nach • ⅒s)" subcategory="Fernsteuerung"
+    //% block="Strecke %buffer ⅒s" weight=6
     // block="fahre Motor (1↓128↑255) %motor Servo (1↖16↗31) %servo Zeit %zehntelsekunden" weight=4
     // motor.min=1 motor.max=255 motor.defl=128
     // motor.shadow=btf_speedPicker
@@ -96,7 +96,7 @@ namespace cb2 { // c-fahrstrecke.ts
     }
 
 
-    //% group="Strecke fahren (Stop nach cm oder 1/10s)" subcategory="Fernsteuerung"
+    //% group="Strecke fahren (Stop nach • cm oder • ⅒s)" subcategory="Fernsteuerung"
     //% block="Strecke %buffer" weight=4
     // block="fahre Motor (1↓128↑255) %motor Servo (1↖16↗31) %servo Strecke (cm \\| 1/10s) %strecke" weight=3
     // motor.min=1 motor.max=255 motor.defl=128
