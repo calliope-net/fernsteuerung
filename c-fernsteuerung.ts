@@ -36,7 +36,7 @@ namespace cb2 { // c-fahrstrecke.ts
 
             writeMotorenStop()
 
-            basic.pause(100)
+         //   basic.pause(100)
             writeRgbLed(eRgbLed.lh, Colors.Red, true, true)
 
             //writeRgbLed(Colors.Red, false, true, false, false, true) // lh
@@ -47,7 +47,7 @@ namespace cb2 { // c-fahrstrecke.ts
 
             writeMotorenStop()
 
-            basic.pause(100)
+        //    basic.pause(100)
             writeRgbLed(eRgbLed.rh, Colors.White, true, true)
 
             //   writeRgbLed(Colors.White, getInputs(btf.eNOT.f, eINPUTS.spl), false, true, getInputs(btf.eNOT.f, eINPUTS.spr), true)
@@ -61,10 +61,10 @@ namespace cb2 { // c-fahrstrecke.ts
                 prozent
             )
 
-            basic.pause(100)
+        //    basic.pause(100)
             writeRgbLed(eRgbLed.lh, Colors.Yellow, btf.getSensor(buffer, bufferPointer, btf.eSensor.b6Abstand))
 
-            basic.pause(100)
+        //  basic.pause(100)
             writeRgbLed(eRgbLed.rh, Colors.White, btf.getSensor(buffer, bufferPointer, btf.eSensor.b5Spur))
 
         }

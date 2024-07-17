@@ -252,7 +252,7 @@ namespace cb2 { // c-callibot.ts 005F7F
     //% blink.shadow=toggleYesNo
     //% inlineInputMode=inline 
     export function writeRgbLed(led: eRgbLed, color: number, on: boolean, blink = false) {
-        if (blink && a_LEDs[led] == color)
+        if (!on || (blink && a_LEDs[led] == color))
             color = Colors.Off // alle Farben aus = 0
 
         if (a_LEDs[led] != color) { // I²C nur wenn Farbe geändert
@@ -270,8 +270,14 @@ namespace cb2 { // c-callibot.ts 005F7F
                 buffer.setNumber(NumberFormat.UInt32BE, 1, 0) // 4 Byte 0 0 0 0
 
             buffer[1] = led // Led-Index 1,2,3,4 für RGB
+
+            let t = input.runningTime() - rgbLedPause
+            if (t < 10)
+                basic.pause(t) // ms
+            rgbLedPause = input.runningTime()
+
+            // basic.pause(10) // ms
             i2cWriteBuffer(buffer)
-            basic.pause(10) // ms
         }
 
         /*   if (!on)
@@ -287,6 +293,8 @@ namespace cb2 { // c-callibot.ts 005F7F
           writeRgbLedBlink(led, buffer, blink)
    */
     }
+
+    let rgbLedPause = input.runningTime()  // ms seit Start
 
     //% group="LED"
     //% block="LED %led %on || blinken %blink Helligkeit %pwm" weight=2
