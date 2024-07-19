@@ -150,13 +150,22 @@ namespace btf { // b-enums.ts
 
     export enum e0Betriebsart {
         //% block="00 Fernsteuerung Motoren"
-        p0 = 0x00,
+        p0Fahren = 0x00,
         //% block="10 Fernsteuerung lokale Programme"
-        p1 = 0x10,
+        p1Lokal = 0x10,
         //% block="20 Programm 5 Strecken"
-        p2 = 0x20,
+        p2Strecken = 0x20,
         //% block="30 Programm Sensoren"
+        p3Sensoren = 0x30,
+        //% block="00" deprecated=1
+        p0 = 0x00,
+        //% block="10" deprecated=true
+        p1 = 0x10,
+        //% block="20" deprecated=true
+        p2 = 0x20,
+        //% block="30" deprecated=true
         p3 = 0x30
+
     }
 
     export enum e0Schalter {
