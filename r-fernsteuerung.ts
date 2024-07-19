@@ -6,7 +6,7 @@ namespace receiver { // r-fernsteuerung.ts
     //% receivedData.shadow="btf_receivedBuffer19"
     export function sendM0(receivedData: Buffer) {
 
-        if (btf.isBetriebsart(receivedData, btf.e0Betriebsart.p0)) {
+        if (btf.isBetriebsart(receivedData, btf.e0Betriebsart.p0Fahren)) {
             receiver.dualMotor128(receiver.eDualMotor.M0, btf.getByte(receivedData, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor))
             receiver.pinServo16(btf.getByte(receivedData, btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo))
             receiver.dualMotor128(receiver.eDualMotor.M1, btf.getByte(receivedData, btf.eBufferPointer.m1, btf.eBufferOffset.b0_Motor))

@@ -181,8 +181,8 @@ namespace sender { // s-buttons.ts
 
     // ========== Bilder für Auswahl Modell
 
-    //% group="Image" subcategory="Display 5x5" color=#54C9C9
-    //% block="zeige Bild %image" weight=1
+    // group="Image" subcategory="Knopf A B" color=#54C9C9
+    // block="zeige Bild %image" weight=1
     export function zeigeImage(index: number) {
 
         [images.createImage(`
