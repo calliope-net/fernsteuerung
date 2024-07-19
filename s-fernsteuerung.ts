@@ -7,7 +7,7 @@ namespace sender { // s-fernsteuerung.ts
     //% group="00 Fernsteuerung Motoren" subcategory="Fernsteuerung"
     //% block="00 %buffer M0 Fahren und Lenken" weight=5
     //% buffer.shadow="btf_sendBuffer19"
-    export function sendM0(buffer: Buffer) {
+    export function send00M0(buffer: Buffer) {
         btf.setBetriebsart(btf.btf_sendBuffer19(), btf.e0Betriebsart.p0)
         btf.setByte(btf.btf_sendBuffer19(), btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor, joystickValue(eJoystickValue.xmotor))
         btf.setByte(btf.btf_sendBuffer19(), btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo, joystickValue(eJoystickValue.servo16))
@@ -18,7 +18,7 @@ namespace sender { // s-fernsteuerung.ts
     //% block="00 %buffer M0 Fahren M1 Gabelstapler || * %prozent \\%" weight=4
     //% buffer.shadow="btf_sendBuffer19"
     //% prozent.min=10 prozent.max=100 prozent.defl=100
-    export function sendM01(buffer: Buffer, prozent = 100) {
+    export function send00M01(buffer: Buffer, prozent = 100) {
         btf.setBetriebsart(btf.btf_sendBuffer19(), btf.e0Betriebsart.p0)
         btf.setByte(btf.btf_sendBuffer19(), btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor, btf.motorProzent(joystickValue(eJoystickValue.xmotor), prozent))
         btf.setByte(btf.btf_sendBuffer19(), btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo, n_ButtonAB_Counter)
@@ -30,7 +30,7 @@ namespace sender { // s-fernsteuerung.ts
     //% group="00 Fernsteuerung Motoren" subcategory="Fernsteuerung"
     //% block="00 %buffer MA Seilrolle MB Drehkranz" weight=3
     //% buffer.shadow="btf_sendBuffer19"
-    export function sendMAB(buffer: Buffer) {
+    export function send00MAB(buffer: Buffer) {
         btf.setBetriebsart(btf.btf_sendBuffer19(), btf.e0Betriebsart.p0)
         btf.setByte(btf.btf_sendBuffer19(), btf.eBufferPointer.ma, btf.eBufferOffset.b0_Motor, joystickValue(eJoystickValue.xmotor))
         btf.setByte(btf.btf_sendBuffer19(), btf.eBufferPointer.mb, btf.eBufferOffset.b0_Motor, joystickValue(eJoystickValue.ymotor))
@@ -41,7 +41,7 @@ namespace sender { // s-fernsteuerung.ts
     //% group="00 Fernsteuerung Motoren" subcategory="Fernsteuerung"
     //% block="00 %buffer MC Zahnstange MB Drehkranz" weight=2
     //% buffer.shadow="btf_sendBuffer19"
-    export function sendMCB(buffer: Buffer) {
+    export function send00MCB(buffer: Buffer) {
         btf.setBetriebsart(btf.btf_sendBuffer19(), btf.e0Betriebsart.p0)
         btf.setByte(btf.btf_sendBuffer19(), btf.eBufferPointer.mc, btf.eBufferOffset.b0_Motor, joystickValue(eJoystickValue.xmotor))
         btf.setByte(btf.btf_sendBuffer19(), btf.eBufferPointer.mb, btf.eBufferOffset.b0_Motor, joystickValue(eJoystickValue.ymotor))
