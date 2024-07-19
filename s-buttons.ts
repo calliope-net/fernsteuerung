@@ -1,8 +1,8 @@
 
 namespace sender { // s-buttons.ts
 
-    export enum eButtonAB_Switch { A, B, AB }
-    export let a_ButtonAB_Switch = [false, false, false] // so viele Elemente wie Member in der Enum eSchalter
+    export enum eButtonAB_Switch { A, B }//, AB
+    export let a_ButtonAB_Switch = [false, false] //, false so viele Elemente wie Member in der Enum eButtonAB_Switch
     //  export let n_CalliBotBeispielButtonAB = 0
     export let n_ButtonAB_Counter = 0 // 1..16..31 mit A- B+ ändern
 
@@ -119,10 +119,11 @@ namespace sender { // s-buttons.ts
         // cb2e Calli:bot von Joystick auf Beispiele umschalten
         else if (isModell(eModell.cb2e) && n_Funktion == eFunktion.m0_s0) {
 
+            a_ButtonAB_Switch[eButtonAB_Switch.A] = true  // Ultraschall Sensor aktiv
             a_ButtonAB_Switch[eButtonAB_Switch.B] = false // Beispiel noch nicht aktiv senden; erst nach B geklickt
             n_Funktion = eFunktion.mc_md_callibot_beispiele
-            if (!btf.between(n_ButtonAB_Counter, 1, 3))
-                n_ButtonAB_Counter = 1
+            /* if (!btf.between(n_ButtonAB_Counter, 1, 3))
+                n_ButtonAB_Counter = 1 */
         }
         // mkcg Maker Kit Car ohne und mit Gabelstapler
         else if (isModell(eModell.mkcg) && n_Funktion == eFunktion.m0_s0) {
@@ -136,9 +137,14 @@ namespace sender { // s-buttons.ts
             n_Funktion = eFunktion.mc_mb // Funktion weiter schalten
 
         else {
-            a_ButtonAB_Switch[eButtonAB_Switch.AB] = !a_ButtonAB_Switch[eButtonAB_Switch.AB] // Standardwert immer wechseln true-false
+          //  a_ButtonAB_Switch[eButtonAB_Switch.AB] = !a_ButtonAB_Switch[eButtonAB_Switch.AB] // Standardwert immer wechseln true-false
+
+            a_ButtonAB_Switch[eButtonAB_Switch.A] = false  // beide aus schalten
+            a_ButtonAB_Switch[eButtonAB_Switch.B] = false
+
             n_Funktion = eFunktion.m0_s0 // Standardwert immer Fahren und Lenken
             //n_ButtonAB_Counter = 16
+
         }
     }
 
