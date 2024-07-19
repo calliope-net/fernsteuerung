@@ -100,6 +100,7 @@ namespace btf { // b-fernsteuerung.ts
     // es wird kein Wert zurück gegeben (void)
     // die Variable ist noch undefined, also keiner konkreten Funktion zugeordnet
     let onReceivedDataHandler: (receivedData: Buffer) => void
+    let onReceivedErrorHandler: (receivedData: Buffer) => void
 
 
     // Event-Handler (aus radio) wenn Buffer empfangen (Event Block ist dort hidden und soll hiermit wieder sichtbar werden)
@@ -136,7 +137,13 @@ namespace btf { // b-fernsteuerung.ts
             if (onReceivedDataHandler)
                 onReceivedDataHandler(receivedBuffer) // Ereignis Block auslösen, nur wenn benutzt
         }
+        else if (n_start && onReceivedErrorHandler)
+            onReceivedErrorHandler(receivedBuffer) // Ereignis Block auslösen, nur wenn benutzt
+        // falsche Buffer Länge empfangen
+
     })
+
+
 
     // ========== group="Bluetooth empfangen" subcategory="Buffer"
 
@@ -160,12 +167,12 @@ namespace btf { // b-fernsteuerung.ts
 
     //% blockId=btf_receivedBuffer19
     //% group="Bluetooth empfangen (19 Byte)"
-    //% block="receivedData" weight=8
+    //% block="receivedData" weight=4
     export function btf_receivedBuffer19() { return a_receivedBuffer19 }
 
 
     //% group="Bluetooth empfangen (19 Byte)"
-    //% block="timeout > %ms ms || abschalten %abschalten" weight=7
+    //% block="timeout > %ms ms || abschalten %abschalten" weight=3
     //% abschalten.shadow="toggleYesNo"
     //% ms.defl=1000
     export function timeout(ms: number, abschalten = false) {
@@ -175,7 +182,18 @@ namespace btf { // b-fernsteuerung.ts
             return ((input.runningTime() - n_lastconnectedTime) > ms)
     }
 
+    // sichtbarer Event-Block
 
+    //% group="Bluetooth empfangen (19 Byte)"
+    //% block="ungültige Daten empfangen" weight=1
+    //% draggableParameters=reporter
+    export function onReceivedError(cb: (receivedError: Buffer) => void) {
+        onReceivedErrorHandler = cb
+    }
+
+
+
+    // ========== group="lokales Programm (kein Bluetooth Timeout)"
 
     //% group="lokales Programm (kein Bluetooth Timeout)"
     //% block="Timeout deaktivieren %localProgram"
@@ -187,8 +205,6 @@ namespace btf { // b-fernsteuerung.ts
 
 
     // ========== group="Storage (Flash)" color=#FFBB00
-
-
 
     // group="Flash Speicher (Storage)" deprecated=true
     // block="Flash einlesen %i32" weight=3
