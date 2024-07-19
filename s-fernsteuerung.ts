@@ -5,7 +5,7 @@ namespace sender { // s-fernsteuerung.ts
     // ========== group="Button A+B" subcategory="Fernsteuerung"
 
     //% group="00 Fernsteuerung Motoren" subcategory="Fernsteuerung"
-    //% block="%buffer M0 Fahren und Lenken" weight=5
+    //% block="00 %buffer M0 Fahren und Lenken" weight=5
     //% buffer.shadow="btf_sendBuffer19"
     export function sendM0(buffer: Buffer) {
         btf.setBetriebsart(btf.btf_sendBuffer19(), btf.e0Betriebsart.p0)
@@ -15,7 +15,7 @@ namespace sender { // s-fernsteuerung.ts
     }
 
     //% group="00 Fernsteuerung Motoren" subcategory="Fernsteuerung"
-    //% block="%buffer M0 Fahren M1 Gabelstapler || * %prozent \\%" weight=4
+    //% block="00 %buffer M0 Fahren M1 Gabelstapler || * %prozent \\%" weight=4
     //% buffer.shadow="btf_sendBuffer19"
     //% prozent.min=10 prozent.max=100 prozent.defl=100
     export function sendM01(buffer: Buffer, prozent = 100) {
@@ -28,7 +28,7 @@ namespace sender { // s-fernsteuerung.ts
     }
 
     //% group="00 Fernsteuerung Motoren" subcategory="Fernsteuerung"
-    //% block="%buffer MA Seilrolle MB Drehkranz" weight=3
+    //% block="00 %buffer MA Seilrolle MB Drehkranz" weight=3
     //% buffer.shadow="btf_sendBuffer19"
     export function sendMAB(buffer: Buffer) {
         btf.setBetriebsart(btf.btf_sendBuffer19(), btf.e0Betriebsart.p0)
@@ -39,7 +39,7 @@ namespace sender { // s-fernsteuerung.ts
     }
 
     //% group="00 Fernsteuerung Motoren" subcategory="Fernsteuerung"
-    //% block="%buffer MC Zahnstange MB Drehkranz" weight=2
+    //% block="00 %buffer MC Zahnstange MB Drehkranz" weight=2
     //% buffer.shadow="btf_sendBuffer19"
     export function sendMCB(buffer: Buffer) {
         btf.setBetriebsart(btf.btf_sendBuffer19(), btf.e0Betriebsart.p0)
@@ -57,22 +57,52 @@ namespace sender { // s-fernsteuerung.ts
     //% group="20 Programm 5 Strecken" subcategory="Fernsteuerung"
     //% block="Programm 'Fahrplan' %buffer Schritt 1 %p1 Schritt 2 %p2 Schritt 3 %p3 Schritt 4 %p4 Schritt 5 %p5" weight=8
     //% buffer.shadow="btf_sendBuffer19"
-    //% p1.shadow=btf_programmPicker
-    //% p2.shadow=btf_programmPicker
-    //% p3.shadow=btf_programmPicker
-    //% p4.shadow=btf_programmPicker
-    //% p5.shadow=btf_programmPicker
-    export function programm5(buffer: Buffer, p1: Buffer, p2: Buffer, p3: Buffer, p4: Buffer, p5: Buffer,) {
-       
+    //% p1.shadow=sender_programmPicker_zeit
+    // p2.shadow=btf_programmPicker
+    // p3.shadow=btf_programmPicker
+    // p4.shadow=btf_programmPicker
+    // p5.shadow=btf_programmPicker
+    export function send20Strecken(buffer: Buffer, p1: Buffer, p2: Buffer, p3: Buffer, p4: Buffer, p5: Buffer) {
+
         btf.setBetriebsart(buffer, btf.e0Betriebsart.p2Strecken)
-    
-        if (p1) buffer.write(btf.eBufferPointer.p1, p1) // 4-5-6
-        if (p2) buffer.write(btf.eBufferPointer.p2, p2)
-        if (p3) buffer.write(btf.eBufferPointer.p3, p3)
-        if (p4) buffer.write(btf.eBufferPointer.p4, p4)
-        if (p5) buffer.write(btf.eBufferPointer.p5, p5) // 16-17-18
-      
+
+        if (p1 && p1.length == 3) buffer.write(btf.eBufferPointer.p1, p1) // 4-5-6
+        if (p2 && p2.length == 3) buffer.write(btf.eBufferPointer.p2, p2)
+        if (p3 && p3.length == 3) buffer.write(btf.eBufferPointer.p3, p3)
+        if (p4 && p4.length == 3) buffer.write(btf.eBufferPointer.p4, p4)
+        if (p5 && p5.length == 3) buffer.write(btf.eBufferPointer.p5, p5) // 16-17-18
     }
+
+    //% blockId=sender_programmPicker_zeit
+    //% group="20 Programm 5 Strecken" subcategory="Fernsteuerung"
+    //% block="Motor %motor Servo %servo Zeit %zehntelsekunden" weight=4
+    //% motor.shadow="btf_speedPicker"
+    //% servo.shadow="btf_protractorPicker"
+    //% zehntelsekunden.shadow=btf_zehntelsekunden
+    export function sender_programmPicker_zeit(motor: number, servo: number, zehntelsekunden: number) {
+        return Buffer.fromArray([motor, servo, zehntelsekunden])
+    }
+
+    //% blockId=sender_programmPicker_cm
+    //% group="20 Programm 5 Strecken" subcategory="Fernsteuerung"
+    //% block="Motor %motor Servo %servo Strecke %strecke cm" weight=3
+    //% motor.shadow="btf_speedPicker"
+    //% servo.shadow="btf_protractorPicker"
+    //% strecke.min=10 strecke.max=255 strecke.defl=20
+    export function sender_programmPicker_cm(motor: number, servo: number, strecke: number) {
+        return Buffer.fromArray([motor, servo, strecke])
+    }
+
+    //% blockId=sender_programmSchritt
+    //% group="20 Programm 5 Strecken" subcategory="Fernsteuerung"
+    //% block="Motor (1↓128↑255) %motor Servo (1↖16↗31) %servo Strecke %strecke cm" weight=2
+    //% motor.min=1 motor.max=255 motor.defl=230
+    //% servo.min=1 servo.max=31 servo.defl=26
+    //% strecke.min=10 strecke.max=255 strecke.defl=250
+    export function sender_programmSchritt(motor: number, servo: number, strecke: number) {
+        return Buffer.fromArray([motor, servo, strecke])
+    }
+
 
 
 
