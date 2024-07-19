@@ -200,6 +200,7 @@ namespace btf { // b-fernsteuerung.ts
     //% localProgram.shadow="toggleYesNo"
     export function set_localProgram(localProgram: boolean) {
         n_localProgram = localProgram
+        n_lastconnectedTime = input.runningTime()  // ms seit Start
     }
 
 

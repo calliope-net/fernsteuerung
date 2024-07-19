@@ -30,11 +30,13 @@ namespace cb2 { // c-beispiele.ts
 
         if (stop && (abstand > 0 && (readUltraschallAbstand() < abstand))) { // if (abstand) ist false bei 0
             writeMotorenStop()
-            writeRgbLeds(Colors.Orange, true)
+            // writeRgbLeds(Colors.Orange, true)
+            writeRgbLed(eRgbLed.lh, Colors.Red, true, true)
+
             //  return false
         }
         else {
-            writeRgbLeds(Colors.Off, false)
+
 
             //  let langsamfahren = btf.motorProzent(motor128, motorProzent)
             let lenken = Math.abs(servo16 - 16)  // 16-16=0 / 1-16=15 / 31-16=15
@@ -63,6 +65,10 @@ namespace cb2 { // c-beispiele.ts
                 writeMotor128Servo16(motor128, 16, 0) // geradeaus fahren bis zur schwarzen Linie
                 m_inSpur = false // hell hell
             }
+
+            //   writeRgbLeds(Colors.Off, false)
+            writeRgbLed(eRgbLed.lh, Colors.Yellow, stop, false)
+
             //   return true
         }
     }
