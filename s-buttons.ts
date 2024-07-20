@@ -31,7 +31,7 @@ namespace sender { // s-buttons.ts
         ma_mb,      // MA und MB (Seilrolle und Drehkranz)
         //% block="Zahnstange und Drehkranz"
         mc_mb,       // MC und MB (Zahnstange und Drehkranz)
-        //% block="Calli:bot Beispiele"
+        //% block="Calli:bot Programm fernstarten"
         mc_md_callibot_beispiele
     }
     export let n_Funktion = eFunktion.ng // aktuell ausgewählte Funktion
