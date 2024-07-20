@@ -220,17 +220,12 @@ namespace btf { // b-fernsteuerung.ts
     export function getReceivedBufferError(ms = 2000) {
         return ((input.runningTime() - n_lastErrorBufferTime) < ms)
     }
-    // sichtbarer Event-Block
-    // draggableParameters=reporter
-    //export function onReceivedError(cb: (receivedError: Buffer) => void) {
-    //    onReceivedErrorHandler = cb
-    //}
 
 
 
-    // ========== group="lokales Programm (kein Bluetooth Timeout)"
+    // ========== group="lokales Programm (ohne Fernsteuerung)"
 
-    //% group="lokales Programm (kein Bluetooth Timeout)"
+    //% group="lokales Programm (ohne Fernsteuerung)"
     //% block="Timeout deaktivieren %localProgram" weight=3
     //% localProgram.shadow="toggleYesNo"
     export function set_timeoutDisbled(timeoutDisbled: boolean) {
@@ -238,36 +233,26 @@ namespace btf { // b-fernsteuerung.ts
         n_lastConnectedTime = input.runningTime()  // startet das lange timeout (abschalten) neu
     }
 
-    //% group="lokales Programm (kein Bluetooth Timeout)"
+    //% group="lokales Programm (ohne Fernsteuerung)"
     //% block="Timeout deaktiviert" weight=2
     export function get_timeoutDisbled() {
         return n_timeoutDisbled
     }
 
 
-    // ========== group="Storage (Flash)" color=#FFBB00
 
-    // group="Flash Speicher (Storage)" deprecated=true
-    // block="Flash einlesen %i32" weight=3
-    // zeigeFunkgruppe.shadow="toggleYesNo"
+    // ========== "Storage (Flash)"
 
     export function setStorageBuffer(modellFunkgruppe: number) {
-        // i32 aus Storage enthält 4 Byte, Funkgruppe und Modell (nur beim Sender), + 2 Byte unbenutzt
-        // ist i32 undefined, kommt der Wert nicht aus Storage und es wird der Standardwert modellFunkgruppe genommen
-        // der Standardwert hängt beim Empfänger von der gewählten Hardware ab
-        // basic.showNumber(i32)
+        // Storage enthält 4 Byte, Funkgruppe und Modell (nur beim Sender), + 2 Byte unbenutzt
+        // modellFunkgruppe kann undefined sein, dann Standardwert 0xAE nehmen
+        // wenn ein gültiger Wert im Flash ist, nicht ändern (modellFunkgruppe ignorieren)
+
         a_StorageBuffer = storage.getBuffer()
-        //if (i32) {
-        //    a_StorageBuffer.setNumber(NumberFormat.UInt32LE, 0, i32)
-        // wenn angegeben, muss Funkgruppe (am offset 0) 0xA0 .. 0xBF sein
+
+        // Funkgruppe (am offset 0) muss 0xA0 .. 0xBF sein
         if (!between(a_StorageBuffer[eStorageBuffer.funkgruppe], 0xA0, 0xBF))
             a_StorageBuffer[eStorageBuffer.funkgruppe] = (modellFunkgruppe) ? modellFunkgruppe : 0xAE
-        //}
-        //else {
-        //    // optionaler Parameter (aus Storage) nicht angegeben, Standardwert nehmen
-        //    a_StorageBuffer.fill(0)
-        //    a_StorageBuffer[eStorageBuffer.funkgruppe] = modellFunkgruppe
-        //}
     }
 
 
@@ -281,17 +266,12 @@ namespace btf { // b-fernsteuerung.ts
     // ========== StorageModell offset 1
 
     export function setStorageModell(pModell: number) {
-        //n_StorageModell = pModell
         a_StorageBuffer[eStorageBuffer.modell] = pModell
         storage.putBuffer(a_StorageBuffer)
     }
 
-    //let n_StorageModell: number // lokaler Speicher, um nicht immer aus Storage zu lesen
-
     export function getStorageModell() {
-        //if (n_StorageModell == undefined)
         return a_StorageBuffer[eStorageBuffer.modell] // liest 8 Bit aus dem Buffer, nicht aus dem Flash
-        //return n_StorageModell
     }
 
 
