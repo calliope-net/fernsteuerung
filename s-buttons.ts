@@ -71,12 +71,6 @@ namespace sender { // s-buttons.ts
         }
     }
 
-    /* function abstandSchalten(e: btf.e3Abstand) {
-        //+64
-        btf.e3Abstand.u1
-        btf.e3Abstand.u3
-    } */
-
 
     //% group="in Eingabe Ereignisse einfügen" subcategory="Knopf A B"
     //% block="Knopf B geklickt" weight=6
@@ -149,18 +143,43 @@ namespace sender { // s-buttons.ts
     }
 
 
-    //% group="Zähler / Schalter" subcategory="Knopf A B"
-    //% block="Knopf A-B+ Zähler" weight=4
-    export function getButtonAB_Counter() {
-        return n_ButtonAB_Counter
-    }
 
-    //% group="Zähler / Schalter" subcategory="Knopf A B"
-    //% block="Knopf %pSchalter Schalter" weight=3
+    //% group="Schalter / Zähler" subcategory="Knopf A B" deprecated=1
+    //% block="Knopf %pSchalter Schalter" weight=5
     export function getButtonAB_Switch(pSwitch: eButtonAB_Switch): boolean {
         return a_ButtonAB_Switch[pSwitch]
     }
 
+    //% group="Schalter / Zähler" subcategory="Knopf A B"
+    //% blockId=sender_ButtonA_Switch
+    //% block="Knopf A Schalter" weight=4
+    export function sender_ButtonA_Switch() {
+        return a_ButtonAB_Switch[eButtonAB_Switch.A]
+    }
+
+    //% group="Schalter / Zähler" subcategory="Knopf A B"
+    //% blockId=sender_ButtonB_Switch
+    //% block="Knopf B Schalter" weight=3
+    export function sender_ButtonB_Switch() {
+        return a_ButtonAB_Switch[eButtonAB_Switch.B]
+    }
+
+    //% group="Schalter / Zähler" subcategory="Knopf A B" deprecated=1
+    //% block="Knopf A-B+ Zähler" weight=2
+    export function getButtonAB_Counter() {
+        return n_ButtonAB_Counter
+    }
+
+    //% group="Schalter / Zähler" subcategory="Knopf A B"
+    //% blockId=sender_ButtonAB_Counter
+    //% block="Knopf A-B+ Zähler" weight=1
+    export function sender_ButtonAB_Counter() {
+        return n_ButtonAB_Counter
+    }
+
+
+
+    // ========== group="aktuelles Modell" subcategory="Knopf A B"
 
     //% group="aktuelles Modell" subcategory="Knopf A B"
     //% block="%pModell" weight=4
@@ -169,6 +188,8 @@ namespace sender { // s-buttons.ts
         return btf.getStorageModell() == pModell
     }
 
+
+    // ========== group="aktuelle Funktion" subcategory="Knopf A B"
 
     //% group="aktuelle Funktion" subcategory="Knopf A B"
     //% block="%pFunktion" weight=3

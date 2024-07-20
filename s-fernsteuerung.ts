@@ -27,13 +27,14 @@ namespace sender { // s-fernsteuerung.ts
         btf.setaktiviert(buffer, btf.e3aktiviert.m1, true)
     }
 
-    //% group="00 Fernsteuerung Motoren" subcategory="Fernsteuerung"
-    //% block="00 %buffer fahren %motor0 lenken %servo0 Gabelstapler %motor1 Stop %stop bei Abstand < %abstand" weight=4
+    //% group="00 Fernsteuerung Gabelstapler" subcategory="Fernsteuerung"
+    //% block="00 Gabelstapler %buffer fahren %motor0 lenken %servo0 Gabelstapler %motor1 Stop %stop bei Abstand < %abstand" weight=4
     //% buffer.shadow=btf_sendBuffer19
     //% motor0.shadow=sender_xmotor 
+    //% servo0.shadow=sender_ButtonAB_Counter
     //% motor1.shadow=sender_ymotor 
-
-    export function send00M01a(buffer: Buffer, motor0: number, servo0: number, motor1: number, stop: boolean, abstand: btf.e3Abstand) {
+    //% stop.shadow=sender_ButtonA_Switch
+    export function send00M01Gabelstapler(buffer: Buffer, motor0: number, servo0: number, motor1: number, stop: boolean, abstand: btf.e3Abstand) {
         btf.setBetriebsart(buffer, btf.e0Betriebsart.p0Fahren)
         btf.setByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor, motor0)
         btf.setByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo, servo0)//n_ButtonAB_Counter
@@ -76,7 +77,7 @@ namespace sender { // s-fernsteuerung.ts
     //% langsamfahren.min=1 langsamfahren.max=255 langsamfahren.defl=160
     //% servo16.min=1 servo16.max=31 servo16.defl=31
     //% lenkenProzent.min=10 lenkenProzent.max=90 lenkenProzent.defl=0
-    //% stop.shadow="toggleYesNo" stop.defl=1
+    //% stop.shadow=sender_ButtonA_Switch
     //% abstand.defl=btf.e3Abstand.u2
     // inlineInputMode=inline
     export function send10Spurfolger(buffer: Buffer, motor128: number, langsamfahren: number, servo16: number, lenkenProzent: number, stop: boolean, abstand: btf.e3Abstand) {
