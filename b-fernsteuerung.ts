@@ -6,7 +6,8 @@ namespace btf { // b-fernsteuerung.ts
 
     let n_start = false
 
-    export let n_lastconnectedTime = input.runningTime()  // ms seit Start
+    export let n_lastConnectedTime = input.runningTime()  // ms seit Start
+    let n_lastErrorBufferTime = input.runningTime()
     let n_localProgram = false // autonomes fahren nach Programm, kein Bluetooth timeout
 
     export let n_sendReset = false // true sendet zurücksetzen zum Empfänger wenn connected
@@ -93,6 +94,7 @@ namespace btf { // b-fernsteuerung.ts
     export function btf_sendBuffer19(): Buffer { return a_sendBuffer19 }
 
 
+
     // ========== Bluetooth Event radio.onReceivedBuffer behandeln ==========
 
     // deklariert die Variable mit dem Delegat-Typ '(receivedBuffer: Buffer) => void'
@@ -100,8 +102,7 @@ namespace btf { // b-fernsteuerung.ts
     // es wird kein Wert zurück gegeben (void)
     // die Variable ist noch undefined, also keiner konkreten Funktion zugeordnet
     let onReceivedDataHandler: (receivedData: Buffer) => void
-    let onReceivedErrorHandler: (receivedData: Buffer) => void
-
+    // let onReceivedErrorHandler: (receivedData: Buffer) => void
 
     // Event-Handler (aus radio) wenn Buffer empfangen (Event Block ist dort hidden und soll hiermit wieder sichtbar werden)
     // die function 'radio.onReceivedBuffer(cb)' hat einen Parameter 'cb' (das heißt callback)
@@ -127,7 +128,7 @@ namespace btf { // b-fernsteuerung.ts
             //   n_MotorChipReady = false
             //    n_connected = true // wenn Start und Motor bereit, setze auch Bluetooth connected
             //}
-            n_lastconnectedTime = input.runningTime() // Connection-Timeout Zähler zurück setzen
+            n_lastConnectedTime = input.runningTime() // Connection-Timeout Zähler zurück setzen
 
 
             // die Variable 'onReceivedDataHandler' ist normalerweise undefined, dann passiert nichts
@@ -137,8 +138,10 @@ namespace btf { // b-fernsteuerung.ts
             if (onReceivedDataHandler)
                 onReceivedDataHandler(receivedBuffer) // Ereignis Block auslösen, nur wenn benutzt
         }
-        else if (n_start && onReceivedErrorHandler)
-            onReceivedErrorHandler(receivedBuffer) // Ereignis Block auslösen, nur wenn benutzt
+        else
+            n_lastErrorBufferTime = input.runningTime()
+        //if (n_start && onReceivedErrorHandler)
+        //    onReceivedErrorHandler(receivedBuffer) // Ereignis Block auslösen, nur wenn benutzt
         // falsche Buffer Länge empfangen
 
     })
@@ -177,19 +180,23 @@ namespace btf { // b-fernsteuerung.ts
     //% ms.defl=1000
     export function timeout(ms: number, abschalten = false) {
         if (!abschalten) // kurzes Fernsteuerung-timeout (1s) nur bei Joystick, nicht auslösen wenn n_programm=true
-            return !n_localProgram && ((input.runningTime() - n_lastconnectedTime) > ms)
+            return !n_localProgram && ((input.runningTime() - n_lastConnectedTime) > ms)
         else // längeres Programm-timeout (60s) immer auslösen falls Programm hängt (zum aus schalten)
-            return ((input.runningTime() - n_lastconnectedTime) > ms)
+            return ((input.runningTime() - n_lastConnectedTime) > ms)
     }
 
     // sichtbarer Event-Block
 
     //% group="Bluetooth empfangen (19 Byte)"
-    //% block="ungültige Daten empfangen" weight=1
-    //% draggableParameters=reporter
-    export function onReceivedError(cb: (receivedError: Buffer) => void) {
-        onReceivedErrorHandler = cb
+    //% block="ungültige Daten empfangen || < %ms ms" weight=1
+    //% ms.defl=2000
+    export function getReceivedBufferError(ms = 2000) {
+        return ((input.runningTime() - n_lastErrorBufferTime) < ms)
     }
+    // draggableParameters=reporter
+    //export function onReceivedError(cb: (receivedError: Buffer) => void) {
+    //    onReceivedErrorHandler = cb
+    //}
 
 
 
@@ -200,7 +207,7 @@ namespace btf { // b-fernsteuerung.ts
     //% localProgram.shadow="toggleYesNo"
     export function set_localProgram(localProgram: boolean) {
         n_localProgram = localProgram
-        n_lastconnectedTime = input.runningTime()  // ms seit Start
+        n_lastConnectedTime = input.runningTime()  // ms seit Start
     }
 
 

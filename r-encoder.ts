@@ -151,7 +151,7 @@ namespace receiver { // r-pins.ts
             n_EncoderStrecke_impulse = Math.round(streckecm * n_EncoderFaktor)
             n_EncoderAutoStop = autostop
 
-            btf.n_lastconnectedTime = input.runningTime() // Connection-Timeout Zähler zurück setzen
+            btf.n_lastConnectedTime = input.runningTime() // Connection-Timeout Zähler zurück setzen um Abschaltung zu verhindern
         } else {
             n_EncoderStrecke_impulse = 0
         }
