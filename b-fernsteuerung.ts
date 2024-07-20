@@ -8,7 +8,7 @@ namespace btf { // b-fernsteuerung.ts
 
     export let n_lastConnectedTime = input.runningTime()  // ms seit Start
     let n_lastErrorBufferTime = input.runningTime()
-    let n_localProgram = false // autonomes fahren nach Programm, kein Bluetooth timeout
+    let n_timeoutDisbled = false // autonomes fahren nach Programm, kein Bluetooth timeout
 
     export let n_sendReset = false // true sendet zurücksetzen zum Empfänger wenn connected
 
@@ -120,7 +120,7 @@ namespace btf { // b-fernsteuerung.ts
 
             //  n_programm = (receivedBuffer[0] & 0x20) == 0x20 // Bit 5 Programm=1 / Fernsteuerung=0
 
-            n_localProgram = ((receivedBuffer[0] & 0x20) == 0x20) // Bit 5 Programm=1 / Betriebsart ..10.... oder ..11....
+            n_timeoutDisbled = ((receivedBuffer[0] & 0x20) == 0x20) // Bit 5 Programm=1 / Betriebsart ..10.... oder ..11....
                 || (((receivedBuffer[0] & 0x30) == 0x10) && ((receivedBuffer[3] & 0x01) == 0x00)) // Betriebsart 01 und Joystick nicht aktiv ([3]Bit 0=0)
 
             //if (!n_connected) {
@@ -175,12 +175,12 @@ namespace btf { // b-fernsteuerung.ts
 
 
     //% group="Bluetooth empfangen (19 Byte)"
-    //% block="timeout > %ms ms || abschalten %abschalten" weight=3
-    //% abschalten.shadow="toggleYesNo"
+    //% block="timeout > %ms ms || und deaktiviert %timeoutDisbled" weight=3
+    //% timeoutDisbled.shadow="toggleYesNo"
     //% ms.defl=1000
-    export function timeout(ms: number, abschalten = false) {
-        if (!abschalten) // kurzes Fernsteuerung-timeout (1s) nur bei Joystick, nicht auslösen wenn n_programm=true
-            return !n_localProgram && ((input.runningTime() - n_lastConnectedTime) > ms)
+    export function timeout(ms: number, timeoutDisbled = false) {
+        if (!timeoutDisbled) // kurzes Fernsteuerung-timeout (1s) nur bei Joystick, nicht auslösen wenn n_timeoutDisbled=true
+            return !n_timeoutDisbled && ((input.runningTime() - n_lastConnectedTime) > ms)
         else // längeres Programm-timeout (60s) immer auslösen falls Programm hängt (zum aus schalten)
             return ((input.runningTime() - n_lastConnectedTime) > ms)
     }
@@ -203,13 +203,18 @@ namespace btf { // b-fernsteuerung.ts
     // ========== group="lokales Programm (kein Bluetooth Timeout)"
 
     //% group="lokales Programm (kein Bluetooth Timeout)"
-    //% block="Timeout deaktivieren %localProgram"
+    //% block="Timeout deaktivieren %localProgram" weight=3
     //% localProgram.shadow="toggleYesNo"
-    export function set_localProgram(localProgram: boolean) {
-        n_localProgram = localProgram
-        n_lastConnectedTime = input.runningTime()  // ms seit Start
+    export function set_timeoutDisbled(timeoutDisbled: boolean) {
+        n_timeoutDisbled = timeoutDisbled
+        n_lastConnectedTime = input.runningTime()  // startet das lange timeout (abschalten) neu
     }
 
+    //% group="lokales Programm (kein Bluetooth Timeout)"
+    //% block="Timeout deaktiviert" weight=2
+    export function get_timeoutDisbled() {
+        return n_timeoutDisbled
+    }
 
 
     // ========== group="Storage (Flash)" color=#FFBB00
