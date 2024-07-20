@@ -81,10 +81,19 @@ namespace btf { // b-dispaly5x5.ts
                 // zeigt als letztes direkt 0..31 an, mit Motor würde das gemapt werden
             }
 
-            if (bin.length >= 1)
+            if (bin.length >= 2) {
                 zeigeBINx3Motor_map255(bin[0]) // in 5x5 LED Matrix x=3
-            if (bin.length >= 2)
                 zeigeBINx4Motor_map255(bin[1]) // in 5x5 LED Matrix x=4
+            }
+            else if (bin.length == 1) {
+                zeigeBINx3Motor_map255(bin[0]) // in 5x5 LED Matrix x=3
+                zeigeBINx4Motor_map255(0)
+            }
+            else {
+                zeigeBINx3Motor_map255(0) // Display löschen, wenn nichts aktiviert ist
+                zeigeBINx4Motor_map255(0)
+            }
+
         }
         //} else {
         //    // andere Betriebsarten als '00 Fernsteuerung Motoren'
