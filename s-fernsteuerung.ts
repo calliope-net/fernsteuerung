@@ -2,16 +2,16 @@
 namespace sender { // s-fernsteuerung.ts
 
 
-    // ========== group="Button A+B" subcategory="Fernsteuerung"
+    // ========== group="00 Fernsteuerung Motoren" subcategory="Fernsteuerung"
 
     //% group="00 Fernsteuerung Motoren" subcategory="Fernsteuerung"
     //% block="00 %buffer M0 Fahren und Lenken" weight=5
     //% buffer.shadow="btf_sendBuffer19"
     export function send00M0(buffer: Buffer) {
-        btf.setBetriebsart(btf.btf_sendBuffer19(), btf.e0Betriebsart.p0Fahren)
-        btf.setByte(btf.btf_sendBuffer19(), btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor, joystickValue(eJoystickValue.xmotor))
-        btf.setByte(btf.btf_sendBuffer19(), btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo, joystickValue(eJoystickValue.servo16))
-        btf.setaktiviert(btf.btf_sendBuffer19(), btf.e3aktiviert.m0, true)
+        btf.setBetriebsart(buffer, btf.e0Betriebsart.p0Fahren)
+        btf.setByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor, joystickValue(eJoystickValue.xmotor))
+        btf.setByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo, joystickValue(eJoystickValue.servo16))
+        btf.setaktiviert(buffer, btf.e3aktiviert.m0, true)
     }
 
     //% group="00 Fernsteuerung Motoren" subcategory="Fernsteuerung"
@@ -19,43 +19,65 @@ namespace sender { // s-fernsteuerung.ts
     //% buffer.shadow="btf_sendBuffer19"
     //% prozent.min=10 prozent.max=100 prozent.defl=100
     export function send00M01(buffer: Buffer, prozent = 100) {
-        btf.setBetriebsart(btf.btf_sendBuffer19(), btf.e0Betriebsart.p0Fahren)
-        btf.setByte(btf.btf_sendBuffer19(), btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor, btf.motorProzent(joystickValue(eJoystickValue.xmotor), prozent))
-        btf.setByte(btf.btf_sendBuffer19(), btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo, n_ButtonAB_Counter)
-        btf.setByte(btf.btf_sendBuffer19(), btf.eBufferPointer.m1, btf.eBufferOffset.b0_Motor, joystickValue(eJoystickValue.ymotor))
-        btf.setaktiviert(btf.btf_sendBuffer19(), btf.e3aktiviert.m0, true)
-        btf.setaktiviert(btf.btf_sendBuffer19(), btf.e3aktiviert.m1, true)
+        btf.setBetriebsart(buffer, btf.e0Betriebsart.p0Fahren)
+        btf.setByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor, btf.motorProzent(joystickValue(eJoystickValue.xmotor), prozent))
+        btf.setByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo, n_ButtonAB_Counter)
+        btf.setByte(buffer, btf.eBufferPointer.m1, btf.eBufferOffset.b0_Motor, joystickValue(eJoystickValue.ymotor))
+        btf.setaktiviert(buffer, btf.e3aktiviert.m0, true)
+        btf.setaktiviert(buffer, btf.e3aktiviert.m1, true)
     }
 
     //% group="00 Fernsteuerung Motoren" subcategory="Fernsteuerung"
     //% block="00 %buffer MA Seilrolle MB Drehkranz" weight=3
     //% buffer.shadow="btf_sendBuffer19"
     export function send00MAB(buffer: Buffer) {
-        btf.setBetriebsart(btf.btf_sendBuffer19(), btf.e0Betriebsart.p0Fahren)
-        btf.setByte(btf.btf_sendBuffer19(), btf.eBufferPointer.ma, btf.eBufferOffset.b0_Motor, joystickValue(eJoystickValue.xmotor))
-        btf.setByte(btf.btf_sendBuffer19(), btf.eBufferPointer.mb, btf.eBufferOffset.b0_Motor, joystickValue(eJoystickValue.ymotor))
-        btf.setaktiviert(btf.btf_sendBuffer19(), btf.e3aktiviert.ma, true)
-        btf.setaktiviert(btf.btf_sendBuffer19(), btf.e3aktiviert.mb, true)
+        btf.setBetriebsart(buffer, btf.e0Betriebsart.p0Fahren)
+        btf.setByte(buffer, btf.eBufferPointer.ma, btf.eBufferOffset.b0_Motor, joystickValue(eJoystickValue.xmotor))
+        btf.setByte(buffer, btf.eBufferPointer.mb, btf.eBufferOffset.b0_Motor, joystickValue(eJoystickValue.ymotor))
+        btf.setaktiviert(buffer, btf.e3aktiviert.ma, true)
+        btf.setaktiviert(buffer, btf.e3aktiviert.mb, true)
     }
 
     //% group="00 Fernsteuerung Motoren" subcategory="Fernsteuerung"
     //% block="00 %buffer MC Zahnstange MB Drehkranz" weight=2
     //% buffer.shadow="btf_sendBuffer19"
     export function send00MCB(buffer: Buffer) {
-        btf.setBetriebsart(btf.btf_sendBuffer19(), btf.e0Betriebsart.p0Fahren)
-        btf.setByte(btf.btf_sendBuffer19(), btf.eBufferPointer.mc, btf.eBufferOffset.b0_Motor, joystickValue(eJoystickValue.xmotor))
-        btf.setByte(btf.btf_sendBuffer19(), btf.eBufferPointer.mb, btf.eBufferOffset.b0_Motor, joystickValue(eJoystickValue.ymotor))
-        btf.setaktiviert(btf.btf_sendBuffer19(), btf.e3aktiviert.mc, true)
-        btf.setaktiviert(btf.btf_sendBuffer19(), btf.e3aktiviert.mb, true)
+        btf.setBetriebsart(buffer, btf.e0Betriebsart.p0Fahren)
+        btf.setByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b0_Motor, joystickValue(eJoystickValue.xmotor))
+        btf.setByte(buffer, btf.eBufferPointer.mb, btf.eBufferOffset.b0_Motor, joystickValue(eJoystickValue.ymotor))
+        btf.setaktiviert(buffer, btf.e3aktiviert.mc, true)
+        btf.setaktiviert(buffer, btf.e3aktiviert.mb, true)
     }
 
+    // ==========
 
+    //% group="10 Programm fernstarten" subcategory="Fernsteuerung"
+    //% block="10 Spurfolger %buffer fahren (1↓128↑255) %motor128 langsam fahren %langsamfahren lenken (1↖16↗31) %servo16 lenkender Motor \\% %lenkenProzent Stop %stop bei Abstand < %abstand" weight=2
+    //% buffer.shadow="btf_sendBuffer19"
+    //% motor128.min=1 motor128.max=255 motor128.defl=192
+    //% langsamfahren.min=1 langsamfahren.max=255 langsamfahren.defl=160
+    //% servo16.min=1 servo16.max=31 servo16.defl=31
+    //% lenkenProzent.min=10 lenkenProzent.max=90 lenkenProzent.defl=0
+    //% stop.shadow="toggleYesNo" stop.defl=1
+    //% abstand.defl=btf.e3Abstand.u2
+    // inlineInputMode=inline
+    export function send10Spurfolger(buffer: Buffer, motor128: number, langsamfahren: number, servo16: number, lenkenProzent: number, stop: boolean, abstand: btf.e3Abstand) {
+
+        btf.setBetriebsart(buffer, btf.e0Betriebsart.p1Lokal)
+        btf.setByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b0_Motor, 192)
+        btf.setByte(buffer, btf.eBufferPointer.md, btf.eBufferOffset.b0_Motor, 160)
+        btf.setByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b1_Servo, 31)
+        btf.setByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b2_Fahrstrecke, 0)
+
+        btf.setSensor(buffer, btf.eBufferPointer.mc, btf.eSensor.b6Abstand, stop)
+        btf.setAbstand(buffer, abstand)
+    }
 
 
     // ========== group="20 Programm 5 Strecken" subcategory="Fernsteuerung"
 
     //% group="20 Programm 5 Strecken" subcategory="Fernsteuerung"
-    //% block="Programm 'Fahrplan' %buffer Schritt 1 %p1 Schritt 2 %p2 Schritt 3 %p3 Schritt 4 %p4 Schritt 5 %p5" weight=8
+    //% block="20 Fahrplan %buffer Schritt 1 %p1 Schritt 2 %p2 Schritt 3 %p3 Schritt 4 %p4 Schritt 5 %p5" weight=8
     //% buffer.shadow="btf_sendBuffer19"
     //% p1.shadow=sender_programmPicker_zeit
     // p2.shadow=btf_programmPicker
