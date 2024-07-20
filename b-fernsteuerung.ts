@@ -56,7 +56,7 @@ namespace btf { // b-fernsteuerung.ts
 
         storage.putBuffer(a_StorageBuffer)
 
-        zeigeFunkgruppe()
+        zeigeFunkgruppe(true)
 
     }
 

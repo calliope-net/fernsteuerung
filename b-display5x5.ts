@@ -12,7 +12,9 @@ namespace btf { // b-dispaly5x5.ts
     let n5x5_x4 = 0 // Servo 1..16..31
 
     // ↕↕...
-    export function zeigeFunkgruppe() {
+    export function zeigeFunkgruppe(clearScreen: boolean) {
+        if (clearScreen)
+            basic.clearScreen()
         zeigeBIN(getStorageFunkgruppe(), ePlot.hex, 1) // 5x5 x=0-1 y=1-2-3-4 (y=0 ist bei hex immer aus)
     }
 
@@ -140,8 +142,8 @@ namespace btf { // b-dispaly5x5.ts
             // pro Ziffer werden mit zeigeBIN immer 5 LEDs geschaltet 0..31
             if (n5x5_setClearScreen) {  // wenn vorher Image oder Text angezeigt wurde
                 n5x5_setClearScreen = false
-                basic.clearScreen()     // löschen und Funkgruppe in 01 ↕↕... wieder anzeigen
-                zeigeFunkgruppe()       // !ruft zeigeBIN rekursiv auf!
+                //  basic.clearScreen()     // löschen und Funkgruppe in 01 ↕↕... wieder anzeigen
+                zeigeFunkgruppe(true)       // !ruft zeigeBIN rekursiv auf!
             }
             for (let y = 4; y >= 0; y--) {
                 if ((int % 2) == 1) { led.plot(xLed, y) } else { led.unplot(xLed, y) }

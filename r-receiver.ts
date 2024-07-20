@@ -85,7 +85,7 @@ namespace receiver { // r-receiver.ts
 
         btf.setStorageBuffer(modellFunkgruppe) // prüft und speichert in a_StorageBuffer
         if (zf)
-            btf.zeigeFunkgruppe()
+            btf.zeigeFunkgruppe(true)
 
         pins.servoWritePin(a_PinServo[n_Hardware], n_ServoGeradeaus)
 
