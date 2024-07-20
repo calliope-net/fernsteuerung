@@ -137,7 +137,7 @@ namespace sender { // s-buttons.ts
             n_Funktion = eFunktion.mc_mb // Funktion weiter schalten
 
         else {
-          //  a_ButtonAB_Switch[eButtonAB_Switch.AB] = !a_ButtonAB_Switch[eButtonAB_Switch.AB] // Standardwert immer wechseln true-false
+            //  a_ButtonAB_Switch[eButtonAB_Switch.AB] = !a_ButtonAB_Switch[eButtonAB_Switch.AB] // Standardwert immer wechseln true-false
 
             a_ButtonAB_Switch[eButtonAB_Switch.A] = false  // beide aus schalten
             a_ButtonAB_Switch[eButtonAB_Switch.B] = false
@@ -177,6 +177,13 @@ namespace sender { // s-buttons.ts
             return n_Funktion != eFunktion.ng // wenn nicht nicht gestartet
         else
             return pFunktion == n_Funktion
+    }
+
+
+    //% group="aktuelle Funktion" subcategory="Knopf A B"
+    //% block="Reset Funktion (auf nicht gestartet)" weight=2
+    export function resetFunktion() {
+        n_Funktion = eFunktion.ng
     }
 
 

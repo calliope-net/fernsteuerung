@@ -90,6 +90,13 @@ namespace btf { // b-advanced.ts
 
     // ========== group="Buffer" advanced=true
 
+
+    //% group="Buffer" advanced=true
+    //% block="create Buffer size %size" weight=9
+    export function createBuffer(size: number) {
+        return Buffer.create(size)
+    }
+
     //% group="Buffer" advanced=true
     //% block="Buffer %buffer getNumber(%format offset %offset)" weight=8
     //% format.defl=NumberFormat.UInt8LE
