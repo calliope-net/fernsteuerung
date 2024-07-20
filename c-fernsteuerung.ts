@@ -2,6 +2,7 @@
 namespace cb2 { // c-fahrstrecke.ts
 
 
+    // ========== group="Strecke fahren (Fernsteuerung) reagiert auf Sensoren" subcategory="Fernsteuerung"
 
     //% group="Strecke fahren (Fernsteuerung) reagiert auf Sensoren" subcategory="Fernsteuerung"
     //% block="fahre mit Joystick aus Datenpaket %buffer lenken %prozent \\%" weight=8
@@ -9,24 +10,6 @@ namespace cb2 { // c-fahrstrecke.ts
     //% prozent.min=10 prozent.max=90 prozent.defl=50
     export function fahreJoystick(buffer: Buffer, prozent = 50) {
         let bufferPointer = btf.eBufferPointer.m0
-
-
-
-        /*  if (btf.getSensor(buffer, bufferPointer, btf.eSensor.b6Abstand))
-             writeRgbLed(Colors.Yellow, false, true, false, false) // lh
-         else
-             writeRgbLed(Colors.Off, false, true, false, false) // lh
- 
-         if (btf.getSensor(buffer, bufferPointer, btf.eSensor.b5Spur))
-             writeRgbLed(Colors.White, false, false, true, false) // rh
-         else
-             writeRgbLed(Colors.Off, false, false, true, false) // rh
-  */
-        /*   writeRgbLed(Colors.Yellow,
-              false,
-              btf.getSensor(buffer, bufferPointer, btf.eSensor.b6Abstand),
-              btf.getSensor(buffer, bufferPointer, btf.eSensor.b5Spur),
-              false) */
 
         if (btf.getSensor(buffer, bufferPointer, btf.eSensor.b6Abstand) // Abstandssensor aktiviert
             &&
@@ -36,10 +19,7 @@ namespace cb2 { // c-fahrstrecke.ts
 
             writeMotorenStop()
 
-         //   basic.pause(100)
             writeRgbLed(eRgbLed.lh, Colors.Red, true, true)
-
-            //writeRgbLed(Colors.Red, false, true, false, false, true) // lh
         }
         else if (btf.getSensor(buffer, bufferPointer, btf.eSensor.b5Spur) // Spursensor aktiviert
             &&
@@ -47,10 +27,7 @@ namespace cb2 { // c-fahrstrecke.ts
 
             writeMotorenStop()
 
-        //    basic.pause(100)
             writeRgbLed(eRgbLed.rh, Colors.White, true, true)
-
-            //   writeRgbLed(Colors.White, getInputs(btf.eNOT.f, eINPUTS.spl), false, true, getInputs(btf.eNOT.f, eINPUTS.spr), true)
         }
         // Stoßstange noch abfragen
         else {
@@ -61,15 +38,15 @@ namespace cb2 { // c-fahrstrecke.ts
                 prozent
             )
 
-        //    basic.pause(100)
             writeRgbLed(eRgbLed.lh, Colors.Yellow, btf.getSensor(buffer, bufferPointer, btf.eSensor.b6Abstand))
 
-        //  basic.pause(100)
             writeRgbLed(eRgbLed.rh, Colors.White, btf.getSensor(buffer, bufferPointer, btf.eSensor.b5Spur))
-
         }
     }
 
+
+
+    // ========== group="Strecke fahren (Fernprogrammierung)" subcategory="Fernsteuerung"
 
     //% group="Strecke fahren (Fernprogrammierung)" subcategory="Fernsteuerung"
     //% block="fahre Strecke 1-5 aus Datenpaket %buffer" weight=4
@@ -82,7 +59,7 @@ namespace cb2 { // c-fahrstrecke.ts
 
 
 
-
+    // ========== group="Strecke fahren (Stop nach • ⅒s)" subcategory="Fernsteuerung"
 
     //% group="Strecke fahren (Stop nach • ⅒s)" subcategory="Fernsteuerung"
     //% block="Strecke %buffer ⅒s" weight=6
@@ -102,24 +79,22 @@ namespace cb2 { // c-fahrstrecke.ts
     }
 
 
+
+    // ========== group="Strecke fahren (Stop nach • cm oder • ⅒s)" subcategory="Fernsteuerung"
+
     //% group="Strecke fahren (Stop nach • cm oder • ⅒s)" subcategory="Fernsteuerung"
-    //% block="Strecke %buffer" weight=4
-    // block="fahre Motor (1↓128↑255) %motor Servo (1↖16↗31) %servo Strecke (cm \\| 1/10s) %strecke" weight=3
-    // motor.min=1 motor.max=255 motor.defl=128
-    // motor.shadow=btf_speedPicker
-    // servo.min=1 servo.max=31 servo.defl=16
-    // servo.shadow=btf_protractorPicker
-    // strecke.min=10 strecke.max=255 strecke.defl=20
-    // inlineInputMode=inline
+    //% block="Strecke %buffer || lenken %prozent \\%" weight=4
     //% buffer.shadow=btf_programmSchritt
-    export function fahreStrecke(buffer: Buffer) { // cm oder zehntelsekunden
+    //% prozent.min=10 prozent.max=90 prozent.defl=50
+    // inlineInputMode=inline
+    export function fahreStrecke(buffer: Buffer, prozent = 50) { // cm oder zehntelsekunden
 
         writeMotorenStop()
 
         if (buffer.length == 3 && buffer[0] != 0 && buffer[1] != 0 && buffer[2] != 0) {
             let hasEncoder = writeEncoderReset() // Testet ob Encoder vorhanden, Ergebnis in n_Callibot2_x22hasEncoder
 
-            writeMotor128Servo16(buffer[0], buffer[1] & 0b00011111)
+            writeMotor128Servo16(buffer[0], buffer[1] & 0b00011111, prozent)
 
             if (hasEncoder) {
 
@@ -131,14 +106,6 @@ namespace cb2 { // c-fahrstrecke.ts
             }
             else {
                 basic.pause(buffer[2] * 100)
-
-                //let i = Math.abs(Math.round(Math.map(motor, 1, 255, -9, 9)))
-                //let a = [160, 160, 91, 73, 63, 59, 56, 53, 52, 51] // Fahrzeit ms für 1cm bei 10%, 20% .. 100%
-                //if (a10)
-                //    a = a10
-
-                //basic.showNumber(i)
-                //basic.pause(strecke * a[i])
             }
 
             writeMotorenStop() // cb2.writeMotor128Servo16(c_MotorStop, 16)
@@ -146,41 +113,6 @@ namespace cb2 { // c-fahrstrecke.ts
     }
 
 
-
-
-
-    //% group="Programmieren" subcategory="Fahrstrecke"
-    //% block="Strecke %buffer" weight=8
-    //% buffer.shadow=btf_programmSchritt
-    /* export function fahreBuffer(buffer: Buffer) {
-        if (buffer.length == 3)
-            fahreStrecke(buffer[0], buffer[1] & 0b00011111, buffer[2])
-    } */
-
-    /* 
-        //% blockId=cb2_programmPicker
-        //% group="Programmieren" subcategory="Fahrstrecke"
-        //% block="Motor %motor Servo %servo Zeit %zehntelsekunden" weight=7
-        //% motor.shadow="btf_speedPicker"
-        //% servo.shadow="btf_protractorPicker"
-        //% strecke.min=10 strecke.max=255 strecke.defl=20
-       //% zehntelsekunden.shadow=cb2_zehntelsekunden
-         function programmPicker(motor: number, servo: number, zehntelsekunden: number) {
-            return Buffer.fromArray([motor, servo, zehntelsekunden])
-        }
-    
-    
-        //% blockId=cb2_programmSchritt
-        //% group="Programmieren" subcategory="Fahrstrecke"
-        //% block="Motor (1↓128↑255) %motor Servo (1↖16↗31) %servo Strecke %strecke cm" weight=7
-        //% motor.min=1 motor.max=255 motor.defl=128
-        //% servo.min=1 servo.max=31 servo.defl=16
-        //% strecke.min=10 strecke.max=255 strecke.defl=20
-         function programmSchritt(motor: number, servo: number, strecke: number) {
-            return Buffer.fromArray([motor, servo, strecke])
-        }
-    
-     */
 
 
 
