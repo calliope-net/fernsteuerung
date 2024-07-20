@@ -30,6 +30,34 @@ namespace btf { // b-fernsteuerung.ts
         n_start = true
     }
 
+    //% group="calliope-net.github.io/fernsteuerung"
+    //% block="Knopf A halten, Funkgruppe -1 und anzeigen" weight=6
+    export function buttonAhold() {
+        if (!(input.buttonIsPressed(Button.B)) && a_StorageBuffer[eStorageBuffer.funkgruppe] > 0xA0) {
+            //sender.resetFunktion()
+            //btf.setFunkgruppeButton(btf.eFunkgruppeButton.plus)
+            //  a_StorageBuffer[eStorageBuffer.funkgruppe]--
+            radio.setGroup(a_StorageBuffer[eStorageBuffer.funkgruppe]--)
+            storage.putBuffer(a_StorageBuffer)
+        }
+        zeigeFunkgruppe(true)
+    }
+
+    //% group="calliope-net.github.io/fernsteuerung"
+    //% block="Knopf B halten, Funkgruppe -1 und anzeigen" weight=5
+    export function buttonBhold() {
+        if (!(input.buttonIsPressed(Button.A)) && a_StorageBuffer[eStorageBuffer.funkgruppe] < 0xBF) {
+            //sender.resetFunktion()
+            //btf.setFunkgruppeButton(btf.eFunkgruppeButton.plus)
+
+            // a_StorageBuffer[eStorageBuffer.funkgruppe]++
+            //  radio.setGroup(a_StorageBuffer[eStorageBuffer.funkgruppe])
+            radio.setGroup(a_StorageBuffer[eStorageBuffer.funkgruppe]++)
+            storage.putBuffer(a_StorageBuffer)
+        }
+        zeigeFunkgruppe(true)
+    }
+
 
 
     export enum eFunkgruppeButton {
@@ -42,7 +70,7 @@ namespace btf { // b-fernsteuerung.ts
     }
 
     //% group="calliope-net.github.io/fernsteuerung"
-    //% block="Funkgruppe ändern %e" weight=7
+    //% block="Funkgruppe ändern %e" weight=4 deprecated=1
     export function setFunkgruppeButton(e: eFunkgruppeButton) {
 
         if (e == eFunkgruppeButton.minus && a_StorageBuffer[eStorageBuffer.funkgruppe] > 0xA0)
@@ -62,7 +90,7 @@ namespace btf { // b-fernsteuerung.ts
 
 
     //% group="calliope-net.github.io/fernsteuerung"
-    //% block="%id" color="#7E84F7" weight=5
+    //% block="%id" color="#7E84F7" weight=2
     //% id.defl=ButtonEvent.Hold
     export function buttonEventValue(id: ButtonEvent): number {
         return id
