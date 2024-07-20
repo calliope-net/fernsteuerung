@@ -23,16 +23,18 @@ namespace sender { // s-buttons.ts
     export enum eFunktion {
         //% block="gestartet"
         ng, // nicht gestartet
-        //% block="Fahren und Lenken"
+        //% block="00 Fahren und Lenken"
         m0_s0,      // Joystick steuert M0 und Servo (Fahren und Lenken)
-        //% block="Gabelstapler"
+        //% block="00 Gabelstapler"
         m0_m1_s0,   // M0 und M1, Servo über Tasten A- B+ (Gabelstapler)
-        //% block="Seilrolle und Drehkranz"
+        //% block="00 Seilrolle und Drehkranz"
         ma_mb,      // MA und MB (Seilrolle und Drehkranz)
-        //% block="Zahnstange und Drehkranz"
+        //% block="00 Zahnstange und Drehkranz"
         mc_mb,       // MC und MB (Zahnstange und Drehkranz)
-        //% block="Calli:bot Programm fernstarten"
-        mc_md_callibot_beispiele
+        //% block="10 Calli:bot Programm fernstarten"
+        mc_md_callibot_beispiele,
+        //% block="20 Fahrplan senden"
+        m1abcd_fahrplan
     }
     export let n_Funktion = eFunktion.ng // aktuell ausgewählte Funktion
 
