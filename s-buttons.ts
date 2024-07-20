@@ -7,13 +7,13 @@ namespace sender { // s-buttons.ts
     export let n_ButtonAB_Counter = 0 // 1..16..31 mit A- B+ ändern
 
     export enum eModell { // zuletzt gewähltes Modell wird im offset 1 dauerhaft gespeiechert
-        //% block="Calli:Bot"
+        //% block="Modell Calli:Bot"
         cb2e, // Standardwert CalliBot
-        //% block="Maker Kit Car"
+        //% block="Modell Maker Kit Car"
         mkcg, // Maker Kit Car ohne und mit Gabelstapler
-        //% block="Maker Kit Car Kran"
+        //% block="Modell Maker Kit Car Kran"
         mkck, // Maker Kit Car mit Kran
-        //% block="Calliope auf Rädern 4"
+        //% block="Modell Calliope auf Rädern 4"
         car4  // CaR 4
     } // so viele Images müssen im Array sein - Bilder am Ende dieser Datei
     export const c_ModellCount = 4
