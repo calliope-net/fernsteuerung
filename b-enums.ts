@@ -121,12 +121,12 @@ namespace btf { // b-enums.ts
 
 
     export enum e3Abstand {
+        //% block="20 cm"
+        u2 = 0x80,
         //% block="10 cm"
         u0 = 0x00,
         //% block="15 cm"
         u1 = 0x40,
-        //% block="20 cm"
-        u2 = 0x80,
         //% block="30 cm"
         u3 = 0xC0
     }
