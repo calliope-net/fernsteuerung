@@ -28,6 +28,24 @@ namespace sender { // s-fernsteuerung.ts
     }
 
     //% group="00 Fernsteuerung Motoren" subcategory="Fernsteuerung"
+    //% block="00 %buffer fahren %motor0 lenken %servo0 Gabelstapler %motor1 Stop %stop bei Abstand < %abstand" weight=4
+    //% buffer.shadow=btf_sendBuffer19
+    //% motor0.shadow=sender_xmotor 
+    //% motor1.shadow=sender_ymotor 
+
+    export function send00M01a(buffer: Buffer, motor0: number, servo0: number, motor1: number, stop: boolean, abstand: btf.e3Abstand) {
+        btf.setBetriebsart(buffer, btf.e0Betriebsart.p0Fahren)
+        btf.setByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor, motor0)
+        btf.setByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo, servo0)//n_ButtonAB_Counter
+        btf.setByte(buffer, btf.eBufferPointer.m1, btf.eBufferOffset.b0_Motor, motor1)
+        btf.setaktiviert(buffer, btf.e3aktiviert.m0, true)
+        btf.setaktiviert(buffer, btf.e3aktiviert.m1, true)
+
+        btf.setSensor(buffer, btf.eBufferPointer.m0, btf.eSensor.b6Abstand, stop)
+        btf.setAbstand(buffer, abstand)
+    }
+
+    //% group="00 Fernsteuerung Motoren" subcategory="Fernsteuerung"
     //% block="00 %buffer MA Seilrolle MB Drehkranz" weight=3
     //% buffer.shadow="btf_sendBuffer19"
     export function send00MAB(buffer: Buffer) {

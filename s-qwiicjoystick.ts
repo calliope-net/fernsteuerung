@@ -150,8 +150,25 @@ namespace sender { // s-qwiicjoystick.ts
         return n_ButtonPosition
     }
 
+    // ========== blockHidden=true
 
+    //% blockId=sender_xmotor blockHidden=true
+    //% block="Joystick x (1↓128↑255)"
+    export function sender_xmotor() {
+        return joystickValue(eJoystickValue.xmotor)
+    }
 
+    //% blockId=sender_ymotor blockHidden=true
+    //% block="Joystick y (1↓128↑255)"
+    export function sender_ymotor() {
+        return joystickValue(eJoystickValue.ymotor)
+    }
+    
+    //% blockId=sender_servo16 blockHidden=true
+    //% block="Joystick y (1↖16↗31)"
+    export function sender_servo16() {
+        return joystickValue(eJoystickValue.servo16)
+    }
 
     //% group="Qwiic Joystick 0x20"
     //% block="Joystick Button war gedrückt || Status löschen %clear" weight=6
