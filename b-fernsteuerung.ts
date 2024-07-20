@@ -185,7 +185,6 @@ namespace btf { // b-fernsteuerung.ts
             return ((input.runningTime() - n_lastConnectedTime) > ms)
     }
 
-    // sichtbarer Event-Block
 
     //% group="Bluetooth empfangen (19 Byte)"
     //% block="ungültige Daten empfangen || < %ms ms" weight=1
@@ -193,6 +192,7 @@ namespace btf { // b-fernsteuerung.ts
     export function getReceivedBufferError(ms = 2000) {
         return ((input.runningTime() - n_lastErrorBufferTime) < ms)
     }
+    // sichtbarer Event-Block
     // draggableParameters=reporter
     //export function onReceivedError(cb: (receivedError: Buffer) => void) {
     //    onReceivedErrorHandler = cb
