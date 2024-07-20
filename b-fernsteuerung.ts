@@ -37,14 +37,14 @@ namespace btf { // b-fernsteuerung.ts
             //sender.resetFunktion()
             //btf.setFunkgruppeButton(btf.eFunkgruppeButton.plus)
             //  a_StorageBuffer[eStorageBuffer.funkgruppe]--
-            radio.setGroup(a_StorageBuffer[eStorageBuffer.funkgruppe]--)
-            storage.putBuffer(a_StorageBuffer)
+            radio.setGroup(--a_StorageBuffer[eStorageBuffer.funkgruppe]) // erst -1, dann zurück lesen
+            storage.putBuffer(a_StorageBuffer) // im Flash speichern
         }
         zeigeFunkgruppe(true)
     }
 
     //% group="calliope-net.github.io/fernsteuerung"
-    //% block="Knopf B halten, Funkgruppe -1 und anzeigen" weight=5
+    //% block="Knopf B halten, Funkgruppe +1 und anzeigen" weight=5
     export function buttonBhold() {
         if (!(input.buttonIsPressed(Button.A)) && a_StorageBuffer[eStorageBuffer.funkgruppe] < 0xBF) {
             //sender.resetFunktion()
@@ -52,8 +52,8 @@ namespace btf { // b-fernsteuerung.ts
 
             // a_StorageBuffer[eStorageBuffer.funkgruppe]++
             //  radio.setGroup(a_StorageBuffer[eStorageBuffer.funkgruppe])
-            radio.setGroup(a_StorageBuffer[eStorageBuffer.funkgruppe]++)
-            storage.putBuffer(a_StorageBuffer)
+            radio.setGroup(++a_StorageBuffer[eStorageBuffer.funkgruppe]) // erst +1, dann zurück lesen
+            storage.putBuffer(a_StorageBuffer) // im Flash speichern
         }
         zeigeFunkgruppe(true)
     }

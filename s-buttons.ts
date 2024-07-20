@@ -204,7 +204,7 @@ namespace sender { // s-buttons.ts
 
 
     //% group="aktuelle Funktion" subcategory="Knopf A B"
-    //% block="Reset Funktion (auf nicht gestartet)" weight=2
+    //% block="Funktion auf 'nicht gestartet' stellen" weight=2
     export function resetFunktion() {
         n_Funktion = eFunktion.ng
     }
