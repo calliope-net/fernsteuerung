@@ -38,12 +38,12 @@ namespace sender { // s-multiswitch.ts
                     else if (bu[3 + 2] == 0) { // 2 nach links
 
                         if (isModell(eModell.mkcg) && isFunktion(eFunktion.m0_m1_s0))
-                            a_ButtonAB_Switch[eButtonAB_Switch.A] = false // n_Magnet = false
+                            n_ButtonA_Switch = false // n_Magnet = false
                     }
                     else if (bu[3 + 4] == 0) { // 4 nach rechts
 
                         if (isModell(eModell.mkcg) && isFunktion(eFunktion.m0_m1_s0))
-                            a_ButtonAB_Switch[eButtonAB_Switch.A] = true // n_Magnet = true
+                            n_ButtonA_Switch = true // n_Magnet = true
                     }
                 }
             }
