@@ -94,6 +94,7 @@ namespace cb2 { // c-fahrstrecke.ts
 
     // ========== group="Strecke fahren (Stop nach • cm oder • ⅒s)" subcategory="Fernsteuerung"
 
+
     //% group="Strecke fahren (Stop nach • cm oder • ⅒s)" subcategory="Fernsteuerung"
     //% block="Strecke %buffer || lenken %prozent \\%" weight=4
     //% buffer.shadow=btf_programmSchritt
@@ -109,8 +110,8 @@ namespace cb2 { // c-fahrstrecke.ts
             writeMotor128Servo16(buffer[0], buffer[1] & 0b00011111, prozent)
 
             if (hasEncoder) {
-
-                while (getEncoderMittelwert() < buffer[2] * n_EncoderFaktor) { // 31.25
+                let n_count_Encoder = 200 // 20 s
+                while ((getEncoderMittelwert() < buffer[2] * n_EncoderFaktor) && n_count_Encoder-- > 0) { // 31.25
                     // Pause eventuell bei hoher Geschwindigkeit motor verringern
                     // oder langsamer fahren wenn Rest strecke kleiner wird
                     basic.pause(100) // 200
