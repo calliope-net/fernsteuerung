@@ -28,7 +28,7 @@ namespace cb2 { // c-beispiele.ts
             m_inSpur = false     // beim ersten Durchlauf der Schleife
         }
 
-        if (stop && (abstand > 0 && (readUltraschallAbstand() < abstand))) { // if (abstand) ist false bei 0
+        if (stop && (abstand > 0 && (readUltraschallAbstand() < abstand))) { 
             writeMotorenStop()
             // writeRgbLeds(Colors.Orange, true)
             writeRgbLed(eRgbLed.lh, Colors.Red, true, true)

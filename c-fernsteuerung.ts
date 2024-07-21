@@ -2,6 +2,15 @@
 namespace cb2 { // c-fahrstrecke.ts
 
 
+    function getAbstandStop(buffer: Buffer, bufferPointer: btf.eBufferPointer) {
+        // Abstand messen
+        return (btf.getSensor(buffer, bufferPointer, btf.eSensor.b6Abstand) // Abstandssensor aktiviert
+            &&
+            btf.getByte(buffer, bufferPointer, btf.eBufferOffset.b0_Motor) > 128 // Fahrtrichtung vorwärts
+            &&
+            readUltraschallAbstand() < btf.getAbstand(buffer))
+    }
+
     // ========== group="Strecke fahren (Fernsteuerung) reagiert auf Sensoren" subcategory="Fernsteuerung"
 
     //% group="Strecke fahren (Fernsteuerung) reagiert auf Sensoren" subcategory="Fernsteuerung"
@@ -110,8 +119,12 @@ namespace cb2 { // c-fahrstrecke.ts
             writeMotor128Servo16(buffer[0], buffer[1] & 0b00011111, prozent)
 
             if (hasEncoder) {
-                let n_count_Encoder = 200 // 20 s
-                while ((getEncoderMittelwert() < buffer[2] * n_EncoderFaktor) && n_count_Encoder-- > 0) { // 31.25
+                let timeout_Encoder = 200 // 20 s Timeout wenn Encoder nicht zählt
+
+                while ((getEncoderMittelwert() < buffer[2] * n_EncoderFaktor) // 31.25
+                    &&
+                    timeout_Encoder-- > 0) {
+
                     // Pause eventuell bei hoher Geschwindigkeit motor verringern
                     // oder langsamer fahren wenn Rest strecke kleiner wird
                     basic.pause(100) // 200
@@ -126,6 +139,53 @@ namespace cb2 { // c-fahrstrecke.ts
     }
 
 
+    //% group="Strecke fahren (Stop nach • cm oder • ⅒s)" subcategory="Fernsteuerung"
+    //% block="Strecke %buffer Stop %stop bei Abstand < (cm) %abstand || lenken %prozent \\%" weight=3
+    //% buffer.shadow=btf_programmSchritt
+    //% stop.shadow="toggleYesNo" stop.defl=1
+    //% abstand.min=10 abstand.max=50 abstand.defl=20
+    //% prozent.min=10 prozent.max=90 prozent.defl=50
+    //% inlineInputMode=inline
+    export function fahreStreckeAbstand(buffer: Buffer, stop: boolean, abstand: number, prozent = 50) { // cm oder zehntelsekunden
+
+        writeMotorenStop()
+
+        if (buffer.length == 3 && buffer[0] != 0 && buffer[1] != 0 && buffer[2] != 0) {
+            let hasEncoder = writeEncoderReset() // Testet ob Encoder vorhanden, Ergebnis in n_Callibot2_x22hasEncoder
+            let timeout_Encoder: number// = 200 // 20 s Timeout wenn Encoder nicht zählt
+
+            writeMotor128Servo16(buffer[0], buffer[1] & 0b00011111, prozent)
+
+            if (hasEncoder) {
+                timeout_Encoder = 200 // 20 s Timeout wenn Encoder nicht zählt
+                while (
+                    (getEncoderMittelwert() < buffer[2] * n_EncoderFaktor) // 31.25
+                    &&
+                    timeout_Encoder-- > 0
+                    &&
+                    !(stop && (abstand > 0 && (readUltraschallAbstand() < abstand)))
+                ) {
+
+                    // Pause eventuell bei hoher Geschwindigkeit motor verringern
+                    // oder langsamer fahren wenn Rest strecke kleiner wird
+                    basic.pause(100) // 200
+                }
+            }
+            else {
+                //  basic.pause(buffer[2] * 100)
+                timeout_Encoder = buffer[2] // Zehntelsekunden
+                while (
+                    timeout_Encoder-- > 0
+                    &&
+                    !(stop && (abstand > 0 && (readUltraschallAbstand() < abstand)))
+                ) {
+                    basic.pause(100) // 1 Zehntelsekunde
+                }
+            }
+
+            writeMotorenStop() // cb2.writeMotor128Servo16(c_MotorStop, 16)
+        }
+    }
 
 
 
