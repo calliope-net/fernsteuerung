@@ -5,6 +5,7 @@ namespace btf { // b-fernsteuerung.ts
     enum eStorageBuffer { funkgruppe, modell /* , c, d */ } // Index im Buffer
 
     let n_start = false
+    export let n_FunkgruppeChanged = false // bei true kann Modell nicht geändert werden, das geht nur nach Reset
 
     export let n_lastConnectedTime = input.runningTime()  // ms seit Start
     let n_lastErrorBufferTime = input.runningTime()
@@ -40,6 +41,7 @@ namespace btf { // b-fernsteuerung.ts
             radio.setGroup(--a_StorageBuffer[eStorageBuffer.funkgruppe]) // erst -1, dann zurück lesen
             storage.putBuffer(a_StorageBuffer) // im Flash speichern
         }
+        n_FunkgruppeChanged = true
         zeigeFunkgruppe(true)
     }
 
@@ -55,10 +57,19 @@ namespace btf { // b-fernsteuerung.ts
             radio.setGroup(++a_StorageBuffer[eStorageBuffer.funkgruppe]) // erst +1, dann zurück lesen
             storage.putBuffer(a_StorageBuffer) // im Flash speichern
         }
+        n_FunkgruppeChanged = true
         zeigeFunkgruppe(true)
     }
 
+    //% group="calliope-net.github.io/fernsteuerung"
+    //% block="%id" color="#7E84F7" weight=2
+    //% id.defl=ButtonEvent.Hold
+    export function buttonEventValue(id: ButtonEvent): number {
+        return id
+    }
 
+
+    // ========== deprecated=1
 
     export enum eFunkgruppeButton {
         //% block="-1 und anzeigen"
@@ -86,14 +97,6 @@ namespace btf { // b-fernsteuerung.ts
 
         zeigeFunkgruppe(true)
 
-    }
-
-
-    //% group="calliope-net.github.io/fernsteuerung"
-    //% block="%id" color="#7E84F7" weight=2
-    //% id.defl=ButtonEvent.Hold
-    export function buttonEventValue(id: ButtonEvent): number {
-        return id
     }
 
 

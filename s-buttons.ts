@@ -44,7 +44,7 @@ namespace sender { // s-buttons.ts
     export function buttonA() {
 
         if (n_Funktion == eFunktion.ng) {
-            if (btf.getStorageModell() > 0)
+            if (!btf.n_FunkgruppeChanged && btf.getStorageModell() > 0) // wenn btf.n_FunkgruppeChanged true, wird Modell nur angezeigt
                 btf.setStorageModell(btf.getStorageModell() - 1)
 
             zeigeImage(btf.getStorageModell())
@@ -79,7 +79,7 @@ namespace sender { // s-buttons.ts
     export function buttonB() {
 
         if (n_Funktion == eFunktion.ng) {
-            if (btf.getStorageModell() < c_ModellCount - 1)
+            if (!btf.n_FunkgruppeChanged && btf.getStorageModell() < c_ModellCount - 1) // wenn btf.n_FunkgruppeChanged true, wird Modell nur angezeigt
                 btf.setStorageModell(btf.getStorageModell() + 1)
 
             zeigeImage(btf.getStorageModell())
@@ -109,9 +109,10 @@ namespace sender { // s-buttons.ts
     //% block="Knopf A+B geklickt" weight=5
     export function buttonAB() {
         // wenn einmal A+B geklickt, wird n_Funktion nie wieder ng (nicht gestartet)
-        if (n_Funktion == eFunktion.ng) // beim ersten Mal (nach Reset)
+        if (n_Funktion == eFunktion.ng) { // beim ersten Mal (nach Reset)
+            btf.n_FunkgruppeChanged = true // verhindert Ändern des Modell
             n_Funktion = eFunktion.m0_s0 // Standardwert immer Fahren und Lenken
-
+        }
         // cb2e Calli:bot von Joystick auf Beispiele umschalten
         else if (isModell(eModell.cb2e) && n_Funktion == eFunktion.m0_s0) {
 
