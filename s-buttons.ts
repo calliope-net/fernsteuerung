@@ -36,7 +36,7 @@ namespace sender { // s-buttons.ts
         //% block="20 Fahrplan senden"
         m1abcd_fahrplan
     }
-    //   export let n_Funktion = eFunktion.ng // aktuell ausgewählte Funktion
+    //   export let n_Funktion = eFunktion.ng // aktuell ausgewählte Funktion ist in b-fernsteuerung.ts Zeile 15
 
 
     //% group="in Eingabe Ereignisse einfügen" subcategory="Knopf A B"
@@ -111,7 +111,10 @@ namespace sender { // s-buttons.ts
         // wenn einmal A+B geklickt, wird n_Funktion nie wieder ng (nicht gestartet)
         if (!isFunktion(eFunktion.ng)) { // nicht gestartet // beim ersten Mal (nach Reset)
             btf.n_FunkgruppeChanged = true // verhindert Ändern des Modell
-            setFunktion(eFunktion.m0_s0)// Standardwert immer Fahren und Lenken
+
+            setFunktion(eFunktion.m0_s0) // Standardwert immer Fahren und Lenken
+            a_ButtonAB_Switch[eButtonAB_Switch.A] = false  // beide aus schalten
+            a_ButtonAB_Switch[eButtonAB_Switch.B] = false
         }
         // cb2e Calli:bot von Joystick auf Beispiele umschalten
         else if (isModell(eModell.cb2e) && isFunktion(eFunktion.m0_s0)) {
@@ -136,12 +139,9 @@ namespace sender { // s-buttons.ts
         else {
             //  a_ButtonAB_Switch[eButtonAB_Switch.AB] = !a_ButtonAB_Switch[eButtonAB_Switch.AB] // Standardwert immer wechseln true-false
 
+            setFunktion(eFunktion.m0_s0) // Standardwert immer Fahren und Lenken
             a_ButtonAB_Switch[eButtonAB_Switch.A] = false  // beide aus schalten
             a_ButtonAB_Switch[eButtonAB_Switch.B] = false
-
-            setFunktion(eFunktion.m0_s0)// Standardwert immer Fahren und Lenken
-            //n_ButtonAB_Counter = 16
-
         }
     }
 
