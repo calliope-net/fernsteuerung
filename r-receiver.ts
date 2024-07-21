@@ -75,7 +75,7 @@ namespace receiver { // r-receiver.ts
     //% encoder.shadow="toggleOnOff"
     //% radDmm.min=60 radDmm.max=80 radDmm.defl=65
     //% zf.shadow="toggleYesNo" zf.defl=1
-    //% modellFunkgruppe.min=160 modellFunkgruppe.max=191
+    // modellFunkgruppe.min=160 modellFunkgruppe.max=191
     // inlineInputMode=inline
     export function beimStart(modell: eHardware, servoGeradeaus: number, encoder: boolean, radDmm: number, zf = true, modellFunkgruppe?: number) {
         n_Hardware = modell

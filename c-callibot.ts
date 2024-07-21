@@ -19,7 +19,7 @@ namespace cb2 { // c-callibot.ts 005F7F
     //% group="calliope-net.github.io/fernsteuerung"
     //% block="beim Start: Calli:bot 2 || Funkgruppe anzeigen %zf %modellFunkgruppe" weight=8
     //% zf.shadow="toggleYesNo" zf.defl=1
-    //% modellFunkgruppe.min=160 modellFunkgruppe.max=191
+    // modellFunkgruppe.min=160 modellFunkgruppe.max=191
     // inlineInputMode=external
     export function beimStart(zf = true, modellFunkgruppe?: number) {
 

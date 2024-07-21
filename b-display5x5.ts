@@ -19,7 +19,10 @@ namespace btf { // b-dispaly5x5.ts
             n5x5_x3 = 0 // Motor 1..16..31
             n5x5_x4 = 0 // Servo 1..16..31
         }
-        zeigeBIN(getStorageFunkgruppe(), ePlot.hex, 1) // 5x5 x=0-1 y=1-2-3-4 (y=0 ist bei hex immer aus)
+        if (between(getStorageFunkgruppe(), c_funkgruppe_min, c_funkgruppe_max))
+            zeigeBIN(getStorageFunkgruppe() << 4, ePlot.hex, 1) // 5x5 x=0-1 y=1-2-3-4 (y=0 ist bei hex immer aus)
+        else
+            zeigeBIN(getStorageFunkgruppe(), ePlot.hex, 1) // 5x5 x=0-1 y=1-2-3-4 (y=0 ist bei hex immer aus)
     }
 
     //% group="BIN" subcategory="Display 5x5" color=#54C9C9

@@ -8,7 +8,7 @@ namespace sender { // s-sender.ts
     //% group="calliope-net.github.io/fernsteuerung"
     //% block="beim Start: Sender || Modell und Funkgruppe anzeigen %zf %modellFunkgruppe" weight=8
     //% zf.shadow="toggleYesNo" zf.defl=1
-    //% modellFunkgruppe.min=160 modellFunkgruppe.max=191
+    // modellFunkgruppe.min=160 modellFunkgruppe.max=191
     // inlineInputMode=external
     export function beimStart(zf = true, modellFunkgruppe?: number) {
         if (!btf.simulator()) {

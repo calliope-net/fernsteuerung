@@ -1,6 +1,9 @@
 //% color=#E3008C weight=95 icon="\uf012" block="Fernsteuerung"
 namespace btf { // b-fernsteuerung.ts
 
+    export const c_funkgruppe_min = 0xB1 // 0xA0
+    export const c_funkgruppe_max = 0xB7 // 0xBF
+
     let a_StorageBuffer = Buffer.create(4) // lokaler Speicher 4 Byte NumberFormat.UInt32LE
     enum eStorageBuffer { funkgruppe, modell /* , c, d */ } // Index im Buffer
 
@@ -17,7 +20,6 @@ namespace btf { // b-fernsteuerung.ts
 
     //% group="calliope-net.github.io/fernsteuerung"
     //% block="beim Start || Funkgruppe %modellFunkgruppe" weight=9
-    //% modellFunkgruppe.min=160 modellFunkgruppe.max=191
     export function beimStart(modellFunkgruppe?: number) {
         setStorageBuffer(modellFunkgruppe)
         //  storage.putBuffer(a_StorageBuffer)
@@ -36,7 +38,7 @@ namespace btf { // b-fernsteuerung.ts
     //% group="calliope-net.github.io/fernsteuerung"
     //% block="Knopf A halten, Funkgruppe -1 und anzeigen" weight=6
     export function buttonAhold() {
-        if (!(input.buttonIsPressed(Button.B)) && a_StorageBuffer[eStorageBuffer.funkgruppe] > 0xA0) {
+        if (!(input.buttonIsPressed(Button.B)) && a_StorageBuffer[eStorageBuffer.funkgruppe] > c_funkgruppe_min) {
             //sender.resetFunktion()
             //btf.setFunkgruppeButton(btf.eFunkgruppeButton.plus)
             //  a_StorageBuffer[eStorageBuffer.funkgruppe]--
@@ -51,7 +53,7 @@ namespace btf { // b-fernsteuerung.ts
     //% group="calliope-net.github.io/fernsteuerung"
     //% block="Knopf B halten, Funkgruppe +1 und anzeigen" weight=5
     export function buttonBhold() {
-        if (!(input.buttonIsPressed(Button.A)) && a_StorageBuffer[eStorageBuffer.funkgruppe] < 0xBF) {
+        if (!(input.buttonIsPressed(Button.A)) && a_StorageBuffer[eStorageBuffer.funkgruppe] < c_funkgruppe_max) {
             //sender.resetFunktion()
             //btf.setFunkgruppeButton(btf.eFunkgruppeButton.plus)
 
@@ -60,7 +62,7 @@ namespace btf { // b-fernsteuerung.ts
             radio.setGroup(++a_StorageBuffer[eStorageBuffer.funkgruppe]) // erst +1, dann zurück lesen
             storage.putBuffer(a_StorageBuffer) // im Flash speichern
             n_Funktion = 0 // Sender nicht gestartet
-      }
+        }
         n_FunkgruppeChanged = true
         zeigeFunkgruppe(true)
     }
@@ -74,35 +76,35 @@ namespace btf { // b-fernsteuerung.ts
 
 
     // ========== deprecated=1
-/* 
-    export enum eFunkgruppeButton {
-        //% block="-1 und anzeigen"
-        minus,
-        //% block="+1 und anzeigen"
-        plus,
-        // block="175 0xAF und anzeigen"
-        //reset
-    }
-
-    //% group="calliope-net.github.io/fernsteuerung"
-    //% block="Funkgruppe ändern %e" weight=4 deprecated=1
-    export function setFunkgruppeButton(e: eFunkgruppeButton) {
-
-        if (e == eFunkgruppeButton.minus && a_StorageBuffer[eStorageBuffer.funkgruppe] > 0xA0)
-            a_StorageBuffer[eStorageBuffer.funkgruppe]--
-        else if (e == eFunkgruppeButton.plus && a_StorageBuffer[eStorageBuffer.funkgruppe] < 0xBF)
-            a_StorageBuffer[eStorageBuffer.funkgruppe]++
-        //else if (e == eFunkgruppeButton.reset)
-        //    a_StorageBuffer[eStorageBuffer.funkgruppe] = 0xAF
-
-        radio.setGroup(a_StorageBuffer[eStorageBuffer.funkgruppe])
-
-        storage.putBuffer(a_StorageBuffer)
-
-        zeigeFunkgruppe(true)
-
-    }
- */
+    /* 
+        export enum eFunkgruppeButton {
+            //% block="-1 und anzeigen"
+            minus,
+            //% block="+1 und anzeigen"
+            plus,
+            // block="175 0xAF und anzeigen"
+            //reset
+        }
+    
+        //% group="calliope-net.github.io/fernsteuerung"
+        //% block="Funkgruppe ändern %e" weight=4 deprecated=1
+        export function setFunkgruppeButton(e: eFunkgruppeButton) {
+    
+            if (e == eFunkgruppeButton.minus && a_StorageBuffer[eStorageBuffer.funkgruppe] > c_funkgruppe_min)
+                a_StorageBuffer[eStorageBuffer.funkgruppe]--
+            else if (e == eFunkgruppeButton.plus && a_StorageBuffer[eStorageBuffer.funkgruppe] < c_funkgruppe_max)
+                a_StorageBuffer[eStorageBuffer.funkgruppe]++
+            //else if (e == eFunkgruppeButton.reset)
+            //    a_StorageBuffer[eStorageBuffer.funkgruppe] = 0xAF
+    
+            radio.setGroup(a_StorageBuffer[eStorageBuffer.funkgruppe])
+    
+            storage.putBuffer(a_StorageBuffer)
+    
+            zeigeFunkgruppe(true)
+    
+        }
+     */
 
     // ========== group="Bluetooth senden" subcategory="Bluetooth"
 
@@ -257,9 +259,9 @@ namespace btf { // b-fernsteuerung.ts
 
         a_StorageBuffer = storage.getBuffer()
 
-        // Funkgruppe (am offset 0) muss 0xA0 .. 0xBF sein
-        if (!between(a_StorageBuffer[eStorageBuffer.funkgruppe], 0xA0, 0xBF))
-            a_StorageBuffer[eStorageBuffer.funkgruppe] = (modellFunkgruppe) ? modellFunkgruppe : 0xAE
+        // Funkgruppe (am offset 0) muss c_funkgruppe_min .. c_funkgruppe_max sein
+        if (!between(a_StorageBuffer[eStorageBuffer.funkgruppe], c_funkgruppe_min, c_funkgruppe_max))
+            a_StorageBuffer[eStorageBuffer.funkgruppe] = (modellFunkgruppe) ? modellFunkgruppe : c_funkgruppe_min
     }
 
 
