@@ -69,7 +69,15 @@ namespace cb2 { // c-fahrstrecke.ts
             n_fahreBuffer19_gestartet = true
 
             for (let iBufferPointer: btf.eBufferPointer = btf.eBufferPointer.p1; iBufferPointer < 19; iBufferPointer += 3) { // 4, 7, 10, 13, 16
-                fahreStrecke(buffer.slice(iBufferPointer, 3))
+                //  fahreStrecke(buffer.slice(iBufferPointer, 3))
+                fahreStreckeAbstand(buffer.slice(iBufferPointer, 3),
+                    btf.getSensor(
+                        buffer,
+                        iBufferPointer,
+                        btf.eSensor.b6Abstand
+                    ),
+                    btf.getAbstand(buffer)
+                )
             }
         }
         else if (n_fahreBuffer19_gestartet && !btf.getaktiviert(buffer, motorBit)) { // m1 false
@@ -159,13 +167,8 @@ namespace cb2 { // c-fahrstrecke.ts
 
             if (hasEncoder) {
                 timeout_Encoder = 200 // 20 s Timeout wenn Encoder nicht zählt
-                while (
-                    (getEncoderMittelwert() < buffer[2] * n_EncoderFaktor) // 31.25
-                    /*  &&
-                     timeout_Encoder-- > 0
-                     &&
-                     !(stop && buffer[0] > c_MotorStop && abstand > 0 && readUltraschallAbstand() < abstand) */
-                ) {
+                while (getEncoderMittelwert() < buffer[2] * n_EncoderFaktor) // 31.25
+                {
                     if (timeout_Encoder-- <= 0) {
                         abstand_color = Colors.Red
                         break
@@ -183,11 +186,10 @@ namespace cb2 { // c-fahrstrecke.ts
             else {
                 //  basic.pause(buffer[2] * 100)
                 timeout_Encoder = buffer[2] // Zehntelsekunden
-                while (
-                    timeout_Encoder-- > 0
-                ) {
+                while (timeout_Encoder-- > 0) //
+                {
                     if (stop && buffer[0] > c_MotorStop && abstand > 0 && readUltraschallAbstand() < abstand) {
-                        abstand_color = Colors.Yellow
+                        abstand_color = Colors.Orange
                         break
                     }
 
@@ -195,7 +197,7 @@ namespace cb2 { // c-fahrstrecke.ts
                 }
             }
 
-            writeMotorenStop() // cb2.writeMotor128Servo16(c_MotorStop, 16)
+            writeMotorenStop()
 
             if (abstand_color != Colors.Off) {
                 writeRgbLeds(abstand_color, true)
