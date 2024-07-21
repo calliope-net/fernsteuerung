@@ -163,7 +163,7 @@ namespace cb2 { // c-fahrstrecke.ts
                     &&
                     timeout_Encoder-- > 0
                     &&
-                    !(stop && (abstand > 0 && (readUltraschallAbstand() < abstand)))
+                    !(stop && buffer[0] > c_MotorStop && abstand > 0 && readUltraschallAbstand() < abstand)
                 ) {
 
                     // Pause eventuell bei hoher Geschwindigkeit motor verringern
@@ -177,7 +177,7 @@ namespace cb2 { // c-fahrstrecke.ts
                 while (
                     timeout_Encoder-- > 0
                     &&
-                    !(stop && (abstand > 0 && (readUltraschallAbstand() < abstand)))
+                    !(stop && buffer[0] > c_MotorStop && abstand > 0 && readUltraschallAbstand() < abstand)
                 ) {
                     basic.pause(100) // 1 Zehntelsekunde
                 }
