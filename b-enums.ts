@@ -19,15 +19,15 @@ namespace btf { // b-enums.ts
         md = 16,
 
         //% block="[4] 1. Strecke"
-        f1 = 4,
+        //f1 = 4,
         //% block="[7] 2. Strecke"
-        f2 = 7,
+        //f2 = 7,
         //% block="[10] 3. Strecke"
-        f3 = 10,
+        //f3 = 10,
         //% block="[13] 4. Strecke"
-        f4 = 13,
+        //f4 = 13,
         //% block="[16] 5. Strecke"
-        f5 = 16,
+        //f5 = 16,
 
         //% block="[4] Ultraschallsensor"
         ue = 4,
