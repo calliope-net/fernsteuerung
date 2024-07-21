@@ -131,7 +131,9 @@ namespace sender { // s-buttons.ts
         // cb2e Calli:bot von fernstarten auf Fahrplan umschalten
         else if (isModell(eModell.cb2e) && isFunktion(eFunktion.mc_md_callibot_beispiele)) {
             setFunktion(eFunktion.m1abcd_fahrplan)
-        }
+            n_ButtonA_Switch = false  // beide aus schalten
+            n_ButtonB_Switch = false
+       }
 
         // mkcg Maker Kit Car ohne und mit Gabelstapler
         else if (isModell(eModell.mkcg) && isFunktion(eFunktion.m0_s0)) {
