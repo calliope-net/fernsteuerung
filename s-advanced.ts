@@ -7,8 +7,9 @@ namespace sender { // s-advanced.ts
     //% block="Reset senden %reset" weight=2
     //% reset.shadow="toggleYesNo"
     export function setSendReset(reset = false) {
-        //if (isFunktion(sender.eFunktion.ng)) // nicht nicht gestartet
-        btf.n_sendReset = reset
+        if (isFunktion(sender.eFunktion.ng)) // nicht nicht gestartet
+            //if (n_Funktion != eFunktion.ng)
+            btf.n_sendReset = reset
     }
 
 

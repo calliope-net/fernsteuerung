@@ -22,7 +22,7 @@ namespace sender { // s-buttons.ts
 
     export enum eFunktion {
         //% block="gestartet"
-        ng, // nicht gestartet
+        ng = 0, // nicht gestartet
         //% block="00 Fahren und Lenken"
         m0_s0,      // Joystick steuert M0 und Servo (Fahren und Lenken)
         //% block="00 Gabelstapler"
@@ -36,14 +36,14 @@ namespace sender { // s-buttons.ts
         //% block="20 Fahrplan senden"
         m1abcd_fahrplan
     }
-    export let n_Funktion = eFunktion.ng // aktuell ausgewählte Funktion
+    //   export let n_Funktion = eFunktion.ng // aktuell ausgewählte Funktion
 
 
     //% group="in Eingabe Ereignisse einfügen" subcategory="Knopf A B"
     //% block="Knopf A geklickt" weight=7
     export function buttonA() {
 
-        if (n_Funktion == eFunktion.ng) {
+        if (!isFunktion(eFunktion.ng)) { // nicht gestartet
             if (!btf.n_FunkgruppeChanged && btf.getStorageModell() > 0) // wenn btf.n_FunkgruppeChanged true, wird Modell nur angezeigt
                 btf.setStorageModell(btf.getStorageModell() - 1)
 
@@ -61,7 +61,7 @@ namespace sender { // s-buttons.ts
                 n_ButtonAB_Counter = 1
         } */
         // Maker Kit Car && Gabelstapler (lenken mit Tasten)
-        else if (isModell(eModell.mkcg) && n_Funktion == eFunktion.m0_m1_s0) {
+        else if (isModell(eModell.mkcg) && isFunktion(eFunktion.m0_m1_s0)) {
 
             if (n_ButtonAB_Counter > 1)  // M0 und M1, Servo über Tasten A- B+ (Gabelstapler)
                 n_ButtonAB_Counter--
@@ -78,7 +78,7 @@ namespace sender { // s-buttons.ts
     //% block="Knopf B geklickt" weight=6
     export function buttonB() {
 
-        if (n_Funktion == eFunktion.ng) {
+        if (!isFunktion(eFunktion.ng)) { // nicht gestartet
             if (!btf.n_FunkgruppeChanged && btf.getStorageModell() < c_ModellCount - 1) // wenn btf.n_FunkgruppeChanged true, wird Modell nur angezeigt
                 btf.setStorageModell(btf.getStorageModell() + 1)
 
@@ -90,7 +90,7 @@ namespace sender { // s-buttons.ts
         //    a_ButtonAB_Switch[eButtonAB_Switch.B] = !a_ButtonAB_Switch[eButtonAB_Switch.B] // Beispiel jetzt aktiv senden
         //}
         // Maker Kit Car && Gabelstapler (lenken mit Tasten)
-        else if (isModell(eModell.mkcg) && n_Funktion == eFunktion.m0_m1_s0) {
+        else if (isModell(eModell.mkcg) && isFunktion(eFunktion.m0_m1_s0)) {
 
             if (n_ButtonAB_Counter < 31)  // M0 und M1, Servo über Tasten A- B+ (Gabelstapler)
                 n_ButtonAB_Counter++
@@ -109,29 +109,29 @@ namespace sender { // s-buttons.ts
     //% block="Knopf A+B geklickt" weight=5
     export function buttonAB() {
         // wenn einmal A+B geklickt, wird n_Funktion nie wieder ng (nicht gestartet)
-        if (n_Funktion == eFunktion.ng) { // beim ersten Mal (nach Reset)
+        if (!isFunktion(eFunktion.ng)) { // nicht gestartet // beim ersten Mal (nach Reset)
             btf.n_FunkgruppeChanged = true // verhindert Ändern des Modell
-            n_Funktion = eFunktion.m0_s0 // Standardwert immer Fahren und Lenken
+            setFunktion(eFunktion.m0_s0)// Standardwert immer Fahren und Lenken
         }
         // cb2e Calli:bot von Joystick auf Beispiele umschalten
-        else if (isModell(eModell.cb2e) && n_Funktion == eFunktion.m0_s0) {
+        else if (isModell(eModell.cb2e) && isFunktion(eFunktion.m0_s0)) {
 
             a_ButtonAB_Switch[eButtonAB_Switch.A] = true  // Ultraschall Sensor aktiv
             a_ButtonAB_Switch[eButtonAB_Switch.B] = false // Beispiel noch nicht aktiv senden; erst nach B geklickt
-            n_Funktion = eFunktion.mc_md_callibot_beispiele
+            setFunktion(eFunktion.mc_md_callibot_beispiele)
             /* if (!btf.between(n_ButtonAB_Counter, 1, 3))
                 n_ButtonAB_Counter = 1 */
         }
         // mkcg Maker Kit Car ohne und mit Gabelstapler
-        else if (isModell(eModell.mkcg) && n_Funktion == eFunktion.m0_s0) {
-            n_Funktion = eFunktion.m0_m1_s0
+        else if (isModell(eModell.mkcg) && isFunktion(eFunktion.m0_s0)) {
+            setFunktion(eFunktion.m0_m1_s0)
             n_ButtonAB_Counter = 16
         }
         // mkck Maker Kit Car mit Kran
-        else if (isModell(eModell.mkck) && n_Funktion == eFunktion.m0_s0)
-            n_Funktion = eFunktion.ma_mb // Funktion weiter schalten
-        else if (isModell(eModell.mkck) && n_Funktion == eFunktion.ma_mb)
-            n_Funktion = eFunktion.mc_mb // Funktion weiter schalten
+        else if (isModell(eModell.mkck) && isFunktion(eFunktion.m0_s0))
+            setFunktion(eFunktion.ma_mb) // Funktion weiter schalten
+        else if (isModell(eModell.mkck) && isFunktion(eFunktion.ma_mb))
+            setFunktion(eFunktion.mc_mb)// Funktion weiter schalten
 
         else {
             //  a_ButtonAB_Switch[eButtonAB_Switch.AB] = !a_ButtonAB_Switch[eButtonAB_Switch.AB] // Standardwert immer wechseln true-false
@@ -139,7 +139,7 @@ namespace sender { // s-buttons.ts
             a_ButtonAB_Switch[eButtonAB_Switch.A] = false  // beide aus schalten
             a_ButtonAB_Switch[eButtonAB_Switch.B] = false
 
-            n_Funktion = eFunktion.m0_s0 // Standardwert immer Fahren und Lenken
+            setFunktion(eFunktion.m0_s0)// Standardwert immer Fahren und Lenken
             //n_ButtonAB_Counter = 16
 
         }
@@ -198,16 +198,21 @@ namespace sender { // s-buttons.ts
     //% block="%pFunktion" weight=3
     export function isFunktion(pFunktion: eFunktion) {
         if (pFunktion == eFunktion.ng)
-            return n_Funktion != eFunktion.ng // wenn nicht nicht gestartet
+            return btf.n_Funktion != eFunktion.ng // wenn nicht nicht gestartet
         else
-            return pFunktion == n_Funktion
+            return pFunktion == btf.n_Funktion
     }
+
+    export function setFunktion(e: eFunktion) {
+        btf.n_Funktion = e
+    }
+
 
 
     //% group="aktuelle Funktion" subcategory="Knopf A B"
     //% block="Funktion auf 'nicht gestartet' stellen" weight=2
     export function resetFunktion() {
-        n_Funktion = eFunktion.ng
+        btf.n_Funktion = eFunktion.ng
     }
 
 

@@ -27,22 +27,22 @@ namespace sender { // s-multiswitch.ts
                 if (isModell(eModell.mkck)) { // (getModell() == eModell.mkck) { // Maker Kit Car mit Kran
 
                     if (bu[3 + 5] == 0) {      // 5 Mitte gedrückt
-                        n_Funktion = eFunktion.m0_s0 // Joystick steuert M0 und Servo (Fahren und Lenken)
+                        setFunktion(eFunktion.m0_s0)// Joystick steuert M0 und Servo (Fahren und Lenken)
                     }
                     else if (bu[3 + 1] == 0) { // 1 nach oben
-                        n_Funktion = eFunktion.ma_mb // MA und MB (Seilrolle und Drehkranz)
+                        setFunktion(eFunktion.ma_mb)// MA und MB (Seilrolle und Drehkranz)
                     }
                     else if (bu[3 + 3] == 0) { // 3 nach unten
-                        n_Funktion = eFunktion.mc_mb // MC und MB (Zahnstange und Drehkranz)
+                        setFunktion(eFunktion.mc_mb) // MC und MB (Zahnstange und Drehkranz)
                     }
                     else if (bu[3 + 2] == 0) { // 2 nach links
 
-                        if (isModell(eModell.mkcg) && n_Funktion == eFunktion.m0_m1_s0)
+                        if (isModell(eModell.mkcg) && isFunktion(eFunktion.m0_m1_s0))
                             a_ButtonAB_Switch[eButtonAB_Switch.A] = false // n_Magnet = false
                     }
                     else if (bu[3 + 4] == 0) { // 4 nach rechts
 
-                        if (isModell(eModell.mkcg) && n_Funktion == eFunktion.m0_m1_s0)
+                        if (isModell(eModell.mkcg) && isFunktion(eFunktion.m0_m1_s0))
                             a_ButtonAB_Switch[eButtonAB_Switch.A] = true // n_Magnet = true
                     }
                 }
