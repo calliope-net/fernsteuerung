@@ -153,6 +153,7 @@ namespace cb2 { // c-fahrstrecke.ts
         if (buffer.length == 3 && buffer[0] != 0 && buffer[1] != 0 && buffer[2] != 0) {
             let hasEncoder = writeEncoderReset() // Testet ob Encoder vorhanden, Ergebnis in n_Callibot2_x22hasEncoder
             let timeout_Encoder: number// = 200 // 20 s Timeout wenn Encoder nicht zählt
+            let abstand_color = Colors.Off
 
             writeMotor128Servo16(buffer[0], buffer[1] & 0b00011111, prozent)
 
@@ -160,11 +161,20 @@ namespace cb2 { // c-fahrstrecke.ts
                 timeout_Encoder = 200 // 20 s Timeout wenn Encoder nicht zählt
                 while (
                     (getEncoderMittelwert() < buffer[2] * n_EncoderFaktor) // 31.25
-                    &&
-                    timeout_Encoder-- > 0
-                    &&
-                    !(stop && buffer[0] > c_MotorStop && abstand > 0 && readUltraschallAbstand() < abstand)
+                    /*  &&
+                     timeout_Encoder-- > 0
+                     &&
+                     !(stop && buffer[0] > c_MotorStop && abstand > 0 && readUltraschallAbstand() < abstand) */
                 ) {
+
+                    if (timeout_Encoder-- > 0) {
+                        abstand_color = Colors.Red
+                        break
+                    }
+                    if (stop && buffer[0] > c_MotorStop && abstand > 0 && readUltraschallAbstand() < abstand) {
+                        abstand_color = Colors.Yellow
+                        break
+                    }
 
                     // Pause eventuell bei hoher Geschwindigkeit motor verringern
                     // oder langsamer fahren wenn Rest strecke kleiner wird
@@ -176,14 +186,23 @@ namespace cb2 { // c-fahrstrecke.ts
                 timeout_Encoder = buffer[2] // Zehntelsekunden
                 while (
                     timeout_Encoder-- > 0
-                    &&
-                    !(stop && buffer[0] > c_MotorStop && abstand > 0 && readUltraschallAbstand() < abstand)
                 ) {
+                    if (stop && buffer[0] > c_MotorStop && abstand > 0 && readUltraschallAbstand() < abstand) {
+                        abstand_color = Colors.Yellow
+                        break
+                    }
+
                     basic.pause(100) // 1 Zehntelsekunde
                 }
             }
 
             writeMotorenStop() // cb2.writeMotor128Servo16(c_MotorStop, 16)
+
+            if (abstand_color != Colors.Off) {
+                writeRgbLeds(abstand_color, true)
+                basic.pause(1000)
+                writeRgbLeds(abstand_color, false)
+            }
         }
     }
 
