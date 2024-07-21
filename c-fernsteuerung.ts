@@ -2,16 +2,7 @@
 namespace cb2 { // c-fahrstrecke.ts
 
 
-    function getAbstandStop(buffer: Buffer, bufferPointer: btf.eBufferPointer) {
-        // Abstand messen
-        return (btf.getSensor(buffer, bufferPointer, btf.eSensor.b6Abstand) // Abstandssensor aktiviert
-            &&
-            btf.getByte(buffer, bufferPointer, btf.eBufferOffset.b0_Motor) > 128 // Fahrtrichtung vorwärts
-            &&
-            readUltraschallAbstand() < btf.getAbstand(buffer))
-    }
-
-    // ========== group="Strecke fahren (Fernsteuerung) reagiert auf Sensoren" subcategory="Fernsteuerung"
+     // ========== group="Strecke fahren (Fernsteuerung) reagiert auf Sensoren" subcategory="Fernsteuerung"
 
     //% group="Strecke fahren (Fernsteuerung) reagiert auf Sensoren" subcategory="Fernsteuerung"
     //% block="fahre mit Joystick aus Datenpaket %buffer lenken %prozent \\%" weight=8
@@ -75,7 +66,7 @@ namespace cb2 { // c-fahrstrecke.ts
                         buffer,
                         iBufferPointer,
                         btf.eSensor.b6Abstand
-                    ),
+                    ), 
                     btf.getAbstand(buffer)
                 )
             }
@@ -117,19 +108,19 @@ namespace cb2 { // c-fahrstrecke.ts
     //% buffer.shadow=btf_programmSchritt
     //% prozent.min=10 prozent.max=90 prozent.defl=50
     // inlineInputMode=inline
-    export function fahreStrecke(buffer: Buffer, prozent = 50) { // cm oder zehntelsekunden
+    export function fahreStrecke(buffer3: Buffer, prozent = 50) { // cm oder zehntelsekunden
 
         writeMotorenStop()
 
-        if (buffer.length == 3 && buffer[0] != 0 && buffer[1] != 0 && buffer[2] != 0) {
+        if (buffer3.length == 3 && buffer3[0] != 0 && buffer3[1] != 0 && buffer3[2] != 0) {
             let hasEncoder = writeEncoderReset() // Testet ob Encoder vorhanden, Ergebnis in n_Callibot2_x22hasEncoder
 
-            writeMotor128Servo16(buffer[0], buffer[1] & 0b00011111, prozent)
+            writeMotor128Servo16(buffer3[0], buffer3[1] & 0b00011111, prozent)
 
             if (hasEncoder) {
                 let timeout_Encoder = 200 // 20 s Timeout wenn Encoder nicht zählt
 
-                while ((getEncoderMittelwert() < buffer[2] * n_EncoderFaktor) // 31.25
+                while ((getEncoderMittelwert() < buffer3[2] * n_EncoderFaktor) // 31.25
                     &&
                     timeout_Encoder-- > 0) {
 
@@ -139,7 +130,7 @@ namespace cb2 { // c-fahrstrecke.ts
                 }
             }
             else {
-                basic.pause(buffer[2] * 100)
+                basic.pause(buffer3[2] * 100)
             }
 
             writeMotorenStop() // cb2.writeMotor128Servo16(c_MotorStop, 16)
@@ -154,26 +145,26 @@ namespace cb2 { // c-fahrstrecke.ts
     //% abstand.min=10 abstand.max=50 abstand.defl=20
     //% prozent.min=10 prozent.max=90 prozent.defl=50
     //% inlineInputMode=inline
-    export function fahreStreckeAbstand(buffer: Buffer, stop: boolean, abstand: number, prozent = 50) { // cm oder zehntelsekunden
+    export function fahreStreckeAbstand(buffer3: Buffer, stop: boolean, abstand: number, prozent = 50) { // cm oder zehntelsekunden
 
         writeMotorenStop()
 
-        if (buffer.length == 3 && buffer[0] != 0 && buffer[1] != 0 && buffer[2] != 0) {
+        if (buffer3.length == 3 && buffer3[0] != 0 && buffer3[1] != 0 && buffer3[2] != 0) {
             let hasEncoder = writeEncoderReset() // Testet ob Encoder vorhanden, Ergebnis in n_Callibot2_x22hasEncoder
             let timeout_Encoder: number// = 200 // 20 s Timeout wenn Encoder nicht zählt
             let abstand_color = Colors.Off
 
-            writeMotor128Servo16(buffer[0], buffer[1] & 0b00011111, prozent)
+            writeMotor128Servo16(buffer3[0], buffer3[1] & 0b00011111, prozent)
 
             if (hasEncoder) {
                 timeout_Encoder = 200 // 20 s Timeout wenn Encoder nicht zählt
-                while (getEncoderMittelwert() < buffer[2] * n_EncoderFaktor) // 31.25
+                while (getEncoderMittelwert() < buffer3[2] * n_EncoderFaktor) // 31.25
                 {
                     if (timeout_Encoder-- <= 0) {
                         abstand_color = Colors.Red
                         break
                     }
-                    if (stop && buffer[0] > c_MotorStop && abstand > 0 && readUltraschallAbstand() < abstand) {
+                    if (stop && buffer3[0] > c_MotorStop && abstand > 0 && readUltraschallAbstand() < abstand) {
                         abstand_color = Colors.Yellow
                         break
                     }
@@ -185,10 +176,10 @@ namespace cb2 { // c-fahrstrecke.ts
             }
             else {
                 //  basic.pause(buffer[2] * 100)
-                timeout_Encoder = buffer[2] // Zehntelsekunden
+                timeout_Encoder = buffer3[2] // Zehntelsekunden
                 while (timeout_Encoder-- > 0) //
                 {
-                    if (stop && buffer[0] > c_MotorStop && abstand > 0 && readUltraschallAbstand() < abstand) {
+                    if (stop && buffer3[0] > c_MotorStop && abstand > 0 && readUltraschallAbstand() < abstand) {
                         abstand_color = Colors.Orange
                         break
                     }
