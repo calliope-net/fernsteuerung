@@ -36,8 +36,11 @@ namespace btf { // b-dispaly5x5.ts
             if ((n5x5_x01y0 & 0x10) == 0x10) { led.plot(1, 0) } else { led.unplot(1, 0) }
         }
 
+        if (btf.isBetriebsart(buffer, btf.e0Betriebsart.p2Fahrplan)) {
+            // Betriebsart 20 Fahrplan nichts anzeigen siehe unten zeigeBINx234Fahrplan
+        }
         // Mitte x=2 aktivierte Motoren aus Buffer anzeigen
-        if (n5x5_x2 != buffer[3]) {
+        else if (n5x5_x2 != buffer[3]) {
             n5x5_x2 = buffer[3]
             let x = 2 // 5x5 x=2 Motor Power außer m0
             if ((n5x5_x2 & e3aktiviert.m1) == e3aktiviert.m1) { led.plot(x, 0) } else { led.unplot(x, 0) }
@@ -60,6 +63,9 @@ namespace btf { // b-dispaly5x5.ts
             // fahren und lenken mit Servo
             zeigeBINx3Motor_map255(buffer[eBufferPointer.m0])
             zeigeBINx4Servo_31(buffer[eBufferPointer.m0 + eBufferOffset.b1_Servo] & 0x1F)
+        }
+        else if (btf.isBetriebsart(buffer, btf.e0Betriebsart.p2Fahrplan)) {
+            // Betriebsart 20 Fahrplan nichts anzeigen siehe unten zeigeBINx234Fahrplan
         }
         else {
             // die ersten 2 aktivierten Motoren ohne Servo
@@ -133,17 +139,17 @@ namespace btf { // b-dispaly5x5.ts
     }
 
     export function zeigeBINx234Fahrplan(buffer: Buffer, iBufferPointer: btf.eBufferPointer) { // 4, 7, 10, 13, 16
-         //  Math.pow(2, 4 - Math.idiv(iBufferPointer - 4, 3)) // 16, 8, 4, 2, 1
+        //  Math.pow(2, 4 - Math.idiv(iBufferPointer - 4, 3)) // 16, 8, 4, 2, 1
         let x = 2
-        if (iBufferPointer == btf.eBufferPointer.m1) { led.plot(x, 4) } //else { led.unplot(x, 0) }
-        if (iBufferPointer == btf.eBufferPointer.ma) { led.plot(x, 3) } //else { led.unplot(x, 1) }
+        if (iBufferPointer == btf.eBufferPointer.m1) { led.plot(x, 0) } //else { led.unplot(x, 0) }
+        if (iBufferPointer == btf.eBufferPointer.ma) { led.plot(x, 1) } //else { led.unplot(x, 1) }
         if (iBufferPointer == btf.eBufferPointer.mb) { led.plot(x, 2) } //else { led.unplot(x, 2) }
-        if (iBufferPointer == btf.eBufferPointer.mc) { led.plot(x, 1) } //else { led.unplot(x, 3) }
-        if (iBufferPointer == btf.eBufferPointer.md) { led.plot(x, 0) } //else { led.unplot(x, 4) }
- 
+        if (iBufferPointer == btf.eBufferPointer.mc) { led.plot(x, 3) } //else { led.unplot(x, 3) }
+        if (iBufferPointer == btf.eBufferPointer.md) { led.plot(x, 4) } //else { led.unplot(x, 4) }
+
         zeigeBINx3Motor_map255(buffer[iBufferPointer + eBufferOffset.b0_Motor])
         zeigeBINx4Servo_31(buffer[iBufferPointer + eBufferOffset.b1_Servo] & 0x1F)
-   }
+    }
 
 
 
