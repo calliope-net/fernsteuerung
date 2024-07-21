@@ -140,8 +140,12 @@ namespace btf { // b-dispaly5x5.ts
 
     export function zeigeBINx234Fahrplan(buffer: Buffer, iBufferPointer: btf.eBufferPointer) { // 4, 7, 10, 13, 16
         //  Math.pow(2, 4 - Math.idiv(iBufferPointer - 4, 3)) // 16, 8, 4, 2, 1
+
         let x = 2
-        if (iBufferPointer == btf.eBufferPointer.m1) { led.plot(x, 0) } //else { led.unplot(x, 0) }
+        if (iBufferPointer == btf.eBufferPointer.m1) {
+            zeigeBIN(0, ePlot.bin, 2)
+            led.plot(x, 0)
+        } //else { led.unplot(x, 0) }
         if (iBufferPointer == btf.eBufferPointer.ma) { led.plot(x, 1) } //else { led.unplot(x, 1) }
         if (iBufferPointer == btf.eBufferPointer.mb) { led.plot(x, 2) } //else { led.unplot(x, 2) }
         if (iBufferPointer == btf.eBufferPointer.mc) { led.plot(x, 3) } //else { led.unplot(x, 3) }

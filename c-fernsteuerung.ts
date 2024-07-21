@@ -58,6 +58,7 @@ namespace cb2 { // c-fahrstrecke.ts
 
         if (!n_fahreBuffer19_gestartet && btf.getaktiviert(buffer, motorBit)) { // m1 true
             n_fahreBuffer19_gestartet = true
+            btf.zeigeBIN(0, btf.ePlot.bin, 2)
 
             for (let iBufferPointer: btf.eBufferPointer = btf.eBufferPointer.p1; iBufferPointer < 19; iBufferPointer += 3) { // 4, 7, 10, 13, 16
                 //  fahreStrecke(buffer.slice(iBufferPointer, 3))
@@ -75,6 +76,7 @@ namespace cb2 { // c-fahrstrecke.ts
         }
         else if (n_fahreBuffer19_gestartet && !btf.getaktiviert(buffer, motorBit)) { // m1 false
             n_fahreBuffer19_gestartet = false
+            btf.zeigeBIN(0, btf.ePlot.bin, 2)
         }
 
     }
