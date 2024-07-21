@@ -166,8 +166,7 @@ namespace cb2 { // c-fahrstrecke.ts
                      &&
                      !(stop && buffer[0] > c_MotorStop && abstand > 0 && readUltraschallAbstand() < abstand) */
                 ) {
-
-                    if (timeout_Encoder-- > 0) {
+                    if (timeout_Encoder-- <= 0) {
                         abstand_color = Colors.Red
                         break
                     }
