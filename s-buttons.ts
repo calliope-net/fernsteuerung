@@ -147,11 +147,11 @@ namespace sender { // s-buttons.ts
 
 
 
-    //% group="Schalter / Zähler" subcategory="Knopf A B" deprecated=1
-    //% block="Knopf %pSchalter Schalter" weight=5
-    export function getButtonAB_Switch(pSwitch: eButtonAB_Switch): boolean {
-        return a_ButtonAB_Switch[pSwitch]
-    }
+    // group="Schalter / Zähler" subcategory="Knopf A B" deprecated=1
+    // block="Knopf %pSchalter Schalter" weight=5
+    //export function getButtonAB_Switch(pSwitch: eButtonAB_Switch): boolean {
+    //    return a_ButtonAB_Switch[pSwitch]
+    //}
 
     //% group="Schalter / Zähler" subcategory="Knopf A B"
     //% blockId=sender_ButtonA_Switch
@@ -167,11 +167,11 @@ namespace sender { // s-buttons.ts
         return a_ButtonAB_Switch[eButtonAB_Switch.B]
     }
 
-    //% group="Schalter / Zähler" subcategory="Knopf A B" deprecated=1
-    //% block="Knopf A-B+ Zähler" weight=2
-    export function getButtonAB_Counter() {
-        return n_ButtonAB_Counter
-    }
+    // group="Schalter / Zähler" subcategory="Knopf A B" deprecated=1
+    // block="Knopf A-B+ Zähler" weight=2
+    //export function getButtonAB_Counter() {
+    //    return n_ButtonAB_Counter
+    //}
 
     //% group="Schalter / Zähler" subcategory="Knopf A B"
     //% blockId=sender_ButtonAB_Counter
@@ -187,18 +187,18 @@ namespace sender { // s-buttons.ts
     //% group="aktuelles Modell" subcategory="Knopf A B"
     //% block="%pModell" weight=4
     export function isModell(pModell: eModell) {
-        // return btf.isModell(pModell)
         return btf.getStorageModell() == pModell
     }
 
 
     // ========== group="aktuelle Funktion" subcategory="Knopf A B"
+    // btf.n_Funktion wird in b-fernsteuerung.ts gespeichert und dort beim Ändern der Funkgruppe auf 0 gesetzt
 
     //% group="aktuelle Funktion" subcategory="Knopf A B"
     //% block="%pFunktion" weight=3
     export function isFunktion(pFunktion: eFunktion) {
         if (pFunktion == eFunktion.ng)
-            return btf.n_Funktion != eFunktion.ng // wenn nicht nicht gestartet
+            return btf.n_Funktion != eFunktion.ng // true wenn != 0 (nicht nicht) gestartet
         else
             return pFunktion == btf.n_Funktion
     }
@@ -209,11 +209,11 @@ namespace sender { // s-buttons.ts
 
 
 
-    //% group="aktuelle Funktion" subcategory="Knopf A B"
-    //% block="Funktion auf 'nicht gestartet' stellen" weight=2
-    export function resetFunktion() {
-        btf.n_Funktion = eFunktion.ng
-    }
+    // group="aktuelle Funktion" subcategory="Knopf A B"
+    // block="Funktion auf 'nicht gestartet' stellen" weight=2
+    //export function resetFunktion() {
+    //    btf.n_Funktion = eFunktion.ng
+    //}
 
 
     //% group="Ereignisse" subcategory="Knopf A B"

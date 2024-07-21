@@ -74,7 +74,7 @@ namespace btf { // b-fernsteuerung.ts
 
 
     // ========== deprecated=1
-
+/* 
     export enum eFunkgruppeButton {
         //% block="-1 und anzeigen"
         minus,
@@ -102,7 +102,7 @@ namespace btf { // b-fernsteuerung.ts
         zeigeFunkgruppe(true)
 
     }
-
+ */
 
     // ========== group="Bluetooth senden" subcategory="Bluetooth"
 
