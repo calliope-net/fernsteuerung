@@ -18,17 +18,6 @@ namespace btf { // b-enums.ts
         //% block="[16] MD"
         md = 16,
 
-        //% block="[4] 1. Strecke"
-        //f1 = 4,
-        //% block="[7] 2. Strecke"
-        //f2 = 7,
-        //% block="[10] 3. Strecke"
-        //f3 = 10,
-        //% block="[13] 4. Strecke"
-        //f4 = 13,
-        //% block="[16] 5. Strecke"
-        //f5 = 16,
-
         //% block="[4] Ultraschallsensor"
         ue = 4,
         //% block="[7] Spursensor 00"
@@ -54,6 +43,19 @@ namespace btf { // b-enums.ts
         //% block="MD | 5. Strecke | Spur 11"
         p5 = 16
     }
+
+
+        // block="[4] 1. Strecke"
+        //f1 = 4,
+        // block="[7] 2. Strecke"
+        //f2 = 7,
+        // block="[10] 3. Strecke"
+        //f3 = 10,
+        // block="[13] 4. Strecke"
+        //f4 = 13,
+        // block="[16] 5. Strecke"
+        //f5 = 16,
+
 
     export enum eBufferOffset { // 3 Byte (b0-b1-b2) ab n_BufferPointer
         //% block="Motor (1 ↓ 128 ↑ 255)"
