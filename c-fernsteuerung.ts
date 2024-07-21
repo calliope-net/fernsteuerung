@@ -2,7 +2,7 @@
 namespace cb2 { // c-fahrstrecke.ts
 
 
-     // ========== group="Strecke fahren (Fernsteuerung) reagiert auf Sensoren" subcategory="Fernsteuerung"
+    // ========== group="Strecke fahren (Fernsteuerung) reagiert auf Sensoren" subcategory="Fernsteuerung"
 
     //% group="Strecke fahren (Fernsteuerung) reagiert auf Sensoren" subcategory="Fernsteuerung"
     //% block="fahre mit Joystick aus Datenpaket %buffer lenken %prozent \\%" weight=8
@@ -61,12 +61,14 @@ namespace cb2 { // c-fahrstrecke.ts
 
             for (let iBufferPointer: btf.eBufferPointer = btf.eBufferPointer.p1; iBufferPointer < 19; iBufferPointer += 3) { // 4, 7, 10, 13, 16
                 //  fahreStrecke(buffer.slice(iBufferPointer, 3))
+                btf.zeigeBINx234Fahrplan(buffer, iBufferPointer)
+
                 fahreStreckeAbstand(buffer.slice(iBufferPointer, 3),
                     btf.getSensor(
                         buffer,
                         iBufferPointer,
                         btf.eSensor.b6Abstand
-                    ), 
+                    ),
                     btf.getAbstand(buffer)
                 )
             }
