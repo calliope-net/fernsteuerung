@@ -7,8 +7,8 @@ namespace sender { // s-advanced.ts
     //% block="Reset senden %reset" weight=2
     //% reset.shadow="toggleYesNo"
     export function setSendReset(reset = false) {
-        if (isFunktion(sender.eFunktion.ng)) // nicht nicht gestartet
-            btf.n_sendReset = reset
+        //if (isFunktion(sender.eFunktion.ng)) // nicht nicht gestartet
+        btf.n_sendReset = reset
     }
 
 
@@ -20,7 +20,7 @@ namespace sender { // s-advanced.ts
 
     //% group="Bluetooth empfangen (Text)" advanced=true
     //% block="Status empfangen aktivieren" weight=5
-     function receivedStringRegisterEvent() {
+    function receivedStringRegisterEvent() {
 
         radio.onReceivedString(function (receivedString) {
             n_receivedStringChanged = n_receivedString != receivedString

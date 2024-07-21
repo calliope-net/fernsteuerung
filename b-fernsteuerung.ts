@@ -24,7 +24,7 @@ namespace btf { // b-fernsteuerung.ts
 
     export function beimStartintern() {
 
-        radio.setGroup(getStorageFunkgruppe())// a_StorageBuffer[eStorageBuffer.funkgruppe])
+        radio.setGroup(getStorageFunkgruppe())
         radio.setTransmitPower(7)
         radio.setTransmitSerialNumber(true)
 
