@@ -119,15 +119,20 @@ namespace sender { // s-buttons.ts
             n_ButtonA_Switch = false  // beide aus schalten
             n_ButtonB_Switch = false
         }
-        // cb2e Calli:bot von Joystick auf Beispiele umschalten
+        // cb2e Calli:bot von Joystick auf fernstarten umschalten
         else if (isModell(eModell.cb2e) && isFunktion(eFunktion.m0_s0)) {
 
             n_ButtonA_Switch = true  // Ultraschall Sensor aktiv
-            n_ButtonB_Switch= false // Beispiel noch nicht aktiv senden; erst nach B geklickt
+            n_ButtonB_Switch = false // Beispiel noch nicht aktiv senden; erst nach B geklickt
             setFunktion(eFunktion.mc_md_callibot_beispiele)
             /* if (!btf.between(n_ButtonAB_Counter, 1, 3))
                 n_ButtonAB_Counter = 1 */
         }
+        // cb2e Calli:bot von fernstarten auf Fahrplan umschalten
+        else if (isModell(eModell.cb2e) && isFunktion(eFunktion.mc_md_callibot_beispiele)) {
+            setFunktion(eFunktion.m1abcd_fahrplan)
+        }
+
         // mkcg Maker Kit Car ohne und mit Gabelstapler
         else if (isModell(eModell.mkcg) && isFunktion(eFunktion.m0_s0)) {
             setFunktion(eFunktion.m0_m1_s0)

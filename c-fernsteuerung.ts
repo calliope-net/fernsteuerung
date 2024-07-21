@@ -48,13 +48,25 @@ namespace cb2 { // c-fahrstrecke.ts
 
     // ========== group="Strecke fahren (Fernprogrammierung)" subcategory="Fernsteuerung"
 
+    let n_fahreBuffer19_gestartet = false
+
     //% group="Strecke fahren (Fernprogrammierung)" subcategory="Fernsteuerung"
-    //% block="fahre Strecke 1-5 aus Datenpaket %buffer" weight=4
+    //% block="fahre Strecke 1-5 aus Datenpaket %buffer Steuerbit %motorBit" weight=4
     //% buffer.shadow=btf_receivedBuffer19
-    export function fahreBuffer19(buffer: Buffer) {
-        for (let iBufferPointer: btf.eBufferPointer = btf.eBufferPointer.p1; iBufferPointer < 19; iBufferPointer += 3) { // 4, 7, 10, 13, 16
-            fahreStrecke(buffer.slice(iBufferPointer, 3))
+    //% motorBit.defl=btf.e3aktiviert.m1
+    export function fahreBuffer19(buffer: Buffer, motorBit: btf.e3aktiviert) {
+
+        if (!n_fahreBuffer19_gestartet && btf.getaktiviert(buffer, motorBit)) { // m1 true
+            n_fahreBuffer19_gestartet = true
+
+            for (let iBufferPointer: btf.eBufferPointer = btf.eBufferPointer.p1; iBufferPointer < 19; iBufferPointer += 3) { // 4, 7, 10, 13, 16
+                fahreStrecke(buffer.slice(iBufferPointer, 3))
+            }
         }
+        else if (n_fahreBuffer19_gestartet && !btf.getaktiviert(buffer, motorBit)) { // m1 false
+            n_fahreBuffer19_gestartet = false
+        }
+
     }
 
 
