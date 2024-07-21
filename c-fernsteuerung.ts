@@ -77,6 +77,8 @@ namespace cb2 { // c-fahrstrecke.ts
         else if (n_fahreBuffer19_gestartet && !btf.getaktiviert(buffer, motorBit)) { // m1 false
             n_fahreBuffer19_gestartet = false
             btf.zeigeBIN(0, btf.ePlot.bin, 2)
+            btf.zeigeBIN(0, btf.ePlot.bin, 3)
+            btf.zeigeBIN(0, btf.ePlot.bin, 4)
         }
 
     }
