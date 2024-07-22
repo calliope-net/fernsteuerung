@@ -230,7 +230,8 @@ namespace btf { // b-dispaly5x5.ts
                 if (format == ePlot.bcd) {
                     zeigeBIN(int % 10, ePlot.bin, xLed) // Ziffer 0..9
                     int = Math.idiv(int, 10) // 32 bit signed integer
-                } else if (format == ePlot.hex) {
+                } 
+                else if (format == ePlot.hex) {
                     zeigeBIN(int % 16, ePlot.bin, xLed) // Ziffer 0..15
                     int = int >>> 4 // bitweise Division durch 16
                 }
