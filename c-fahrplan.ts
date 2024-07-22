@@ -50,7 +50,7 @@ namespace cb2 { // c-fahrplan.ts
     //% spurSensor.shadow=toggleOnOff
     //% impulse.shadow=toggleOnOff
     //% inlineInputMode=inline
-    export function fahreStreckePicker(motor: number, servo: number, strecke: number, abstandsSensor = true, abstand: number, spurSensor = false, impulse = false) {
+    export function fahreStreckePicker(motor: number, servo: number, strecke: number, abstandsSensor = true, abstand = 20, spurSensor = false, impulse = false) {
         fahreStrecke(btf.speedPicker(motor), btf.protractorPicker(servo), strecke, abstandsSensor, abstand, spurSensor, impulse)
     }
 
@@ -64,7 +64,7 @@ namespace cb2 { // c-fahrplan.ts
     //% spurSensor.shadow=toggleOnOff
     //% impulse.shadow=toggleOnOff
     //% inlineInputMode=inline
-    export function fahreStrecke(motor: number, servo: number, strecke: number, abstandsSensor = true, abstand: number, spurSensor = false, impulse = false) {
+    export function fahreStrecke(motor: number, servo: number, strecke: number, abstandsSensor = true, abstand = 20, spurSensor = false, impulse = false) {
 
         writeMotorenStop()
 
