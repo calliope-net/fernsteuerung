@@ -7,10 +7,10 @@ namespace cb2 { // c-fahrplan.ts
 
     let n_fahreBuffer19_gestartet = false
 
-    //% group="Strecke fahren (Fernprogrammierung)" subcategory="Fahrplan"
-    //% block="fahre Strecke 1-5 aus Datenpaket %buffer Steuerbit %motorBit" weight=4
+    //% group="20 Fahrplan empfangen" subcategory="Fahrplan"
+    //% block="fahre Strecke 1-5 aus Datenpaket %buffer Start Bit %motorBit" weight=4
     //% buffer.shadow=btf_receivedBuffer19
-    //% motorBit.defl=btf.e3aktiviert.m1
+    //% motorBit.defl=btf.e3aktiviert.f1
     export function fahreBuffer19(buffer: Buffer, motorBit: btf.e3aktiviert) {
 
         if (!n_fahreBuffer19_gestartet && btf.getaktiviert(buffer, motorBit)) { // m1 true
@@ -36,6 +36,84 @@ namespace cb2 { // c-fahrplan.ts
             btf.zeigeBIN(0, btf.ePlot.bin, 2)
             btf.zeigeBIN(0, btf.ePlot.bin, 3)
             btf.zeigeBIN(0, btf.ePlot.bin, 4)
+        }
+
+    }
+    //% group="Geschwindigkeit (-100 ↓ 0 ↑ +100), Winkel (0° ↖ 90° ↗ 180°)" subcategory="Fahrplan"
+    //% block="Fahren %motor Lenken %servo Länge %strecke cm\\|⅒s || Stop %abstandsSensor bei Abstand < (cm) %abstand Spursensor %spurSensor Impulse %impulse" weight=7
+
+    //% motor.shadow=speedPicker motor.defl=50
+    //% servo.shadow=protractorPicker servo.defl=90
+    //% strecke.min=10 strecke.max=255 strecke.defl=20
+    //% abstandsSensor.shadow=toggleOnOff abstandsSensor.defl=1
+    //% abstand.min=10 abstand.max=50 abstand.defl=20
+    //% spurSensor.shadow=toggleOnOff
+    //% impulse.shadow=toggleOnOff
+    //% inlineInputMode=inline
+    export function fahreStreckePicker(motor: number, servo: number, strecke: number, abstandsSensor = true, abstand: number, spurSensor = false, impulse = false) {
+        fahreStrecke(btf.speedPicker(motor), btf.protractorPicker(servo), strecke, abstandsSensor, abstand, spurSensor, impulse)
+    }
+
+    //% group="Geschwindigkeit (1 ↓ 128 ↑ 255), Winkel (1 ↖ 16 ↗ 31)" subcategory="Fahrplan"
+    //% block="Fahren (1↓128↑255) %motor Lenken (1↖16↗31) %servo Länge %strecke cm\\|⅒s || Stop %abstandsSensor bei Abstand < (cm) %abstand Spursensor %spurSensor Impulse %impulse" weight=5
+    //% motor.min=1 motor.max=255 motor.defl=230
+    //% servo.min=1 servo.max=31 servo.defl=26
+    //% strecke.min=10 strecke.max=255 strecke.defl=250
+    //% abstandsSensor.shadow=toggleOnOff abstandsSensor.defl=1
+    //% abstand.min=10 abstand.max=50 abstand.defl=20
+    //% spurSensor.shadow=toggleOnOff
+    //% impulse.shadow=toggleOnOff
+    //% inlineInputMode=inline
+    export function fahreStrecke(motor: number, servo: number, strecke: number, abstandsSensor = true, abstand: number, spurSensor = false, impulse = false) {
+
+        writeMotorenStop()
+
+        if (motor != 0 && servo != 0 && strecke != 0) {
+            let hasEncoder = writeEncoderReset() // Testet ob Encoder vorhanden, Ergebnis in n_Callibot2_x22hasEncoder
+            let timeout_Encoder: number// = 200 // 20 s Timeout wenn Encoder nicht zählt
+            let abstand_color = Colors.Off
+
+            writeMotor128Servo16(motor, servo & 0b00011111) //, prozent
+
+            if (hasEncoder) {
+                timeout_Encoder = 200 // 20 s Timeout wenn Encoder nicht zählt
+                while (getEncoderMittelwert() < strecke * n_EncoderFaktor) // 31.25
+                {
+                    if (timeout_Encoder-- <= 0) {
+                        abstand_color = Colors.Red
+                        break
+                    }
+                    if (abstandsSensor && motor > c_MotorStop && abstand > 0 && readUltraschallAbstand() < abstand) {
+                        abstand_color = Colors.Yellow
+                        break
+                    }
+
+                    // Pause eventuell bei hoher Geschwindigkeit motor verringern
+                    // oder langsamer fahren wenn Rest strecke kleiner wird
+                    basic.pause(100) // 200
+                }
+            }
+            else {
+                //  basic.pause(buffer[2] * 100)
+                timeout_Encoder = strecke // Zehntelsekunden
+                while (timeout_Encoder-- > 0) //
+                {
+                    if (abstandsSensor && motor > c_MotorStop && abstand > 0 && readUltraschallAbstand() < abstand) {
+                        abstand_color = Colors.Orange
+                        break
+                    }
+
+                    basic.pause(100) // 1 Zehntelsekunde
+                }
+            }
+
+            writeMotorenStop()
+
+            if (abstand_color != Colors.Off) {
+                writeRgbLeds(abstand_color, true)
+                basic.pause(1000)
+                writeRgbLeds(abstand_color, false)
+            }
         }
 
     }
@@ -71,7 +149,7 @@ namespace cb2 { // c-fahrplan.ts
     //% buffer.shadow=btf_programmSchritt
     //% prozent.min=10 prozent.max=90 prozent.defl=50
     // inlineInputMode=inline
-    export function fahreStrecke(buffer3: Buffer, prozent = 50) { // cm oder zehntelsekunden
+    /* export function fahreStrecke(buffer3: Buffer, prozent = 50) { // cm oder zehntelsekunden
 
         writeMotorenStop()
 
@@ -98,7 +176,8 @@ namespace cb2 { // c-fahrplan.ts
 
             writeMotorenStop() // cb2.writeMotor128Servo16(c_MotorStop, 16)
         }
-    }
+    } */
+
 
 
     //% group="Strecke fahren (Stop nach • cm oder • ⅒s)" subcategory="Fahrplan"
