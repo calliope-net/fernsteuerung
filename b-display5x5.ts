@@ -4,7 +4,7 @@ namespace btf { // b-dispaly5x5.ts
 
     // ========== group="25 LED Display" advanced=true color=#54C9C9
 
-    export let n5x5_setClearScreen = false // wenn ein Image angezeigt wird, merken dass z.B. Funkgruppe wieder angezeigt werden muss
+    export let n5x5_setClearScreen = true // wenn ein Image angezeigt wird, merken dass z.B. Funkgruppe wieder angezeigt werden muss
 
     let n5x5_x01y0 = 0 // Bit 5-4 Betriebsart in x=0-1 y=0
     // let n5x5_x2 = 0 // Bit 5-4-3-2-1 Motor Power in x=2
@@ -14,18 +14,22 @@ namespace btf { // b-dispaly5x5.ts
     let a5x5_xBuffer = Buffer.create(5)
 
     // ↕↕...
-    export function zeigeFunkgruppe(clearScreen: boolean) {
-        if (clearScreen) {
-            basic.clearScreen()
-            a5x5_xBuffer.fill(0, 2, 3)
-            // n5x5_x2 = 0 // Bit 5-4-3-2-1 Motor Power in x=2
-            // n5x5_x3 = 0 // Motor 1..16..31
-            // n5x5_x4 = 0 // Servo 1..16..31
+    export function zeigeFunkgruppe() {
+        /*  if (clearScreen) {
+             basic.clearScreen()
+             a5x5_xBuffer.fill(0, 2, 3)
+             // n5x5_x2 = 0 // Bit 5-4-3-2-1 Motor Power in x=2
+             // n5x5_x3 = 0 // Motor 1..16..31
+             // n5x5_x4 = 0 // Servo 1..16..31
+         } */
+        let int = getStorageFunkgruppe()
+        if (between(int, c_funkgruppe_min, c_funkgruppe_max)) {
+            // zeigeBIN(getStorageFunkgruppe() << 4, ePlot.hex, 1) // 5x5 x=0-1 y=1-2-3-4 (y=0 ist bei hex immer aus)
+            int = [0x10, 0x30, 0x70, 0xF0, 0xF1, 0xF3, 0xF7, 0xFF][getStorageFunkgruppe() & 0x07] // 3 Bit 0..7 als Index
         }
-        if (between(getStorageFunkgruppe(), c_funkgruppe_min, c_funkgruppe_max))
-            zeigeBIN(getStorageFunkgruppe() << 4, ePlot.hex, 1) // 5x5 x=0-1 y=1-2-3-4 (y=0 ist bei hex immer aus)
-        else
-            zeigeBIN(getStorageFunkgruppe(), ePlot.hex, 1) // 5x5 x=0-1 y=1-2-3-4 (y=0 ist bei hex immer aus)
+        // else
+        //     zeigeBIN(getStorageFunkgruppe(), ePlot.hex, 1) // 5x5 x=0-1 y=1-2-3-4 (y=0 ist bei hex immer aus)
+        zeigeBIN(int, ePlot.hex, 1) // 5x5 x=0-1 y=1-2-3-4 (y=0 ist bei hex immer aus)
     }
 
     //% group="BIN" subcategory="Display 5x5" color=#54C9C9
@@ -202,13 +206,15 @@ namespace btf { // b-dispaly5x5.ts
             // pro Ziffer werden mit zeigeBIN immer 5 LEDs geschaltet 0..31
             if (n5x5_setClearScreen) {  // wenn vorher Image oder Text angezeigt wurde
                 n5x5_setClearScreen = false
-                basic.clearScreen()     // löschen und Funkgruppe in 01 ↕↕... wieder anzeigen
-                zeigeFunkgruppe(false)       // !ruft zeigeBIN rekursiv auf!
+                for (let x = 4; x >= 0; x--) {
+                    zeigeBIN(0, ePlot.bin, x)
+                }
+                // basic.clearScreen()     // löschen und Funkgruppe in 01 ↕↕... wieder anzeigen
+                zeigeFunkgruppe()       // !ruft zeigeBIN rekursiv auf!
             }
             // nur bei Änderung
-            if (a5x5_xBuffer[xLed] != int) { // zeigt Servo0 aus Buffer[2] 1..16..31 (x=4)
-                a5x5_xBuffer[xLed] != int
-                zeigeBIN(int, ePlot.bin, 4)
+            if (a5x5_xBuffer[xLed] != int) {
+                a5x5_xBuffer[xLed] = int
 
                 for (let y = 4; y >= 0; y--) {
                     if ((int % 2) == 1) { led.plot(xLed, y) } else { led.unplot(xLed, y) }

@@ -47,7 +47,8 @@ namespace btf { // b-fernsteuerung.ts
             n_Funktion = 0 // Sender nicht gestartet
         }
         n_FunkgruppeChanged = true
-        zeigeFunkgruppe(true)
+        n5x5_setClearScreen =true
+        zeigeFunkgruppe()
     }
 
     //% group="calliope-net.github.io/fernsteuerung"
@@ -64,7 +65,8 @@ namespace btf { // b-fernsteuerung.ts
             n_Funktion = 0 // Sender nicht gestartet
         }
         n_FunkgruppeChanged = true
-        zeigeFunkgruppe(true)
+        n5x5_setClearScreen =true
+        zeigeFunkgruppe()
     }
 
     //% group="calliope-net.github.io/fernsteuerung"

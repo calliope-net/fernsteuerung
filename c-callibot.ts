@@ -28,7 +28,7 @@ namespace cb2 { // c-callibot.ts 005F7F
         btf.setStorageBuffer(modellFunkgruppe) // prüft und speichert in a_StorageBuffer
 
         if (zf)
-            btf.zeigeFunkgruppe(true)
+            btf.zeigeFunkgruppe()
 
         btf.beimStartintern() // setzt auch n_start true, muss deshalb zuletzt stehen
     }

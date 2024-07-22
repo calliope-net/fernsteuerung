@@ -24,7 +24,7 @@ namespace sender { // s-sender.ts
                 zeigeImage(btf.getStorageModell())
                 //   btf.zeigeImage(a_ModellImages[btf.getStorageModell()])
                 basic.pause(1500)
-                btf.zeigeFunkgruppe(true)
+                btf.zeigeFunkgruppe()
             }
             btf.beimStartintern() // setzt auch n_start true, startet Bluetooth Empfang
         }
