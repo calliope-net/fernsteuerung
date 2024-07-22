@@ -34,6 +34,7 @@
         "r-calliope-v3.ts",
         "c-callibot.ts",
         "c-fernsteuerung.ts",
+        "c-fahrplan.ts",
         "c-beispiele.ts"
     ],
     "testFiles": [
