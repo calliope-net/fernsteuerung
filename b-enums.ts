@@ -62,7 +62,7 @@ namespace btf { // b-enums.ts
         b0_Motor = 0, // 1..128..255
         //% block="Servo (1 ↖ 16 ↗ 31)"
         b1_Servo = 1, // Bit 4-0 (0..31)
-        //% block="Fahrstrecke 0..255 cm"
+        //% block="Länge 0..255 cm"
         b2_Fahrstrecke = 2, // Encoder in cm max. 255cm
         // b1_3Bit = 3 // Bit 7-6-5
     }

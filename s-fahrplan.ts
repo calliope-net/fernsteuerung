@@ -5,7 +5,7 @@ namespace sender { // s-fahrplan.ts
     // ========== group="20 Fahrplan senden" subcategory="Fahrplan"
 
     //% group="20 Fahrplan senden" subcategory="Fahrplan"
-    //% block="20 Fahrplan %buffer Schritt 1 %p1 Schritt 2 %p2 Schritt 3 %p3 Schritt 4 %p4 Schritt 5 %p5" weight=8
+    //% block="20 Fahrplan %buffer Strecke 1 %p1 Strecke 2 %p2 Strecke 3 %p3 Strecke 4 %p4 Strecke 5 %p5" weight=8
     //% buffer.shadow="btf_sendBuffer19"
     //% p1.shadow=sender_StreckePicker
     //% p2.shadow=sender_StreckePicker
@@ -26,8 +26,8 @@ namespace sender { // s-fahrplan.ts
 
 
     //% blockId=sender_StreckePicker
-    //% group="20 Fahrplan senden" subcategory="Fahrplan"
-    //% block="fahren %motor lenken %servo Strecke (cm \\| ⅒s) %strecke || Abstandssensor %abstandsSensor Spursensor %spurSensor Impulse %impulse" weight=7
+    //% group="Geschwindigkeit (-100 ↓ 0 ↑ +100), Winkel (0° ↖ 90° ↗ 180°)" subcategory="Fahrplan"
+    //% block="Fahren %motor Lenken %servo Länge %strecke cm\\|⅒s || Abstandssensor %abstandsSensor Spursensor %spurSensor Impulse %impulse" weight=7
     //% motor.shadow=speedPicker motor.defl=50
     //% servo.shadow=protractorPicker servo.defl=90
     //% strecke.min=10 strecke.max=255 strecke.defl=20
@@ -53,8 +53,8 @@ namespace sender { // s-fahrplan.ts
     }
 
     //% blockId=sender_programmSchritt
-    //% group="20 Fahrplan senden" subcategory="Fahrplan"
-    //% block="Motor (1↓128↑255) %motor Servo (1↖16↗31) %servo Strecke %strecke cm || Abstandssensor %abstandsSensor Spursensor %spurSensor Impulse %impulse" weight=5
+    //% group="Geschwindigkeit (1 ↓ 128 ↑ 255), Winkel (1 ↖ 16 ↗ 31)" subcategory="Fahrplan"
+    //% block="Fahren (1↓128↑255) %motor Lenken (1↖16↗31) %servo Länge %strecke cm\\|⅒s || Abstandssensor %abstandsSensor Spursensor %spurSensor Impulse %impulse" weight=5
     //% motor.min=1 motor.max=255 motor.defl=230
     //% servo.min=1 servo.max=31 servo.defl=26
     //% strecke.min=10 strecke.max=255 strecke.defl=250
@@ -80,7 +80,7 @@ namespace sender { // s-fahrplan.ts
     }
 
     //% blockId=sender_zehntelsekunden
-    //% group="20 Fahrplan senden" subcategory="Fahrplan"
+    //% group="Zehntelsekunden ⅒s" subcategory="Fahrplan"
     //% block="%pause" weight=4
     export function sender_zehntelsekunden(pause: btf.ePause): number {
         return pause
