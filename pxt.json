@@ -18,6 +18,7 @@
         "b-advanced.ts",
         "s-sender.ts",
         "s-fernsteuerung.ts",
+        "s-fahrplan.ts",
         "s-buttons.ts",
         "s-qwiicjoystick.ts",
         "s-multiswitch.ts",
