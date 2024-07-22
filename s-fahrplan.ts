@@ -23,6 +23,8 @@ namespace sender { // s-fahrplan.ts
         if (p5 && p5.length == 3) buffer.write(btf.eBufferPointer.p5, p5) // 16-17-18
     }
 
+   
+
 
 
     //% blockId=sender_StreckePicker
@@ -36,8 +38,10 @@ namespace sender { // s-fahrplan.ts
     //% impulse.shadow=toggleOnOff
     //% inlineInputMode=inline
     export function sender_StreckePicker(motor: number, servo: number, strecke: number, abstandsSensor = true, spurSensor = false, impulse = false) {
-        let buffer = Buffer.create(3)
-        buffer[0] = btf.speedPicker(motor) // -100..0..+100 umwandeln in (1 ↓ 128 ↑ 255)
+        return sender_Strecke(btf.speedPicker(motor), btf.protractorPicker(servo), strecke, abstandsSensor, spurSensor, impulse)
+        // -100..0..+100 umwandeln in (1 ↓ 128 ↑ 255)
+        // 0..90..180 umwandeln in (1 ↖ 16 ↗ 31)     let buffer = Buffer.create(3)
+       /*  buffer[0] = btf.speedPicker(motor) // -100..0..+100 umwandeln in (1 ↓ 128 ↑ 255)
         buffer[1] = btf.protractorPicker(servo)  // 0..90..180 umwandeln in (1 ↖ 16 ↗ 31)
         buffer[2] = strecke
 
@@ -48,12 +52,44 @@ namespace sender { // s-fahrplan.ts
         if (impulse)
             buffer[1] |= btf.eSensor.b7Impulse
 
-        return buffer
+        return buffer */
         //   return Buffer.fromArray([motor, servo, strecke])
     }
 
-    //% blockId=sender_programmSchritt
+
+
+
+    //% blockId=sender_Strecke
     //% group="Geschwindigkeit (1 ↓ 128 ↑ 255), Winkel (1 ↖ 16 ↗ 31)" subcategory="Fahrplan"
+    //% block="Fahren (1↓128↑255) %motor Lenken (1↖16↗31) %servo Länge %strecke cm\\|⅒s || Abstandssensor %abstandsSensor Spursensor %spurSensor Impulse %impulse" weight=5
+    //% motor.min=1 motor.max=255 motor.defl=230
+    //% servo.min=1 servo.max=31 servo.defl=26
+    //% strecke.min=10 strecke.max=255 strecke.defl=250
+    //% abstandsSensor.shadow=toggleOnOff abstandsSensor.defl=1
+    //% spurSensor.shadow=toggleOnOff
+    //% impulse.shadow=toggleOnOff
+    //% inlineInputMode=inline
+    export function sender_Strecke(motor: number, servo: number, strecke: number, abstandsSensor = true, spurSensor = false, impulse = false) {
+        let buffer = Buffer.create(3)
+        buffer[0] = motor //  (1 ↓ 128 ↑ 255)
+        buffer[1] = servo & 0x1F // (1 ↖ 16 ↗ 31)
+        buffer[2] = strecke
+
+        if (spurSensor)
+            buffer[1] |= btf.eSensor.b5Spur
+        if (abstandsSensor)
+            buffer[1] |= btf.eSensor.b6Abstand
+        if (impulse)
+            buffer[1] |= btf.eSensor.b7Impulse
+
+        return buffer
+        //    return Buffer.fromArray([motor, servo, strecke])
+    }
+
+
+
+    //% blockId=sender_programmSchritt
+    //% group="Geschwindigkeit (1 ↓ 128 ↑ 255), Winkel (1 ↖ 16 ↗ 31)" subcategory="Fahrplan" deprecated=1
     //% block="Fahren (1↓128↑255) %motor Lenken (1↖16↗31) %servo Länge %strecke cm\\|⅒s || Abstandssensor %abstandsSensor Spursensor %spurSensor Impulse %impulse" weight=5
     //% motor.min=1 motor.max=255 motor.defl=230
     //% servo.min=1 servo.max=31 servo.defl=26
@@ -78,6 +114,8 @@ namespace sender { // s-fahrplan.ts
         return buffer
         //    return Buffer.fromArray([motor, servo, strecke])
     }
+
+
 
     //% blockId=sender_zehntelsekunden
     //% group="Zehntelsekunden ⅒s" subcategory="Fahrplan"

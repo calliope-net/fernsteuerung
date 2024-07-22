@@ -40,7 +40,7 @@ namespace cb2 { // c-fahrplan.ts
 
     }
     //% group="Geschwindigkeit (-100 ↓ 0 ↑ +100), Winkel (0° ↖ 90° ↗ 180°)" subcategory="Fahrplan"
-    //% block="Fahren %motor Lenken %servo Länge %strecke cm\\|⅒s || Stop %abstandsSensor bei Abstand < (cm) %abstand Spursensor %spurSensor Impulse %impulse" weight=7
+    //% block="Fahren %motor Lenken %servo Länge %strecke cm\\|⅒s || Stop %abstandsSensor bei Abstand < (cm) %abstand Spursensor %spurSensor Impulse %impulse Lenken %lenkenProzent \\%" weight=7
 
     //% motor.shadow=speedPicker motor.defl=50
     //% servo.shadow=protractorPicker servo.defl=90
@@ -49,13 +49,14 @@ namespace cb2 { // c-fahrplan.ts
     //% abstand.min=10 abstand.max=50 abstand.defl=20
     //% spurSensor.shadow=toggleOnOff
     //% impulse.shadow=toggleOnOff
+    //% lenkenProzent.min=10 lenkenProzent.max=90 lenkenProzent.defl=50
     //% inlineInputMode=inline
-    export function fahreStreckePicker(motor: number, servo: number, strecke: number, abstandsSensor = true, abstand = 20, spurSensor = false, impulse = false) {
-        fahreStrecke(btf.speedPicker(motor), btf.protractorPicker(servo), strecke, abstandsSensor, abstand, spurSensor, impulse)
+    export function fahreStreckePicker(motor: number, servo: number, strecke: number, abstandsSensor = true, abstand = 20, spurSensor = false, impulse = false, lenkenProzent = 50) {
+        fahreStrecke(btf.speedPicker(motor), btf.protractorPicker(servo), strecke, abstandsSensor, abstand, spurSensor, impulse, lenkenProzent)
     }
 
     //% group="Geschwindigkeit (1 ↓ 128 ↑ 255), Winkel (1 ↖ 16 ↗ 31)" subcategory="Fahrplan"
-    //% block="Fahren (1↓128↑255) %motor Lenken (1↖16↗31) %servo Länge %strecke cm\\|⅒s || Stop %abstandsSensor bei Abstand < (cm) %abstand Spursensor %spurSensor Impulse %impulse" weight=5
+    //% block="Fahren (1↓128↑255) %motor Lenken (1↖16↗31) %servo Länge %strecke cm\\|⅒s || Stop %abstandsSensor bei Abstand < (cm) %abstand Spursensor %spurSensor Impulse %impulse Lenken %lenkenProzent \\%" weight=5
     //% motor.min=1 motor.max=255 motor.defl=230
     //% servo.min=1 servo.max=31 servo.defl=26
     //% strecke.min=10 strecke.max=255 strecke.defl=250
@@ -63,8 +64,9 @@ namespace cb2 { // c-fahrplan.ts
     //% abstand.min=10 abstand.max=50 abstand.defl=20
     //% spurSensor.shadow=toggleOnOff
     //% impulse.shadow=toggleOnOff
+    //% lenkenProzent.min=10 lenkenProzent.max=90 lenkenProzent.defl=50
     //% inlineInputMode=inline
-    export function fahreStrecke(motor: number, servo: number, strecke: number, abstandsSensor = true, abstand = 20, spurSensor = false, impulse = false) {
+    export function fahreStrecke(motor: number, servo: number, strecke: number, abstandsSensor = true, abstand = 20, spurSensor = false, impulse = false, lenkenProzent = 50) {
 
         writeMotorenStop()
 
@@ -73,7 +75,7 @@ namespace cb2 { // c-fahrplan.ts
             let timeout_Encoder: number// = 200 // 20 s Timeout wenn Encoder nicht zählt
             let abstand_color = Colors.Off
 
-            writeMotor128Servo16(motor, servo & 0b00011111) //, prozent
+            writeMotor128Servo16(motor, servo & 0b00011111, lenkenProzent) //, prozent
 
             if (hasEncoder) {
                 timeout_Encoder = 200 // 20 s Timeout wenn Encoder nicht zählt
@@ -119,11 +121,22 @@ namespace cb2 { // c-fahrplan.ts
     }
 
 
+    //% blockId=cb2_zehntelsekunden
+    //% group="Zehntelsekunden ⅒s" subcategory="Fahrplan"
+    //% block="%pause" weight=4
+    export function cb2_zehntelsekunden(pause: btf.ePause): number {
+        return pause
+    }
+
+
+
+    // ========== deprecated=1
+
 
     // ========== group="Strecke fahren (Stop nach • ⅒s)" subcategory="Fahrplan"
 
     //% group="Strecke fahren (Stop nach • ⅒s)" subcategory="Fahrplan"
-    //% block="Strecke %buffer ⅒s" weight=6
+    //% block="Strecke %buffer ⅒s" weight=6 deprecated=1
     // block="fahre Motor (1↓128↑255) %motor Servo (1↖16↗31) %servo Zeit %zehntelsekunden" weight=4
     // motor.min=1 motor.max=255 motor.defl=128
     // motor.shadow=btf_speedPicker
@@ -181,7 +194,7 @@ namespace cb2 { // c-fahrplan.ts
 
 
     //% group="Strecke fahren (Stop nach • cm oder • ⅒s)" subcategory="Fahrplan"
-    //% block="Strecke %buffer Stop %stop bei Abstand < (cm) %abstand || lenken %prozent \\%" weight=3
+    //% block="Strecke %buffer Stop %stop bei Abstand < (cm) %abstand || lenken %prozent \\%" weight=3 deprecated=1
     //% buffer.shadow=btf_programmSchritt
     //% stop.shadow="toggleYesNo" stop.defl=1
     //% abstand.min=10 abstand.max=50 abstand.defl=20
