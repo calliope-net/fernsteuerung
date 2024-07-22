@@ -82,7 +82,7 @@ namespace btf { // b-dispaly5x5.ts
             zeigeBIN_map255(buffer[eBufferPointer.m0], 3)
             zeigeBIN(buffer[eBufferPointer.m0 + eBufferOffset.b1_Servo] & 0x1F, ePlot.bin, 4)
         }
-        else if (btf.isBetriebsart(buffer, btf.e0Betriebsart.p2Fahrplan)) {
+        else if (m_Namespace == eNamespace.cb2 && btf.isBetriebsart(buffer, btf.e0Betriebsart.p2Fahrplan)) {
             // Betriebsart 20 Fahrplan nichts anzeigen siehe unten zeigeBINx234Fahrplan
         }
         else {
