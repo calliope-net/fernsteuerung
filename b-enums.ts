@@ -193,7 +193,7 @@ namespace btf { // b-enums.ts
     }
 
 
-    export enum ePause {
+    export enum ePause { // Zehntelsekunden
         //% block="1 Sekunde"
         s1 = 10,
         //% block="0,5 Sekunden"
