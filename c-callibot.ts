@@ -30,7 +30,7 @@ namespace cb2 { // c-callibot.ts 005F7F
         if (zf)
             btf.zeigeFunkgruppe()
 
-        btf.beimStartintern() // setzt auch n_start true, muss deshalb zuletzt stehen
+        btf.beimStartintern(btf.eNamespace.cb2) // setzt auch n_start true, muss deshalb zuletzt stehen
     }
 
     //% group="calliope-net.github.io/fernsteuerung"

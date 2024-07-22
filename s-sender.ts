@@ -26,7 +26,7 @@ namespace sender { // s-sender.ts
                 basic.pause(1500)
                 btf.zeigeFunkgruppe()
             }
-            btf.beimStartintern() // setzt auch n_start true, startet Bluetooth Empfang
+            btf.beimStartintern(btf.eNamespace.sender) // setzt auch n_start true, startet Bluetooth Empfang
         }
     }
 

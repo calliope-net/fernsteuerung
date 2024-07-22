@@ -94,7 +94,7 @@ namespace receiver { // r-receiver.ts
         if (encoder)
             encoderRegisterEvent(radDmm)
 
-        btf.beimStartintern() // setzt auch n_start true, muss deshalb zuletzt stehen
+        btf.beimStartintern(btf.eNamespace.receiver) // setzt auch n_start true, muss deshalb zuletzt stehen
 
     }
 

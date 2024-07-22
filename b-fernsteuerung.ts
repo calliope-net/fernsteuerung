@@ -1,7 +1,7 @@
 //% color=#E3008C weight=95 icon="\uf012" block="Fernsteuerung"
 namespace btf { // b-fernsteuerung.ts
 
-    export const c_funkgruppe_min = 0xB1 // 0xA0
+    export const c_funkgruppe_min = 0xB0 // 0xA0
     export const c_funkgruppe_max = 0xB7 // 0xBF
 
     let a_StorageBuffer = Buffer.create(4) // lokaler Speicher 4 Byte NumberFormat.UInt32LE
@@ -23,11 +23,14 @@ namespace btf { // b-fernsteuerung.ts
     export function beimStart(modellFunkgruppe?: number) {
         setStorageBuffer(modellFunkgruppe)
         //  storage.putBuffer(a_StorageBuffer)
-        beimStartintern()
+        beimStartintern(eNamespace.btf)
     }
 
-    export function beimStartintern() {
+    export enum eNamespace { btf, sender, receiver, cb2 }
+    export let m_Namespace: eNamespace
 
+    export function beimStartintern(e: eNamespace) {
+        m_Namespace = e
         radio.setGroup(getStorageFunkgruppe())
         radio.setTransmitPower(7)
         radio.setTransmitSerialNumber(true)
@@ -47,7 +50,7 @@ namespace btf { // b-fernsteuerung.ts
             n_Funktion = 0 // Sender nicht gestartet
         }
         n_FunkgruppeChanged = true
-        n5x5_setClearScreen =true
+        n5x5_setClearScreen = true
         zeigeFunkgruppe()
     }
 
@@ -65,7 +68,7 @@ namespace btf { // b-fernsteuerung.ts
             n_Funktion = 0 // Sender nicht gestartet
         }
         n_FunkgruppeChanged = true
-        n5x5_setClearScreen =true
+        n5x5_setClearScreen = true
         zeigeFunkgruppe()
     }
 

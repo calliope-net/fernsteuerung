@@ -44,7 +44,7 @@ namespace btf { // b-dispaly5x5.ts
         }
 
         let xLed = 2 // 5x5 x=2 Motor Power außer m0
-        if (btf.isBetriebsart(buffer, btf.e0Betriebsart.p2Fahrplan)) {
+        if (m_Namespace == eNamespace.cb2 && isBetriebsart(buffer, e0Betriebsart.p2Fahrplan)) {
             // Betriebsart 20 Fahrplan nichts anzeigen siehe unten zeigeBINx234Fahrplan
         }
         // Mitte x=2 aktivierte Motoren aus Buffer anzeigen
