@@ -360,9 +360,9 @@ namespace cb2 { // c-callibot.ts 005F7F
     export enum eDH { dunkel = 0, hell = 1 }
 
     //% group="INPUT digital" subcategory="Sensoren"
-    //% block="Spursensor links %l und rechts %r || I²C %i2c" weight=5
-    export function readSpursensor(l: eDH, r: eDH, i2c?: eI2C) {
-        if (i2c != undefined)
+    //% block="Spursensor links %l und rechts %r || einlesen %read I²C %i2c" weight=5
+    export function readSpursensor(l: eDH, r: eDH, read = true, i2c = eI2C.x22) {
+        if (read)
             readInputs(i2c)
         return (n_Inputs & 0x03) == (l << 1 | r)
         // return (n_Inputs & 0x03) == (l * 2 + r)

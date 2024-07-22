@@ -28,7 +28,7 @@ namespace cb2 { // c-beispiele.ts
             m_inSpur = false     // beim ersten Durchlauf der Schleife
         }
 
-        if (stop && (abstand > 0 && (readUltraschallAbstand() < abstand))) { 
+        if (stop && (abstand > 0 && (readUltraschallAbstand() < abstand))) {
             writeMotorenStop()
             // writeRgbLeds(Colors.Orange, true)
             writeRgbLed(eRgbLed.lh, Colors.Red, true, true)
@@ -41,18 +41,18 @@ namespace cb2 { // c-beispiele.ts
             //  let langsamfahren = btf.motorProzent(motor128, motorProzent)
             let lenken = Math.abs(servo16 - 16)  // 16-16=0 / 1-16=15 / 31-16=15
 
-            readInputs(i2cSpur)
+            readInputs(i2cSpur) // liest Spursensor ein
 
-            if (readSpursensor(eDH.dunkel, eDH.dunkel)) {
+            if (readSpursensor(eDH.dunkel, eDH.dunkel, false)) {
                 writeMotor128Servo16(motor128, 16) // nicht lenken
                 m_inSpur = true
             }
-            else if (readSpursensor(eDH.dunkel, eDH.hell)) { // 0% Rad steht bei voller Lenkung (1 oder 31)
+            else if (readSpursensor(eDH.dunkel, eDH.hell, false)) { // 0% Rad steht bei voller Lenkung (1 oder 31)
                 writeMotor128Servo16(langsamfahren, 16 - lenken, lenkenProzent) // links lenken <16 = 1
                 if (m_inSpur)
                     m_lenken = 16 - lenken
             }
-            else if (readSpursensor(eDH.hell, eDH.dunkel)) { // 0% Rad steht bei voller Lenkung (1 oder 31)
+            else if (readSpursensor(eDH.hell, eDH.dunkel, false)) { // 0% Rad steht bei voller Lenkung (1 oder 31)
                 writeMotor128Servo16(langsamfahren, 16 + lenken, lenkenProzent) // rechts lenken >16 = 31
                 if (m_inSpur)
                     m_lenken = 16 + lenken
@@ -91,7 +91,7 @@ namespace cb2 { // c-beispiele.ts
             //return false
         } else {
 
-            if (readSpursensor(eDH.dunkel, eDH.dunkel, eI2C.x21)) { //     if (this.bitINPUTS(calli2bot.eINPUTS.sp0)) {
+            if (readSpursensor(eDH.dunkel, eDH.dunkel, true, eI2C.x21)) { //     if (this.bitINPUTS(calli2bot.eINPUTS.sp0)) {
                 writeMotoren128(motoren, motoren)//         setMotoren0Prozent(pwm1, pwm1) // dunkel,dunkel
             } else if (readSpursensor(eDH.dunkel, eDH.hell)) { // if (this.bitINPUTS(calli2bot.eINPUTS.sp1r)) {
                 writeMotoren128(c_MotorStop, langsamer)//      setMotoren0Prozent(0, pwm2)
@@ -186,7 +186,7 @@ namespace cb2 { // c-beispiele.ts
         } else {
             // this.i2cReadINPUTS()
             // readInputs()
-            if (readSpursensor(eDH.dunkel, eDH.dunkel, eI2C.x21)) { //     if (this.bitINPUTS(calli2bot.eINPUTS.sp0)) {
+            if (readSpursensor(eDH.dunkel, eDH.dunkel, true, eI2C.x21)) { //     if (this.bitINPUTS(calli2bot.eINPUTS.sp0)) {
                 setMotoren0Prozent(pwm1, pwm1) // dunkel,dunkel
                 writeLed(eLed.redb, false) // beide rote LED aus
             } else if (readSpursensor(eDH.dunkel, eDH.hell)) { // if (this.bitINPUTS(calli2bot.eINPUTS.sp1r)) {
