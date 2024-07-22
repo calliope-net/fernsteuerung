@@ -11,7 +11,7 @@ namespace sender { // s-fahrplan.ts
     //% p2.shadow=sender_StreckePicker
     // p3.shadow=sender_StreckePicker
     // p4.shadow=sender_StreckePicker
-    //% p5.shadow=sender_programmSchritt
+    //% p5.shadow=sender_Strecke
     export function send20Strecken(buffer: Buffer, p1: Buffer, p2: Buffer, p3: Buffer, p4: Buffer, p5: Buffer) {
 
         btf.setBetriebsart(buffer, btf.e0Betriebsart.p2Fahrplan)
@@ -23,7 +23,7 @@ namespace sender { // s-fahrplan.ts
         if (p5 && p5.length == 3) buffer.write(btf.eBufferPointer.p5, p5) // 16-17-18
     }
 
-   
+
 
 
 
@@ -41,22 +41,20 @@ namespace sender { // s-fahrplan.ts
         return sender_Strecke(btf.speedPicker(motor), btf.protractorPicker(servo), strecke, abstandsSensor, spurSensor, impulse)
         // -100..0..+100 umwandeln in (1 ↓ 128 ↑ 255)
         // 0..90..180 umwandeln in (1 ↖ 16 ↗ 31)     let buffer = Buffer.create(3)
-       /*  buffer[0] = btf.speedPicker(motor) // -100..0..+100 umwandeln in (1 ↓ 128 ↑ 255)
-        buffer[1] = btf.protractorPicker(servo)  // 0..90..180 umwandeln in (1 ↖ 16 ↗ 31)
-        buffer[2] = strecke
-
-        if (spurSensor)
-            buffer[1] |= btf.eSensor.b5Spur
-        if (abstandsSensor)
-            buffer[1] |= btf.eSensor.b6Abstand
-        if (impulse)
-            buffer[1] |= btf.eSensor.b7Impulse
-
-        return buffer */
+        /*  buffer[0] = btf.speedPicker(motor) // -100..0..+100 umwandeln in (1 ↓ 128 ↑ 255)
+         buffer[1] = btf.protractorPicker(servo)  // 0..90..180 umwandeln in (1 ↖ 16 ↗ 31)
+         buffer[2] = strecke
+ 
+         if (spurSensor)
+             buffer[1] |= btf.eSensor.b5Spur
+         if (abstandsSensor)
+             buffer[1] |= btf.eSensor.b6Abstand
+         if (impulse)
+             buffer[1] |= btf.eSensor.b7Impulse
+ 
+         return buffer */
         //   return Buffer.fromArray([motor, servo, strecke])
     }
-
-
 
 
     //% blockId=sender_Strecke
@@ -87,8 +85,17 @@ namespace sender { // s-fahrplan.ts
     }
 
 
+    //% blockId=sender_zehntelsekunden
+    //% group="Zehntelsekunden ⅒s" subcategory="Fahrplan"
+    //% block="%pause" weight=4
+    export function sender_zehntelsekunden(pause: btf.ePause): number {
+        return pause
+    }
 
-    //% blockId=sender_programmSchritt
+    // ========== deprecated=1
+/* 
+
+    // blockId=sender_programmSchritt
     //% group="Geschwindigkeit (1 ↓ 128 ↑ 255), Winkel (1 ↖ 16 ↗ 31)" subcategory="Fahrplan" deprecated=1
     //% block="Fahren (1↓128↑255) %motor Lenken (1↖16↗31) %servo Länge %strecke cm\\|⅒s || Abstandssensor %abstandsSensor Spursensor %spurSensor Impulse %impulse" weight=5
     //% motor.min=1 motor.max=255 motor.defl=230
@@ -117,18 +124,8 @@ namespace sender { // s-fahrplan.ts
 
 
 
-    //% blockId=sender_zehntelsekunden
-    //% group="Zehntelsekunden ⅒s" subcategory="Fahrplan"
-    //% block="%pause" weight=4
-    export function sender_zehntelsekunden(pause: btf.ePause): number {
-        return pause
-    }
 
-
-
-    // ========== deprecated=1
-
-    //% blockId=sender_programmPicker_zeit
+    // blockId=sender_programmPicker_zeit
     //% group="20 Fahrplan senden" subcategory="Fahrplan" deprecated=1
     //% block="Motor %motor Servo %servo Zeit %zehntelsekunden" weight=4
     //% motor.shadow="btf_speedPicker"
@@ -138,7 +135,7 @@ namespace sender { // s-fahrplan.ts
         return Buffer.fromArray([motor, servo, zehntelsekunden])
     }
 
-    //% blockId=sender_programmPicker_cm
+    // blockId=sender_programmPicker_cm
     //% group="20 Fahrplan senden" subcategory="Fahrplan" deprecated=1
     //% block="Motor %motor Servo %servo Strecke %strecke cm" weight=3
     //% motor.shadow="btf_speedPicker"
@@ -147,6 +144,6 @@ namespace sender { // s-fahrplan.ts
     export function sender_programmPicker_cm(motor: number, servo: number, strecke: number) {
         return Buffer.fromArray([motor, servo, strecke])
     }
-
+ */
 
 } // s-fahrplan.ts
