@@ -206,6 +206,7 @@ namespace btf { // b-dispaly5x5.ts
             // pro Ziffer werden mit zeigeBIN immer 5 LEDs geschaltet 0..31
             if (n5x5_setClearScreen) {  // wenn vorher Image oder Text angezeigt wurde
                 n5x5_setClearScreen = false
+                a5x5_xBuffer.fill(0xFF) // mit ungültigen Werten füllen, die rekursiv wieder zu 0 werden
                 for (let x = 4; x >= 0; x--) {
                     zeigeBIN(0, ePlot.bin, x)
                 }
