@@ -391,8 +391,8 @@ namespace cb2 { // c-callibot.ts 005F7F
     //% block="Batterie Spannung ⅒ Volt" weight=4
     export function readSpannung() {
         i2cWriteBuffer(Buffer.fromArray([eRegister.GET_POWER]))
-        // return Math.idiv(i2cReadBuffer(3).getNumber(NumberFormat.UInt16LE, 1), 100) // 16 Bit (mV)/100 3V=30 3.15V=31
-        return Math.roundWithPrecision(i2cReadBuffer(3).getNumber(NumberFormat.UInt16LE, 1) / 1000, 1) // 16 Bit (mV)/1000 = Volt mit 1 Kommastelle
+        return Math.idiv(i2cReadBuffer(3).getNumber(NumberFormat.UInt16LE, 1), 100) // 16 Bit (mV)/100 3V=30 3.15V=31
+        // return Math.roundWithPrecision(i2cReadBuffer(3).getNumber(NumberFormat.UInt16LE, 1) / 1000, 1) // 16 Bit (mV)/1000 = Volt mit 1 Kommastelle
     }
 
 
