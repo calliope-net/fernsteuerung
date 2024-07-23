@@ -123,7 +123,7 @@ namespace cb2 { // c-fahrplan.ts
                         sensor_color = Colors.Yellow
                         break
                     }
-                    if (spurSensor && !readSpursensor(eDH.hell, eDH.hell)) { // Spursensor aktiviert und schwarze Linie erkannt
+                    if (spurSensor && !readSpursensor(eDH.hell, eDH.hell, true)) { // Spursensor aktiviert und schwarze Linie erkannt
                         sensor_color = Colors.White
                         break
                     }
@@ -141,7 +141,7 @@ namespace cb2 { // c-fahrplan.ts
                         sensor_color = Colors.Orange
                         break
                     }
-                    if (spurSensor && !readSpursensor(eDH.hell, eDH.hell)) { // Spursensor aktiviert und schwarze Linie erkannt
+                    if (spurSensor && !readSpursensor(eDH.hell, eDH.hell, true)) { // Spursensor aktiviert und schwarze Linie erkannt
                         sensor_color = Colors.White
                         break
                     }

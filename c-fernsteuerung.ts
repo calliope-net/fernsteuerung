@@ -23,7 +23,7 @@ namespace cb2 { // c-fernsteuerung.ts
         }
         else if (btf.getSensor(buffer, bufferPointer, btf.eSensor.b5Spur) // Spursensor aktiviert
             &&
-            !readSpursensor(eDH.hell, eDH.hell)) { // schwarze Linie erkannt / nicht hell, hell
+            !readSpursensor(eDH.hell, eDH.hell, true)) { // schwarze Linie erkannt / nicht hell, hell
 
             writeMotorenStop()
 

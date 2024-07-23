@@ -93,7 +93,7 @@ namespace cb2 { // c-beispiele.ts
 
             if (readSpursensor(eDH.dunkel, eDH.dunkel, true, eI2C.x21)) { //     if (this.bitINPUTS(calli2bot.eINPUTS.sp0)) {
                 writeMotoren128(motoren, motoren)//         setMotoren0Prozent(pwm1, pwm1) // dunkel,dunkel
-            } else if (readSpursensor(eDH.dunkel, eDH.hell)) { // if (this.bitINPUTS(calli2bot.eINPUTS.sp1r)) {
+            } else if (readSpursensor(eDH.dunkel, eDH.hell, false)) { // if (this.bitINPUTS(calli2bot.eINPUTS.sp1r)) {
                 writeMotoren128(c_MotorStop, langsamer)//      setMotoren0Prozent(0, pwm2)
             } else {
                 writeMotoren128(langsamer, c_MotorStop)//      setMotoren0Prozent(pwm2, 0)
@@ -189,7 +189,7 @@ namespace cb2 { // c-beispiele.ts
             if (readSpursensor(eDH.dunkel, eDH.dunkel, true, eI2C.x21)) { //     if (this.bitINPUTS(calli2bot.eINPUTS.sp0)) {
                 setMotoren0Prozent(pwm1, pwm1) // dunkel,dunkel
                 writeLed(eLed.redb, false) // beide rote LED aus
-            } else if (readSpursensor(eDH.dunkel, eDH.hell)) { // if (this.bitINPUTS(calli2bot.eINPUTS.sp1r)) {
+            } else if (readSpursensor(eDH.dunkel, eDH.hell, false)) { // if (this.bitINPUTS(calli2bot.eINPUTS.sp1r)) {
                 setMotoren0Prozent(0, pwm2)
                 // writeLed(eLed.redl, false)
                 writeLed(eLed.redr, true)

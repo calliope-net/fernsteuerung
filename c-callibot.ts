@@ -331,40 +331,44 @@ namespace cb2 { // c-callibot.ts 005F7F
     // ========== group="INPUT digital" subcategory="Sensoren"
 
     // interner Speicher für digitale Sensoren (eRegister.GET_INPUTS)
-    let n_Inputs: number
+    let n_Inputs = Buffer.create(1)
 
     //% group="INPUT digital" subcategory="Sensoren"
     //% block="Digitaleingänge einlesen || I²C %i2c" weight=8
     //% i2c.defl=cb2.eI2C.x22
     export function readInputs(i2c = eI2C.x22) {
         if (i2c == eI2C.x21)
-            n_Inputs = pins.i2cReadBuffer(eI2C.x21, 1)[0]
+            n_Inputs = pins.i2cReadBuffer(eI2C.x21, 1)
         else {
             i2cWriteBuffer(Buffer.fromArray([eRegister.GET_INPUTS]))
-            n_Inputs = i2cReadBuffer(1)[0]
+            n_Inputs = i2cReadBuffer(1)
         }
         return n_Inputs
     }
 
     //% group="INPUT digital" subcategory="Sensoren"
-    //% block="%n %e || I²C %i2c" weight=7
-    export function getInputs(n: btf.eNOT, e: cb2.eINPUTS, i2c?: eI2C): boolean {
-        if (i2c != undefined)
+    //% block="%n %e einlesen %read || I²C %i2c" weight=7
+    //% read.shadow="toggleYesNo"
+    //% inlineInputMode=inline
+    export function getInputs(n: btf.eNOT, e: cb2.eINPUTS, read: boolean, i2c = eI2C.x22): boolean {
+        if (read)
             readInputs(i2c)
         if (n == btf.eNOT.t)
-            return (n_Inputs & e) == e
+            return (n_Inputs[0] & e) == e
         else
-            return (n_Inputs & e) == 0
+            return (n_Inputs[0] & e) == 0
     }
 
     export enum eDH { dunkel = 0, hell = 1 }
 
     //% group="INPUT digital" subcategory="Sensoren"
-    //% block="Spursensor links %l und rechts %r || einlesen %read I²C %i2c" weight=5
-    export function readSpursensor(l: eDH, r: eDH, read = true, i2c = eI2C.x22) {
+    //% block="Spursensor links %l und rechts %r einlesen %read || I²C %i2c" weight=5
+    //% read.shadow="toggleYesNo"
+    //% inlineInputMode=inline
+    export function readSpursensor(l: eDH, r: eDH, read: boolean, i2c = eI2C.x22) {
         if (read)
             readInputs(i2c)
-        return (n_Inputs & 0x03) == (l << 1 | r)
+        return (n_Inputs[0] & 0x03) == (l << 1 | r)
         // return (n_Inputs & 0x03) == (l * 2 + r)
     }
 
@@ -376,7 +380,19 @@ namespace cb2 { // c-callibot.ts 005F7F
     //% block="Abstand cm" weight=4
     export function readUltraschallAbstand() {
         i2cWriteBuffer(Buffer.fromArray([eRegister.GET_INPUT_US]))
-        return i2cReadBuffer(3).getNumber(NumberFormat.UInt16LE, 1) / 10 // 16 Bit (mm)
+        return i2cReadBuffer(3).getNumber(NumberFormat.UInt16LE, 1) / 10 // 16 Bit (mm)/10 = cm mit 1 Kommastelle
+    }
+
+
+
+    // ========== group="Versorgungsspannung" subcategory="Sensoren"
+
+    //% group="Versorgungsspannung" subcategory="Sensoren"
+    //% block="Batterie Spannung ⅒ Volt" weight=4
+    export function readSpannung() {
+        i2cWriteBuffer(Buffer.fromArray([eRegister.GET_POWER]))
+        // return Math.idiv(i2cReadBuffer(3).getNumber(NumberFormat.UInt16LE, 1), 100) // 16 Bit (mV)/100 3V=30 3.15V=31
+        return Math.roundWithPrecision(i2cReadBuffer(3).getNumber(NumberFormat.UInt16LE, 1) / 1000, 1) // 16 Bit (mV)/1000 = Volt mit 1 Kommastelle
     }
 
 
@@ -405,7 +421,7 @@ namespace cb2 { // c-callibot.ts 005F7F
     }
 
     //% group="Encoder (Calli:bot 2E)" subcategory="Sensoren"
-    //% block="Encoder Mittelwert" weight=1
+    //% block="Encoder Mittelwert (abs)" weight=1
     export function getEncoderMittelwert() {
         let encoderValues = readEncoderValues()
         return Math.idiv(Math.abs(encoderValues[0]) + Math.abs(encoderValues[1]), 2)
@@ -413,13 +429,30 @@ namespace cb2 { // c-callibot.ts 005F7F
 
 
 
-    // ========== group="Calli:bot Version" subcategory="Sensoren"
+    // ========== group="Calli:bot [1]Typ, [2-5]Version, [6-9]Seriennummer" subcategory="Sensoren"
 
-    //% group="Calli:bot Version" subcategory="Sensoren"
+    //% group="Calli:bot [1]Typ, [2-5]Version, [6-9]Seriennummer" subcategory="Sensoren"
+    //% block="Calli:bot Typ %e" weight=4
+    export function readTyp(e: eTyp) {
+        return readVersionArray()[1] == e
+    }
+
+    //% group="Calli:bot [1]Typ, [2-5]Version, [6-9]Seriennummer" subcategory="Sensoren"
     //% block="Calli:bot Typ & FW & SN Array[10]" weight=3
     export function readVersionArray() { // [1]=4:CB2(Gymnasium) =3:CB2E (=2:soll CB2 sein)
         i2cWriteBuffer(Buffer.fromArray([eRegister.GET_FW_VERSION]))
         return i2cReadBuffer(10).toArray(NumberFormat.UInt8LE)
+    }
+
+    export enum eTyp {
+        //% block="3 Calli:bot 2E"
+        cb2e = 3,
+        //% block="4 Calli:bot 2A"
+        cb2a = 4,
+        //% block="2 Calli:bot 2"
+        c2 = 2,
+        //% block="5"
+        c5 = 5
     }
 
 
@@ -495,8 +528,6 @@ namespace cb2 { // c-callibot.ts 005F7F
         //% block="rechts ↗ vorne"
         rv = 4
     }
-    // block="alle (4)"
-    // alle = 0,
 
     export enum eINPUTS {
         //% block="Spursensor rechts hell"
@@ -511,11 +542,11 @@ namespace cb2 { // c-callibot.ts 005F7F
         ont = 0b00010000,
         //% block="OFF-Taster"
         off = 0b00100000,
-        //reserviert = 0b01000000,
         //% block="Calli:bot2 (0x21)"
         cb2 = 0b10000000
     }
     // block="Spursensor beide hell"
     // spb = 0b00000011,
+    //reserviert = 0b01000000,
 
 } // c-callibot.ts
