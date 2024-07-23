@@ -89,8 +89,8 @@ namespace cb2 { // c-fernsteuerung.ts
 
     //% group="2 Motoren (1 ↓ 128 ↑ 255) mit 2 Encodern steuern (Calli:bot 2E)" subcategory="Fernsteuerung"
     //% block="2 Motoren (1↓128↑255) | links %motorA rechts %motorB 2 Encoder (cm\\|Impulse) | links %encoderA rechts %encoderB Impulse %impulse" weight=5
-    //% motorA.min=1 motorA.max=255 motorA.defl=128
-    //% motorB.min=1 motorB.max=255 motorB.defl=128
+    //% motorA.min=1 motorA.max=255 motorA.defl=192
+    //% motorB.min=1 motorB.max=255 motorB.defl=64
     //% encoderA.min=10 encoderA.max=255 encoderA.defl=25
     //% encoderB.min=10 encoderB.max=255 encoderB.defl=25
     //% impulse.shadow=toggleYesNo
@@ -120,6 +120,7 @@ namespace cb2 { // c-fernsteuerung.ts
 
             let encoderImpulseA = impulse ? encoderA : encoderA * n_EncoderFaktor
             let encoderImpulseB = impulse ? encoderB : encoderB * n_EncoderFaktor
+          //  let pause = Math.map(0, 0, 0, 0, 0)
             let timeout_Encoder = 200 // * pause 100 (unten) = 20 s Timeout, wenn Encoder nicht zählt
 
             let aEncoderWerte: number[]
@@ -127,13 +128,13 @@ namespace cb2 { // c-fernsteuerung.ts
             writeMotoren128(motorA, motorB) // Start
 
             while (motorA != c_MotorStop || motorB != c_MotorStop) {
-                if (timeout_Encoder-- <= 0) {
+                /* if (timeout_Encoder-- <= 0) {
                     writeMotorenStop()
                     writeRgbLeds(Colors.Red, true)
                     basic.pause(1000)
                     writeRgbLeds(Colors.Red, false) // aus nach 1 Sekunde
                     break
-                }
+                } */
 
                 aEncoderWerte = readEncoderValues() // rückwärts sind die Werte negativ
 
@@ -148,7 +149,9 @@ namespace cb2 { // c-fernsteuerung.ts
 
                 // Pause eventuell bei hoher Geschwindigkeit motor verringern
                 // oder langsamer fahren wenn Rest strecke kleiner wird
-                basic.pause(100) // 200
+                // l=255 r=1: 800 Impulse (25*32) 1.4s = 1.75ms pro Impuls
+
+                basic.pause(2) // 2 ms müsste jeden Impuls erfassen
 
             } // while
             writeMotorenStop()

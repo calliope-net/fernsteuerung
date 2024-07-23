@@ -10,7 +10,7 @@ namespace cb2 { // c-callibot.ts 005F7F
     export const c_MotorStop = 128
     //  const c_Servo_geradeaus = 16
 
-    export let n_EncoderFaktor = 31.25 // Impulse = 31.25 * Fahrstrecke in cm
+    export let n_EncoderFaktor = 32 // Impulse = 31.25 * Fahrstrecke in cm
 
 
 
