@@ -87,13 +87,13 @@ namespace cb2 { // c-fernsteuerung.ts
     }
 
 
-    //% group="Geschwindigkeit (1 ↓ 128 ↑ 255) (0: keine Änderung)" subcategory="Fernsteuerung"
-    //% block="Motoren (1↓128↑255) links %motorA rechts %motorB Encoder links %encoderA rechts %encoderB Impulse %impulse" weight=5
+    //% group="2 Motoren (1 ↓ 128 ↑ 255) mit 2 Encodern steuern (Calli:bot 2E)" subcategory="Fernsteuerung"
+    //% block="2 Motoren (1↓128↑255) | links %motorA rechts %motorB 2 Encoder (cm\\|Impulse) | links %encoderA rechts %encoderB Impulse %impulse" weight=5
     //% motorA.min=1 motorA.max=255 motorA.defl=128
     //% motorB.min=1 motorB.max=255 motorB.defl=128
     //% encoderA.min=10 encoderA.max=255 encoderA.defl=25
     //% encoderB.min=10 encoderB.max=255 encoderB.defl=25
-    //% impulse.shadow=toggleOnOff
+    //% impulse.shadow=toggleYesNo
     // inlineInputMode=inline
     export function fahre2MotorenEncoder(motorA: number, motorB: number, encoderA: number, encoderB: number, impulse = false) {
         // let iBufferPointerA = btf.eBufferPointer.ma
@@ -120,7 +120,7 @@ namespace cb2 { // c-fernsteuerung.ts
 
             let encoderImpulseA = impulse ? encoderA : encoderA * n_EncoderFaktor
             let encoderImpulseB = impulse ? encoderB : encoderB * n_EncoderFaktor
-            let timeout_Encoder = 200 // 20 s Timeout wenn Encoder nicht zählt
+            let timeout_Encoder = 200 // * pause 100 (unten) = 20 s Timeout, wenn Encoder nicht zählt
 
             let aEncoderWerte: number[]
 
@@ -131,7 +131,7 @@ namespace cb2 { // c-fernsteuerung.ts
                     writeMotorenStop()
                     writeRgbLeds(Colors.Red, true)
                     basic.pause(1000)
-                    writeRgbLeds(Colors.Red, false)
+                    writeRgbLeds(Colors.Red, false) // aus nach 1 Sekunde
                     break
                 }
 
