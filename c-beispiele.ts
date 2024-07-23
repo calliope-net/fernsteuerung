@@ -241,10 +241,7 @@ namespace cb2 { // c-beispiele.ts
     //% block="%pause" blockHidden=true
     export function cb2_sekunden(pause: ePause): number { return pause / 10 }
 
-    // blockId=cb2_zehntelsekunden
-    // block="%pause" blockHidden=true
-    //export function cb2_zehntelsekunden(pause: ePause): number { return pause }
-
+  
 
     export enum eRL { rechts = 0, links = 1 } // Index im Array
 

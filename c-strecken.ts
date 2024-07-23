@@ -5,7 +5,7 @@ namespace cb2 { // c-strecken.ts
     // ========== group="Geschwindigkeit (-100 ↓ 0 ↑ +100), Winkel (0° ↖ 90° ↗ 180°)" subcategory="Strecken"
 
     //% group="Geschwindigkeit (-100 ↓ 0 ↑ +100), Winkel (0° ↖ 90° ↗ 180°)" subcategory="Strecken"
-    //% block="Fahren %motor Lenken %servo Länge %strecke cm\\|⅒s || Stop %abstandsSensor bei Abstand < (cm) %abstand Spursensor %spurSensor Impulse %impulse Lenken %lenkenProzent \\% Encoder %checkEncoder" weight=7
+    //% block="Fahren %motor \\% Lenken %servo ° Länge %strecke cm\\|⅒s || Stop %abstandsSensor bei Abstand < (cm) %abstand Spursensor %spurSensor Impulse %impulse Lenken %lenkenProzent \\% Encoder %checkEncoder" weight=7
     //% motor.shadow=speedPicker motor.defl=50
     //% servo.shadow=protractorPicker servo.defl=90
     //% strecke.min=10 strecke.max=255 strecke.defl=20
@@ -107,9 +107,9 @@ namespace cb2 { // c-strecken.ts
     // ========== group="2 Motoren (-100 ↓ 0 ↑ +100) nach Zeit (1.0 - 25.5 s) steuern" subcategory="Strecken"
 
     //% group="2 Motoren (-100 ↓ 0 ↑ +100) nach Zeit (1.0 - 25.5 s) steuern" subcategory="Strecken"
-    //% block="2 Motoren links %motorA rechts %motorB Zeit (⅒s) %zehntelsekunden || Stop %abstandsSensor bei Abstand < (cm) %abstand Spursensor %spurSensor "
-    //% motorA.shadow=speedPicker motor.defl=50
-    //% motorB.shadow=speedPicker motor.defl=-50
+    //% block="2 Motoren links %motorA \\% rechts %motorB \\% Zeit %zehntelsekunden ⅒s || Stop %abstandsSensor bei Abstand < (cm) %abstand Spursensor %spurSensor "
+    //% motorA.shadow=speedPicker motorA.defl=50
+    //% motorB.shadow=speedPicker motorB.defl=-50
     //% zehntelsekunden.shadow=cb2_zehntelsekunden
     //% abstandsSensor.shadow=toggleOnOff abstandsSensor.defl=1
     //% abstand.min=10 abstand.max=50 abstand.defl=20
@@ -124,7 +124,7 @@ namespace cb2 { // c-strecken.ts
     // ========== group="2 Motoren (1 ↓ 128 ↑ 255) nach Zeit (1.0 - 25.5 s) steuern" subcategory="Strecken"
 
     //% group="2 Motoren (1 ↓ 128 ↑ 255) nach Zeit (1.0 - 25.5 s) steuern" subcategory="Strecken"
-    //% block="2 Motoren (1↓128↑255) links %motorA rechts %motorB Zeit (⅒s) %zehntelsekunden || Stop %abstandsSensor bei Abstand < (cm) %abstand Spursensor %spurSensor "
+    //% block="2 Motoren (1↓128↑255) links %motorA rechts %motorB Zeit %zehntelsekunden ⅒s || Stop %abstandsSensor bei Abstand < (cm) %abstand Spursensor %spurSensor "
     //% motorA.min=1 motorA.max=255 motorA.defl=192
     //% motorB.min=1 motorB.max=255 motorB.defl=64
     //% zehntelsekunden.min=10 zehntelsekunden.max=255 zehntelsekunden.defl=25
