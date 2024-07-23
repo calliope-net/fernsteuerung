@@ -8,7 +8,7 @@ namespace cb2 { // c-callibot.ts 005F7F
     let n_Callibot2_x22hasEncoder = false // 2:CB2 3:CB2E 4:CB2A=Gymnasium
 
     export const c_MotorStop = 128
-    // export const c_Servo_geradeaus = 16
+    //  const c_Servo_geradeaus = 16
 
     export let n_EncoderFaktor = 31.25 // Impulse = 31.25 * Fahrstrecke in cm
 
@@ -19,8 +19,6 @@ namespace cb2 { // c-callibot.ts 005F7F
     //% group="calliope-net.github.io/fernsteuerung"
     //% block="beim Start: Calli:bot 2 || Funkgruppe anzeigen %zf %modellFunkgruppe" weight=8
     //% zf.shadow="toggleYesNo" zf.defl=1
-    // modellFunkgruppe.min=160 modellFunkgruppe.max=191
-    // inlineInputMode=external
     export function beimStart(zf = true, modellFunkgruppe?: number) {
 
         writeReset() // Reset Motoren, LEDs
@@ -41,7 +39,7 @@ namespace cb2 { // c-callibot.ts 005F7F
 
 
 
-    // ========== group="Motor"
+    // ========== group="Motoren"
 
     // aktuelle Werte // I²C nur bei Änderung
     let n_x1_128_255: number
@@ -49,31 +47,52 @@ namespace cb2 { // c-callibot.ts 005F7F
     let n_m1_1_128_255: number
     let n_m2_1_128_255: number
 
-    //% group="Motor"
-    //% block="fahren (1 ↓ 128 ↑ 255) %x1_128_255 lenken (1 ↖ 16 ↗ 31) %y1_16_31 || lenken %prozent \\%" weight=4
-    //% x1_128_255.min=1 x1_128_255.max=255 x1_128_255.defl=128 
-    //% y1_16_31.min=1 y1_16_31.max=31 y1_16_31.defl=16
-    //% prozent.min=10 prozent.max=90 prozent.defl=50
-    export function writeMotor128Servo16(x1_128_255: number, y1_16_31: number, prozent = 50) {
+
+    //% group="Motoren"
+    //% block="beide Motoren Stop" weight=1
+    export function writeMotorenStop() {
+        if (n_x1_128_255 != c_MotorStop || n_m1_1_128_255 != c_MotorStop || n_m2_1_128_255 != c_MotorStop) {
+
+            n_x1_128_255 = c_MotorStop
+            n_y1_16_31 = undefined // die anderen zwischengespeicherten Werte ungültig machen
+
+            n_m1_1_128_255 = c_MotorStop
+            n_m2_1_128_255 = c_MotorStop // I²C nur bei Änderung
+
+            let setMotorBuffer = Buffer.create(6)
+            setMotorBuffer[0] = eRegister.SET_MOTOR   // 2
+            setMotorBuffer[1] = 3 // ec2Motor.beide     // 3
+            setMotorBuffer.fill(0, 2)
+
+            i2cWriteBuffer(setMotorBuffer)
+        }
+    }
+
+    //% group="Geschwindigkeit (1 ↓ 128 ↑ 255), Winkel (1 ↖ 16 ↗ 31)"
+    //% block="Fahren (1↓128↑255) %x_1_128_255 Lenken (1↖16↗31) %y_1_16_31 || Lenken %lenkenProzent \\%" weight=4
+    //% x_1_128_255.min=1 x_1_128_255.max=255 x_1_128_255.defl=128
+    //% y_1_16_31.min=1 y_1_16_31.max=31 y_1_16_31.defl=16
+    //% lenkenProzent.min=10 lenkenProzent.max=90 lenkenProzent.defl=50
+    export function writeMotor128Servo16(x_1_128_255: number, y_1_16_31: number, lenkenProzent = 50) {
         n_m1_1_128_255 = undefined
         n_m2_1_128_255 = undefined // die anderen zwischengespeicherten Werte ungültig machen
 
-        if ((n_x1_128_255 != x1_128_255 || n_y1_16_31 != y1_16_31) && x1_128_255 != 0 && y1_16_31 != 0) {
-            n_x1_128_255 = x1_128_255
-            n_y1_16_31 = y1_16_31 // I²C nur bei Änderung
+        if ((n_x1_128_255 != x_1_128_255 || n_y1_16_31 != y_1_16_31) && x_1_128_255 != 0 && y_1_16_31 != 0) {
+            n_x1_128_255 = x_1_128_255
+            n_y1_16_31 = y_1_16_31 // I²C nur bei Änderung
 
             let setMotorBuffer = Buffer.create(6)
             setMotorBuffer[0] = eRegister.SET_MOTOR   // 2
             setMotorBuffer[1] = 3 // ec2Motor.beide     // 3
 
-            if ((x1_128_255 & 0x80) == 0x80) {  // 128..255 vorwärts
+            if ((x_1_128_255 & 0x80) == 0x80) {  // 128..255 vorwärts
                 setMotorBuffer[2] = 0
-                setMotorBuffer[3] = x1_128_255 << 1 // linkes Bit weg=0..127 * 2 // 128=00, 129=02, 130=04, 254=FC, 255=FE
+                setMotorBuffer[3] = (x_1_128_255 << 1) // linkes Bit weg=0..127 * 2 // 128=00, 129=02, 130=04, 254=FC, 255=FE
                 setMotorBuffer[4] = 0
                 setMotorBuffer[5] = setMotorBuffer[3]
             } else {                            // 0..127 rückwärts
                 setMotorBuffer[2] = 1
-                setMotorBuffer[3] = ~(x1_128_255 << 1) // * 2 und bitweise NOT // 0=FF, 1=FD, 126=03, 127=01,
+                setMotorBuffer[3] = ~(x_1_128_255 << 1) // * 2 und bitweise NOT // 0=FF, 1=FD, 126=03, 127=01,
                 setMotorBuffer[4] = 1
                 setMotorBuffer[5] = setMotorBuffer[3]
             }
@@ -100,11 +119,11 @@ namespace cb2 { // c-callibot.ts 005F7F
                } */
 
             // lenken (ein Motor wird langsamer)
-            if (btf.between(y1_16_31, 1, 15)) { // links
-                setMotorBuffer[3] *= Math.map(y1_16_31, 0, 16, prozent / 100, 1) // 0=linkslenken50% // 16=nichtlenken=100%
+            if (btf.between(y_1_16_31, 1, 15)) { // links
+                setMotorBuffer[3] *= Math.map(y_1_16_31, 0, 16, lenkenProzent / 100, 1) // 0=linkslenken50% // 16=nichtlenken=100%
             }
-            else if (btf.between(y1_16_31, 17, 31)) { // rechts
-                setMotorBuffer[5] *= Math.map(y1_16_31, 16, 32, 1, prozent / 100) // 16=nichtlenken=100% // 32=rechtslenken50%
+            else if (btf.between(y_1_16_31, 17, 31)) { // rechts
+                setMotorBuffer[5] *= Math.map(y_1_16_31, 16, 32, 1, lenkenProzent / 100) // 16=nichtlenken=100% // 32=rechtslenken50%
             }
             //else { // wenn y lenken 0, 16 oder mehr als 5 Bit
             //}
@@ -113,78 +132,68 @@ namespace cb2 { // c-callibot.ts 005F7F
         }
     }
 
-    //% group="Motor"
-    //% block="Motoren (1 ↓ 128 ↑ 255) links %m1_1_128_255 rechts %m2_1_128_255" weight=3
+    //% group="Geschwindigkeit (1 ↓ 128 ↑ 255) (0: keine Änderung)"
+    //% block="2 Motoren (1↓128↑255) links %m1_1_128_255 rechts %m2_1_128_255" weight=3
     //% m1_1_128_255.min=0 m1_1_128_255.max=255 m1_1_128_255.defl=0
     //% m2_1_128_255.min=0 m2_1_128_255.max=255 m2_1_128_255.defl=0
     export function writeMotoren128(m1_1_128_255: number, m2_1_128_255: number) {
         n_x1_128_255 = undefined
         n_y1_16_31 = undefined // die anderen zwischengespeicherten Werte ungültig machen
 
-        if ((n_m1_1_128_255 != m1_1_128_255 || n_m2_1_128_255 != m2_1_128_255) && m1_1_128_255 != 0 && m2_1_128_255 != 0) {
+        // ist ein Parameter 0, wird der Motor nicht angesteuert: keine Änderung
+        // ist ein Parameter gleich dem letzten Wert, wird der Motor nicht geändert (I²C)
+
+        let m1 = btf.between(m1_1_128_255, 1, 255) && n_m1_1_128_255 != m1_1_128_255
+        let m2 = btf.between(m2_1_128_255, 1, 255) && n_m2_1_128_255 != m2_1_128_255
+
+        // if (m1 || m2) {// ((n_m1_1_128_255 != m1_1_128_255 || n_m2_1_128_255 != m2_1_128_255) && m1_1_128_255 != 0 && m2_1_128_255 != 0) {
+        // n_m1_1_128_255 = m1_1_128_255
+        //  n_m2_1_128_255 = m2_1_128_255 // I²C nur bei Änderung
+
+        //  let m1 = btf.between(m1_1_128_255, 1, 255)
+        //  let m2 = btf.between(m2_1_128_255, 1, 255)
+
+        let motorBuffer: Buffer // undefined
+        let offset = 0
+        if (m1 && m2) {
+            motorBuffer = Buffer.create(6)
+            motorBuffer[offset++] = eRegister.SET_MOTOR
+            motorBuffer[offset++] = 3 // 3 beide Motoren
+        } else if (m1) {
+            motorBuffer = Buffer.create(4)
+            motorBuffer[offset++] = eRegister.SET_MOTOR
+            motorBuffer[offset++] = 1
+        } else if (m2) {
+            motorBuffer = Buffer.create(4)
+            motorBuffer[offset++] = eRegister.SET_MOTOR
+            motorBuffer[offset++] = 2
+        }
+
+        // M1 offset 2:Richtung, 3:PWM
+        if (m1 && (m1_1_128_255 & 0x80) == 0x80) { // 128..255 M1 vorwärts
+            n_m1_1_128_255 = m1_1_128_255 // letzten Wert merken
+            motorBuffer[offset++] = 0
+            motorBuffer[offset++] = (m1_1_128_255 << 1)
+        } else if (m1) { // 1..127 M1 rückwärts
             n_m1_1_128_255 = m1_1_128_255
-            n_m2_1_128_255 = m2_1_128_255 // I²C nur bei Änderung
-
-            let m1 = btf.between(m1_1_128_255, 1, 255)
-            let m2 = btf.between(m2_1_128_255, 1, 255)
-            // if (m1 || m2) {
-            let setMotorBuffer: Buffer
-            let offset = 0
-            if (m1 && m2) {
-                setMotorBuffer = Buffer.create(6)
-                setMotorBuffer[offset++] = eRegister.SET_MOTOR
-                setMotorBuffer[offset++] = 3
-            } else if (m1) {
-                setMotorBuffer = Buffer.create(4)
-                setMotorBuffer[offset++] = eRegister.SET_MOTOR
-                setMotorBuffer[offset++] = 1
-            } else if (m2) {
-                setMotorBuffer = Buffer.create(4)
-                setMotorBuffer[offset++] = eRegister.SET_MOTOR
-                setMotorBuffer[offset++] = 2
-            }
-
-            // M1 offset 2:Richtung, 3:PWM
-            if (m1 && (m1_1_128_255 & 0x80) == 0x80) { //     if (m1 && btf.between(m1_1_128_255, 128, 255)) { // M1 vorwärts
-                setMotorBuffer[offset++] = 0
-                setMotorBuffer[offset++] = m1_1_128_255 << 1// btf.mapInt32(m1_1_128_255, 128, 255, 0, 255)
-            } else if (m1) { // 1..127 M1 rückwärts
-                setMotorBuffer[offset++] = 1
-                setMotorBuffer[offset++] = ~(m1_1_128_255 << 1) // btf.mapInt32(m1_1_128_255, 1, 128, 255, 0)
-            }
-
-            // M2 wenn !m1 offset 2:Richtung, 3:PWM sonst offset 4:Richtung, 5:PWM
-            if (m2 && (m2_1_128_255 & 0x80) == 0x80) { //    if (m2 && btf.between(m2_1_128_255, 128, 255)) { // M2 vorwärts
-                setMotorBuffer[offset++] = 0
-                setMotorBuffer[offset++] = m2_1_128_255 << 1// btf.mapInt32(m2_1_128_255, 128, 255, 0, 255)
-            } else if (m2) { // 1..127 M2 rückwärts
-                setMotorBuffer[offset++] = 1
-                setMotorBuffer[offset++] = ~(m2_1_128_255 << 1) // btf.mapInt32(m2_1_128_255, 1, 128, 255, 0)
-            }
-
-            if (setMotorBuffer)
-                i2cWriteBuffer(setMotorBuffer)
+            motorBuffer[offset++] = 1
+            motorBuffer[offset++] = ~(m1_1_128_255 << 1)
         }
-    }
 
-    //% group="Motor"
-    //% block="Motoren Stop" weight=1
-    export function writeMotorenStop() {
-        if (n_x1_128_255 != c_MotorStop || n_m1_1_128_255 != c_MotorStop || n_m2_1_128_255 != c_MotorStop) {
-
-            n_x1_128_255 = c_MotorStop
-            n_y1_16_31 = undefined // die anderen zwischengespeicherten Werte ungültig machen
-
-            n_m1_1_128_255 = c_MotorStop
-            n_m2_1_128_255 = c_MotorStop // I²C nur bei Änderung
-
-            let setMotorBuffer = Buffer.create(6)
-            setMotorBuffer[0] = eRegister.SET_MOTOR   // 2
-            setMotorBuffer[1] = 3 // ec2Motor.beide     // 3
-            setMotorBuffer.fill(0, 2)
-
-            i2cWriteBuffer(setMotorBuffer)
+        // M2 wenn !m1 offset 2:Richtung, 3:PWM sonst offset 4:Richtung, 5:PWM
+        if (m2 && (m2_1_128_255 & 0x80) == 0x80) { // 128..255 M2 vorwärts
+            n_m2_1_128_255 = m2_1_128_255 // letzten Wert merken
+            motorBuffer[offset++] = 0
+            motorBuffer[offset++] = (m2_1_128_255 << 1)
+        } else if (m2) { // 1..127 M2 rückwärts
+            n_m2_1_128_255 = m2_1_128_255
+            motorBuffer[offset++] = 1
+            motorBuffer[offset++] = ~(m2_1_128_255 << 1)
         }
+
+        if (motorBuffer) // wenn beide false, ist motorBuffer undefined
+            i2cWriteBuffer(motorBuffer)
+        //  }
     }
 
 
@@ -385,18 +394,6 @@ namespace cb2 { // c-callibot.ts 005F7F
 
 
 
-    // ========== group="Versorgungsspannung" subcategory="Sensoren"
-
-    //% group="Versorgungsspannung" subcategory="Sensoren"
-    //% block="Batterie Spannung ⅒ Volt" weight=4
-    export function readSpannung() {
-        i2cWriteBuffer(Buffer.fromArray([eRegister.GET_POWER]))
-        return Math.idiv(i2cReadBuffer(3).getNumber(NumberFormat.UInt16LE, 1), 100) // 16 Bit (mV)/100 3V=30 3.15V=31
-        // return Math.roundWithPrecision(i2cReadBuffer(3).getNumber(NumberFormat.UInt16LE, 1) / 1000, 1) // 16 Bit (mV)/1000 = Volt mit 1 Kommastelle
-    }
-
-
-
     // ========== group="Encoder (Calli:bot 2E)" subcategory="Sensoren"
 
     //% group="Encoder (Calli:bot 2E)" subcategory="Sensoren"
@@ -410,7 +407,7 @@ namespace cb2 { // c-callibot.ts 005F7F
     }
 
     //% group="Encoder (Calli:bot 2E)" subcategory="Sensoren"
-    //% block="Encoder Werte [l,r]" weight=2
+    //% block="Encoder Werte [l,r] (Int32LE)" weight=2
     export function readEncoderValues() {
         if (n_Callibot2_x22hasEncoder) {
             i2cWriteBuffer(Buffer.fromArray([eRegister.GET_ENCODER_VALUE]))
@@ -453,6 +450,25 @@ namespace cb2 { // c-callibot.ts 005F7F
         c2 = 2,
         //% block="5"
         c5 = 5
+    }
+
+
+
+    // ========== group="INPUT analog (ab Typ 3)" subcategory="Sensoren"
+
+    //% group="INPUT analog (ab Typ 3)" subcategory="Sensoren"
+    //% block="Batterie Spannung ⅒ Volt" weight=4
+    export function readSpannung() {
+        i2cWriteBuffer(Buffer.fromArray([eRegister.GET_POWER]))
+        return Math.idiv(i2cReadBuffer(3).getNumber(NumberFormat.UInt16LE, 1), 100) // 16 Bit (mV)/100 3V=30 3.15V=31
+        // return Math.roundWithPrecision(i2cReadBuffer(3).getNumber(NumberFormat.UInt16LE, 1) / 1000, 1) // 16 Bit (mV)/1000 = Volt mit 1 Kommastelle
+    }
+
+    //% group="INPUT analog (ab Typ 3)" subcategory="Sensoren"
+    //% block="Spursensoren analog [r,l] in mV (UInt16LE)" weight=2
+    export function readSpursensorAnalog() {
+        i2cWriteBuffer(Buffer.fromArray([eRegister.GET_LINE_SEN_VALUE]))
+        return i2cReadBuffer(5).slice(1, 4).toArray(NumberFormat.UInt16LE) // 2 * 16 Bit
     }
 
 
