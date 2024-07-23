@@ -419,7 +419,7 @@ namespace cb2 { // c-callibot.ts 005F7F
 
     //% group="Encoder (Calli:bot 2E)" subcategory="Sensoren"
     //% block="Encoder Mittelwert (abs)" weight=1
-    export function getEncoderMittelwert() {
+    export function readEncoderMittelwert() {
         let encoderValues = readEncoderValues()
         return Math.idiv(Math.abs(encoderValues[0]) + Math.abs(encoderValues[1]), 2)
     }

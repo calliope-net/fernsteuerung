@@ -2,9 +2,9 @@
 namespace sender { // s-fahrplan.ts
 
 
-    // ========== group="20 Fahrplan senden" subcategory="Fahrplan"
+    // ========== group="20 Fahrplan (5 Teilstrecken) senden" subcategory="Fahrplan"
 
-    //% group="20 Fahrplan senden" subcategory="Fahrplan"
+    //% group="20 Fahrplan (5 Teilstrecken) senden" subcategory="Fahrplan"
     //% block="20 Fahrplan %buffer Strecke 1 %p1 Strecke 2 %p2 Strecke 3 %p3 Strecke 4 %p4 Strecke 5 %p5" weight=8
     //% buffer.shadow="btf_sendBuffer19"
     //% p1.shadow=sender_StreckePicker

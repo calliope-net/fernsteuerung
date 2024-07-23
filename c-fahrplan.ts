@@ -3,11 +3,11 @@ namespace cb2 { // c-fahrplan.ts
 
 
 
-    // ========== group="20 Fahrplan empfangen" subcategory="Fahrplan"
+    // ========== group="20 Fahrplan (5 Teilstrecken) empfangen" subcategory="Fahrplan"
 
     let n_fahreBuffer19_gestartet = false
 
-    //% group="20 Fahrplan empfangen" subcategory="Fahrplan"
+    //% group="20 Fahrplan (5 Teilstrecken) empfangen" subcategory="Fahrplan"
     //% block="fahre Strecke 1-5 aus Datenpaket %buffer Start Bit %motorBit" weight=4
     //% buffer.shadow=btf_receivedBuffer19
     //% motorBit.defl=btf.e3aktiviert.f1
@@ -17,7 +17,7 @@ namespace cb2 { // c-fahrplan.ts
             n_fahreBuffer19_gestartet = true
             btf.zeigeBIN(0, btf.ePlot.bin, 2)
 
-            for (let iBufferPointer: btf.eBufferPointer = btf.eBufferPointer.p1; iBufferPointer < 19; iBufferPointer += 3) { // 4, 7, 10, 13, 16
+            for (let iBufferPointer = btf.eBufferPointer.p1; iBufferPointer < 19; iBufferPointer += 3) { // 4, 7, 10, 13, 16
                 //  fahreStrecke(buffer.slice(iBufferPointer, 3))
 
                 if (btf.getByte(buffer, iBufferPointer, btf.eBufferOffset.b0_Motor) != 0
@@ -113,7 +113,7 @@ namespace cb2 { // c-fahrplan.ts
 
                 timeout_Encoder = 200 // 20 s Timeout wenn Encoder nicht zählt
 
-                while (getEncoderMittelwert() < encoderImpulse) // strecke * n_EncoderFaktor 31.25
+                while (readEncoderMittelwert() < encoderImpulse) // strecke * n_EncoderFaktor 31.25
                 {
                     if (timeout_Encoder-- <= 0) {
                         sensor_color = Colors.Red
