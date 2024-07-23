@@ -41,35 +41,31 @@ namespace btf { // b-fernsteuerung.ts
     //% group="calliope-net.github.io/fernsteuerung"
     //% block="Knopf A halten, Funkgruppe -1 und anzeigen" weight=6
     export function buttonAhold() {
-        if (!(input.buttonIsPressed(Button.B)) && a_StorageBuffer[eStorageBuffer.funkgruppe] > c_funkgruppe_min) {
-            //sender.resetFunktion()
-            //btf.setFunkgruppeButton(btf.eFunkgruppeButton.plus)
-            //  a_StorageBuffer[eStorageBuffer.funkgruppe]--
-            radio.setGroup(--a_StorageBuffer[eStorageBuffer.funkgruppe]) // erst -1, dann zurück lesen
-            storage.putBuffer(a_StorageBuffer) // im Flash speichern
-            n_Funktion = 0 // Sender nicht gestartet
+        if (!(input.buttonIsPressed(Button.B))) {
+            if (a_StorageBuffer[eStorageBuffer.funkgruppe] > c_funkgruppe_min) {
+                radio.setGroup(--a_StorageBuffer[eStorageBuffer.funkgruppe]) // erst -1, dann zurück lesen
+                storage.putBuffer(a_StorageBuffer) // im Flash speichern
+                n_Funktion = 0 // Sender nicht gestartet
+            }
+            n_FunkgruppeChanged = true
+            n5x5_setClearScreen = true
+            zeigeFunkgruppe()
         }
-        n_FunkgruppeChanged = true
-        n5x5_setClearScreen = true
-        zeigeFunkgruppe()
     }
 
     //% group="calliope-net.github.io/fernsteuerung"
     //% block="Knopf B halten, Funkgruppe +1 und anzeigen" weight=5
     export function buttonBhold() {
-        if (!(input.buttonIsPressed(Button.A)) && a_StorageBuffer[eStorageBuffer.funkgruppe] < c_funkgruppe_max) {
-            //sender.resetFunktion()
-            //btf.setFunkgruppeButton(btf.eFunkgruppeButton.plus)
-
-            // a_StorageBuffer[eStorageBuffer.funkgruppe]++
-            //  radio.setGroup(a_StorageBuffer[eStorageBuffer.funkgruppe])
-            radio.setGroup(++a_StorageBuffer[eStorageBuffer.funkgruppe]) // erst +1, dann zurück lesen
-            storage.putBuffer(a_StorageBuffer) // im Flash speichern
-            n_Funktion = 0 // Sender nicht gestartet
+        if (!(input.buttonIsPressed(Button.A))) {
+            if (a_StorageBuffer[eStorageBuffer.funkgruppe] < c_funkgruppe_max) {
+                radio.setGroup(++a_StorageBuffer[eStorageBuffer.funkgruppe]) // erst +1, dann zurück lesen
+                storage.putBuffer(a_StorageBuffer) // im Flash speichern
+                n_Funktion = 0 // Sender nicht gestartet
+            }
+            n_FunkgruppeChanged = true
+            n5x5_setClearScreen = true
+            zeigeFunkgruppe()
         }
-        n_FunkgruppeChanged = true
-        n5x5_setClearScreen = true
-        zeigeFunkgruppe()
     }
 
     //% group="calliope-net.github.io/fernsteuerung"
