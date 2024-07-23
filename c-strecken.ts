@@ -103,8 +103,90 @@ namespace cb2 { // c-strecken.ts
     }
 
 
+
+    // ========== group="2 Motoren (-100 ↓ 0 ↑ +100) nach Zeit (1.0 - 25.5 s) steuern" subcategory="Strecken"
+
+    //% group="2 Motoren (-100 ↓ 0 ↑ +100) nach Zeit (1.0 - 25.5 s) steuern" subcategory="Strecken"
+    //% block="2 Motoren links %motorA rechts %motorB Zeit (⅒s) %zehntelsekunden || Stop %abstandsSensor bei Abstand < (cm) %abstand Spursensor %spurSensor "
+    //% motorA.shadow=speedPicker motor.defl=50
+    //% motorB.shadow=speedPicker motor.defl=-50
+    //% zehntelsekunden.shadow=cb2_zehntelsekunden
+    //% abstandsSensor.shadow=toggleOnOff abstandsSensor.defl=1
+    //% abstand.min=10 abstand.max=50 abstand.defl=20
+    //% spurSensor.shadow=toggleOnOff  
+    //% inlineInputMode=inline
+    export function fahre2MotorenZeitPicker(motorA: number, motorB: number, zehntelsekunden: number, abstandsSensor = true, abstand = 20, spurSensor = false) {
+        fahre2MotorenZeit(btf.speedPicker(motorA), btf.speedPicker(motorB), zehntelsekunden, abstandsSensor, abstand, spurSensor)
+    }
+
+
+
+    // ========== group="2 Motoren (1 ↓ 128 ↑ 255) nach Zeit (1.0 - 25.5 s) steuern" subcategory="Strecken"
+
+    //% group="2 Motoren (1 ↓ 128 ↑ 255) nach Zeit (1.0 - 25.5 s) steuern" subcategory="Strecken"
+    //% block="2 Motoren (1↓128↑255) links %motorA rechts %motorB Zeit (⅒s) %zehntelsekunden || Stop %abstandsSensor bei Abstand < (cm) %abstand Spursensor %spurSensor "
+    //% motorA.min=1 motorA.max=255 motorA.defl=192
+    //% motorB.min=1 motorB.max=255 motorB.defl=64
+    //% zehntelsekunden.min=10 zehntelsekunden.max=255 zehntelsekunden.defl=25
+    //% abstandsSensor.shadow=toggleOnOff abstandsSensor.defl=1
+    //% abstand.min=10 abstand.max=50 abstand.defl=20
+    //% spurSensor.shadow=toggleOnOff   // inlineInputMode=inline
+    //% inlineInputMode=inline
+    export function fahre2MotorenZeit(motorA: number, motorB: number, zehntelsekunden: number, abstandsSensor = true, abstand = 20, spurSensor = false) {
+
+        writeMotorenStop()
+
+        if (
+            !(motorA == 0 && motorB == 0) // nicht beide 0, wäre wirkungslos
+            &&
+            zehntelsekunden > 0
+        ) {
+            let sensor_color = Colors.Off
+
+            writeMotoren128(motorA, motorB) // Start
+
+            while (zehntelsekunden-- > 0) // -1 aller 100 ms (pause unten)
+            {
+                if (abstandsSensor && abstand > 0 && readUltraschallAbstand() < abstand) {
+                    sensor_color = Colors.Orange
+                    break
+                }
+                if (spurSensor && !readSpursensor(eDH.hell, eDH.hell, true)) { // Spursensor aktiviert und schwarze Linie erkannt
+                    sensor_color = Colors.White
+                    break
+                }
+
+                basic.pause(100) // 1 Zehntelsekunde
+            } // while
+
+            writeMotorenStop()
+
+            if (sensor_color != Colors.Off) {
+                writeRgbLeds(sensor_color, true)
+                basic.pause(1000)
+                writeRgbLeds(sensor_color, false)
+            }
+        } // if
+    }
+
+
+
+    // ========== group="Zehntelsekunden ⅒s" subcategory="Strecken"
+
+    //% blockId=cb2_zehntelsekunden
+    //% group="Zehntelsekunden ⅒s" subcategory="Strecken"
+    //% block="%pause" weight=4
+    export function cb2_zehntelsekunden(pause: btf.ePause): number {
+        return pause
+    }
+
+
+    // ========== nur ENCODER, ohne Sensoren
+
+    // ========== group="2 Motoren (1 ↓ 128 ↑ 255) mit 2 Encodern steuern (Calli:bot 2E)" subcategory="Strecken"
+
     //% group="2 Motoren (1 ↓ 128 ↑ 255) mit 2 Encodern steuern (Calli:bot 2E)" subcategory="Strecken"
-    //% block="2 Motoren (1↓128↑255) | links %motorA rechts %motorB 2 Encoder (cm\\|Impulse) | links %encoderA rechts %encoderB Impulse %impulse" weight=5
+    //% block="2 Motoren (1↓128↑255) | links %motorA rechts %motorB 2 Encoder (cm\\|Impulse) | links %encoderA rechts %encoderB Impulse %impulse"
     //% motorA.min=1 motorA.max=255 motorA.defl=192
     //% motorB.min=1 motorB.max=255 motorB.defl=64
     //% encoderA.min=10 encoderA.max=255 encoderA.defl=25
@@ -112,7 +194,7 @@ namespace cb2 { // c-strecken.ts
     //% impulse.shadow=toggleYesNo
     // inlineInputMode=inline
     export function fahre2MotorenEncoder(motorA: number, motorB: number, encoderA: number, encoderB: number, impulse = false) {
-
+        writeMotorenStop()
         if (
             !(motorA == 0 && motorB == 0) // nicht beide 0, wäre wirkungslos
             &&
@@ -175,22 +257,6 @@ namespace cb2 { // c-strecken.ts
             } // while
             writeMotorenStop()
         }
-    }
-
-
-    export function fahre2MotorenZeit(motorA: number, motorB: number, zeit: number) {
-
-
-
-    }
-
-    // ========== group="Zehntelsekunden ⅒s" subcategory="Strecken"
-
-    //% blockId=cb2_zehntelsekunden
-    //% group="Zehntelsekunden ⅒s" subcategory="Strecken"
-    //% block="%pause" weight=4
-    export function cb2_zehntelsekunden(pause: btf.ePause): number {
-        return pause
     }
 
 
