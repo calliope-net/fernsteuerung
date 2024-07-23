@@ -96,21 +96,12 @@ namespace cb2 { // c-fernsteuerung.ts
     //% impulse.shadow=toggleYesNo
     // inlineInputMode=inline
     export function fahre2MotorenEncoder(motorA: number, motorB: number, encoderA: number, encoderB: number, impulse = false) {
-        // let iBufferPointerA = btf.eBufferPointer.ma
-        //   let sensor_color = Colors.Off
-        //   let timeout_Encoder: number// = 200 // 20 s Timeout wenn Encoder nicht zählt
-        //  let motorBit = 0
-
-        //   let hasEncoder = false
-        //  if (checkEncoder)
-        //     hasEncoder = writeEncoderReset() // Testet ob Encoder vorhanden, Ergebnis in n_Callibot2_x22hasEncoder
-
 
         if (
             !(motorA == 0 && motorB == 0) // nicht beide 0, wäre wirkungslos
             &&
             (
-                motorA != c_MotorStop && encoderA != 0
+                motorA != c_MotorStop && encoderA != 0 // mindestens einer muss Geschwindiegkeit und Strecken Länge haben
                 ||
                 motorB != c_MotorStop && encoderB != 0
             )
@@ -120,7 +111,6 @@ namespace cb2 { // c-fernsteuerung.ts
 
             let encoderImpulseA = impulse ? encoderA : encoderA * n_EncoderFaktor
             let encoderImpulseB = impulse ? encoderB : encoderB * n_EncoderFaktor
-            //  let pause = Math.map(0, 0, 0, 0, 0)
             let timeoutEncoder = 500 // 500 * pause 2 (unten) = 1 s Timeout, wenn Encoder nicht zählt
             // 200 * pause 100 (unten) = 20 s Timeout, wenn Encoder nicht zählt
 
@@ -139,11 +129,11 @@ namespace cb2 { // c-fernsteuerung.ts
                         // in 500 * pause 2 (unten) = 1 s Timeout hat sich kein Wert geändert
                         writeMotorenStop()
                         writeRgbLeds(Colors.Red, true)
-                       // basic.pause(1000)
-                      //  writeRgbLeds(Colors.Red, false) // aus nach 1 Sekunde
+                        // basic.pause(1000)
+                        //  writeRgbLeds(Colors.Red, false) // aus nach 1 Sekunde
                         break
                     }
-                    else { // mindestens ein Wert geändert
+                    else { // mindestens ein Wert geändert - weiter fahren
                         letzteEncoderWerte[0] = aEncoderWerte[0]
                         letzteEncoderWerte[1] = aEncoderWerte[1]
                         timeoutEncoder = 500 // 500 * pause 2 (unten) = 1 s Timeout, wenn Encoder nicht zählt
@@ -164,12 +154,18 @@ namespace cb2 { // c-fernsteuerung.ts
                 // oder langsamer fahren wenn Rest strecke kleiner wird
                 // l=255 r=1: 800 Impulse (25*32) 1.4s = 1.75ms pro Impuls
 
-             //   basic.pause(2) // 2 ms müsste jeden Impuls erfassen
+                basic.pause(2) // 2 ms müsste jeden Impuls erfassen
 
             } // while
             writeMotorenStop()
         }
     }
 
+
+    export function fahre2MotorenZeit(motorA: number, motorB: number, zeit: number) {
+
+
+
+    }
 
 } // c-fernsteuerung.ts

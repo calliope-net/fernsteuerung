@@ -33,6 +33,7 @@
         "r-advanced.ts",
         "r-calliope-v3.ts",
         "c-callibot.ts",
+        "c-strecken.ts",
         "c-fernsteuerung.ts",
         "c-fahrplan.ts",
         "c-beispiele.ts"
@@ -50,5 +51,5 @@
     "supportedTargets": [
         "calliopemini"
     ],
-    "preferredEditor": "blocksprj"
+    "preferredEditor": "tsprj"
 }
