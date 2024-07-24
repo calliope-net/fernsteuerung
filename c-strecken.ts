@@ -40,7 +40,7 @@ namespace cb2 { // c-strecken.ts
 
         writeMotorenStop()
 
-        if (motor != 0 && servo != 0 && strecke != 0) {
+        if (motor != 0 && motor != c_MotorStop && servo != 0 && strecke != 0) {
             let sensor_color = Colors.Off
             let timeout_Encoder: number// = 200 // 20 s Timeout wenn Encoder nicht zählt
             let hasEncoder = false

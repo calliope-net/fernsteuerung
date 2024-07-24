@@ -20,35 +20,26 @@ namespace cb2 { // c-fahrplan.ts
             for (let iBufferPointer = btf.eBufferPointer.p1; iBufferPointer < 19; iBufferPointer += 3) { // 4, 7, 10, 13, 16
                 //  fahreStrecke(buffer.slice(iBufferPointer, 3))
 
-                if (btf.getByte(buffer, iBufferPointer, btf.eBufferOffset.b0_Motor) != 0
-                    &&
-                    btf.getByte(buffer, iBufferPointer, btf.eBufferOffset.b1_Servo) != 0
-                    &&
-                    btf.getByte(buffer, iBufferPointer, btf.eBufferOffset.b2_Fahrstrecke) != 0) {
+                /*  if (btf.getByte(buffer, iBufferPointer, btf.eBufferOffset.b0_Motor) != 0
+                     &&
+                     btf.getByte(buffer, iBufferPointer, btf.eBufferOffset.b1_Servo) != 0
+                     &&
+                     btf.getByte(buffer, iBufferPointer, btf.eBufferOffset.b2_Fahrstrecke) != 0) { */
 
 
-                    btf.zeigeBINx234Fahrplan(buffer, iBufferPointer) // anzeigen im 5x5 Display
+                btf.zeigeBINx234Fahrplan5Strecken(buffer, iBufferPointer) // anzeigen im 5x5 Display
 
-                    fahreStrecke(
-                        btf.getByte(buffer, iBufferPointer, btf.eBufferOffset.b0_Motor),
-                        btf.getByte(buffer, iBufferPointer, btf.eBufferOffset.b1_Servo),
-                        btf.getByte(buffer, iBufferPointer, btf.eBufferOffset.b2_Fahrstrecke),
-                        btf.getSensor(buffer, iBufferPointer, btf.eSensor.b6Abstand),
-                        btf.getAbstand(buffer),
-                        btf.getSensor(buffer, iBufferPointer, btf.eSensor.b5Spur),
-                        btf.getSensor(buffer, iBufferPointer, btf.eSensor.b7Impulse)
-                    )
-
-                    /* fahreStreckeAbstand(buffer.slice(iBufferPointer, 3),
-                        btf.getSensor(
-                            buffer,
-                            iBufferPointer,
-                            btf.eSensor.b6Abstand
-                        ),
-                        btf.getAbstand(buffer)
-                    ) */
-                }
-            }
+                fahreStrecke(
+                    btf.getByte(buffer, iBufferPointer, btf.eBufferOffset.b0_Motor),
+                    btf.getByte(buffer, iBufferPointer, btf.eBufferOffset.b1_Servo),
+                    btf.getByte(buffer, iBufferPointer, btf.eBufferOffset.b2_Fahrstrecke),
+                    btf.getSensor(buffer, iBufferPointer, btf.eSensor.b6Abstand),
+                    btf.getAbstand(buffer),
+                    btf.getSensor(buffer, iBufferPointer, btf.eSensor.b5Spur),
+                    btf.getSensor(buffer, iBufferPointer, btf.eSensor.b7Impulse)
+                )
+                // }
+            } // for iBufferPointer
         }
         else if (n_fahrplanBuffer5Strecken_gestartet && !btf.getaktiviert(buffer, startBit)) { // m1 false
             n_fahrplanBuffer5Strecken_gestartet = false
@@ -93,7 +84,7 @@ namespace cb2 { // c-fahrplan.ts
                           btf.getByte(buffer, iBufferPointer, btf.eBufferOffset.b2_Fahrstrecke) != 0) {
        */
 
-                    btf.zeigeBINx234Fahrplan(buffer, iBufferPointer) // anzeigen im 5x5 Display
+                    btf.zeigeBINx234Fahrplan2x2Motoren(buffer, iBufferPointer) // anzeigen im 5x5 Display
 
                     for (let j = btf.getByte(buffer, iBufferPointer, btf.eBufferOffset.b1_Servo); j >= 0; j--) {
 
