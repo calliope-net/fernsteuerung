@@ -10,7 +10,7 @@ namespace cb2 { // c-fahrplan.ts
     //% group="20 Fahrplan (5 Teilstrecken) empfangen" subcategory="Fahrplan"
     //% block="fahre Strecke 1-5 aus Datenpaket %buffer Start Bit %startBit" weight=4
     //% buffer.shadow=btf_receivedBuffer19
-    //% startBit.defl=btf.e3aktiviert.f1
+    //% startBit.defl=btf.e3aktiviert.m1
     export function fahrplanBuffer5Strecken(buffer: Buffer, startBit: btf.e3aktiviert) {
 
         if (!n_fahrplanBuffer5Strecken_gestartet && btf.getaktiviert(buffer, startBit)) { // m1 true
