@@ -74,24 +74,42 @@ namespace sender { // s-fahrplan.ts
 
 
     // ==========
-    // ========== group="20 Fahrplan (5 Teilstrecken) senden" subcategory="Fahrplan"
+
+
+    //% group="20 Fahrplan (5 Teilstrecken) senden" subcategory="Fahrplan"
+    //% block="20 Fahrplan %buffer Strecke 1 %p1 Strecke 2 %p2 alles wiederholen %count" weight=8
+    //% buffer.shadow="btf_sendBuffer19"
+    //% p1.shadow=sender_StreckePicker
+    //% p2.shadow=sender_StreckePicker
+    //% count.min=1 count.max=8 count.defl=1
+    //% inlineInputMode=inline
+    export function send2x2Motoren(buffer: Buffer, p1: Buffer, p2: Buffer, count = 1) {
+        btf.setBetriebsart(buffer, btf.e0Betriebsart.p2Fahrplan)
+
+        btf.setByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo, count) // alles wiederholen
+
+        if (p1 && p1.length == 6) buffer.write(btf.eBufferPointer.ma, p1) // 7-8-9-0-11-12
+        if (p2 && p2.length == 6) buffer.write(btf.eBufferPointer.mc, p2) // 13-14-15-16-17-18
+    }
+
 
 
     // ========== group="2 Motoren (1 ↓ 128 ↑ 255) mit 2 Encodern steuern (Calli:bot 2E)" subcategory="Fahrplan"
 
     //% blockId=sender_2MotorenZeit
     //% group="20 Fahrplan (2 Teilstrecken • 2 Motoren) senden" subcategory="Fahrplan"
-    //% block="2 Motoren (1↓128↑255) | links %motorA rechts %motorB Zeit %zehntelsekunden ⅒s || Abstandssensor %abstandsSensor Spursensor %spurSensor"
+    //% block="2 Motoren (1↓128↑255) | links %motorA rechts %motorB Zeit %zehntelsekunden ⅒s || Wiederholungen %count Abstandssensor %abstandsSensor Spursensor %spurSensor"
     //% motorA.min=1 motorA.max=255 motorA.defl=192
     //% motorB.min=1 motorB.max=255 motorB.defl=64
     //% zehntelsekunden.min=10 zehntelsekunden.max=255 zehntelsekunden.defl=25
+    //% count.min=1 count.max=8 count.defl=1
     //% abstandsSensor.shadow=toggleOnOff abstandsSensor.defl=1
     //% spurSensor.shadow=toggleOnOff
     //% inlineInputMode=inline
-    export function sender_2MotorenZeit(motorA: number, motorB: number, zehntelsekunden: number, abstandsSensor = true, spurSensor = false) {
+    export function sender_2MotorenZeit(motorA: number, motorB: number, zehntelsekunden: number, count = 1, abstandsSensor = true, spurSensor = false) {
         let buffer6 = Buffer.create(6)
         buffer6[0] = motorA //  (1 ↓ 128 ↑ 255)
-        // buffer6[1] = servo & 0x1F // (1 ↖ 16 ↗ 31)
+        buffer6[1] = count & 0x1F // (1 ↖ 16 ↗ 31)
         buffer6[2] = zehntelsekunden
         buffer6[3] = motorB //  (1 ↓ 128 ↑ 255)
         //  buffer6[4] = servo & 0x1F // (1 ↖ 16 ↗ 31)
@@ -109,19 +127,20 @@ namespace sender { // s-fahrplan.ts
 
     //% blockId=sender_2MotorenEncoder
     //% group="20 Fahrplan (2 Teilstrecken • 2 Motoren) senden" subcategory="Fahrplan"
-    //% block="2 Motoren (1↓128↑255) | links %motorA rechts %motorB 2 Encoder (cm\\|Impulse) | links %encoderA rechts %encoderB || Impulse %impulse"
+    //% block="2 Motoren (1↓128↑255) | links %motorA rechts %motorB 2 Encoder (cm\\|Impulse) | links %encoderA rechts %encoderB || Wiederholungen %count Impulse %impulse"
     //% motorA.min=1 motorA.max=255 motorA.defl=192
     //% motorB.min=1 motorB.max=255 motorB.defl=64
     //% encoderA.min=10 encoderA.max=255 encoderA.defl=25
     //% encoderB.min=10 encoderB.max=255 encoderB.defl=25
-    //% abstandsSensor.shadow=toggleOnOff abstandsSensor.defl=1
-    //% spurSensor.shadow=toggleOnOff
+    //% count.min=1 count.max=8 count.defl=1
+    // abstandsSensor.shadow=toggleOnOff abstandsSensor.defl=1
+    // spurSensor.shadow=toggleOnOff
     //% impulse.shadow=toggleYesNo
     //% inlineInputMode=inline
-    export function sender_2MotorenEncoder(motorA: number, motorB: number, encoderA: number, encoderB: number, impulse = false) {
+    export function sender_2MotorenEncoder(motorA: number, motorB: number, encoderA: number, encoderB: number, count = 1, impulse = false) {
         let buffer6 = Buffer.create(6)
         buffer6[0] = motorA //  (1 ↓ 128 ↑ 255)
-        // buffer6[1] = servo & 0x1F // (1 ↖ 16 ↗ 31)
+        buffer6[1] = count & 0x1F // (1 ↖ 16 ↗ 31)
         buffer6[2] = encoderA
         buffer6[3] = motorB //  (1 ↓ 128 ↑ 255)
         //  buffer6[4] = servo & 0x1F // (1 ↖ 16 ↗ 31)
