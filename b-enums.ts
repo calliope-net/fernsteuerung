@@ -7,15 +7,15 @@ namespace btf { // b-enums.ts
     export enum eBufferPointer {
         //% block="[1] M0"
         m0 = 1,
-        //% block="[4] M1"
+        //% block="[4] M1 (1)"
         m1 = 4,
-        //% block="[7] MA"
+        //% block="[7] MA (2)"
         ma = 7,
-        //% block="[10] MB"
+        //% block="[10] MB (3)"
         mb = 10,
-        //% block="[13] MC"
+        //% block="[13] MC (4)"
         mc = 13,
-        //% block="[16] MD"
+        //% block="[16] MD (5)"
         md = 16,
 
         //% block="[4] Ultraschallsensor"
@@ -28,23 +28,21 @@ namespace btf { // b-enums.ts
         s10 = 13,
         //% block="[16] Spursensor 11"
         s11 = 16,
-
-
-        //% block="M0 | Joystick"
-        p0 = 1,
-        //% block="M1 | 1. Strecke | Ultraschall"
-        p1 = 4,
-        //% block="MA | 2. Strecke | Spur 00"
-        p2 = 7,
-        //% block="MB | 3. Strecke | Spur 01"
-        p3 = 10,
-        //% block="MC | 4. Strecke | Spur 10"
-        p4 = 13,
-        //% block="MD | 5. Strecke | Spur 11"
-        p5 = 16
     }
 
 
+        //% block="M0 | Joystick"
+        // p0 = 1,
+        //% block="M1 | 1. Strecke | Ultraschall"
+        // p1 = 4,
+        //% block="MA | 2. Strecke | Spur 00"
+        // p2 = 7,
+        //% block="MB | 3. Strecke | Spur 01"
+        // p3 = 10,
+        //% block="MC | 4. Strecke | Spur 10"
+        // p4 = 13,
+        //% block="MD | 5. Strecke | Spur 11"
+        // p5 = 16
         // block="[4] 1. Strecke"
         //f1 = 4,
         // block="[7] 2. Strecke"
@@ -75,28 +73,28 @@ namespace btf { // b-enums.ts
 
         //% block="Motor M0"
         m0 = 0x01,
-        //% block="Motor M1"
+        //% block="Motor M1 (1)"
         m1 = 0x02,
-        //% block="Motor MA"
+        //% block="Motor MA (2)"
         ma = 0x04,
-        //% block="Motor MB"
+        //% block="Motor MB (3)"
         mb = 0x08,
-        //% block="Motor MC"
+        //% block="Motor MC (4)"
         mc = 0x10,
-        //% block="Motor MD"
+        //% block="Motor MD (5)"
         md = 0x20,
 
 
-        //% block="1. Strecke"
-        f1 = 0x02,
-        //% block="2. Strecke"
-        f2 = 0x04,
-        //% block="3. Strecke"
-        f3 = 0x08,
-        //% block="4. Strecke"
-        f4 = 0x10,
-        //% block="5. Strecke"
-        f5 = 0x20,
+        // block="1. Strecke"
+        // f1 = 0x02,
+        // block="2. Strecke"
+        // f2 = 0x04,
+        // block="3. Strecke"
+        // f3 = 0x08,
+        // //% block="4. Strecke"
+        // f4 = 0x10,
+        // block="5. Strecke"
+        // f5 = 0x20,
 
 
         //% block="Ultraschallsensor"
@@ -111,6 +109,8 @@ namespace btf { // b-enums.ts
         s11 = 0x20
 
 
+   }
+
         //% block="M0 & M1 (0x03)"
         //  m01 = m0 + m1,
         //% block="MA & MB (0x0C)"
@@ -119,8 +119,7 @@ namespace btf { // b-enums.ts
         //  mcd = mc + md,
         //% block="alle 6 Bit (0x3F)"
         //  m01abcd = m01 + mab + mcd
-    }
-
+ 
 
     export enum e3Abstand {
         //% block="20 cm"

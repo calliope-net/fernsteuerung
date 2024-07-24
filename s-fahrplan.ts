@@ -16,11 +16,11 @@ namespace sender { // s-fahrplan.ts
 
         btf.setBetriebsart(buffer, btf.e0Betriebsart.p2Fahrplan)
 
-        if (p1 && p1.length == 3) buffer.write(btf.eBufferPointer.p1, p1) // 4-5-6
-        if (p2 && p2.length == 3) buffer.write(btf.eBufferPointer.p2, p2)
-        if (p3 && p3.length == 3) buffer.write(btf.eBufferPointer.p3, p3)
-        if (p4 && p4.length == 3) buffer.write(btf.eBufferPointer.p4, p4)
-        if (p5 && p5.length == 3) buffer.write(btf.eBufferPointer.p5, p5) // 16-17-18
+        if (p1 && p1.length == 3) buffer.write(btf.eBufferPointer.m1, p1) // 4-5-6
+        if (p2 && p2.length == 3) buffer.write(btf.eBufferPointer.ma, p2)
+        if (p3 && p3.length == 3) buffer.write(btf.eBufferPointer.mb, p3)
+        if (p4 && p4.length == 3) buffer.write(btf.eBufferPointer.mc, p4)
+        if (p5 && p5.length == 3) buffer.write(btf.eBufferPointer.md, p5) // 16-17-18
     }
 
 

@@ -17,7 +17,7 @@ namespace cb2 { // c-fahrplan.ts
             n_fahrplanBuffer5Strecken_gestartet = true
             btf.zeigeBIN(0, btf.ePlot.bin, 2)
 
-            for (let iBufferPointer = btf.eBufferPointer.p1; iBufferPointer < 19; iBufferPointer += 3) { // 4, 7, 10, 13, 16
+            for (let iBufferPointer = btf.eBufferPointer.m1; iBufferPointer < 19; iBufferPointer += 3) { // 4, 7, 10, 13, 16
                 //  fahreStrecke(buffer.slice(iBufferPointer, 3))
 
                 /*  if (btf.getByte(buffer, iBufferPointer, btf.eBufferOffset.b0_Motor) != 0
