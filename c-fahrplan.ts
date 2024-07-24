@@ -5,7 +5,7 @@ namespace cb2 { // c-fahrplan.ts
 
     // ========== group="20 Fahrplan (5 Teilstrecken) empfangen" subcategory="Fahrplan"
 
-    let n_fahreBuffer19_gestartet = false
+    let n_fahrplanBuffer5Strecken_gestartet = false
 
     //% group="20 Fahrplan (5 Teilstrecken) empfangen" subcategory="Fahrplan"
     //% block="fahre Strecke 1-5 aus Datenpaket %buffer Start Bit %startBit" weight=4
@@ -13,8 +13,8 @@ namespace cb2 { // c-fahrplan.ts
     //% startBit.defl=btf.e3aktiviert.f1
     export function fahrplanBuffer5Strecken(buffer: Buffer, startBit: btf.e3aktiviert) {
 
-        if (!n_fahreBuffer19_gestartet && btf.getaktiviert(buffer, startBit)) { // m1 true
-            n_fahreBuffer19_gestartet = true
+        if (!n_fahrplanBuffer5Strecken_gestartet && btf.getaktiviert(buffer, startBit)) { // m1 true
+            n_fahrplanBuffer5Strecken_gestartet = true
             btf.zeigeBIN(0, btf.ePlot.bin, 2)
 
             for (let iBufferPointer = btf.eBufferPointer.p1; iBufferPointer < 19; iBufferPointer += 3) { // 4, 7, 10, 13, 16
@@ -50,8 +50,8 @@ namespace cb2 { // c-fahrplan.ts
                 }
             }
         }
-        else if (n_fahreBuffer19_gestartet && !btf.getaktiviert(buffer, startBit)) { // m1 false
-            n_fahreBuffer19_gestartet = false
+        else if (n_fahrplanBuffer5Strecken_gestartet && !btf.getaktiviert(buffer, startBit)) { // m1 false
+            n_fahrplanBuffer5Strecken_gestartet = false
             btf.zeigeBIN(0, btf.ePlot.bin, 2)
             btf.zeigeBIN(0, btf.ePlot.bin, 3)
             btf.zeigeBIN(0, btf.ePlot.bin, 4)
@@ -60,48 +60,68 @@ namespace cb2 { // c-fahrplan.ts
     }
 
 
-    let n_fahreBuffer19Encoder_gestartet = false
+
+    // ========== group="20 Fahrplan (2 Teilstrecken) empfangen" subcategory="Fahrplan"
+
+    let n_fahrplanBuffer2x2Motoren_gestartet = false
 
     //% group="20 Fahrplan (2 Teilstrecken) empfangen" subcategory="Fahrplan"
-    //% block="fahre 2 Strecken mit 2 Motoren aus Datenpaket %buffer Start Bit %startBit" weight=4
+    //% block="fahre 2 Strecken mit 2 Motoren aus Datenpaket %buffer Start Bit %startBit || Encoder %checkEncoder" weight=4
     //% buffer.shadow=btf_receivedBuffer19
     //% startBit.defl=btf.e3aktiviert.ma
-    export function fahrplanBuffer2x2Motoren(buffer: Buffer, startBit: btf.e3aktiviert) {
+    //% checkEncoder.shadow=toggleYesNo checkEncoder.defl=1
+    //% inlineInputMode=inline
+    export function fahrplanBuffer2x2Motoren(buffer: Buffer, startBit: btf.e3aktiviert, checkEncoder = true) {
 
-        if (!n_fahreBuffer19Encoder_gestartet && btf.getaktiviert(buffer, startBit)) { // ma true
-            n_fahreBuffer19Encoder_gestartet = true
+        if (!n_fahrplanBuffer2x2Motoren_gestartet && btf.getaktiviert(buffer, startBit)) { // ma true
+            n_fahrplanBuffer2x2Motoren_gestartet = true
             btf.zeigeBIN(0, btf.ePlot.bin, 2) // x=2 löschen
 
-            for (let iBufferPointer = btf.eBufferPointer.ma; iBufferPointer < 19; iBufferPointer += 6) { // 7ab, 13cd
-                //  fahreStrecke(buffer.slice(iBufferPointer, 3))
+            let hasEncoder = false
+            if (checkEncoder)
+                hasEncoder = writeEncoderReset() // Testet ob Encoder vorhanden, Ergebnis in n_Callibot2_x22hasEncoder
 
-                if (btf.getByte(buffer, iBufferPointer, btf.eBufferOffset.b0_Motor) != 0
-                    &&
-                    btf.getByte(buffer, iBufferPointer, btf.eBufferOffset.b1_Servo) != 0
-                    &&
-                    btf.getByte(buffer, iBufferPointer, btf.eBufferOffset.b2_Fahrstrecke) != 0) {
+            for (let i = btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo); i >= 0; i--) {
 
+                for (let iBufferPointer = btf.eBufferPointer.ma; iBufferPointer < 19; iBufferPointer += 6) { // 7ab, 13cd
+                    //  fahreStrecke(buffer.slice(iBufferPointer, 3))
+
+                    /*   if (btf.getByte(buffer, iBufferPointer, btf.eBufferOffset.b0_Motor) != 0
+                          &&
+                          btf.getByte(buffer, iBufferPointer, btf.eBufferOffset.b1_Servo) != 0
+                          &&
+                          btf.getByte(buffer, iBufferPointer, btf.eBufferOffset.b2_Fahrstrecke) != 0) {
+       */
 
                     btf.zeigeBINx234Fahrplan(buffer, iBufferPointer) // anzeigen im 5x5 Display
 
+                    for (let j = btf.getByte(buffer, iBufferPointer, btf.eBufferOffset.b1_Servo); j >= 0; j--) {
 
-
-                    fahreStrecke(
-                        btf.getByte(buffer, iBufferPointer, btf.eBufferOffset.b0_Motor),
-                        btf.getByte(buffer, iBufferPointer, btf.eBufferOffset.b1_Servo),
-                        btf.getByte(buffer, iBufferPointer, btf.eBufferOffset.b2_Fahrstrecke),
-                        btf.getSensor(buffer, iBufferPointer, btf.eSensor.b6Abstand),
-                        btf.getAbstand(buffer),
-                        btf.getSensor(buffer, iBufferPointer, btf.eSensor.b5Spur),
-                        btf.getSensor(buffer, iBufferPointer, btf.eSensor.b7Impulse)
-                    )
-
-                   
-                }
-            }
+                        if (hasEncoder) {
+                            fahre2MotorenEncoder(
+                                btf.getByte(buffer, iBufferPointer, btf.eBufferOffset.b0_Motor),
+                                btf.getByte(buffer, iBufferPointer + 3, btf.eBufferOffset.b0_Motor),
+                                btf.getByte(buffer, iBufferPointer, btf.eBufferOffset.b2_Fahrstrecke),
+                                btf.getByte(buffer, iBufferPointer + 3, btf.eBufferOffset.b2_Fahrstrecke),
+                                btf.getSensor(buffer, iBufferPointer, btf.eSensor.b7Impulse)
+                            )
+                        }
+                        else {
+                            fahre2MotorenZeit(
+                                btf.getByte(buffer, iBufferPointer, btf.eBufferOffset.b0_Motor),
+                                btf.getByte(buffer, iBufferPointer + 3, btf.eBufferOffset.b0_Motor),
+                                btf.getByte(buffer, iBufferPointer, btf.eBufferOffset.b2_Fahrstrecke),
+                                btf.getSensor(buffer, iBufferPointer, btf.eSensor.b6Abstand),
+                                btf.getAbstand(buffer),
+                                btf.getSensor(buffer, iBufferPointer, btf.eSensor.b5Spur)
+                            )
+                        }
+                    } // for j
+                } // for iBufferPointer
+            } // for i
         }
-        else if (n_fahreBuffer19Encoder_gestartet && !btf.getaktiviert(buffer, startBit)) { // m1 false
-            n_fahreBuffer19Encoder_gestartet = false
+        else if (n_fahrplanBuffer2x2Motoren_gestartet && !btf.getaktiviert(buffer, startBit)) { // m1 false
+            n_fahrplanBuffer2x2Motoren_gestartet = false
             btf.zeigeBIN(0, btf.ePlot.bin, 2)
             btf.zeigeBIN(0, btf.ePlot.bin, 3)
             btf.zeigeBIN(0, btf.ePlot.bin, 4)
