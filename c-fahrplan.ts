@@ -56,11 +56,11 @@ namespace cb2 { // c-fahrplan.ts
 
 
 
-    // ========== group="20 Fahrplan (2 Teilstrecken) empfangen" subcategory="Fahrplan"
+    // ========== group="20 Fahrplan (2 Teilstrecken • 2 Motoren) empfangen" subcategory="Fahrplan"
 
     let n_fahrplanBuffer2x2Motoren_gestartet = false
 
-    //% group="20 Fahrplan (2 Teilstrecken) empfangen" subcategory="Fahrplan"
+    //% group="20 Fahrplan (2 Teilstrecken • 2 Motoren) empfangen" subcategory="Fahrplan"
     //% block="fahre 2 Strecken mit 2 Motoren aus Datenpaket %buffer Start Bit %startBit || Encoder %checkEncoder" weight=4
     //% buffer.shadow=btf_receivedBuffer19
     //% startBit.defl=btf.e3aktiviert.ma

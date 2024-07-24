@@ -23,10 +23,6 @@ namespace sender { // s-fahrplan.ts
         if (p5 && p5.length == 3) buffer.write(btf.eBufferPointer.md, p5) // 16-17-18
     }
 
-
-
-
-
     //% blockId=sender_StreckePicker
     //% group="Geschwindigkeit (-100 ↓ 0 ↑ +100), Winkel (0° ↖ 90° ↗ 180°)" subcategory="Fahrplan"
     //% block="Fahren %motor Lenken %servo Länge %strecke cm\\|⅒s || Abstandssensor %abstandsSensor Spursensor %spurSensor Impulse %impulse" weight=7
@@ -35,7 +31,7 @@ namespace sender { // s-fahrplan.ts
     //% strecke.min=10 strecke.max=255 strecke.defl=20
     //% abstandsSensor.shadow=toggleOnOff abstandsSensor.defl=1
     //% spurSensor.shadow=toggleOnOff
-    //% impulse.shadow=toggleOnOff
+    //% impulse.shadow=toggleYesNo
     //% inlineInputMode=inline
     export function sender_StreckePicker(motor: number, servo: number, strecke: number, abstandsSensor = true, spurSensor = false, impulse = false) {
         return sender_Strecke(btf.speedPicker(motor), btf.protractorPicker(servo), strecke, abstandsSensor, spurSensor, impulse)
@@ -49,22 +45,22 @@ namespace sender { // s-fahrplan.ts
     //% strecke.min=10 strecke.max=255 strecke.defl=250
     //% abstandsSensor.shadow=toggleOnOff abstandsSensor.defl=1
     //% spurSensor.shadow=toggleOnOff
-    //% impulse.shadow=toggleOnOff
+    //% impulse.shadow=toggleYesNo
     //% inlineInputMode=inline
     export function sender_Strecke(motor: number, servo: number, strecke: number, abstandsSensor = true, spurSensor = false, impulse = false) {
-        let buffer = Buffer.create(3)
-        buffer[0] = motor //  (1 ↓ 128 ↑ 255)
-        buffer[1] = servo & 0x1F // (1 ↖ 16 ↗ 31)
-        buffer[2] = strecke
+        let buffer3 = Buffer.create(3)
+        buffer3[0] = motor //  (1 ↓ 128 ↑ 255)
+        buffer3[1] = servo & 0x1F // (1 ↖ 16 ↗ 31)
+        buffer3[2] = strecke
 
         if (spurSensor)
-            buffer[1] |= btf.eSensor.b5Spur
+            buffer3[1] |= btf.eSensor.b5Spur
         if (abstandsSensor)
-            buffer[1] |= btf.eSensor.b6Abstand
+            buffer3[1] |= btf.eSensor.b6Abstand
         if (impulse)
-            buffer[1] |= btf.eSensor.b7Impulse
+            buffer3[1] |= btf.eSensor.b7Impulse // Bit 7 setzen
 
-        return buffer
+        return buffer3
         //    return Buffer.fromArray([motor, servo, strecke])
     }
 
@@ -76,6 +72,70 @@ namespace sender { // s-fahrplan.ts
         return pause
     }
 
+
+    // ==========
+    // ========== group="20 Fahrplan (5 Teilstrecken) senden" subcategory="Fahrplan"
+
+
+    // ========== group="2 Motoren (1 ↓ 128 ↑ 255) mit 2 Encodern steuern (Calli:bot 2E)" subcategory="Fahrplan"
+
+    //% blockId=sender_2MotorenZeit
+    //% group="20 Fahrplan (2 Teilstrecken • 2 Motoren) senden" subcategory="Fahrplan"
+    //% block="2 Motoren (1↓128↑255) | links %motorA rechts %motorB Zeit %zehntelsekunden ⅒s || Abstandssensor %abstandsSensor Spursensor %spurSensor"
+    //% motorA.min=1 motorA.max=255 motorA.defl=192
+    //% motorB.min=1 motorB.max=255 motorB.defl=64
+    //% zehntelsekunden.min=10 zehntelsekunden.max=255 zehntelsekunden.defl=25
+    //% abstandsSensor.shadow=toggleOnOff abstandsSensor.defl=1
+    //% spurSensor.shadow=toggleOnOff
+    //% inlineInputMode=inline
+    export function sender_2MotorenZeit(motorA: number, motorB: number, zehntelsekunden: number, abstandsSensor = true, spurSensor = false) {
+        let buffer6 = Buffer.create(6)
+        buffer6[0] = motorA //  (1 ↓ 128 ↑ 255)
+        // buffer6[1] = servo & 0x1F // (1 ↖ 16 ↗ 31)
+        buffer6[2] = zehntelsekunden
+        buffer6[3] = motorB //  (1 ↓ 128 ↑ 255)
+        //  buffer6[4] = servo & 0x1F // (1 ↖ 16 ↗ 31)
+        // buffer6[5] = strecke
+
+
+        if (spurSensor)
+            buffer6[1] |= btf.eSensor.b5Spur
+        if (abstandsSensor)
+            buffer6[1] |= btf.eSensor.b6Abstand
+        //if (impulse)
+        //    buffer[1] |= btf.eSensor.b7Impulse
+        return buffer6
+    }
+
+    //% blockId=sender_2MotorenEncoder
+    //% group="20 Fahrplan (2 Teilstrecken • 2 Motoren) senden" subcategory="Fahrplan"
+    //% block="2 Motoren (1↓128↑255) | links %motorA rechts %motorB 2 Encoder (cm\\|Impulse) | links %encoderA rechts %encoderB || Impulse %impulse"
+    //% motorA.min=1 motorA.max=255 motorA.defl=192
+    //% motorB.min=1 motorB.max=255 motorB.defl=64
+    //% encoderA.min=10 encoderA.max=255 encoderA.defl=25
+    //% encoderB.min=10 encoderB.max=255 encoderB.defl=25
+    //% abstandsSensor.shadow=toggleOnOff abstandsSensor.defl=1
+    //% spurSensor.shadow=toggleOnOff
+    //% impulse.shadow=toggleYesNo
+    //% inlineInputMode=inline
+    export function sender_2MotorenEncoder(motorA: number, motorB: number, encoderA: number, encoderB: number, impulse = false) {
+        let buffer6 = Buffer.create(6)
+        buffer6[0] = motorA //  (1 ↓ 128 ↑ 255)
+        // buffer6[1] = servo & 0x1F // (1 ↖ 16 ↗ 31)
+        buffer6[2] = encoderA
+        buffer6[3] = motorB //  (1 ↓ 128 ↑ 255)
+        //  buffer6[4] = servo & 0x1F // (1 ↖ 16 ↗ 31)
+        buffer6[5] = encoderB
+
+
+        //if (spurSensor)
+        //    buffer[1] |= btf.eSensor.b5Spur
+        //if (abstandsSensor)
+        //    buffer[1] |= btf.eSensor.b6Abstand
+        if (impulse)
+            buffer6[1] |= btf.eSensor.b7Impulse // Bit 7 setzen
+        return buffer6
+    }
 
 
 
