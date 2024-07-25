@@ -2,16 +2,16 @@
 namespace sender { // s-fahrplan.ts
 
 
-    // ========== group="20 Fahrplan (5 Teilstrecken) senden" subcategory="Fahrplan"
+    // ========== group="20 Fahrplan Fahren und Lenken (5 Teilstrecken) senden" subcategory="Fahrplan"
 
     //% group="20 Fahrplan (5 Teilstrecken) senden" subcategory="Fahrplan"
-    //% block="20 Fahrplan %buffer Strecke 1 %p1 Strecke 2 %p2 Strecke 3 %p3 Strecke 4 %p4 Strecke 5 %p5" weight=8
+    //% block="20 Fahrplan senden • Fahren und Lenken %buffer Strecke 1 %p1 Strecke 2 %p2 Strecke 3 %p3 Strecke 4 %p4 Strecke 5 %p5" weight=8
     //% buffer.shadow="btf_sendBuffer19"
     //% p1.shadow=sender_StreckePicker
     //% p2.shadow=sender_StreckePicker
-    // p3.shadow=sender_StreckePicker
-    // p4.shadow=sender_StreckePicker
-    //% p5.shadow=sender_Strecke
+    //% p3.shadow=sender_StreckePicker
+    //% p4.shadow=sender_StreckePicker
+    //% p5.shadow=sender_StreckePicker
     export function send20Strecken(buffer: Buffer, p1: Buffer, p2: Buffer, p3: Buffer, p4: Buffer, p5: Buffer) {
 
         btf.setBetriebsart(buffer, btf.e0Betriebsart.p2Fahrplan)
@@ -76,13 +76,13 @@ namespace sender { // s-fahrplan.ts
     // ==========
 
 
-    //% group="20 Fahrplan (5 Teilstrecken) senden" subcategory="Fahrplan"
-    //% block="20 Fahrplan %buffer Strecke 1 %p1 Strecke 2 %p2 alles wiederholen %count" weight=8
+    //% group="20 Fahrplan (2 Teilstrecken • 2 Motoren) senden" subcategory="Fahrplan"
+    //% block="20 Fahrplan senden • 2 Motoren %buffer Strecke 1 %p1 Strecke 2 %p2 alles wiederholen %count" weight=8
     //% buffer.shadow="btf_sendBuffer19"
-    //% p1.shadow=sender_StreckePicker
-    //% p2.shadow=sender_StreckePicker
+    //% p1.shadow=sender_2MotorenZeit
+    //% p2.shadow=sender_2MotorenZeit
     //% count.min=1 count.max=8 count.defl=1
-    //% inlineInputMode=inline
+    // inlineInputMode=inline
     export function send2x2Motoren(buffer: Buffer, p1: Buffer, p2: Buffer, count = 1) {
         btf.setBetriebsart(buffer, btf.e0Betriebsart.p2Fahrplan)
 
@@ -97,8 +97,9 @@ namespace sender { // s-fahrplan.ts
     // ========== group="2 Motoren (1 ↓ 128 ↑ 255) mit 2 Encodern steuern (Calli:bot 2E)" subcategory="Fahrplan"
 
     //% blockId=sender_2MotorenZeit
-    //% group="20 Fahrplan (2 Teilstrecken • 2 Motoren) senden" subcategory="Fahrplan"
-    //% block="2 Motoren (1↓128↑255) | links %motorA rechts %motorB Zeit %zehntelsekunden ⅒s || Wiederholungen %count Abstandssensor %abstandsSensor Spursensor %spurSensor"
+    //% group="Geschwindigkeit (1 ↓ 128 ↑ 255) • 2 Motoren getrennt • nach Zeit" subcategory="Fahrplan"
+    // group="20 Fahrplan (2 Teilstrecken • 2 Motoren) senden" subcategory="Fahrplan"
+    //% block="2 Motoren (1↓128↑255) | links %motorA rechts %motorB Zeit %zehntelsekunden ⅒s || Wiederholungen %count Abstandssensor %abstandsSensor Spursensor %spurSensor" weight=4
     //% motorA.min=1 motorA.max=255 motorA.defl=192
     //% motorB.min=1 motorB.max=255 motorB.defl=64
     //% zehntelsekunden.min=10 zehntelsekunden.max=255 zehntelsekunden.defl=25
@@ -126,8 +127,9 @@ namespace sender { // s-fahrplan.ts
     }
 
     //% blockId=sender_2MotorenEncoder
-    //% group="20 Fahrplan (2 Teilstrecken • 2 Motoren) senden" subcategory="Fahrplan"
-    //% block="2 Motoren (1↓128↑255) | links %motorA rechts %motorB 2 Encoder (cm\\|Impulse) | links %encoderA rechts %encoderB || Wiederholungen %count Impulse %impulse"
+    //% group="Geschwindigkeit (1 ↓ 128 ↑ 255) • 2 Motoren getrennt • nur mit Encoder" subcategory="Fahrplan"
+    // group="20 Fahrplan (2 Teilstrecken • 2 Motoren) senden" subcategory="Fahrplan"
+    //% block="2 Motoren (1↓128↑255) | links %motorA rechts %motorB 2 Encoder (cm\\|Impulse) | links %encoderA rechts %encoderB || Wiederholungen %count Impulse %impulse" weight=3
     //% motorA.min=1 motorA.max=255 motorA.defl=192
     //% motorB.min=1 motorB.max=255 motorB.defl=64
     //% encoderA.min=10 encoderA.max=255 encoderA.defl=25
