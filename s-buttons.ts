@@ -6,7 +6,7 @@ namespace sender { // s-buttons.ts
     //  export let n_CalliBotBeispielButtonAB = 0
 
     //export let n_ButtonA_Switch = false
-    export let n_ButtonB_Switch = false
+    //export let n_ButtonB_Switch = false
     //  export let n_ButtonAB_Counter = 0 // 1..16..31 mit A- B+ ändern
 
     export enum eModell { // zuletzt gewähltes Modell wird im offset 1 dauerhaft gespeiechert
@@ -103,7 +103,8 @@ namespace sender { // s-buttons.ts
         }
         // Standardwerte       
         else {
-            n_ButtonB_Switch = !n_ButtonB_Switch// Standardwert immer wechseln true-false
+            setStatusButtonB(!getStatusButtonB())
+            //n_ButtonB_Switch = !n_ButtonB_Switch// Standardwert immer wechseln true-false
             // mit B Licht, wenn oben nichts anderes steht
         }
         //   return modellChanged
@@ -119,14 +120,14 @@ namespace sender { // s-buttons.ts
             btf.n_FunkgruppeChanged = true // verhindert Ändern des Modell
 
             setFunktion(eFunktion.m0_s0) // Standardwert immer Fahren und Lenken
-          setStatusButtonA(false) //  n_ButtonA_Switch = false  // beide aus schalten
-            n_ButtonB_Switch = false
+            setStatusButtonA(false) //  n_ButtonA_Switch = false  // beide aus schalten
+            setStatusButtonB(false) // n_ButtonB_Switch = false
         }
         // cb2e Calli:bot von Joystick auf fernstarten umschalten
         else if (isModell(eModell.cb2e) && isFunktion(eFunktion.m0_s0)) {
 
             setStatusButtonA(true) //  n_ButtonA_Switch = true  // Ultraschall Sensor aktiv
-            n_ButtonB_Switch = false // Beispiel noch nicht aktiv senden; erst nach B geklickt
+            setStatusButtonB(false) // n_ButtonB_Switch = false // Beispiel noch nicht aktiv senden; erst nach B geklickt
             setFunktion(eFunktion.mc_md_callibot_beispiele)
             /* if (!btf.between(n_ButtonAB_Counter, 1, 3))
                 n_ButtonAB_Counter = 1 */
@@ -134,8 +135,8 @@ namespace sender { // s-buttons.ts
         // cb2e Calli:bot von fernstarten auf Fahrplan umschalten
         else if (isModell(eModell.cb2e) && isFunktion(eFunktion.mc_md_callibot_beispiele)) {
             setFunktion(eFunktion.m1abcd_fahrplan)
-            setStatusButtonA(false) //  n_ButtonA_Switch = false  // beide aus schalten
-            n_ButtonB_Switch = false
+            setStatusButtonA(false) // n_ButtonA_Switch = false  // beide aus schalten
+            setStatusButtonB(false) // n_ButtonB_Switch = false
         }
 
         // mkcg Maker Kit Car ohne und mit Gabelstapler
@@ -155,7 +156,7 @@ namespace sender { // s-buttons.ts
 
             setFunktion(eFunktion.m0_s0) // Standardwert immer Fahren und Lenken
             setStatusButtonA(false) //  n_ButtonA_Switch = false  // beide aus schalten
-            n_ButtonB_Switch = false
+            setStatusButtonB(false) //  n_ButtonB_Switch = false
         }
     }
 
@@ -171,7 +172,7 @@ namespace sender { // s-buttons.ts
     //% blockId=sender_ButtonA_Switch
     //% block="Knopf A Schalter" weight=4
     export function sender_ButtonA_Switch() {
-       return getStatusButtonA()
+        return getStatusButtonA()
         //return n_ButtonA_Switch
     }
 
@@ -179,7 +180,8 @@ namespace sender { // s-buttons.ts
     //% blockId=sender_ButtonB_Switch
     //% block="Knopf B Schalter" weight=3
     export function sender_ButtonB_Switch() {
-        return n_ButtonB_Switch
+        return getStatusButtonB()
+        //return n_ButtonB_Switch
     }
 
     // group="Schalter / Zähler" subcategory="Knopf A B" deprecated=1
