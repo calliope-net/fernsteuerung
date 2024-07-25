@@ -21,7 +21,7 @@ namespace sender { // s-fernsteuerung.ts
     export function send00M01(buffer: Buffer, prozent = 100) {
         btf.setBetriebsart(buffer, btf.e0Betriebsart.p0Fahren)
         btf.setByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor, btf.motorProzent(joystickValue(eJoystickValue.xmotor), prozent))
-        btf.setByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo, n_ButtonAB_Counter)
+        btf.setByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo, getStatusButtonCounter())// n_ButtonAB_Counter
         btf.setByte(buffer, btf.eBufferPointer.m1, btf.eBufferOffset.b0_Motor, joystickValue(eJoystickValue.ymotor))
         btf.setaktiviert(buffer, btf.e3aktiviert.m0, true)
         btf.setaktiviert(buffer, btf.e3aktiviert.m1, true)

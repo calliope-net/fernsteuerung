@@ -78,9 +78,9 @@ namespace sender { // s-sender.ts
     }
 
     export function addStatusButtonCounter(add: number, min: number, max: number) {
-        let counter = getStatusButtonCounter()
-        if ((add < 0 && counter > min) || (add > 0 && counter < max))
-            setStatusButtonCounter(counter + add)
+        let newCounter = getStatusButtonCounter() + add
+        if (btf.between(newCounter, min, max))
+            setStatusButtonCounter(newCounter)
     }
     export function setStatusButtonCounter(counter6Bit: number) {
         getCurrentStatusBuffer()[eStatusBuffer.buttons] &= 0b11000000 // AND Bit 7-6 bleiben; 5-4-3-2-1-0 auf 0 setzen

@@ -7,7 +7,7 @@ namespace sender { // s-buttons.ts
 
     export let n_ButtonA_Switch = false
     export let n_ButtonB_Switch = false
-    export let n_ButtonAB_Counter = 0 // 1..16..31 mit A- B+ ändern
+    //  export let n_ButtonAB_Counter = 0 // 1..16..31 mit A- B+ ändern
 
     export enum eModell { // zuletzt gewähltes Modell wird im offset 1 dauerhaft gespeiechert
         //% block="Modell Calli:Bot"
@@ -66,8 +66,9 @@ namespace sender { // s-buttons.ts
         // Maker Kit Car && Gabelstapler (lenken mit Tasten)
         else if (isModell(eModell.mkcg) && isFunktion(eFunktion.m0_m1_s0)) {
 
-            if (n_ButtonAB_Counter > 1)  // M0 und M1, Servo über Tasten A- B+ (Gabelstapler)
-                n_ButtonAB_Counter--
+            addStatusButtonCounter(-1, 1, 31)
+            //if (n_ButtonAB_Counter > 1)  // M0 und M1, Servo über Tasten A- B+ (Gabelstapler)
+            //    n_ButtonAB_Counter--
         }
         // Standardwerte    
         else {
@@ -95,8 +96,9 @@ namespace sender { // s-buttons.ts
         // Maker Kit Car && Gabelstapler (lenken mit Tasten)
         else if (isModell(eModell.mkcg) && isFunktion(eFunktion.m0_m1_s0)) {
 
-            if (n_ButtonAB_Counter < 31)  // M0 und M1, Servo über Tasten A- B+ (Gabelstapler)
-                n_ButtonAB_Counter++
+            addStatusButtonCounter(1, 1, 31)
+            //if (n_ButtonAB_Counter < 31)  // M0 und M1, Servo über Tasten A- B+ (Gabelstapler)
+            //    n_ButtonAB_Counter++
         }
         // Standardwerte       
         else {
@@ -133,12 +135,13 @@ namespace sender { // s-buttons.ts
             setFunktion(eFunktion.m1abcd_fahrplan)
             n_ButtonA_Switch = false  // beide aus schalten
             n_ButtonB_Switch = false
-       }
+        }
 
         // mkcg Maker Kit Car ohne und mit Gabelstapler
         else if (isModell(eModell.mkcg) && isFunktion(eFunktion.m0_s0)) {
             setFunktion(eFunktion.m0_m1_s0)
-            n_ButtonAB_Counter = 16
+            setStatusButtonCounter(16)
+            //n_ButtonAB_Counter = 16
         }
         // mkck Maker Kit Car mit Kran
         else if (isModell(eModell.mkck) && isFunktion(eFunktion.m0_s0))
@@ -187,7 +190,8 @@ namespace sender { // s-buttons.ts
     //% blockId=sender_ButtonAB_Counter
     //% block="Knopf A-B+ Zähler" weight=1
     export function sender_ButtonAB_Counter() {
-        return n_ButtonAB_Counter
+        return getStatusButtonCounter()
+        //return n_ButtonAB_Counter
     }
 
 
