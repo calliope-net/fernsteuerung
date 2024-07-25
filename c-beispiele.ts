@@ -9,12 +9,9 @@ namespace cb2 { // c-beispiele.ts
     let m_inSpur = false
 
     //% group="1 Spurfolger (1 ↓ 128 ↑ 255) (1 ↖ 16 ↗ 31)" subcategory=Beispiele
-    //% block="Spurfolger: Calli:bot | fahren (1↓128↑255) %motor128 langsam fahren %langsamfahren lenken (1↖16↗31) %servo16 lenkender Motor \\% %lenkenProzent Wiederholung %repeat Stop %stop bei Abstand < (cm) %abstand I²C %i2c" weight=2
-    // motor128.shadow=btf_speedPicker
+    //% block="Spurfolger: Calli:bot | fahren (1↓128↑255) %motor128 langsam fahren %langsamfahren lenken (1↖16↗31) %servo16 lenkender Motor \\% %lenkenProzent Wiederholung %repeat Stop %stop bei Abstand < (cm) %abstand I²C Spursensor %i2c" weight=2
     //% motor128.min=1 motor128.max=255 motor128.defl=192
-    // servo16.shadow=btf_protractorPicker
     //% servo16.min=1 servo16.max=31 servo16.defl=31
-    // motorProzent.min=10 motorProzent.max=90 motorProzent.defl=50
     //% langsamfahren.min=1 langsamfahren.max=255 langsamfahren.defl=160
     //% lenkenProzent.min=10 lenkenProzent.max=90 lenkenProzent.defl=0
     //% repeat.shadow="toggleYesNo" repeat.defl=1
@@ -26,19 +23,18 @@ namespace cb2 { // c-beispiele.ts
         if (!repeat) {
             m_lenken = undefined // gespeicherte Werte löschen
             m_inSpur = false     // beim ersten Durchlauf der Schleife
+            writeRgbLeds(Colors.Off, false) // alle 4 aus
         }
 
-        if (stop && (abstand > 0 && (readUltraschallAbstand() < abstand))) {
+        if (stop && abstand > 0 && readUltraschallAbstand() < abstand) {
             writeMotorenStop()
-            // writeRgbLeds(Colors.Orange, true)
-            writeRgbLed(eRgbLed.lh, Colors.Red, true, true)
 
-            //  return false
+            writeRgbLed(eRgbLed.lh, Colors.Red, true)
+
+            basic.pause(Math.randomRange(500, 5000)) // 0.5 .. 5 Sekunden
         }
         else {
 
-
-            //  let langsamfahren = btf.motorProzent(motor128, motorProzent)
             let lenken = Math.abs(servo16 - 16)  // 16-16=0 / 1-16=15 / 31-16=15
 
             readInputs(i2cSpur) // liest Spursensor ein
@@ -66,41 +62,10 @@ namespace cb2 { // c-beispiele.ts
                 m_inSpur = false // hell hell
             }
 
-            //   writeRgbLeds(Colors.Off, false)
-            writeRgbLed(eRgbLed.lh, Colors.Yellow, stop, false)
-
-            //   return true
+            writeRgbLed(eRgbLed.lh, Colors.Yellow, stop)
         }
     }
 
-
-
-    // ========== group="1 Spurfolger (1 ↓ 128 ↑ 255)" subcategory=Beispiele
-
-    //% group="1 Spurfolger (1 ↓ 128 ↑ 255)" subcategory=Beispiele
-    //% block="Spurfolger Motoren %motoren lenkender Motor %langsamer Stop %stopbeiabstand bei Abstand < (cm) %abstand" weight=2
-    //% motoren.shadow=btf_speedPicker
-    //% langsamer.shadow=btf_speedPicker
-    //% stopbeiabstand.shadow=toggleYesNo
-    //% abstand.min=0 abstand.max=50 abstand.defl=15
-    //% inlineInputMode=inline
-    export function beispielSpurfolger(motoren: number, langsamer: number, stopbeiabstand: boolean, abstand: number) {
-
-        if (stopbeiabstand && (readUltraschallAbstand() < abstand)) { //  if (this.bitINPUT_US(eVergleich.lt, stop)) {
-            writeMotorenStop()
-            //return false
-        } else {
-
-            if (readSpursensor(eDH.dunkel, eDH.dunkel, true, eI2C.x21)) { //     if (this.bitINPUTS(calli2bot.eINPUTS.sp0)) {
-                writeMotoren128(motoren, motoren)//         setMotoren0Prozent(pwm1, pwm1) // dunkel,dunkel
-            } else if (readSpursensor(eDH.dunkel, eDH.hell, false)) { // if (this.bitINPUTS(calli2bot.eINPUTS.sp1r)) {
-                writeMotoren128(c_MotorStop, langsamer)//      setMotoren0Prozent(0, pwm2)
-            } else {
-                writeMotoren128(langsamer, c_MotorStop)//      setMotoren0Prozent(pwm2, 0)
-            }
-            //return true
-        }
-    }
 
 
 
@@ -241,7 +206,7 @@ namespace cb2 { // c-beispiele.ts
     //% block="%pause" blockHidden=true
     export function cb2_sekunden(pause: ePause): number { return pause / 10 }
 
-  
+
 
     export enum eRL { rechts = 0, links = 1 } // Index im Array
 
