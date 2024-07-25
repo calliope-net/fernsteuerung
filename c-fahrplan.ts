@@ -17,8 +17,11 @@ namespace cb2 { // c-fahrplan.ts
             n_fahrplanBuffer5Strecken_gestartet = true
             btf.zeigeBIN(0, btf.ePlot.bin, 2)
 
-            for (let i = btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo); i >= 0; i--) {
-                if (i == 0) i = 1 // 0=1x 1=1x 2=2x 3=3x ...
+            let i = btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo) // Anzahl Durchläufe gesamt
+            if (i == 0)
+                i = 1 // 0=1x 1=1x 2=2x 3=3x ...
+
+            for (i; i > 0; i--) {
 
                 for (let iBufferPointer = btf.eBufferPointer.m1; iBufferPointer < 19; iBufferPointer += 3) { // 4, 7, 10, 13, 16
                     //  fahreStrecke(buffer.slice(iBufferPointer, 3))
@@ -76,15 +79,21 @@ namespace cb2 { // c-fahrplan.ts
             if (checkEncoder)
                 hasEncoder = writeEncoderReset() // Testet ob Encoder vorhanden, Ergebnis in n_Callibot2_x22hasEncoder
 
-            for (let i = btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo); i >= 0; i--) {
-                if (i == 0) i = 1 // 0=1x 1=1x 2=2x 3=3x ...
+            let i = btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo) // Anzahl Durchläufe gesamt
+            if (i == 0)
+                i = 1 // 0=1x 1=1x 2=2x 3=3x ...
+
+            for (i; i > 0; i--) {
 
                 for (let iBufferPointer = btf.eBufferPointer.ma; iBufferPointer < 19; iBufferPointer += 6) { // 7ab, 13cd
 
                     btf.zeigeBINx234Fahrplan2x2Motoren(buffer, iBufferPointer) // anzeigen im 5x5 Display
 
-                    for (let j = btf.getByte(buffer, iBufferPointer, btf.eBufferOffset.b1_Servo); j >= 0; j--) {
-                        if (j == 0) j = 1 // 0=1x 1=1x 2=2x 3=3x ...
+                    let j = btf.getByte(buffer, iBufferPointer, btf.eBufferOffset.b1_Servo) // Anzahl Durchläufe einzeln
+                    if (j == 0)
+                        j = 1
+
+                    for (j; j > 0; j--) {
 
                         if (hasEncoder) {
                             fahre2MotorenEncoder(
