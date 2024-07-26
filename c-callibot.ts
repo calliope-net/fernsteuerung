@@ -10,7 +10,9 @@ namespace cb2 { // c-callibot.ts 005F7F
     export const c_MotorStop = 128
     //  const c_Servo_geradeaus = 16
 
-    export let n_EncoderFaktor = 32 // Impulse = 31.25 * Fahrstrecke in cm
+    // let n_EncoderFaktor_fischertechnik = 63.3 * (26 / 14) / (8 * Math.PI) // 63.3 Motorwelle * (26/14) Zähne Differenzial / (8cm * PI) Rad Umfang = 4.6774502 cm
+    // export let n_EncoderFaktor = 32 // Impulse = 31.25 * Fahrstrecke in cm
+    export let n_EncoderFaktor = 3 * 150 / (4.55 * Math.PI) //=31.48 Impulse/cm // 3 Motor*150 Getriebe/(Raddurchmasse*PI=Umfang)
 
 
 
