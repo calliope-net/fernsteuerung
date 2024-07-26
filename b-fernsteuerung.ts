@@ -54,6 +54,7 @@ namespace btf { // b-fernsteuerung.ts
             //  n_FunkgruppeChanged = true
             n5x5_setClearScreen = true
             zeigeFunkgruppe()
+            basic.pause(1500)
             if (onFunkgruppeChangedHandler)
                 onFunkgruppeChangedHandler(getStorageFunkgruppe())
         }
@@ -71,6 +72,7 @@ namespace btf { // b-fernsteuerung.ts
             //  n_FunkgruppeChanged = true
             n5x5_setClearScreen = true
             zeigeFunkgruppe()
+            basic.pause(1500)
             if (onFunkgruppeChangedHandler)
                 onFunkgruppeChangedHandler(getStorageFunkgruppe())
         }
