@@ -23,16 +23,23 @@ namespace sender { // s-sender.ts
                 setStatusModell(eModell.cb2e) // wenn ungültig, Standardwert setzen, setStatusModell() schreibt auch in Flash
 
             if (zf) {
-                // Bild anzeigen mit Pause 1500ms, Image-Array in s-auswahl.ts
+                // Bild anzeigen mit Pause 1500ms
                 zeigeImage(getStatusModell())
                 //zeigeImage(btf.getStorageModell())
-             
+
                 basic.pause(1500)
                 btf.zeigeFunkgruppe()
             }
-            btf.beimStartintern(btf.eNamespace.sender) // setzt auch n_start true, startet Bluetooth Empfang
+
+            btf.beimStartintern(btf.eNamespace.sender, // setzt auch n_start true, startet Bluetooth Empfang
+                function (int: number) { 
+                    zeigeImage(getStatusModell()) // Bild anzeigen mit Pause 1500ms
+                    basic.pause(1500)
+                }
+            )
         }
     }
+
 
     // PRIVATE
     enum eStatusBuffer { modell, funktion, buttons }

@@ -9,7 +9,7 @@ namespace btf { // b-fernsteuerung.ts
     enum eStorageBuffer { funkgruppe, modell /* , c, d */ } // Index im Buffer
 
     let n_start = false
-   // export let n_FunkgruppeChanged = false // bei true kann Modell nicht geändert werden, das geht nur nach Reset
+    // export let n_FunkgruppeChanged = false // bei true kann Modell nicht geändert werden, das geht nur nach Reset
 
     export let n_lastConnectedTime = input.runningTime()  // ms seit Start
     let n_lastErrorBufferTime = input.runningTime()
@@ -30,8 +30,11 @@ namespace btf { // b-fernsteuerung.ts
     export enum eNamespace { btf, sender, receiver, cb2 }
     export let m_Namespace: eNamespace
 
-    export function beimStartintern(e: eNamespace) {
+    let onFunkgruppeChangedHandler: (int: number) => void
+
+    export function beimStartintern(e: eNamespace, callbackFunkgruppeChanged?: (int: number) => void) {
         m_Namespace = e
+        onFunkgruppeChangedHandler = callbackFunkgruppeChanged
         radio.setGroup(getStorageFunkgruppe())
         radio.setTransmitPower(7)
         radio.setTransmitSerialNumber(true)
@@ -48,7 +51,9 @@ namespace btf { // b-fernsteuerung.ts
                 storage.putBuffer(a_StorageBuffer) // im Flash speichern
                 n_Funktion = 0 // Sender nicht gestartet
             }
-          //  n_FunkgruppeChanged = true
+            if (onFunkgruppeChangedHandler)
+                onFunkgruppeChangedHandler(getStorageFunkgruppe())
+            //  n_FunkgruppeChanged = true
             n5x5_setClearScreen = true
             zeigeFunkgruppe()
         }
@@ -63,7 +68,9 @@ namespace btf { // b-fernsteuerung.ts
                 storage.putBuffer(a_StorageBuffer) // im Flash speichern
                 n_Funktion = 0 // Sender nicht gestartet
             }
-          //  n_FunkgruppeChanged = true
+            if (onFunkgruppeChangedHandler)
+                onFunkgruppeChangedHandler(getStorageFunkgruppe())
+            //  n_FunkgruppeChanged = true
             n5x5_setClearScreen = true
             zeigeFunkgruppe()
         }
