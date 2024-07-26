@@ -8,7 +8,7 @@ namespace btf { // b-dispaly5x5.ts
 
     export function setClearScreen() {
         n5x5_setClearScreen = true
-        n5x5_x01y0 = 0
+        n5x5_x01y0 = undefined
     }
 
     let n5x5_x01y0 = 0 // Bit 5-4 Betriebsart in x=0-1 y=0
