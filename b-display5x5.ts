@@ -8,7 +8,7 @@ namespace btf { // b-dispaly5x5.ts
 
     export function setClearScreen() {
         n5x5_setClearScreen = true
-        n5x5_x01y0 = undefined
+       // n5x5_x01y0 = 0
     }
 
     let n5x5_x01y0 = 0 // Bit 5-4 Betriebsart in x=0-1 y=0
@@ -234,6 +234,7 @@ namespace btf { // b-dispaly5x5.ts
                 }
                 // basic.clearScreen()     // löschen und Funkgruppe in 01 ↕↕... wieder anzeigen
                 zeigeFunkgruppe()       // !ruft zeigeBIN rekursiv auf!
+                n5x5_x01y0 = 0 // Betriebsart auch neu anzeigen nach clearScreen
             }
             // nur bei Änderung
             if (a5x5_xBuffer[xLed] != int) {
