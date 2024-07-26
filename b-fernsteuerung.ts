@@ -9,7 +9,7 @@ namespace btf { // b-fernsteuerung.ts
     enum eStorageBuffer { funkgruppe, modell /* , c, d */ } // Index im Buffer
 
     let n_start = false
-    export let n_FunkgruppeChanged = false // bei true kann Modell nicht geändert werden, das geht nur nach Reset
+   // export let n_FunkgruppeChanged = false // bei true kann Modell nicht geändert werden, das geht nur nach Reset
 
     export let n_lastConnectedTime = input.runningTime()  // ms seit Start
     let n_lastErrorBufferTime = input.runningTime()
@@ -48,7 +48,7 @@ namespace btf { // b-fernsteuerung.ts
                 storage.putBuffer(a_StorageBuffer) // im Flash speichern
                 n_Funktion = 0 // Sender nicht gestartet
             }
-            n_FunkgruppeChanged = true
+          //  n_FunkgruppeChanged = true
             n5x5_setClearScreen = true
             zeigeFunkgruppe()
         }
@@ -63,7 +63,7 @@ namespace btf { // b-fernsteuerung.ts
                 storage.putBuffer(a_StorageBuffer) // im Flash speichern
                 n_Funktion = 0 // Sender nicht gestartet
             }
-            n_FunkgruppeChanged = true
+          //  n_FunkgruppeChanged = true
             n5x5_setClearScreen = true
             zeigeFunkgruppe()
         }

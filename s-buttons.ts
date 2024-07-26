@@ -9,6 +9,8 @@ namespace sender { // s-buttons.ts
     //export let n_ButtonB_Switch = false
     //  export let n_ButtonAB_Counter = 0 // 1..16..31 mit A- B+ ändern
 
+    let n_einmalgestartet = false
+
     export enum eModell { // zuletzt gewähltes Modell wird im offset 1 dauerhaft gespeiechert
         //% block="Modell Calli:Bot"
         cb2e, // Standardwert CalliBot
@@ -47,7 +49,7 @@ namespace sender { // s-buttons.ts
     export function buttonA() {
 
         if (!isFunktion(eFunktion.ng)) { // nicht gestartet
-            if (!btf.n_FunkgruppeChanged && getStatusModell() > 0)
+            if (!n_einmalgestartet && getStatusModell() > 0)
                 setStatusModell(getStatusModell() - 1) // setStatusModell() schreibt auch in Flash
             zeigeImage(getStatusModell())
 
@@ -88,7 +90,7 @@ namespace sender { // s-buttons.ts
 
         if (!isFunktion(eFunktion.ng)) { // nicht gestartet
 
-            if (!btf.n_FunkgruppeChanged && getStatusModell() < c_ModellCount - 1)
+            if (!n_einmalgestartet && getStatusModell() < c_ModellCount - 1)
                 setStatusModell(getStatusModell() + 1) // setStatusModell() schreibt auch in Flash
             zeigeImage(getStatusModell())
 
@@ -124,7 +126,7 @@ namespace sender { // s-buttons.ts
     export function buttonAB() {
         // wenn einmal A+B geklickt, wird n_Funktion nie wieder ng (nicht gestartet)
         if (!isFunktion(eFunktion.ng)) { // nicht gestartet // beim ersten Mal (nach Reset)
-            btf.n_FunkgruppeChanged = true // verhindert Ändern des Modell
+            n_einmalgestartet=true//  btf.n_FunkgruppeChanged = true // verhindert Ändern des Modell
 
             setFunktion(eFunktion.m0_s0) // Standardwert immer Fahren und Lenken
             setStatusButtonA(false) //  n_ButtonA_Switch = false  // beide aus schalten
