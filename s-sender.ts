@@ -36,7 +36,7 @@ namespace sender { // s-sender.ts
                     // nur nach Funkgruppe ändern mit buttonAhold oder buttonBhold
                     if (!isFunktion(eFunktion.ng)) { // und nur wenn (neue Funktion) nicht gestertet
                         zeigeModellImagePause(1500) // Bild anzeigen mit Pause 1500ms
-                        //&basic.pause(1500)
+                        // basic.pause(1500)
                     }
                 }
             )
