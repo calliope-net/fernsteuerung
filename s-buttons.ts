@@ -262,7 +262,7 @@ namespace sender { // s-buttons.ts
     //% group="aktuelles Modell" subcategory="Knopf A B"
     // block="%pModell" weight=2
     // group="Image" subcategory="Knopf A B" color=#54C9C9
-    //% block="zeige Modell Bild Pause %ms" weight=1
+    //% block="zeige Modell Bild • Pause (ms) %ms" weight=1
     export function zeigeModellImagePause(ms: number) {
 
         [images.createImage(`
