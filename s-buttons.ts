@@ -226,10 +226,10 @@ namespace sender { // s-buttons.ts
     //% block="%pFunktion" weight=3
     export function isFunktion(pFunktion: eFunktion) {
         if (pFunktion == eFunktion.ng)
-            return getStatusFunktion() != eFunktion.ng // true wenn != 0 (nicht nicht) gestartet
+            return pFunktion != getStatusFunktion()  // true wenn != 0 (nicht nicht) gestartet
         //return btf.n_Funktion != eFunktion.ng // true wenn != 0 (nicht nicht) gestartet
         else
-            return getStatusFunktion() == eFunktion.ng
+            return pFunktion == getStatusFunktion()
         //return pFunktion == btf.n_Funktion
     }
 
