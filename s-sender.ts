@@ -32,9 +32,12 @@ namespace sender { // s-sender.ts
             }
 
             btf.beimStartintern(btf.eNamespace.sender, // setzt auch n_start true, startet Bluetooth Empfang
-                function (int: number) { 
-                    zeigeModellImage() // Bild anzeigen mit Pause 1500ms
-                    basic.pause(1500)
+                function (int: number) {
+                    // nur nach Funkgruppe ändern mit buttonAhold oder buttonBhold
+                    if (!isFunktion(eFunktion.ng)) { // und nur wenn (neue Funktion) nicht gestertet
+                        zeigeModellImage() // Bild anzeigen mit Pause 1500ms
+                        basic.pause(1500)
+                    }
                 }
             )
         }
