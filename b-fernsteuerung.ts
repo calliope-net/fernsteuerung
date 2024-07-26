@@ -4,6 +4,7 @@ namespace btf { // b-fernsteuerung.ts
     export const c_funkgruppe_min = 0xB0 // 0xA0
     export const c_funkgruppe_max = 0xB7 // 0xBF
 
+    // private
     let a_StorageBuffer = Buffer.create(4) // lokaler Speicher 4 Byte NumberFormat.UInt32LE
     enum eStorageBuffer { funkgruppe, modell /* , c, d */ } // Index im Buffer
 
@@ -273,7 +274,7 @@ namespace btf { // b-fernsteuerung.ts
     }
 
 
-    // ========== StorageModell offset 1
+    // ========== StorageModell offset 1 (nur einmal in s-sender.ts aufgerufen)
 
     export function setStorageModell(pModell: number) {
         a_StorageBuffer[eStorageBuffer.modell] = pModell

@@ -47,10 +47,13 @@ namespace sender { // s-buttons.ts
     export function buttonA() {
 
         if (!isFunktion(eFunktion.ng)) { // nicht gestartet
-            if (!btf.n_FunkgruppeChanged && btf.getStorageModell() > 0) // wenn btf.n_FunkgruppeChanged true, wird Modell nur angezeigt
-                btf.setStorageModell(btf.getStorageModell() - 1)
+            if (!btf.n_FunkgruppeChanged && getStatusModell() > 0)
+                setStatusModell(getStatusModell() - 1) // setStatusModell() schreibt auch in Flash
+            zeigeImage(getStatusModell())
 
-            zeigeImage(btf.getStorageModell())
+            //if (!btf.n_FunkgruppeChanged && btf.getStorageModell() > 0)  // wenn btf.n_FunkgruppeChanged true, wird Modell nur angezeigt
+            //    btf.setStorageModell(btf.getStorageModell() - 1)
+            //zeigeImage(btf.getStorageModell())
 
         }
         // Calli:bot && Funktion Beispiele (Modell Nummer ++)
@@ -84,10 +87,14 @@ namespace sender { // s-buttons.ts
     export function buttonB() {
 
         if (!isFunktion(eFunktion.ng)) { // nicht gestartet
-            if (!btf.n_FunkgruppeChanged && btf.getStorageModell() < c_ModellCount - 1) // wenn btf.n_FunkgruppeChanged true, wird Modell nur angezeigt
-                btf.setStorageModell(btf.getStorageModell() + 1)
 
-            zeigeImage(btf.getStorageModell())
+            if (!btf.n_FunkgruppeChanged && getStatusModell() < c_ModellCount - 1)
+                setStatusModell(getStatusModell() + 1) // setStatusModell() schreibt auch in Flash
+            zeigeImage(getStatusModell())
+
+            //if (!btf.n_FunkgruppeChanged && btf.getStorageModell() < c_ModellCount - 1)  // wenn btf.n_FunkgruppeChanged true, wird Modell nur angezeigt
+            //    btf.setStorageModell(btf.getStorageModell() + 1)
+            //zeigeImage(btf.getStorageModell())
 
         }
         // Calli:bot && Funktion Beispiele (mit A gewählte Modell Nummer starten)
@@ -205,7 +212,8 @@ namespace sender { // s-buttons.ts
     //% group="aktuelles Modell" subcategory="Knopf A B"
     //% block="%pModell" weight=4
     export function isModell(pModell: eModell) {
-        return btf.getStorageModell() == pModell
+        return getStatusModell() == pModell
+        //return btf.getStorageModell() == pModell
     }
 
 

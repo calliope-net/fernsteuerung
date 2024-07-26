@@ -14,15 +14,19 @@ namespace sender { // s-sender.ts
         if (!btf.simulator()) {
             btf.setStorageBuffer(modellFunkgruppe) // prüft und speichert in a_StorageBuffer
 
+            //if (!btf.between(btf.getStorageModell(), 0, c_ModellCount - 1))
+            // wenn ungültig, Standardwert setzen
+            //    btf.setStorageModell(eModell.cb2e)
 
-            if (!btf.between(btf.getStorageModell(), 0, c_ModellCount - 1))
-                // wenn ungültig, Standardwert setzen
-                btf.setStorageModell(eModell.cb2e)
+            setStatusModell(btf.getStorageModell()) // übernimmt Modell aus Flash
+            if (!btf.between(getStatusModell(), 0, c_ModellCount - 1))
+                setStatusModell(eModell.cb2e) // wenn ungültig, Standardwert setzen, setStatusModell() schreibt auch in Flash
 
             if (zf) {
                 // Bild anzeigen mit Pause 1500ms, Image-Array in s-auswahl.ts
-                zeigeImage(btf.getStorageModell())
-                //   btf.zeigeImage(a_ModellImages[btf.getStorageModell()])
+                zeigeImage(getStatusModell())
+                //zeigeImage(btf.getStorageModell())
+             
                 basic.pause(1500)
                 btf.zeigeFunkgruppe()
             }
@@ -45,6 +49,7 @@ namespace sender { // s-sender.ts
 
     export function setStatusModell(pModell: eModell) {
         getCurrentStatusBuffer()[eStatusBuffer.modell] = pModell
+        btf.setStorageModell(pModell)
     }
     export function getStatusModell(): eModell {
         return getCurrentStatusBuffer()[eStatusBuffer.modell]
