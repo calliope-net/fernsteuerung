@@ -23,8 +23,14 @@ namespace btf { // b-advanced.ts
         return (i0 >= i1 && i0 <= i2)
     }
 
+
     //% group="Funktionen" advanced=true
-    //% block="Prozent (1 ↓ 128 ↑ 255) %value * %prozent \\%" weight=5
+    //% block="π" weight=5
+    export function pi() { return Math.PI }
+
+
+    //% group="Funktionen" advanced=true
+    //% block="Prozent (1 ↓ 128 ↑ 255) %value * %prozent \\%" weight=4
     //% value.min=1 value.max=255 value.defl=128
     //% prozent.min=10 prozent.max=100 prozent.defl=100
     export function motorProzent(value: number, prozent: number) {
@@ -33,7 +39,7 @@ namespace btf { // b-advanced.ts
 
 
     //% group="Funktionen" advanced=true
-    //% block="mapInt32 %value|from low %fromLow|high %fromHigh|to low %toLow|high %toHigh" weight=4
+    //% block="mapInt32 %value|from low %fromLow|high %fromHigh|to low %toLow|high %toHigh" weight=3
     //% fromLow.defl=1 fromHigh.defl=255 toLow.defl=-100 toHigh.defl=100
     //% inlineInputMode=inline
     export function mapInt32(value: number, fromLow: number, fromHigh: number, toLow: number, toHigh: number): number {
