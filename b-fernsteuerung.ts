@@ -51,11 +51,11 @@ namespace btf { // b-fernsteuerung.ts
                 storage.putBuffer(a_StorageBuffer) // im Flash speichern
                 //n_Funktion = 0 // Sender nicht gestartet
             }
-            if (onFunkgruppeChangedHandler)
-                onFunkgruppeChangedHandler(getStorageFunkgruppe())
             //  n_FunkgruppeChanged = true
             n5x5_setClearScreen = true
             zeigeFunkgruppe()
+            if (onFunkgruppeChangedHandler)
+                onFunkgruppeChangedHandler(getStorageFunkgruppe())
         }
     }
 
@@ -68,11 +68,11 @@ namespace btf { // b-fernsteuerung.ts
                 storage.putBuffer(a_StorageBuffer) // im Flash speichern
                 //n_Funktion = 0 // Sender nicht gestartet
             }
-            if (onFunkgruppeChangedHandler)
-                onFunkgruppeChangedHandler(getStorageFunkgruppe())
             //  n_FunkgruppeChanged = true
             n5x5_setClearScreen = true
             zeigeFunkgruppe()
+            if (onFunkgruppeChangedHandler)
+                onFunkgruppeChangedHandler(getStorageFunkgruppe())
         }
     }
 

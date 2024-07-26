@@ -51,8 +51,9 @@ namespace sender { // s-buttons.ts
         if (!isFunktion(eFunktion.ng)) { // nicht gestartet
             if (!n_einmalgestartet && getStatusModell() > 0)
                 setStatusModell(getStatusModell() - 1) // setStatusModell() schreibt auch in Flash
-            zeigeImage(getStatusModell())
-
+            zeigeModellImage()
+            basic.pause(1500)
+            btf.zeigeFunkgruppe()
             //if (!btf.n_FunkgruppeChanged && btf.getStorageModell() > 0)  // wenn btf.n_FunkgruppeChanged true, wird Modell nur angezeigt
             //    btf.setStorageModell(btf.getStorageModell() - 1)
             //zeigeImage(btf.getStorageModell())
@@ -92,8 +93,9 @@ namespace sender { // s-buttons.ts
 
             if (!n_einmalgestartet && getStatusModell() < c_ModellCount - 1)
                 setStatusModell(getStatusModell() + 1) // setStatusModell() schreibt auch in Flash
-            zeigeImage(getStatusModell())
-
+            zeigeModellImage()
+            basic.pause(1500)
+            btf.zeigeFunkgruppe()
             //if (!btf.n_FunkgruppeChanged && btf.getStorageModell() < c_ModellCount - 1)  // wenn btf.n_FunkgruppeChanged true, wird Modell nur angezeigt
             //    btf.setStorageModell(btf.getStorageModell() + 1)
             //zeigeImage(btf.getStorageModell())
@@ -256,10 +258,12 @@ namespace sender { // s-buttons.ts
 
 
     // ========== Bilder für Auswahl Modell
-
+    
+    //% group="aktuelles Modell" subcategory="Knopf A B"
+    // block="%pModell" weight=2
     // group="Image" subcategory="Knopf A B" color=#54C9C9
-    // block="zeige Bild %image" weight=1
-    export function zeigeImage(index: number) {
+    //% block="zeige Modell Bild" weight=1
+    export function zeigeModellImage() {
 
         [images.createImage(`
     . # . # .
@@ -289,7 +293,7 @@ namespace sender { // s-buttons.ts
     # # # # #
     . # . # .
     `)
-        ][index].showImage(0)
+        ][getStatusModell()].showImage(0)
 
         btf.n5x5_setClearScreen = true
     }

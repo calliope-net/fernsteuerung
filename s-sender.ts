@@ -24,7 +24,7 @@ namespace sender { // s-sender.ts
 
             if (zf) {
                 // Bild anzeigen mit Pause 1500ms
-                zeigeImage(getStatusModell())
+                zeigeModellImage()
                 //zeigeImage(btf.getStorageModell())
 
                 basic.pause(1500)
@@ -33,7 +33,7 @@ namespace sender { // s-sender.ts
 
             btf.beimStartintern(btf.eNamespace.sender, // setzt auch n_start true, startet Bluetooth Empfang
                 function (int: number) { 
-                    zeigeImage(getStatusModell()) // Bild anzeigen mit Pause 1500ms
+                    zeigeModellImage() // Bild anzeigen mit Pause 1500ms
                     basic.pause(1500)
                 }
             )
