@@ -24,10 +24,10 @@ namespace sender { // s-sender.ts
 
             if (zf) {
                 // Bild anzeigen mit Pause 1500ms
-                zeigeModellImage()
+                zeigeModellImagePause(1500)
                 //zeigeImage(btf.getStorageModell())
 
-                basic.pause(1500)
+                // basic.pause(1500)
                 btf.zeigeFunkgruppe()
             }
 
@@ -35,8 +35,8 @@ namespace sender { // s-sender.ts
                 function (int: number) {
                     // nur nach Funkgruppe ändern mit buttonAhold oder buttonBhold
                     if (!isFunktion(eFunktion.ng)) { // und nur wenn (neue Funktion) nicht gestertet
-                        zeigeModellImage() // Bild anzeigen mit Pause 1500ms
-                        basic.pause(1500)
+                        zeigeModellImagePause(1500) // Bild anzeigen mit Pause 1500ms
+                        //&basic.pause(1500)
                     }
                 }
             )
