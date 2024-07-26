@@ -52,7 +52,7 @@ namespace btf { // b-fernsteuerung.ts
                 //n_Funktion = 0 // Sender nicht gestartet
             }
             //  n_FunkgruppeChanged = true
-            n5x5_setClearScreen = true
+            setClearScreen()
             zeigeFunkgruppe()
             basic.pause(1500)
             if (onFunkgruppeChangedHandler)
@@ -70,7 +70,7 @@ namespace btf { // b-fernsteuerung.ts
                 //n_Funktion = 0 // Sender nicht gestartet
             }
             //  n_FunkgruppeChanged = true
-            n5x5_setClearScreen = true
+            setClearScreen()
             zeigeFunkgruppe()
             basic.pause(1500)
             if (onFunkgruppeChangedHandler)

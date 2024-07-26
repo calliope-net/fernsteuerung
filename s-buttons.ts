@@ -295,7 +295,7 @@ namespace sender { // s-buttons.ts
     `)
         ][getStatusModell()].showImage(0)
 
-        btf.n5x5_setClearScreen = true
+        btf.setClearScreen()
     }
 
     /*  export let a_ModellImages_ = [
