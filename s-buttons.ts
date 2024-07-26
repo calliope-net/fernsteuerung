@@ -126,9 +126,9 @@ namespace sender { // s-buttons.ts
     export function buttonAB() {
         // wenn einmal A+B geklickt, wird n_Funktion nie wieder ng (nicht gestartet)
         if (!isFunktion(eFunktion.ng)) { // nicht gestartet // beim ersten Mal (nach Reset)
-            n_einmalgestartet=true//  btf.n_FunkgruppeChanged = true // verhindert Ändern des Modell
+            n_einmalgestartet = true//  btf.n_FunkgruppeChanged = true // verhindert Ändern des Modell
 
-            setFunktion(eFunktion.m0_s0) // Standardwert immer Fahren und Lenken
+            setStatusFunktion(eFunktion.m0_s0) // Standardwert immer Fahren und Lenken
             setStatusButtonA(false) //  n_ButtonA_Switch = false  // beide aus schalten
             setStatusButtonB(false) // n_ButtonB_Switch = false
         }
@@ -137,33 +137,33 @@ namespace sender { // s-buttons.ts
 
             setStatusButtonA(true) //  n_ButtonA_Switch = true  // Ultraschall Sensor aktiv
             setStatusButtonB(false) // n_ButtonB_Switch = false // Beispiel noch nicht aktiv senden; erst nach B geklickt
-            setFunktion(eFunktion.mc_md_callibot_beispiele)
+            setStatusFunktion(eFunktion.mc_md_callibot_beispiele)
             /* if (!btf.between(n_ButtonAB_Counter, 1, 3))
                 n_ButtonAB_Counter = 1 */
         }
         // cb2e Calli:bot von fernstarten auf Fahrplan umschalten
         else if (isModell(eModell.cb2e) && isFunktion(eFunktion.mc_md_callibot_beispiele)) {
-            setFunktion(eFunktion.m1abcd_fahrplan)
+            setStatusFunktion(eFunktion.m1abcd_fahrplan)
             setStatusButtonA(false) // n_ButtonA_Switch = false  // beide aus schalten
             setStatusButtonB(false) // n_ButtonB_Switch = false
         }
 
         // mkcg Maker Kit Car ohne und mit Gabelstapler
         else if (isModell(eModell.mkcg) && isFunktion(eFunktion.m0_s0)) {
-            setFunktion(eFunktion.m0_m1_s0)
+            setStatusFunktion(eFunktion.m0_m1_s0)
             setStatusButtonCounter(16)
             //n_ButtonAB_Counter = 16
         }
         // mkck Maker Kit Car mit Kran
         else if (isModell(eModell.mkck) && isFunktion(eFunktion.m0_s0))
-            setFunktion(eFunktion.ma_mb) // Funktion weiter schalten
+            setStatusFunktion(eFunktion.ma_mb) // Funktion weiter schalten
         else if (isModell(eModell.mkck) && isFunktion(eFunktion.ma_mb))
-            setFunktion(eFunktion.mc_mb) // Funktion weiter schalten
+            setStatusFunktion(eFunktion.mc_mb) // Funktion weiter schalten
 
         else {
             //  a_ButtonAB_Switch[eButtonAB_Switch.AB] = !a_ButtonAB_Switch[eButtonAB_Switch.AB] // Standardwert immer wechseln true-false
 
-            setFunktion(eFunktion.m0_s0) // Standardwert immer Fahren und Lenken
+            setStatusFunktion(eFunktion.m0_s0) // Standardwert immer Fahren und Lenken
             setStatusButtonA(false) //  n_ButtonA_Switch = false  // beide aus schalten
             setStatusButtonB(false) //  n_ButtonB_Switch = false
         }
@@ -226,14 +226,16 @@ namespace sender { // s-buttons.ts
     //% block="%pFunktion" weight=3
     export function isFunktion(pFunktion: eFunktion) {
         if (pFunktion == eFunktion.ng)
-            return btf.n_Funktion != eFunktion.ng // true wenn != 0 (nicht nicht) gestartet
+            return getStatusFunktion() != eFunktion.ng // true wenn != 0 (nicht nicht) gestartet
+        //return btf.n_Funktion != eFunktion.ng // true wenn != 0 (nicht nicht) gestartet
         else
-            return pFunktion == btf.n_Funktion
+            return getStatusFunktion() == eFunktion.ng
+        //return pFunktion == btf.n_Funktion
     }
 
-    export function setFunktion(e: eFunktion) {
-        btf.n_Funktion = e
-    }
+    //export function setFunktion(e: eFunktion) {
+    //    btf.n_Funktion = e
+    //}
 
 
 

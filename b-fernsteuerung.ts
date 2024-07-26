@@ -16,7 +16,7 @@ namespace btf { // b-fernsteuerung.ts
     let n_timeoutDisbled = false // autonomes fahren nach Programm, kein Bluetooth timeout
 
     // nur Sender
-    export let n_Funktion = 0 // aktuell ausgewählte Funktion
+    //export let n_Funktion = 0 // aktuell ausgewählte Funktion
     export let n_sendReset = false // true sendet zurücksetzen zum Empfänger wenn connected
 
     //% group="calliope-net.github.io/fernsteuerung"
@@ -49,7 +49,7 @@ namespace btf { // b-fernsteuerung.ts
             if (a_StorageBuffer[eStorageBuffer.funkgruppe] > c_funkgruppe_min) {
                 radio.setGroup(--a_StorageBuffer[eStorageBuffer.funkgruppe]) // erst -1, dann zurück lesen
                 storage.putBuffer(a_StorageBuffer) // im Flash speichern
-                n_Funktion = 0 // Sender nicht gestartet
+                //n_Funktion = 0 // Sender nicht gestartet
             }
             if (onFunkgruppeChangedHandler)
                 onFunkgruppeChangedHandler(getStorageFunkgruppe())
@@ -66,7 +66,7 @@ namespace btf { // b-fernsteuerung.ts
             if (a_StorageBuffer[eStorageBuffer.funkgruppe] < c_funkgruppe_max) {
                 radio.setGroup(++a_StorageBuffer[eStorageBuffer.funkgruppe]) // erst +1, dann zurück lesen
                 storage.putBuffer(a_StorageBuffer) // im Flash speichern
-                n_Funktion = 0 // Sender nicht gestartet
+                //n_Funktion = 0 // Sender nicht gestartet
             }
             if (onFunkgruppeChangedHandler)
                 onFunkgruppeChangedHandler(getStorageFunkgruppe())

@@ -27,13 +27,13 @@ namespace sender { // s-multiswitch.ts
                 if (isModell(eModell.mkck)) { // (getModell() == eModell.mkck) { // Maker Kit Car mit Kran
 
                     if (bu[3 + 5] == 0) {      // 5 Mitte gedrückt
-                        setFunktion(eFunktion.m0_s0)// Joystick steuert M0 und Servo (Fahren und Lenken)
+                        setStatusFunktion(eFunktion.m0_s0)// Joystick steuert M0 und Servo (Fahren und Lenken)
                     }
                     else if (bu[3 + 1] == 0) { // 1 nach oben
-                        setFunktion(eFunktion.ma_mb)// MA und MB (Seilrolle und Drehkranz)
+                        setStatusFunktion(eFunktion.ma_mb)// MA und MB (Seilrolle und Drehkranz)
                     }
                     else if (bu[3 + 3] == 0) { // 3 nach unten
-                        setFunktion(eFunktion.mc_mb) // MC und MB (Zahnstange und Drehkranz)
+                        setStatusFunktion(eFunktion.mc_mb) // MC und MB (Zahnstange und Drehkranz)
                     }
                     else if (bu[3 + 2] == 0) { // 2 nach links
 
