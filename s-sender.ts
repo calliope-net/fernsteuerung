@@ -8,26 +8,16 @@ namespace sender { // s-sender.ts
     //% group="calliope-net.github.io/fernsteuerung"
     //% block="beim Start: Sender || Modell und Funkgruppe anzeigen %zf %modellFunkgruppe" weight=8
     //% zf.shadow="toggleYesNo" zf.defl=1
-    // modellFunkgruppe.min=160 modellFunkgruppe.max=191
-    // inlineInputMode=external
     export function beimStart(zf = true, modellFunkgruppe?: number) {
         if (!btf.simulator()) {
             btf.setStorageBuffer(modellFunkgruppe) // prüft und speichert in a_StorageBuffer
-
-            //if (!btf.between(btf.getStorageModell(), 0, c_ModellCount - 1))
-            // wenn ungültig, Standardwert setzen
-            //    btf.setStorageModell(eModell.cb2e)
 
             setStatusModell(btf.getStorageModell()) // übernimmt Modell aus Flash
             if (!btf.between(getStatusModell(), 0, c_ModellCount - 1))
                 setStatusModell(eModell.cb2e) // wenn ungültig, Standardwert setzen, setStatusModell() schreibt auch in Flash
 
             if (zf) {
-                // Bild anzeigen mit Pause 1500ms
-                zeigeModellImagePause(1500)
-                //zeigeImage(btf.getStorageModell())
-
-                // basic.pause(1500)
+                zeigeModellImagePause(1500) // Bild anzeigen mit Pause 1500ms
                 btf.zeigeFunkgruppe()
             }
 
@@ -36,7 +26,6 @@ namespace sender { // s-sender.ts
                     // nur nach Funkgruppe ändern mit buttonAhold oder buttonBhold
                     if (!isFunktion(eFunktion.ng)) { // und nur wenn (neue Funktion) nicht gestertet
                         zeigeModellImagePause(1500) // Bild anzeigen mit Pause 1500ms
-                        // basic.pause(1500)
                     }
                 }
             )
@@ -44,22 +33,41 @@ namespace sender { // s-sender.ts
     }
 
 
-    // PRIVATE
-    enum eStatusBuffer { modell, funktion, buttons }
-    const c_sbl = 3 // Buffer size
-    let a_StatusBuffer: Buffer[] = [
+
+    // solange der Sender (Calliope) an geschaltet ist, 
+    // wird beim Wechsel der Funkgruppe der Status der alten Funkgruppe gespeichert
+    // und bei Rückkehr (zur Funkgruppe und dem damit verbundenen Modell) wieder hergestellt
+
+    // im Flash wird nur die aktuelle Funkgruppe und Modell gespeichert
+    // und beim Einschalten wieder hergestellt
+    // funktion und buttons beginnt bei 0
+    // alle anderen StatusBuffer beginnen bei 0=Calli:bot
+    // solange funktion=nicht gestartet, kann das Modell geändert werden
+
+    // PRIVATE ===
+    enum eStatusBuffer { modell, funktion, buttons } // offset 0 1 2 in jedem Buffer
+    // im Array sind so viele Buffer wie benutzte Funkgruppen
+    // zu jeder Funkgruppe=ferngesteuertes Modell sind die 3 Variablen getrennt gespeichert
+    // beim Wechsel wird so der letzte Status wieder hergestellt
+    let a_StatusBuffer: Buffer[] = []
+    /*  let a_StatusBuffer: Buffer[] = [
         Buffer.create(c_sbl), Buffer.create(c_sbl), Buffer.create(c_sbl), Buffer.create(c_sbl),
         Buffer.create(c_sbl), Buffer.create(c_sbl), Buffer.create(c_sbl), Buffer.create(c_sbl)
-    ]
+    ] */
     function getCurrentStatusBuffer(): Buffer {
-        return a_StatusBuffer[btf.getStorageFunkgruppe() & 0b00000111] // Bitmaske für Index 0..7
+        let index = btf.getStorageFunkgruppe() & 0b00000111 // Bitmaske für Index 0..7
+        while (a_StatusBuffer.length <= index) {
+            a_StatusBuffer.push(Buffer.create(3)) // fügt nur bei Bedarf Buffer zum Array hinzu
+        }
+        return a_StatusBuffer.get(index)
     }
-    // PRIVATE
+    // PRIVATE ===
 
+    // folgende Funktionen bieten (im namespace sender) Zugriff auf die 3 Variablen modell, funktion, buttons
 
     export function setStatusModell(pModell: eModell) {
         getCurrentStatusBuffer()[eStatusBuffer.modell] = pModell
-        btf.setStorageModell(pModell)
+        btf.setStorageModell(pModell) // geändertes Modell wird auch im Flash gespeichert
     }
     export function getStatusModell(): eModell {
         return getCurrentStatusBuffer()[eStatusBuffer.modell]
@@ -72,6 +80,7 @@ namespace sender { // s-sender.ts
         return getCurrentStatusBuffer()[eStatusBuffer.funktion]
     }
 
+    // Button A Bit 7 / Button B Bit 6 / ButtonCounter Bit 5-4-3-2-1-0 = 0..63
     export function setStatusButtonA(bit: boolean) {
         if (bit)
             getCurrentStatusBuffer()[eStatusBuffer.buttons] |= 0b10000000 // OR Nullen bleiben, nur 1 wird gesetzt

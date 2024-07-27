@@ -1,17 +1,9 @@
 
 namespace sender { // s-buttons.ts
 
-    //export enum eButtonAB_Switch { A, B }//, AB
-    //export let a_ButtonAB_Switch = [false, false] //, false so viele Elemente wie Member in der Enum eButtonAB_Switch
-    //  export let n_CalliBotBeispielButtonAB = 0
+    export const c_ModellCount = 4
 
-    //export let n_ButtonA_Switch = false
-    //export let n_ButtonB_Switch = false
-    //  export let n_ButtonAB_Counter = 0 // 1..16..31 mit A- B+ ändern
-
-    //let n_einmalgestartet = false
-
-    export enum eModell { // zuletzt gewähltes Modell wird im offset 1 dauerhaft gespeiechert
+    export enum eModell { // zuletzt gewähltes Modell wird im Flash offset 1 dauerhaft gespeiechert
         //% block="Modell Calli:Bot"
         cb2e, // Standardwert CalliBot
         //% block="Modell Maker Kit Car"
@@ -21,10 +13,7 @@ namespace sender { // s-buttons.ts
         //% block="Modell Calliope auf Rädern 4"
         car4  // CaR 4
     } // so viele Images müssen im Array sein - Bilder am Ende dieser Datei
-    export const c_ModellCount = 4
-
-    // Funktion: wird je nach Modell mit Tasten geändert, steht nicht im Flash
-
+  
     export enum eFunktion {
         //% block="gestartet"
         ng = 0, // nicht gestartet
@@ -41,7 +30,6 @@ namespace sender { // s-buttons.ts
         //% block="20 Fahrplan senden"
         m1abcd_fahrplan
     }
-    //   export let n_Funktion = eFunktion.ng // aktuell ausgewählte Funktion ist in b-fernsteuerung.ts Zeile 15
 
 
     //% group="in Eingabe Ereignisse einfügen" subcategory="Knopf A B"
@@ -52,13 +40,10 @@ namespace sender { // s-buttons.ts
             if (getStatusModell() > 0)
                 setStatusModell(getStatusModell() - 1) // setStatusModell() schreibt auch in Flash
             zeigeModellImagePause(1500)
-            // basic.pause(1500)
             btf.zeigeFunkgruppe()
-            //if (!btf.n_FunkgruppeChanged && btf.getStorageModell() > 0)  // wenn btf.n_FunkgruppeChanged true, wird Modell nur angezeigt
-            //    btf.setStorageModell(btf.getStorageModell() - 1)
-            //zeigeImage(btf.getStorageModell())
 
         }
+
         // Calli:bot && Funktion Beispiele (Modell Nummer ++)
         /* else if (isModell(eModell.cb2e) && n_Funktion == eFunktion.mc_md_callibot_beispiele) {
 
@@ -69,17 +54,15 @@ namespace sender { // s-buttons.ts
             else
                 n_ButtonAB_Counter = 1
         } */
+
         // Maker Kit Car && Gabelstapler (lenken mit Tasten)
         else if (isModell(eModell.mkcg) && isFunktion(eFunktion.m0_m1_s0)) {
-
             addStatusButtonCounter(-1, 1, 31)
-            //if (n_ButtonAB_Counter > 1)  // M0 und M1, Servo über Tasten A- B+ (Gabelstapler)
-            //    n_ButtonAB_Counter--
         }
         // Standardwerte    
         else {
             setStatusButtonA(!getStatusButtonA())
-            //n_ButtonA_Switch = !n_ButtonA_Switch // Standardwert immer wechseln true-false
+
 
         }
     }
@@ -90,35 +73,26 @@ namespace sender { // s-buttons.ts
     export function buttonB() {
 
         if (!isFunktion(eFunktion.ng)) { // nicht gestartet
-
             if (getStatusModell() < c_ModellCount - 1)
                 setStatusModell(getStatusModell() + 1) // setStatusModell() schreibt auch in Flash
             zeigeModellImagePause(1500)
-            // basic.pause(1500)
             btf.zeigeFunkgruppe()
-            //if (!btf.n_FunkgruppeChanged && btf.getStorageModell() < c_ModellCount - 1)  // wenn btf.n_FunkgruppeChanged true, wird Modell nur angezeigt
-            //    btf.setStorageModell(btf.getStorageModell() + 1)
-            //zeigeImage(btf.getStorageModell())
-
         }
+
         // Calli:bot && Funktion Beispiele (mit A gewählte Modell Nummer starten)
         //else if (isModell(eModell.cb2e) && n_Funktion == eFunktion.mc_md_callibot_beispiele) {
         //    a_ButtonAB_Switch[eButtonAB_Switch.B] = !a_ButtonAB_Switch[eButtonAB_Switch.B] // Beispiel jetzt aktiv senden
         //}
+
         // Maker Kit Car && Gabelstapler (lenken mit Tasten)
         else if (isModell(eModell.mkcg) && isFunktion(eFunktion.m0_m1_s0)) {
-
-            addStatusButtonCounter(1, 1, 31)
-            //if (n_ButtonAB_Counter < 31)  // M0 und M1, Servo über Tasten A- B+ (Gabelstapler)
-            //    n_ButtonAB_Counter++
+            addStatusButtonCounter(1, 1, 31) // M0 und M1, Servo über Tasten A- B+ (Gabelstapler)
         }
         // Standardwerte       
         else {
-            setStatusButtonB(!getStatusButtonB())
-            //n_ButtonB_Switch = !n_ButtonB_Switch// Standardwert immer wechseln true-false
-            // mit B Licht, wenn oben nichts anderes steht
+            setStatusButtonB(!getStatusButtonB()) // Standardwert immer wechseln true-false
         }
-        //   return modellChanged
+
     }
 
 
@@ -172,41 +146,25 @@ namespace sender { // s-buttons.ts
     }
 
 
-
-    // group="Schalter / Zähler" subcategory="Knopf A B" deprecated=1
-    // block="Knopf %pSchalter Schalter" weight=5
-    //export function getButtonAB_Switch(pSwitch: eButtonAB_Switch): boolean {
-    //    return a_ButtonAB_Switch[pSwitch]
-    //}
-
-    //% group="Schalter / Zähler" subcategory="Knopf A B"
     //% blockId=sender_ButtonA_Switch
+    //% group="Schalter / Zähler" subcategory="Knopf A B"
     //% block="Knopf A Schalter" weight=4
     export function sender_ButtonA_Switch() {
         return getStatusButtonA()
-        //return n_ButtonA_Switch
     }
 
-    //% group="Schalter / Zähler" subcategory="Knopf A B"
     //% blockId=sender_ButtonB_Switch
+    //% group="Schalter / Zähler" subcategory="Knopf A B"
     //% block="Knopf B Schalter" weight=3
     export function sender_ButtonB_Switch() {
         return getStatusButtonB()
-        //return n_ButtonB_Switch
     }
 
-    // group="Schalter / Zähler" subcategory="Knopf A B" deprecated=1
-    // block="Knopf A-B+ Zähler" weight=2
-    //export function getButtonAB_Counter() {
-    //    return n_ButtonAB_Counter
-    //}
-
-    //% group="Schalter / Zähler" subcategory="Knopf A B"
     //% blockId=sender_ButtonAB_Counter
+    //% group="Schalter / Zähler" subcategory="Knopf A B"
     //% block="Knopf A-B+ Zähler" weight=1
     export function sender_ButtonAB_Counter() {
         return getStatusButtonCounter()
-        //return n_ButtonAB_Counter
     }
 
 
@@ -235,25 +193,13 @@ namespace sender { // s-buttons.ts
         //return pFunktion == btf.n_Funktion
     }
 
-    //export function setFunktion(e: eFunktion) {
-    //    btf.n_Funktion = e
+
+    // group="Ereignisse" subcategory="Knopf A B"
+    // block="%id" deprecated=true
+    // id.defl=ButtonEvent.Hold
+    //export function buttonEventValue(id: ButtonEvent): number {
+    //    return id
     //}
-
-
-
-    // group="aktuelle Funktion" subcategory="Knopf A B"
-    // block="Funktion auf 'nicht gestartet' stellen" weight=2
-    //export function resetFunktion() {
-    //    btf.n_Funktion = eFunktion.ng
-    //}
-
-
-    //% group="Ereignisse" subcategory="Knopf A B"
-    //% block="%id" deprecated=true
-    //% id.defl=ButtonEvent.Hold
-    export function buttonEventValue(id: ButtonEvent): number {
-        return id
-    }
 
 
 
@@ -297,38 +243,8 @@ namespace sender { // s-buttons.ts
 
         btf.setClearScreen()
 
-        basic.pause(ms)
+        if (ms > 0)
+            basic.pause(ms)
     }
-
-    /*  export let a_ModellImages_ = [
-         images.createImage(`
-     . # . # .
-     . . . . .
-     . . . . .
-     # # # # #
-     . # . # .
-     `),
-         images.createImage(`
-     . . # . .
-     . . # . .
-     . . # # #
-     . . # . .
-     # # # . .
-     `),
-         images.createImage(`
-     . # # # #
-     . # . . #
-     . # . . .
-     . # . . .
-     # # # # .
-     `),
-         images.createImage(`
-     . . . . .
-     . # # # .
-     # . . . #
-     # # # # #
-     . # . # .
-     `)
-     ] */
 
 } // s-buttons.ts
