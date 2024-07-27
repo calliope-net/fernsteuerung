@@ -12,8 +12,10 @@ namespace sender { // s-advanced.ts
             btf.n_sendReset = reset
 
             basic.pause(600) // warten bis gesendet (aller 400ms) und wieder false
-            if (!btf.n_sendReset)
+            if (!btf.n_sendReset) {
                 setStatusFunktion(eFunktion.ng) // nach dem Empfänger auch den Sender zurück setzen, sendet dann nicht mehr
+                zeigeModellImagePause(1500)
+            }
         }
     }
 
