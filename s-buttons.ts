@@ -9,7 +9,7 @@ namespace sender { // s-buttons.ts
     //export let n_ButtonB_Switch = false
     //  export let n_ButtonAB_Counter = 0 // 1..16..31 mit A- B+ ändern
 
-    let n_einmalgestartet = false
+    //let n_einmalgestartet = false
 
     export enum eModell { // zuletzt gewähltes Modell wird im offset 1 dauerhaft gespeiechert
         //% block="Modell Calli:Bot"
@@ -49,10 +49,10 @@ namespace sender { // s-buttons.ts
     export function buttonA() {
 
         if (!isFunktion(eFunktion.ng)) { // nicht gestartet
-            if (!n_einmalgestartet && getStatusModell() > 0)
+            if (getStatusModell() > 0)
                 setStatusModell(getStatusModell() - 1) // setStatusModell() schreibt auch in Flash
             zeigeModellImagePause(1500)
-           // basic.pause(1500)
+            // basic.pause(1500)
             btf.zeigeFunkgruppe()
             //if (!btf.n_FunkgruppeChanged && btf.getStorageModell() > 0)  // wenn btf.n_FunkgruppeChanged true, wird Modell nur angezeigt
             //    btf.setStorageModell(btf.getStorageModell() - 1)
@@ -91,10 +91,10 @@ namespace sender { // s-buttons.ts
 
         if (!isFunktion(eFunktion.ng)) { // nicht gestartet
 
-            if (!n_einmalgestartet && getStatusModell() < c_ModellCount - 1)
+            if (getStatusModell() < c_ModellCount - 1)
                 setStatusModell(getStatusModell() + 1) // setStatusModell() schreibt auch in Flash
             zeigeModellImagePause(1500)
-           // basic.pause(1500)
+            // basic.pause(1500)
             btf.zeigeFunkgruppe()
             //if (!btf.n_FunkgruppeChanged && btf.getStorageModell() < c_ModellCount - 1)  // wenn btf.n_FunkgruppeChanged true, wird Modell nur angezeigt
             //    btf.setStorageModell(btf.getStorageModell() + 1)
@@ -128,7 +128,7 @@ namespace sender { // s-buttons.ts
     export function buttonAB() {
         // wenn einmal A+B geklickt, wird n_Funktion nie wieder ng (nicht gestartet)
         if (!isFunktion(eFunktion.ng)) { // nicht gestartet // beim ersten Mal (nach Reset)
-            n_einmalgestartet = true//  btf.n_FunkgruppeChanged = true // verhindert Ändern des Modell
+            //n_einmalgestartet = true//  btf.n_FunkgruppeChanged = true // verhindert Ändern des Modell
 
             setStatusFunktion(eFunktion.m0_s0) // Standardwert immer Fahren und Lenken
             setStatusButtonA(false) //  n_ButtonA_Switch = false  // beide aus schalten
