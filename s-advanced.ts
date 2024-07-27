@@ -7,9 +7,11 @@ namespace sender { // s-advanced.ts
     //% block="Reset senden %reset" weight=2
     //% reset.shadow="toggleYesNo"
     export function setSendReset(reset = false) {
-        if (isFunktion(sender.eFunktion.ng)) // nicht nicht gestartet
-            //if (n_Funktion != eFunktion.ng)
+        // if (isFunktion(sender.eFunktion.ng)) { // nicht nicht gestartet
+        if (getStatusFunktion() != eFunktion.ng) { // nur wenn !=0 (gestartet) wird Bluetooth gesendet
+            setStatusFunktion(eFunktion.ng) // nach dem Empfänger auch den Sender zurück setzen
             btf.n_sendReset = reset
+        }
     }
 
 

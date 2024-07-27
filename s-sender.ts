@@ -34,6 +34,7 @@ namespace sender { // s-sender.ts
 
 
 
+
     // solange der Sender (Calliope) an geschaltet ist, 
     // wird beim Wechsel der Funkgruppe der Status der alten Funkgruppe gespeichert
     // und bei Rückkehr (zur Funkgruppe und dem damit verbundenen Modell) wieder hergestellt
