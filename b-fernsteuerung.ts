@@ -1,29 +1,29 @@
 //% color=#E3008C weight=95 icon="\uf012" block="Fernsteuerung"
 namespace btf { // b-fernsteuerung.ts
 
-    export const c_funkgruppe_min = 0xB0 // 0xA0
-    export const c_funkgruppe_max = 0xB7 // 0xBF
+    export const c_funkgruppe_min = 0xB0 // nur 8 mögliche Funkgruppen als index im StatusBuffer beim Sender
+    export const c_funkgruppe_max = 0xB7
 
     // private
     let a_StorageBuffer = Buffer.create(4) // lokaler Speicher 4 Byte NumberFormat.UInt32LE
     enum eStorageBuffer { funkgruppe, modell /* , c, d */ } // Index im Buffer
 
-    let n_start = false
-    // export let n_FunkgruppeChanged = false // bei true kann Modell nicht geändert werden, das geht nur nach Reset
+    // nur Sender
+    export let n_sendReset = false // true sendet zurücksetzen zum Empfänger wenn connected
+
+
+    // nur Empfänger
+    let n_start = false // nur bei true wird Ereignis 'wenn Datenpaket empfangen' ausgelöst
 
     export let n_lastConnectedTime = input.runningTime()  // ms seit Start
-    let n_lastErrorBufferTime = input.runningTime()
+    //  let n_lastErrorBufferTime = input.runningTime()
     let n_timeoutDisbled = false // autonomes fahren nach Programm, kein Bluetooth timeout
 
-    // nur Sender
-    //export let n_Funktion = 0 // aktuell ausgewählte Funktion
-    export let n_sendReset = false // true sendet zurücksetzen zum Empfänger wenn connected
 
     //% group="calliope-net.github.io/fernsteuerung"
     //% block="beim Start || Funkgruppe %modellFunkgruppe" weight=9
     export function beimStart(modellFunkgruppe?: number) {
         setStorageBuffer(modellFunkgruppe)
-        //  storage.putBuffer(a_StorageBuffer)
         beimStartintern(eNamespace.btf)
     }
 
@@ -39,7 +39,7 @@ namespace btf { // b-fernsteuerung.ts
         radio.setTransmitPower(7)
         radio.setTransmitSerialNumber(true)
 
-        n_start = true
+        n_start = true // nur beim Empfänger relevant
     }
 
     //% group="calliope-net.github.io/fernsteuerung"
@@ -85,37 +85,6 @@ namespace btf { // b-fernsteuerung.ts
         return id
     }
 
-
-    // ========== deprecated=1
-    /* 
-        export enum eFunkgruppeButton {
-            //% block="-1 und anzeigen"
-            minus,
-            //% block="+1 und anzeigen"
-            plus,
-            // block="175 0xAF und anzeigen"
-            //reset
-        }
-    
-        //% group="calliope-net.github.io/fernsteuerung"
-        //% block="Funkgruppe ändern %e" weight=4 deprecated=1
-        export function setFunkgruppeButton(e: eFunkgruppeButton) {
-    
-            if (e == eFunkgruppeButton.minus && a_StorageBuffer[eStorageBuffer.funkgruppe] > c_funkgruppe_min)
-                a_StorageBuffer[eStorageBuffer.funkgruppe]--
-            else if (e == eFunkgruppeButton.plus && a_StorageBuffer[eStorageBuffer.funkgruppe] < c_funkgruppe_max)
-                a_StorageBuffer[eStorageBuffer.funkgruppe]++
-            //else if (e == eFunkgruppeButton.reset)
-            //    a_StorageBuffer[eStorageBuffer.funkgruppe] = 0xAF
-    
-            radio.setGroup(a_StorageBuffer[eStorageBuffer.funkgruppe])
-    
-            storage.putBuffer(a_StorageBuffer)
-    
-            zeigeFunkgruppe(true)
-    
-        }
-     */
 
     // ========== group="Bluetooth senden" subcategory="Bluetooth"
 
@@ -166,16 +135,11 @@ namespace btf { // b-fernsteuerung.ts
             if ((receivedBuffer[0] & 0x80) == 0x80) // Bit 7 reset
                 control.reset() // Soft-Reset, Calliope zurücksetzen
 
-            //  n_programm = (receivedBuffer[0] & 0x20) == 0x20 // Bit 5 Programm=1 / Fernsteuerung=0
+            n_timeoutDisbled =
+                ((receivedBuffer[0] & 0x20) == 0x20) // Bit 5 Programm=1 / Betriebsart ..10.... oder ..11....
+                ||
+                (((receivedBuffer[0] & 0x30) == 0x10) && ((receivedBuffer[3] & 0x01) == 0x00)) // Betriebsart 01 und Joystick nicht aktiv ([3]Bit 0=0)
 
-            n_timeoutDisbled = ((receivedBuffer[0] & 0x20) == 0x20) // Bit 5 Programm=1 / Betriebsart ..10.... oder ..11....
-                || (((receivedBuffer[0] & 0x30) == 0x10) && ((receivedBuffer[3] & 0x01) == 0x00)) // Betriebsart 01 und Joystick nicht aktiv ([3]Bit 0=0)
-
-            //if (!n_connected) {
-            //licht(false, false) //  Licht aus und Blinken beenden
-            //   n_MotorChipReady = false
-            //    n_connected = true // wenn Start und Motor bereit, setze auch Bluetooth connected
-            //}
             n_lastConnectedTime = input.runningTime() // Connection-Timeout Zähler zurück setzen
 
 
@@ -186,11 +150,9 @@ namespace btf { // b-fernsteuerung.ts
             if (onReceivedDataHandler)
                 onReceivedDataHandler(receivedBuffer) // Ereignis Block auslösen, nur wenn benutzt
         }
-        else
-            n_lastErrorBufferTime = input.runningTime()
-        //if (n_start && onReceivedErrorHandler)
-        //    onReceivedErrorHandler(receivedBuffer) // Ereignis Block auslösen, nur wenn benutzt
-        // falsche Buffer Länge empfangen
+        //else
+        //    n_lastErrorBufferTime = input.runningTime()
+
 
     })
 
@@ -234,12 +196,12 @@ namespace btf { // b-fernsteuerung.ts
     }
 
 
-    //% group="Bluetooth empfangen (19 Byte)"
-    //% block="ungültige Daten empfangen || < %ms ms" weight=1
-    //% ms.defl=2000
-    export function getReceivedBufferError(ms = 2000) {
-        return ((input.runningTime() - n_lastErrorBufferTime) < ms)
-    }
+    // group="Bluetooth empfangen (19 Byte)"
+    // block="ungültige Daten empfangen || < %ms ms" weight=1
+    // ms.defl=2000
+    //export function getReceivedBufferError(ms = 2000) {
+    //    return ((input.runningTime() - n_lastErrorBufferTime) < ms)
+    //}
 
 
 
@@ -265,8 +227,8 @@ namespace btf { // b-fernsteuerung.ts
 
     export function setStorageBuffer(modellFunkgruppe: number) {
         // Storage enthält 4 Byte, Funkgruppe und Modell (nur beim Sender), + 2 Byte unbenutzt
-        // modellFunkgruppe kann undefined sein, dann Standardwert 0xAE nehmen
-        // wenn ein gültiger Wert im Flash ist, nicht ändern (modellFunkgruppe ignorieren)
+        // modellFunkgruppe kann undefined sein, dann Standardwert c_funkgruppe_min nehmen
+        // wenn ein gültiger Wert im Flash ist, nicht ändern (Parameter modellFunkgruppe ignorieren)
 
         a_StorageBuffer = storage.getBuffer()
 
