@@ -17,7 +17,7 @@ namespace receiver { // r-fernsteuerung.ts
                     &&
                     btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor) >= 128 // Fahrtrichtung vorwärts
                     &&
-                    selectAbstand() < btf.getAbstand(buffer)) { // Abstand messen
+                    selectAbstand(true) < btf.getAbstand(buffer)) { // Abstand messen
 
                     dualMotor128(eDualMotor.M0, c_DualMotorStop) //  writeMotorenStop()
 

@@ -121,13 +121,13 @@ namespace receiver { // r-pins.ts
     }
 
     //% group="Ultraschall (Pin und Qwiic)" subcategory="Pins, Sensoren"
-    //% block="Abstand cm" weight=6
-    export function selectAbstand() {
+    //% block="Abstand cm • einlesen %read" weight=6
+    export function selectAbstand(read: boolean) {
         if (n_Hardware == eHardware.v3)
-            if (readQwiicUltrasonic()) // i2c einlesen, false wenn Modul nicht angesteckt
-                return getQwiicUltrasonic()
-            else
-                return 0
+            //if (readQwiicUltrasonic()) // i2c einlesen, false wenn Modul nicht angesteckt
+            return getQwiicUltrasonic(read)
+        //else
+        //    return 0
         else if (n_Hardware == eHardware.car4)
             return pinGroveUltraschall_cm() // in r-advanced.ts
         else
@@ -147,9 +147,9 @@ namespace receiver { // r-pins.ts
     export function abstand_vergleich(e: eVergleich, cm: number) { // cm.min=5 cm.max=50 cm.defl=20
         switch (e) {
             case eVergleich.gt:
-                return selectAbstand() >= cm
+                return selectAbstand(true) >= cm
             case eVergleich.lt:
-                return selectAbstand() <= cm
+                return selectAbstand(true) <= cm
             default:
                 return false
         }
