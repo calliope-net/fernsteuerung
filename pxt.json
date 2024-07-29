@@ -24,8 +24,8 @@
         "s-multiswitch.ts",
         "s-advanced.ts",
         "r-receiver.ts",
+        "r-strecken.ts",
         "r-fernsteuerung.ts",
-        "r-fahrstrecke.ts",
         "r-encoder.ts",
         "r-pins.ts",
         "r-qwiicmotor.ts",
@@ -37,8 +37,7 @@
         "c-strecken.ts",
         "c-fernsteuerung.ts",
         "c-fahrplan.ts",
-        "c-beispiele.ts",
-        "r-strecken.ts"
+        "c-beispiele.ts"
     ],
     "testFiles": [
         "test.ts"
