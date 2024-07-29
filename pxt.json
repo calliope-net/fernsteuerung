@@ -29,6 +29,7 @@
         "r-qwiic.ts",
         "r-strecken.ts",
         "r-fernsteuerung.ts",
+        "r-fahrplan.ts",
         "r-encoder.ts",
         "r-beispiele.ts",
         "r-advanced.ts",
@@ -37,8 +38,7 @@
         "c-strecken.ts",
         "c-fernsteuerung.ts",
         "c-fahrplan.ts",
-        "c-beispiele.ts",
-        "r-fahrplan.ts"
+        "c-beispiele.ts"
     ],
     "testFiles": [
         "test.ts"
