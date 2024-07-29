@@ -13,7 +13,9 @@ namespace receiver { // r-fernsteuerung.ts
 
                 if (btf.getSensor(buffer, btf.eBufferPointer.m0, btf.eSensor.b6Abstand) // Abstandssensor aktiviert
                     &&
-                    btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor) > 128 // Fahrtrichtung vorwärts
+                    selectAbstandSensorConnected()
+                    &&
+                    btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor) >= 128 // Fahrtrichtung vorwärts
                     &&
                     selectAbstand() < btf.getAbstand(buffer)) { // Abstand messen
 

@@ -32,7 +32,7 @@ SparkFun Qwiic Ultrasonic Distance Sensor (HC-SR04)
 
     // ========== group="Ultrasonic Distance Sensor (I²C: 0x00)" subcategory="Qwiic" 
 
-    let n_QwiicUltrasonicConnected = true // Qwiic Modul ist angesteckt
+  export  let n_QwiicUltrasonicConnected = true // Qwiic Modul ist angesteckt
     let n_QwiicUltrasonic_mm = 0
 
 

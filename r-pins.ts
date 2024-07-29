@@ -97,6 +97,17 @@ namespace receiver { // r-pins.ts
     // ========== group="Ultraschall (Pin und Qwiic)" subcategory="Pins, Sensoren"
 
     //% group="Ultraschall (Pin und Qwiic)" subcategory="Pins, Sensoren"
+    //% block="Abstand Sensor angeschlossen" weight=7
+    export function selectAbstandSensorConnected() {
+        if (n_Hardware == eHardware.v3)
+            return n_QwiicUltrasonicConnected
+        else if (n_Hardware == eHardware.car4)
+            return true
+        else
+            return false
+    }
+
+    //% group="Ultraschall (Pin und Qwiic)" subcategory="Pins, Sensoren"
     //% block="Abstand cm" weight=6
     export function selectAbstand() {
         if (n_Hardware == eHardware.v3)
@@ -118,7 +129,7 @@ namespace receiver { // r-pins.ts
     }
 
     //% group="Ultraschall (Pin und Qwiic)" subcategory="Pins, Sensoren"
-    //% block="Abstand %e %cm" weight=5
+    //% block="Abstand %e %cm" weight=4
     //% cm.shadow=receiver_getAbstand
     export function abstand_vergleich(e: eVergleich, cm: number) { // cm.min=5 cm.max=50 cm.defl=20
         switch (e) {
