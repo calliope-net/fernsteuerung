@@ -31,17 +31,17 @@ namespace btf { // b-enums.ts
     }
 
 
-    //% block="M0 | Joystick"
+    // block="M0 | Joystick"
     // p0 = 1,
-    //% block="M1 | 1. Strecke | Ultraschall"
+    // block="M1 | 1. Strecke | Ultraschall"
     // p1 = 4,
-    //% block="MA | 2. Strecke | Spur 00"
+    // block="MA | 2. Strecke | Spur 00"
     // p2 = 7,
-    //% block="MB | 3. Strecke | Spur 01"
+    // block="MB | 3. Strecke | Spur 01"
     // p3 = 10,
-    //% block="MC | 4. Strecke | Spur 10"
+    // block="MC | 4. Strecke | Spur 10"
     // p4 = 13,
-    //% block="MD | 5. Strecke | Spur 11"
+    // block="MD | 5. Strecke | Spur 11"
     // p5 = 16
     // block="[4] 1. Strecke"
     //f1 = 4,
@@ -107,13 +107,13 @@ namespace btf { // b-enums.ts
     // block="5. Strecke"
     // f5 = 0x20,
 
-    //% block="M0 & M1 (0x03)"
+    // block="M0 & M1 (0x03)"
     //  m01 = m0 + m1,
-    //% block="MA & MB (0x0C)"
+    // block="MA & MB (0x0C)"
     //  mab = ma + mb,
-    //% block="MC & MD (0x30)"
+    // block="MC & MD (0x30)"
     //  mcd = mc + md,
-    //% block="alle 6 Bit (0x3F)"
+    // block="alle 6 Bit (0x3F)"
     //  m01abcd = m01 + mab + mcd
 
 
