@@ -36,7 +36,8 @@
         "c-strecken.ts",
         "c-fernsteuerung.ts",
         "c-fahrplan.ts",
-        "c-beispiele.ts"
+        "c-beispiele.ts",
+        "r-beispiele.ts"
     ],
     "testFiles": [
         "test.ts"

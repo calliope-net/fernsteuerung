@@ -74,7 +74,7 @@ namespace receiver { // r-pins.ts
     export enum eDH { dunkel = 0, hell = 1 } // 0 ist schwarz
 
     //% group="Spursensor" subcategory="Pins, Sensoren"
-    //% block="Spursensor links %hell" weight=3
+    //% block="Spursensor links %hell" weight=6
     export function pinSpurlinks(hell: eDH) {
         if (a_PinSpurlinks.length > n_Hardware)
             return pins.digitalReadPin(a_PinSpurlinks[n_Hardware]) == hell // 0 ist schwarz
@@ -83,12 +83,25 @@ namespace receiver { // r-pins.ts
     }
 
     //% group="Spursensor" subcategory="Pins, Sensoren"
-    //% block="Spursensor rechts %hell" weight=3
+    //% block="Spursensor rechts %hell" weight=5
     export function pinSpurrechts(hell: eDH) {
         if (a_PinSpurrechts.length > n_Hardware)
             return pins.digitalReadPin(a_PinSpurrechts[n_Hardware]) == hell // 0 ist schwarz
         else
             return false
+    }
+
+
+    //% group="Spursensor" subcategory="Pins, Sensoren"
+    //% block="Spursensor links %l und rechts %r" weight=4
+    export function readSpursensor(l: eDH, r: eDH) {
+
+        return pinSpurlinks(l) && pinSpurrechts(r)
+
+        //if (read)
+        //    readInputs(i2c)
+        //return (n_Inputs[0] & 0x03) == (l << 1 | r)
+
     }
 
 
