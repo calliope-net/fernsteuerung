@@ -105,10 +105,14 @@ namespace cb2 { // c-fahrplan.ts
                             )
                         }
                         else {
+                            let zehntelsekunden = btf.getByte(buffer, iBufferPointer, btf.eBufferOffset.b2_Fahrstrecke)
+                            if (btf.getSensor(buffer, iBufferPointer, btf.eSensor.b7Impulse))
+                                zehntelsekunden /= n_EncoderFaktor
+
                             fahre2MotorenZeit(
                                 btf.getByte(buffer, iBufferPointer, btf.eBufferOffset.b0_Motor),
                                 btf.getByte(buffer, iBufferPointer + 3, btf.eBufferOffset.b0_Motor),
-                                btf.getByte(buffer, iBufferPointer, btf.eBufferOffset.b2_Fahrstrecke),
+                                zehntelsekunden,
                                 btf.getSensor(buffer, iBufferPointer, btf.eSensor.b6Abstand),
                                 btf.getAbstand(buffer),
                                 btf.getSensor(buffer, iBufferPointer, btf.eSensor.b5Spur)
