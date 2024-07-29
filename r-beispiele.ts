@@ -7,13 +7,13 @@ namespace receiver { // r-beispiele.ts
     let m_inSpur = false
 
     //% group="1 Spurfolger (1 ↓ 128 ↑ 255) (1 ↖ 16 ↗ 31)" subcategory=Beispiele
-    //% block="Spurfolger: Calli:bot | fahren (1↓128↑255) %motor128 langsam fahren %langsamfahren lenken (1↖16↗31) %servo16 Wiederholung %repeat Stop %stop bei Abstand < (cm) %abstand" weight=2
+    //% block="Spurfolger | fahren (1↓128↑255) %motor128 langsam fahren %langsamfahren lenken (1↖16↗31) %servo16 Wiederholung %repeat Stop %stop bei Abstand < (cm) %abstand" weight=2
     //% motor128.min=1 motor128.max=255 motor128.defl=192
     //% servo16.min=1 servo16.max=31 servo16.defl=31
     //% langsamfahren.min=1 langsamfahren.max=255 langsamfahren.defl=160
     // lenkenProzent.min=10 lenkenProzent.max=90 lenkenProzent.defl=0
     //% repeat.shadow="toggleYesNo" repeat.defl=1
-    //% stop.shadow="toggleYesNo" stop.defl=1
+    //% stop.shadow="toggleYesNo"
     //% abstand.min=10 abstand.max=50 abstand.defl=20
     // inlineInputMode=inline
     export function beispielSpurfolger16(motor128: number, langsamfahren: number, servo16: number, repeat: boolean, stop: boolean, abstand: number) {
