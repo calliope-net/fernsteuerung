@@ -102,11 +102,19 @@ namespace sender { // s-buttons.ts
             setStatusButtonB(false) // n_ButtonB_Switch = false
         }
 
-        // mkcg Maker Kit Car ohne und mit Gabelstapler
+        // mkcg Maker Kit Car ohne und mit Gabelstapler // von Joystick auf Gabelstapler umschalten
         else if (isModell(eModell.mkcg) && isFunktion(eFunktion.m0_s0)) {
             setStatusFunktion(eFunktion.m0_m1_s0)
             setStatusButtonCounter(16)
         }
+        // mkcg Maker Kit Car ohne und mit Gabelstapler // von Gabelstapler auf Fahrplan umschalten
+        else if (isModell(eModell.mkcg) && isFunktion(eFunktion.m0_m1_s0)) {
+            setStatusFunktion(eFunktion.m1abcd_fahrplan)
+            setStatusButtonA(false) // beide aus schalten
+            setStatusButtonB(false) 
+        }
+
+
         // mkck Maker Kit Car mit Kran
         else if (isModell(eModell.mkck) && isFunktion(eFunktion.m0_s0))
             setStatusFunktion(eFunktion.ma_mb) // Funktion weiter schalten
