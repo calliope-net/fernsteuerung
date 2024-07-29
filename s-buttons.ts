@@ -41,20 +41,7 @@ namespace sender { // s-buttons.ts
                 setStatusModell(getStatusModell() - 1) // setStatusModell() schreibt auch in Flash
             zeigeModellImagePause(1500)
             btf.zeigeFunkgruppe()
-
         }
-
-        // Calli:bot && Funktion Beispiele (Modell Nummer ++)
-        /* else if (isModell(eModell.cb2e) && n_Funktion == eFunktion.mc_md_callibot_beispiele) {
-
-            a_ButtonAB_Switch[eButtonAB_Switch.B] = false // Beispiel noch nicht aktiv senden; erst nach B geklickt
-
-            if (n_ButtonAB_Counter < 3) // zählt bis 3, dann 1
-                n_ButtonAB_Counter += 1
-            else
-                n_ButtonAB_Counter = 1
-        } */
-
         // Maker Kit Car && Gabelstapler (lenken mit Tasten)
         else if (isModell(eModell.mkcg) && isFunktion(eFunktion.m0_m1_s0)) {
             addStatusButtonCounter(-1, 1, 31)
@@ -62,8 +49,6 @@ namespace sender { // s-buttons.ts
         // Standardwerte    
         else {
             setStatusButtonA(!getStatusButtonA())
-
-
         }
     }
 
@@ -78,12 +63,6 @@ namespace sender { // s-buttons.ts
             zeigeModellImagePause(1500)
             btf.zeigeFunkgruppe()
         }
-
-        // Calli:bot && Funktion Beispiele (mit A gewählte Modell Nummer starten)
-        //else if (isModell(eModell.cb2e) && n_Funktion == eFunktion.mc_md_callibot_beispiele) {
-        //    a_ButtonAB_Switch[eButtonAB_Switch.B] = !a_ButtonAB_Switch[eButtonAB_Switch.B] // Beispiel jetzt aktiv senden
-        //}
-
         // Maker Kit Car && Gabelstapler (lenken mit Tasten)
         else if (isModell(eModell.mkcg) && isFunktion(eFunktion.m0_m1_s0)) {
             addStatusButtonCounter(1, 1, 31) // M0 und M1, Servo über Tasten A- B+ (Gabelstapler)
@@ -92,7 +71,6 @@ namespace sender { // s-buttons.ts
         else {
             setStatusButtonB(!getStatusButtonB()) // Standardwert immer wechseln true-false
         }
-
     }
 
 
@@ -128,7 +106,6 @@ namespace sender { // s-buttons.ts
         else if (isModell(eModell.mkcg) && isFunktion(eFunktion.m0_s0)) {
             setStatusFunktion(eFunktion.m0_m1_s0)
             setStatusButtonCounter(16)
-            //n_ButtonAB_Counter = 16
         }
         // mkck Maker Kit Car mit Kran
         else if (isModell(eModell.mkck) && isFunktion(eFunktion.m0_s0))
@@ -137,8 +114,6 @@ namespace sender { // s-buttons.ts
             setStatusFunktion(eFunktion.mc_mb) // Funktion weiter schalten
 
         else {
-            //  a_ButtonAB_Switch[eButtonAB_Switch.AB] = !a_ButtonAB_Switch[eButtonAB_Switch.AB] // Standardwert immer wechseln true-false
-
             setStatusFunktion(eFunktion.m0_s0) // Standardwert immer Fahren und Lenken
             setStatusButtonA(false) //  n_ButtonA_Switch = false  // beide aus schalten
             setStatusButtonB(false) //  n_ButtonB_Switch = false
