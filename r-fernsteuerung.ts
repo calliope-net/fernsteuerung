@@ -8,6 +8,8 @@ namespace receiver { // r-fernsteuerung.ts
 
         if (btf.isBetriebsart(buffer, btf.e0Betriebsart.p0Fahren)) {
 
+            readQwiicUltrasonic()
+
             // Motor M0+Servo M1 (Fahren und Lenken)
             if (btf.getaktiviert(buffer, btf.e3aktiviert.m0)) {
 
@@ -17,11 +19,11 @@ namespace receiver { // r-fernsteuerung.ts
                     &&
                     btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor) >= 128 // Fahrtrichtung vorwärts
                     &&
-                    selectAbstand(true) < btf.getAbstand(buffer)) { // Abstand messen
+                    selectAbstand(false) < btf.getAbstand(buffer)) { // Abstand messen
 
                     dualMotor128(eDualMotor.M0, c_DualMotorStop) //  writeMotorenStop()
 
-                    rgbLEDs(eRGBled.b, Colors.Red, true)
+                    //  rgbLEDs(eRGBled.b, Colors.Red, true)
                     // writeRgbLed(eRgbLed.lh, Colors.Red, true, true)
                 }
                 else if (btf.getSensor(buffer, btf.eBufferPointer.m0, btf.eSensor.b5Spur) // Spursensor aktiviert
