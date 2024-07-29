@@ -255,7 +255,7 @@ namespace receiver { // r-receiver.ts
 
 
     //% group="RGB LEDs (Calliope v3)"
-    //% block="RGB- LEDs %led %color %on || Helligkeit %helligkeit \\%" weight=6
+    //% block="RGB- LEDs %led %color %on || Helligkeit %helligkeit \\%" weight=6 deprecated=1
     //% color.shadow="colorNumberPicker"
     //% on.shadow="toggleOnOff"
     //% helligkeit.min=5 helligkeit.max=100 helligkeit.defl=20
@@ -265,7 +265,7 @@ namespace receiver { // r-receiver.ts
     }
 
     //% group="RGB LEDs (Calliope v3)"
-    //% block="RGB- LEDs %led %color blinken %blinken || Helligkeit %helligkeit \\%" weight=5
+    //% block="RGB- LEDs %led %color blinken %blinken || Helligkeit %helligkeit \\%" weight=5 deprecated=1
     //% color.shadow="colorNumberPicker"
     //% blinken.shadow="toggleYesNo"
     //% helligkeit.min=5 helligkeit.max=100 helligkeit.defl=20

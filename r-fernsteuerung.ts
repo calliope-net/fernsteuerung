@@ -41,7 +41,7 @@ namespace receiver { // r-fernsteuerung.ts
                     receiver.dualMotor128(receiver.eDualMotor.M0, btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor))
                     receiver.pinServo16(btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo))
 
-                    setLedColors(eRGBled.b, Colors.Off, false)
+                    setLedColors(eRGBled.b, Colors.Red, false)
                 }
             }
 
