@@ -30,14 +30,14 @@
         "r-pins.ts",
         "r-qwiicmotor.ts",
         "r-qwiic.ts",
+        "r-beispiele.ts",
         "r-advanced.ts",
         "r-calliope-v3.ts",
         "c-callibot.ts",
         "c-strecken.ts",
         "c-fernsteuerung.ts",
         "c-fahrplan.ts",
-        "c-beispiele.ts",
-        "r-beispiele.ts"
+        "c-beispiele.ts"
     ],
     "testFiles": [
         "test.ts"
