@@ -8,7 +8,7 @@ namespace receiver { // r-fernsteuerung.ts
 
         if (btf.isBetriebsart(buffer, btf.e0Betriebsart.p0Fahren)) {
 
-            readQwiicUltrasonic()
+           // readQwiicUltrasonic()
 
             // Motor M0+Servo M1 (Fahren und Lenken)
             if (btf.getaktiviert(buffer, btf.e3aktiviert.m0)) {
@@ -17,13 +17,14 @@ namespace receiver { // r-fernsteuerung.ts
                     &&
                     selectAbstandSensorConnected()
                     &&
-                    btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor) >= 128 // Fahrtrichtung vorwärts
+                    btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor) > 128 // Fahrtrichtung vorwärts
                     &&
-                    selectAbstand(false) < btf.getAbstand(buffer)) { // Abstand messen
+                    selectAbstand(true) < btf.getAbstand(buffer)) { // Abstand messen
 
                     dualMotor128(eDualMotor.M0, c_DualMotorStop) //  writeMotorenStop()
 
-                    //  rgbLEDs(eRGBled.b, Colors.Red, true)
+                    setLedColors(eRGBled.b, Colors.Red, true)
+                    //rgbLEDs(eRGBled.b, Colors.Red, true)
                     // writeRgbLed(eRgbLed.lh, Colors.Red, true, true)
                 }
                 else if (btf.getSensor(buffer, btf.eBufferPointer.m0, btf.eSensor.b5Spur) // Spursensor aktiviert
@@ -32,13 +33,15 @@ namespace receiver { // r-fernsteuerung.ts
 
                     dualMotor128(eDualMotor.M0, c_DualMotorStop) //  writeMotorenStop()
 
-                    rgbLEDs(eRGBled.b, Colors.White, true)
+                    setLedColors(eRGBled.b, Colors.White, true)
                     //writeRgbLed(eRgbLed.rh, Colors.White, true, true)
                 }
                 else {
                     // Motor M0+Servo M1 (Fahren und Lenken)
                     receiver.dualMotor128(receiver.eDualMotor.M0, btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor))
                     receiver.pinServo16(btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo))
+
+                    setLedColors(eRGBled.b, Colors.Off, false)
                 }
             }
 

@@ -122,6 +122,7 @@ namespace receiver { // r-pins.ts
 
     //% group="Ultraschall (Pin und Qwiic)" subcategory="Pins, Sensoren"
     //% block="Abstand cm • einlesen %read" weight=6
+    //% read.shadow=toggleYesNo
     export function selectAbstand(read: boolean) {
         if (n_Hardware == eHardware.v3)
             //if (readQwiicUltrasonic()) // i2c einlesen, false wenn Modul nicht angesteckt

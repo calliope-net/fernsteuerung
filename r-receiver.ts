@@ -1,7 +1,7 @@
 //% color=#00A38F icon="\uf012" block="Empfänger" weight=93
 namespace receiver { // r-receiver.ts
     //radio: color=#E3008C weight=96 icon="\uf012" groups='["Group", "Broadcast", "Send", "Receive"]'
-//color=#008272 
+    //color=#008272 
 
     export enum eHardware { // === NICHT DIE ZAHLENWERTE ÄNDERN, das ist der Index für die Pins, Funkgruppe, ===
         //% block="Maker Kit Car (Calliope v3)"
@@ -226,8 +226,8 @@ namespace receiver { // r-receiver.ts
     // ========== group="RGB LEDs (v3)" subcategory="Aktoren"
 
     export enum eRGBled { a, b, c } // Index im Array
-    let n_rgbled = [0, 0, 0] // speichert 3 LEDs, wenn nur eine geändert wird
-    let n_rgbledtimer = input.runningTime() // ms seit Start, zwischen zwei Aufrufen ist eine Pause erforderlich
+    let a_RgbLeds = [0, 0, 0] // speichert 3 LEDs, wenn nur eine geändert wird
+    let n_RgbLedTimer = input.runningTime() // ms seit Start, zwischen zwei Aufrufen ist eine Pause erforderlich
 
 
     // deklariert die Variable mit dem Delegat-Typ '(color1: number, color2: number, color3: number, brightness: number) => void'
@@ -255,7 +255,7 @@ namespace receiver { // r-receiver.ts
 
 
     //% group="RGB LEDs (Calliope v3)"
-    //% block="RGB LEDs %led %color %on || Helligkeit %helligkeit \\%" weight=6
+    //% block="RGB- LEDs %led %color %on || Helligkeit %helligkeit \\%" weight=6
     //% color.shadow="colorNumberPicker"
     //% on.shadow="toggleOnOff"
     //% helligkeit.min=5 helligkeit.max=100 helligkeit.defl=20
@@ -265,21 +265,21 @@ namespace receiver { // r-receiver.ts
     }
 
     //% group="RGB LEDs (Calliope v3)"
-    //% block="RGB LEDs %led %color blinken %blinken || Helligkeit %helligkeit \\%" weight=5
+    //% block="RGB- LEDs %led %color blinken %blinken || Helligkeit %helligkeit \\%" weight=5
     //% color.shadow="colorNumberPicker"
     //% blinken.shadow="toggleYesNo"
     //% helligkeit.min=5 helligkeit.max=100 helligkeit.defl=20
     //% inlineInputMode=inline 
     export function rgbLEDs(led: eRGBled, color: number, blinken: boolean, helligkeit = 20) {
-        if (blinken && n_rgbled[led] != 0)
-            n_rgbled[led] = 0
+        if (blinken && a_RgbLeds[led] != 0)
+            a_RgbLeds[led] = 0
         else
-            n_rgbled[led] = color
+            a_RgbLeds[led] = color
 
-        while (input.runningTime() < (n_rgbledtimer + 1)) { // mindestens 1 ms seit letztem basic.setLedColors warten
+        while (input.runningTime() < (n_RgbLedTimer + 1)) { // mindestens 1 ms seit letztem basic.setLedColors warten
             control.waitMicros(100)
         }
-        n_rgbledtimer = input.runningTime()  // ms seit Start
+        n_RgbLedTimer = input.runningTime()  // ms seit Start
 
         //basic.setLedColors(n_rgbled[0], n_rgbled[1], n_rgbled[2])
 
@@ -288,11 +288,38 @@ namespace receiver { // r-receiver.ts
         // der Wert der Variable 'onSetLedColorsHandler' ist die function, die bei true zurück gerufen wird
         // die function ruft mit den 4 Parametern die Blöcke auf, die im Ereignis-Block stehen
         if (onSetLedColorsHandler)
-            onSetLedColorsHandler(n_rgbled[0], n_rgbled[1], n_rgbled[2], helligkeit) // v3 Ereignis Block auslösen, nur wenn benutzt
+            onSetLedColorsHandler(a_RgbLeds[0], a_RgbLeds[1], a_RgbLeds[2], helligkeit) // v3 Ereignis Block auslösen, nur wenn benutzt
         else
-            basic.setLedColor(n_rgbled[0]) // v1 v2
+            basic.setLedColor(a_RgbLeds[0]) // v1 v2
     }
 
+    //% group="RGB LEDs (Calliope v3)"
+    //% block="RGB LED %led %color %on || blinken %blinken Helligkeit %helligkeit \\%" weight=4
+    //% on.shadow=toggleOnOff on.defl=1
+    //% color.shadow="colorNumberPicker"
+    //% blinken.shadow=toggleYesNo
+    //% helligkeit.min=5 helligkeit.max=100 helligkeit.defl=20
+    //% inlineInputMode=inline
+    export function setLedColors(led: eRGBled, color: number, on: boolean, blinken = false, helligkeit = 20) {
+       // rgbLEDs(led, (on ? color : 0), blinken, helligkeit)
 
+        if (!on || (blinken && a_RgbLeds[led] == color)) // entweder aus .. oder an und blinken
+            color = Colors.Off // alle Farben aus = 0
+
+        if (a_RgbLeds[led] != color) { // nur wenn Farbe geändert
+           
+            a_RgbLeds[led] = color
+
+            let t = input.runningTime() - n_RgbLedTimer
+            if (t < 10)
+                basic.pause(t) // ms
+            n_RgbLedTimer = input.runningTime()
+
+            if (onSetLedColorsHandler)
+                onSetLedColorsHandler(a_RgbLeds[0], a_RgbLeds[1], a_RgbLeds[2], helligkeit) // v3 Ereignis Block auslösen, nur wenn benutzt
+            else
+                basic.setLedColor(a_RgbLeds[0]) // v1 v2
+        }
+    }
 
 } // r-receiver.ts
