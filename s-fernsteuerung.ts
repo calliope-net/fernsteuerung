@@ -77,7 +77,7 @@ namespace sender { // s-fernsteuerung.ts
     //% motor0.shadow=sender_xmotor 
     //% servo0.shadow=sender_ButtonAB_Counter
     //% motor1.shadow=sender_ymotor 
-    //% stop.shadow=sender_ButtonA_Switch
+    //% stop.shadow=toggleYesNo
     export function send00M01Gabelstapler(buffer: Buffer, motor0: number, servo0: number, motor1: number, stop: boolean, abstand: btf.e3Abstand) {
         btf.setBetriebsart(buffer, btf.e0Betriebsart.p0Fahren)
         btf.setByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor, motor0)
