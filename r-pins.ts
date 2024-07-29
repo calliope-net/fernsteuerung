@@ -71,23 +71,26 @@ namespace receiver { // r-pins.ts
 
     // ========== group="Spursensor" subcategory="Pins, Sensoren"
 
+    export enum eDH { dunkel = 0, hell = 1 } // 0 ist schwarz
+
     //% group="Spursensor" subcategory="Pins, Sensoren"
-    //% block="Spursensor links %n hell" weight=3
-    export function pinSpurlinks(n: btf.eNOT) {
+    //% block="Spursensor links %hell" weight=3
+    export function pinSpurlinks(hell: eDH) {
         if (a_PinSpurlinks.length > n_Hardware)
-            return pins.digitalReadPin(a_PinSpurlinks[n_Hardware]) == (n = btf.eNOT.t ? 1 : 0) // 0 ist schwarz
+            return pins.digitalReadPin(a_PinSpurlinks[n_Hardware]) == hell // 0 ist schwarz
         else
             return false
     }
 
     //% group="Spursensor" subcategory="Pins, Sensoren"
-    //% block="Spursensor rechts %n hell" weight=3
-    export function pinSpurrechts(n: btf.eNOT) {
+    //% block="Spursensor rechts %hell" weight=3
+    export function pinSpurrechts(hell: eDH) {
         if (a_PinSpurrechts.length > n_Hardware)
-            return pins.digitalReadPin(a_PinSpurrechts[n_Hardware]) == (n = btf.eNOT.t ? 1 : 0) // 0 ist schwarz
+            return pins.digitalReadPin(a_PinSpurrechts[n_Hardware]) == hell // 0 ist schwarz
         else
             return false
     }
+
 
 
 
