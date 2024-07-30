@@ -56,8 +56,8 @@ namespace receiver { // r-receiver.ts
 
 
     const c_Servo_geradeaus = 90
-    let n_ServoGeradeaus = c_Servo_geradeaus // Winkel für geradeaus wird beim Start eingestellt
-    let n_ServoWinkel = c_Servo_geradeaus // aktuell eingestellter Winkel
+    let n_Servo90Geradeaus = c_Servo_geradeaus // Winkel für geradeaus wird beim Start eingestellt
+    let n_Servo90Winkel = c_Servo_geradeaus // aktuell eingestellter Winkel
 
 
     //% group="calliope-net.github.io/fernsteuerung"
@@ -70,7 +70,7 @@ namespace receiver { // r-receiver.ts
     // inlineInputMode=inline
     export function beimStart(modell: eHardware, servoGeradeaus: number, encoder: boolean, radDmm: number, zf = true, modellFunkgruppe?: number) {
         n_Hardware = modell
-        n_ServoGeradeaus = servoGeradeaus // Parameter
+        n_Servo90Geradeaus = servoGeradeaus // Parameter
 
         pinRelay(true) // Relais an schalten (braucht gültiges n_Modell, um den Pin zu finden)
 
@@ -78,7 +78,7 @@ namespace receiver { // r-receiver.ts
         if (zf)
             btf.zeigeFunkgruppe()
 
-        pins.servoWritePin(a_PinServo[n_Hardware], n_ServoGeradeaus)
+        pins.servoWritePin(a_PinServo[n_Hardware], n_Servo90Geradeaus)
         // pinServo90(c_Servo_geradeaus)
 
         qwiicMotorReset() // dauert länger als 2 Sekunden
@@ -198,9 +198,9 @@ namespace receiver { // r-receiver.ts
     export function pinServo90(winkel: number) {
         // Richtung ändern: 180-winkel
         // (0+14)*3=42 keine Änderung, gültige Werte im Buffer 1-31  (1+14)*3=45  (16+14)*3=90  (31+14)*3=135
-        if (btf.between(winkel, 45, 135) && n_ServoWinkel != winkel) {
-            n_ServoWinkel = winkel
-            pins.servoWritePin(a_PinServo[n_Hardware], winkel + n_ServoGeradeaus - c_Servo_geradeaus)
+        if (btf.between(winkel, 45, 135) && n_Servo90Winkel != winkel) {
+            n_Servo90Winkel = winkel
+            pins.servoWritePin(a_PinServo[n_Hardware], winkel - (n_Servo90Geradeaus - c_Servo_geradeaus))
         }
     }
 
