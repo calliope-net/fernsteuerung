@@ -157,10 +157,10 @@ namespace receiver { // r-receiver.ts
 
 
 
-    // ========== group="Servo (vom gewählten Modell) °"
+    // ========== group="Servo (vom gewählten Modell)"
 
-    //% group="Servo (vom gewählten Modell) °"
-    //% block="Servo %servo" weight=4
+    //% group="Servo (vom gewählten Modell)"
+    //% block="Servo %servo °" weight=4
     //% servo.shadow=protractorPicker servo.defl=90
     export function pinServoPicker(servo: number) {
         pinServo16(btf.protractorPicker(servo))

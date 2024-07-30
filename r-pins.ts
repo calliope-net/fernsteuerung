@@ -10,7 +10,7 @@ namespace receiver { // r-pins.ts
     // ========== group="Relais" subcategory="Pins, Sensoren"
     // Relais auf der Leiterplatte schaltet 9V Akku für eigene Stromversorgung an VM+
 
-    //% group="Digital Pins" subcategory="Pins, Sensoren"
+    //% group="Digital Pins (vom gewählten Modell)" subcategory="Pins, Sensoren"
     //% block="Stromversorgung 9V %pON" weight=8
     //% pON.shadow="toggleOnOff"
     export function pinRelay(pON: boolean) {
@@ -20,7 +20,7 @@ namespace receiver { // r-pins.ts
 
     // GPIO für Grove (5V) Licht oder Buzzer
 
-    //% group="Digital Pins" subcategory="Pins, Sensoren"
+    //% group="Digital Pins (vom gewählten Modell)" subcategory="Pins, Sensoren"
     //% block="Licht %pON" weight=7
     //% pON.shadow="toggleOnOff"
     export function pinLicht(pON: boolean) {
@@ -39,7 +39,7 @@ namespace receiver { // r-pins.ts
         C17 = DigitalPin.C17
     }
 
-    //% group="Digital Pins" subcategory="Pins, Sensoren"
+    //% group="Digital Pins (vom gewählten Modell)" subcategory="Pins, Sensoren"
     //% block="Digital Pin %pin %pON" weight=6
     //% pON.shadow="toggleOnOff"
     export function digitalWritePin(pin: eDigitalPins, pON: boolean) {
@@ -73,7 +73,7 @@ namespace receiver { // r-pins.ts
 
     export enum eDH { dunkel = 0, hell = 1 } // 0 ist schwarz
 
-    //% group="Spursensor" subcategory="Pins, Sensoren"
+    //% group="Spursensor (vom gewählten Modell)" subcategory="Pins, Sensoren"
     //% block="Spursensor links %hell" weight=6
     export function pinSpurlinks(hell: eDH) {
         if (a_PinSpurlinks.length > n_Hardware)
@@ -82,7 +82,7 @@ namespace receiver { // r-pins.ts
             return false
     }
 
-    //% group="Spursensor" subcategory="Pins, Sensoren"
+    //% group="Spursensor (vom gewählten Modell)" subcategory="Pins, Sensoren"
     //% block="Spursensor rechts %hell" weight=5
     export function pinSpurrechts(hell: eDH) {
         if (a_PinSpurrechts.length > n_Hardware)
@@ -92,7 +92,7 @@ namespace receiver { // r-pins.ts
     }
 
 
-    //% group="Spursensor" subcategory="Pins, Sensoren"
+    //% group="Spursensor (vom gewählten Modell)" subcategory="Pins, Sensoren"
     //% block="Spursensor links %l und rechts %r" weight=4
     export function readSpursensor(l: eDH, r: eDH) {
 
@@ -107,9 +107,9 @@ namespace receiver { // r-pins.ts
 
 
 
-    // ========== group="Ultraschall (Pin und Qwiic)" subcategory="Pins, Sensoren"
+    // ========== group="Ultraschall (vom gewählten Modell)" subcategory="Pins, Sensoren"
 
-    //% group="Ultraschall (Pin und Qwiic)" subcategory="Pins, Sensoren"
+    //% group="Ultraschall (vom gewählten Modell)" subcategory="Pins, Sensoren"
     //% block="Abstand Sensor angeschlossen" weight=7
     export function selectAbstandSensorConnected() {
         if (n_Hardware == eHardware.v3)
@@ -120,7 +120,7 @@ namespace receiver { // r-pins.ts
             return false
     }
 
-    //% group="Ultraschall (Pin und Qwiic)" subcategory="Pins, Sensoren"
+    //% group="Ultraschall (vom gewählten Modell)" subcategory="Pins, Sensoren"
     //% block="Abstand cm • einlesen %read" weight=6
     //% read.shadow=toggleYesNo
     export function selectAbstand(read: boolean) {
@@ -142,7 +142,7 @@ namespace receiver { // r-pins.ts
         lt
     }
 
-    //% group="Ultraschall (Pin und Qwiic)" subcategory="Pins, Sensoren"
+    //% group="Ultraschall (vom gewählten Modell)" subcategory="Pins, Sensoren"
     //% block="Abstand %e %cm" weight=4
     //% cm.shadow=receiver_getAbstand
     export function abstand_vergleich(e: eVergleich, cm: number) { // cm.min=5 cm.max=50 cm.defl=20
