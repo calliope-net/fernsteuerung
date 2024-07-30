@@ -30,7 +30,6 @@
         "r-strecken.ts",
         "r-fernsteuerung.ts",
         "r-fahrplan.ts",
-        "r-encoder.ts",
         "r-beispiele.ts",
         "r-advanced.ts",
         "r-calliope-v3.ts",
