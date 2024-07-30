@@ -55,7 +55,7 @@ namespace receiver { // r-receiver.ts
     //  let n_dualMotor1Speed = c_DualMotorStop  // aktueller Wert im Chip
 
 
-    export const c_Servo_geradeaus = 90
+    const c_Servo_geradeaus = 90
     let n_ServoGeradeaus = c_Servo_geradeaus // Winkel für geradeaus wird beim Start eingestellt
     let n_ServoWinkel = c_Servo_geradeaus // aktuell eingestellter Winkel
 
@@ -78,7 +78,8 @@ namespace receiver { // r-receiver.ts
         if (zf)
             btf.zeigeFunkgruppe()
 
-        pins.servoWritePin(a_PinServo[n_Hardware], n_ServoGeradeaus)
+        // pins.servoWritePin(a_PinServo[n_Hardware], n_ServoGeradeaus)
+        pinServo90(c_Servo_geradeaus)
 
         qwiicMotorReset() // dauert länger als 2 Sekunden
 
