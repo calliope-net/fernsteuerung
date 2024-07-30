@@ -201,7 +201,8 @@ namespace receiver { // r-receiver.ts
         // (0+14)*3=42 keine Änderung, gültige Werte im Buffer 1-31  (1+14)*3=45  (16+14)*3=90  (31+14)*3=135
         if (btf.between(winkel, 45, 135) && n_Servo90Winkel != winkel) {
             n_Servo90Winkel = winkel
-            pins.servoWritePin(a_PinServo[n_Hardware], winkel + (n_Servo90Geradeaus - c_Servo_geradeaus))
+            // pins.servoWritePin(a_PinServo[n_Hardware], winkel + (n_Servo90Geradeaus - c_Servo_geradeaus))
+            pins.servoWritePin(a_PinServo[n_Hardware], winkel * (n_Servo90Geradeaus / c_Servo_geradeaus))
         }
     }
 
