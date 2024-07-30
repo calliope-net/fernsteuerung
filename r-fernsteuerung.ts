@@ -37,7 +37,7 @@ namespace receiver { // r-fernsteuerung.ts
 
                 if (bAbstand && bRichtung_vor && (cmAbstandSensor <= btf.getAbstand(buffer))) {
                     n_AbstandStop = true
-                } else if (!bAbstand || (!bRichtung_vor && cmAbstandSensor > 5 + btf.getAbstand(buffer)))
+                } else if (!bAbstand || !bRichtung_vor)
                     n_AbstandStop = false
 
                 if (bSpur && (pinSpurlinks(eDH.dunkel) || pinSpurrechts(eDH.dunkel))) {
