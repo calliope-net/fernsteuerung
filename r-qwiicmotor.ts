@@ -65,7 +65,8 @@ namespace receiver { // r-qwiicmotor.ts
         poweron_blue = Colors.Blue
     }
     function qwiicMotorRGBLEDs(pMotorChip: eQwiicMotorChip, color: eQwiicMotorRGBColor) {
-        rgbLEDs(pMotorChip == eQwiicMotorChip.cd ? eRGBled.c : eRGBled.b, color, false)
+       // rgbLEDs(pMotorChip == eQwiicMotorChip.cd ? eRGBled.c : eRGBled.b, color, false)
+        setLedColors(pMotorChip == eQwiicMotorChip.cd ? eRGBled.c : eRGBled.b, color, true)
     }
 
     export function qwiicMotorReset() { // aufgerufen beim Start

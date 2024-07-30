@@ -59,15 +59,6 @@ namespace receiver { // r-receiver.ts
     let n_ServoGeradeaus = c_Servo_geradeaus // Winkel für geradeaus wird beim Start eingestellt
     let n_ServoWinkel = c_Servo_geradeaus // aktuell eingestellter Winkel
 
-    // für Encoder r-pins-encoder.ts
-    // export function dualEncoderM0Richtung() {
-    //    return n_Motor0 > c_MotorStop // true: vorwärts
-    //}
-    //export function dualEncoderM0Stop() {
-    //    motor255(eMotor01.M0, c_MotorStop)
-    //}
-
-
 
     //% group="calliope-net.github.io/fernsteuerung"
     //% block="beim Start: Empfänger | %modell Servo ↑ ° %servoGeradeaus Encoder %encoder Rad Durchmesser mm %radDmm Funkgruppe || anzeigen %zf Funkgruppe %modellFunkgruppe" weight=8
@@ -99,32 +90,8 @@ namespace receiver { // r-receiver.ts
     }
 
 
-    // group="calliope-net.github.io/fernsteuerung"
-    // block="Flash speichern" weight=7
-    /* export function storageBufferGet() {
-        return btf.storageBufferGet()
-    } */
 
-
-    // ========== group="Motor"
-
-    //% group="Motor"
-    //% block="Motor Power %pON" weight=7
-    //% pON.shadow="toggleOnOff"
-    /*  function motorPower(pON: boolean) { // sendet nur wenn der Wert sich ändert
-        // if (motorStatus() && (pON !== n_MotorON)) { // !== XOR eine Seite ist true aber nicht beide
-        if (pON !== n_MotorPower) {
-            //motors.dualMotorPower(Motor.M0_M1, 0)
-            n_MotorPower = pON
-            if (!n_MotorPower && n_Motor0 != c_MotorStop)
-                motors.dualMotorPower(Motor.M0, 0)
-            if (!n_MotorPower && n_Motor1 != c_MotorStop)
-                motors.dualMotorPower(Motor.M1, 0)
-        }
-    } */
-    // pins.i2cWriteBuffer(i2cMotor, Buffer.fromArray([DRIVER_ENABLE, n_MotorON ? 0x01 : 0x00]))
-
-
+    // ========== group="Motor 0 1 (Calliope v3)"
 
     //% group="Motor 0 1 (Calliope v3)"
     //% block="Motor %motor (1 ↓ 128 ↑ 255) %speed (128 ist STOP)" weight=6
@@ -152,10 +119,6 @@ namespace receiver { // r-receiver.ts
             }
         } else { // n_MotorPower false oder speed=0
             dualMotor128(motor, c_DualMotorStop) // 128
-
-            //n_Motor0 = c_MotorStop
-            //n_Motor1 = c_MotorStop
-            //motors.dualMotorPower(Motor.M0_M1, 0)
         }
     }
 
@@ -166,22 +129,24 @@ namespace receiver { // r-receiver.ts
         onDualMotorPowerHandler = cb
     }
 
-
     function dualMotorPower(motor: number, duty_percent: number) {
         if (onDualMotorPowerHandler)
             onDualMotorPowerHandler(motor, duty_percent) // v3 Ereignis Block auslösen, nur wenn benutzt
-        //else
-        //     basic.setLedColor(n_rgbled[0]) // v1 v2
     }
 
 
-    //% group="Motor 0 1 (Calliope v3)"
-    //% block="Motor %motor (1 ↓ 128 ↑ 255) %speed (128 ist STOP)" weight=6
-    //% speed.min=0 speed.max=255 speed.defl=128
 
+    // ========== group="aktueller Motor (vom gewählten Modell)"
 
-    //% group="aktueller Motor (vom gewählten Modell)"
-    //% block="Fahren (1 ↓ 128 ↑ 255) %speed" weight=4
+    //% group="Motor (vom gewählten Modell)"
+    //% block="Fahren (-100 ↓ 0 ↑ +100) %speed \\%" weight=5
+    //% speed.shadow=speedPicker
+    export function selectMotorPicker(speed: number) {
+        selectMotor(btf.speedPicker(speed))
+    }
+
+    //% group="Motor (vom gewählten Modell)"
+    //% block="Fahren (1 ↓ 128 ↑ 255) %speed (128 ist STOP)" weight=4
     //% speed.min=0 speed.max=255 speed.defl=128
     export function selectMotor(speed: number) {
         if (n_Hardware == eHardware.car4) // Fahrmotor am Qwiic Modul
@@ -192,21 +157,16 @@ namespace receiver { // r-receiver.ts
 
 
 
-    // ========== group="Servo"
+    // ========== group="Servo (vom gewählten Modell) °"
 
-    //% group="Servo"
-    //% block="Servo (135° ↖ 90° ↗ 45°) %winkel °" weight=4
-    //% winkel.min=45 winkel.max=135 winkel.defl=90
-    export function pinServo90(winkel: number) {
-        // Richtung ändern: 180-winkel
-        // (0+14)*3=42 keine Änderung, gültige Werte im Buffer 1-31  (1+14)*3=45  (16+14)*3=90  (31+14)*3=135
-        if (btf.between(winkel, 45, 135) && n_ServoWinkel != winkel) {
-            n_ServoWinkel = winkel
-            pins.servoWritePin(a_PinServo[n_Hardware], winkel + n_ServoGeradeaus - c_Servo_geradeaus)
-        }
+    //% group="Servo (vom gewählten Modell) °"
+    //% block="Servo %servo" weight=4
+    //% servo.shadow=protractorPicker servo.defl=90
+    export function pinServoPicker(servo: number) {
+        pinServo16(btf.protractorPicker(servo))
     }
 
-    //% group="Servo"
+    //% group="Servo (vom gewählten Modell)"
     //% block="Servo (1 ↖ 16 ↗ 31) %winkel" weight=3
     //% winkel.min=1 winkel.max=31 winkel.defl=16
     export function pinServo16(winkel: number) {
@@ -223,10 +183,17 @@ namespace receiver { // r-receiver.ts
     }
 
 
-    // group="Servo"
-    // block="Servo (135° ↖ 90° ↗ 45°)" weight=2
-    //function servo_get() { return n_ServoWinkel }
-
+    //% group="Servo (vom gewählten Modell)"
+    //% block="Servo (135° ↖ 90° ↗ 45°) %winkel °" weight=2
+    //% winkel.min=45 winkel.max=135 winkel.defl=90
+    export function pinServo90(winkel: number) {
+        // Richtung ändern: 180-winkel
+        // (0+14)*3=42 keine Änderung, gültige Werte im Buffer 1-31  (1+14)*3=45  (16+14)*3=90  (31+14)*3=135
+        if (btf.between(winkel, 45, 135) && n_ServoWinkel != winkel) {
+            n_ServoWinkel = winkel
+            pins.servoWritePin(a_PinServo[n_Hardware], winkel + n_ServoGeradeaus - c_Servo_geradeaus)
+        }
+    }
 
 
 
@@ -260,54 +227,16 @@ namespace receiver { // r-receiver.ts
     }
 
 
+    // ========== group="RGB LEDs (Calliope v3)"
 
     //% group="RGB LEDs (Calliope v3)"
-    //% block="RGB- LEDs %led %color %on || Helligkeit %helligkeit \\%" weight=6 deprecated=1
-    //% color.shadow="colorNumberPicker"
-    //% on.shadow="toggleOnOff"
-    //% helligkeit.min=5 helligkeit.max=100 helligkeit.defl=20
-    //% inlineInputMode=inline 
-    export function rgbLEDon(led: eRGBled, color: number, on: boolean, helligkeit = 20) {
-        rgbLEDs(led, (on ? color : 0), false, helligkeit)
-    }
-
-    //% group="RGB LEDs (Calliope v3)"
-    //% block="RGB- LEDs %led %color blinken %blinken || Helligkeit %helligkeit \\%" weight=5 deprecated=1
-    //% color.shadow="colorNumberPicker"
-    //% blinken.shadow="toggleYesNo"
-    //% helligkeit.min=5 helligkeit.max=100 helligkeit.defl=20
-    //% inlineInputMode=inline 
-    export function rgbLEDs(led: eRGBled, color: number, blinken: boolean, helligkeit = 20) {
-        if (blinken && a_RgbLeds[led] != 0)
-            a_RgbLeds[led] = 0
-        else
-            a_RgbLeds[led] = color
-
-        while (input.runningTime() < (n_RgbLedTimer + 1)) { // mindestens 1 ms seit letztem basic.setLedColors warten
-            control.waitMicros(100)
-        }
-        n_RgbLedTimer = input.runningTime()  // ms seit Start
-
-        //basic.setLedColors(n_rgbled[0], n_rgbled[1], n_rgbled[2])
-
-        // die Variable 'onSetLedColorsHandler' ist normalerweise undefined, dann passiert nichts
-        // die Variable erhält einen Wert, wenn der Ereignis Block 'onSetLedColors' einmal im Code vorkommt
-        // der Wert der Variable 'onSetLedColorsHandler' ist die function, die bei true zurück gerufen wird
-        // die function ruft mit den 4 Parametern die Blöcke auf, die im Ereignis-Block stehen
-        if (onSetLedColorsHandler)
-            onSetLedColorsHandler(a_RgbLeds[0], a_RgbLeds[1], a_RgbLeds[2], helligkeit) // v3 Ereignis Block auslösen, nur wenn benutzt
-        else
-            basic.setLedColor(a_RgbLeds[0]) // v1 v2
-    }
-
-    //% group="RGB LEDs (Calliope v3)"
-    //% block="RGB LED %led %color %on || blinken %blinken Helligkeit %helligkeit \\%" weight=4
+    //% block="RGB LED %led %color || %on blinken %blinken Helligkeit %helligkeit \\%" weight=4
     //% on.shadow=toggleOnOff on.defl=1
     //% color.shadow="colorNumberPicker"
     //% blinken.shadow=toggleYesNo
     //% helligkeit.min=5 helligkeit.max=100 helligkeit.defl=20
     //% inlineInputMode=inline
-    export function setLedColors(led: eRGBled, color: number, on: boolean, blinken = false, helligkeit = 20) {
+    export function setLedColors(led: eRGBled, color: number, on = true, blinken = false, helligkeit = 20) {
         // rgbLEDs(led, (on ? color : 0), blinken, helligkeit)
 
         if (!on || (blinken && a_RgbLeds[led] == color)) // entweder aus .. oder an und blinken
@@ -317,9 +246,9 @@ namespace receiver { // r-receiver.ts
 
             a_RgbLeds[led] = color
 
-            let t = input.runningTime() - n_RgbLedTimer
+            let t = input.runningTime() - n_RgbLedTimer // ms seit letztem setLedColor
             if (t < 10)
-                basic.pause(t) // ms
+                basic.pause(t) // restliche Zeit-Differenz bis 10 ms warten
             n_RgbLedTimer = input.runningTime()
 
             if (onSetLedColorsHandler)
@@ -329,4 +258,48 @@ namespace receiver { // r-receiver.ts
         }
     }
 
+
+
+
+    // ========== deprecated=1
+    /* 
+        //% group="RGB LEDs (Calliope v3)"
+        //% block="RGB- LEDs %led %color %on || Helligkeit %helligkeit \\%" weight=6 deprecated=1
+        //% color.shadow="colorNumberPicker"
+        //% on.shadow="toggleOnOff"
+        //% helligkeit.min=5 helligkeit.max=100 helligkeit.defl=20
+        //% inlineInputMode=inline 
+        export function rgbLEDon(led: eRGBled, color: number, on: boolean, helligkeit = 20) {
+            rgbLEDs(led, (on ? color : 0), false, helligkeit)
+        }
+    
+        //% group="RGB LEDs (Calliope v3)"
+        //% block="RGB- LEDs %led %color blinken %blinken || Helligkeit %helligkeit \\%" weight=5 deprecated=1
+        //% color.shadow="colorNumberPicker"
+        //% blinken.shadow="toggleYesNo"
+        //% helligkeit.min=5 helligkeit.max=100 helligkeit.defl=20
+        //% inlineInputMode=inline 
+        export function rgbLEDs(led: eRGBled, color: number, blinken: boolean, helligkeit = 20) {
+            if (blinken && a_RgbLeds[led] != 0)
+                a_RgbLeds[led] = 0
+            else
+                a_RgbLeds[led] = color
+    
+            while (input.runningTime() < (n_RgbLedTimer + 1)) { // mindestens 1 ms seit letztem basic.setLedColors warten
+                control.waitMicros(100)
+            }
+            n_RgbLedTimer = input.runningTime()  // ms seit Start
+    
+            //basic.setLedColors(n_rgbled[0], n_rgbled[1], n_rgbled[2])
+    
+            // die Variable 'onSetLedColorsHandler' ist normalerweise undefined, dann passiert nichts
+            // die Variable erhält einen Wert, wenn der Ereignis Block 'onSetLedColors' einmal im Code vorkommt
+            // der Wert der Variable 'onSetLedColorsHandler' ist die function, die bei true zurück gerufen wird
+            // die function ruft mit den 4 Parametern die Blöcke auf, die im Ereignis-Block stehen
+            if (onSetLedColorsHandler)
+                onSetLedColorsHandler(a_RgbLeds[0], a_RgbLeds[1], a_RgbLeds[2], helligkeit) // v3 Ereignis Block auslösen, nur wenn benutzt
+            else
+                basic.setLedColor(a_RgbLeds[0]) // v1 v2
+        }
+     */
 } // r-receiver.ts
