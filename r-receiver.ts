@@ -3,7 +3,7 @@ namespace receiver { // r-receiver.ts
     //radio: color=#E3008C weight=96 icon="\uf012" groups='["Group", "Broadcast", "Send", "Receive"]'
     //color=#008272 
 
-    export enum eHardware { // === NICHT DIE ZAHLENWERTE ÄNDERN, das ist der Index für die Pins, Funkgruppe, ===
+    export enum eHardware { // === NICHT DIE ZAHLENWERTE ÄNDERN, das ist der Index für die Pins ===
         //% block="Maker Kit Car (Calliope v3)"
         v3 = 0,     // Index in Arrays
         //% block="CaR 4 (Calliope v1)"
@@ -175,14 +175,21 @@ namespace receiver { // r-receiver.ts
     }
 
 
-    // group="Motor"
-    // block="Motor %motor (1 ↓ 128 ↑ 255)" weight=3
-    /* export function motor_get(motor: eMotor01) {
-        if (motor == eMotor01.M1)
-            return n_Motor1
-        else
-            return n_Motor0
-    } */
+    //% group="Motor 0 1 (Calliope v3)"
+    //% block="Motor %motor (1 ↓ 128 ↑ 255) %speed (128 ist STOP)" weight=6
+    //% speed.min=0 speed.max=255 speed.defl=128
+
+
+    //% group="aktueller Motor (vom gewählten Modell)"
+    //% block="Fahren (1 ↓ 128 ↑ 255) %speed" weight=4
+    //% speed.min=0 speed.max=255 speed.defl=128
+    export function selectMotor(speed: number) {
+        if (n_Hardware == eHardware.car4) // Fahrmotor am Qwiic Modul
+            qwiicMotor128(eQwiicMotor.ma, speed)
+        else // Standard M0 Fahrmotor an Calliope v3 Pins
+            dualMotor128(eDualMotor.M0, speed)
+    }
+
 
 
     // ========== group="Servo"
@@ -301,13 +308,13 @@ namespace receiver { // r-receiver.ts
     //% helligkeit.min=5 helligkeit.max=100 helligkeit.defl=20
     //% inlineInputMode=inline
     export function setLedColors(led: eRGBled, color: number, on: boolean, blinken = false, helligkeit = 20) {
-       // rgbLEDs(led, (on ? color : 0), blinken, helligkeit)
+        // rgbLEDs(led, (on ? color : 0), blinken, helligkeit)
 
         if (!on || (blinken && a_RgbLeds[led] == color)) // entweder aus .. oder an und blinken
             color = Colors.Off // alle Farben aus = 0
 
         if (a_RgbLeds[led] != color) { // nur wenn Farbe geändert
-           
+
             a_RgbLeds[led] = color
 
             let t = input.runningTime() - n_RgbLedTimer

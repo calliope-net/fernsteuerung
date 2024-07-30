@@ -1,6 +1,9 @@
 
 namespace receiver { // r-fernsteuerung.ts
 
+    let n_AbstandStop = false
+    let n_SpurStop = false
+
     //% group="00 Fernsteuerung mit Joystick (reagiert auf Sensoren)" subcategory="Fernsteuerung"
     //% block="Fahren und Lenken mit Joystick aus Datenpaket %buffer M:01ABCD S:0" weight=5
     //% buffer.shadow="btf_receivedBuffer19"
@@ -8,16 +11,55 @@ namespace receiver { // r-fernsteuerung.ts
 
         if (btf.isBetriebsart(buffer, btf.e0Betriebsart.p0Fahren)) {
 
-           // readQwiicUltrasonic()
+            // readQwiicUltrasonic()
 
             // Motor M0+Servo M1 (Fahren und Lenken)
             if (btf.getaktiviert(buffer, btf.e3aktiviert.m0)) {
 
-                if (btf.getSensor(buffer, btf.eBufferPointer.m0, btf.eSensor.b6Abstand) // Abstandssensor aktiviert
+                let bAbstand = btf.getSensor(buffer, btf.eBufferPointer.m0, btf.eSensor.b6Abstand) && selectAbstandSensorConnected()
+                let bSpur = btf.getSensor(buffer, btf.eBufferPointer.m0, btf.eSensor.b5Spur)
+                let bRichtung_vor = false
+
+                if (bAbstand) {
+                    setLedColors(eRGBled.b, Colors.Yellow, bAbstand, n_AbstandStop)
+                    setLedColors(eRGBled.c, Colors.White, bSpur)
+                    bRichtung_vor = btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor) >= c_DualMotorStop // Fahrtrichtung vorwärts oder Stop
+                } else if (bSpur) {
+                    setLedColors(eRGBled.b, Colors.White, pinSpurlinks(eDH.hell))
+                    setLedColors(eRGBled.c, Colors.White, pinSpurrechts(eDH.hell))
+                } else { // beide aus
+                    setLedColors(eRGBled.b, Colors.Off, false)
+                    setLedColors(eRGBled.c, Colors.Off, false)
+                }
+
+
+                if (bAbstand && bRichtung_vor && selectAbstand(true) < btf.getAbstand(buffer)) {
+                    n_AbstandStop = true
+                } else if (!bAbstand || !bRichtung_vor)
+                    n_AbstandStop = false
+
+                if (bSpur && (pinSpurlinks(eDH.dunkel) || pinSpurrechts(eDH.dunkel))) {
+                    n_SpurStop = true
+                } else if (!bSpur)
+                    n_SpurStop = false
+
+                if (!n_AbstandStop && !n_SpurStop) {
+                    // Motor M0+Servo M1 (Fahren und Lenken)
+                    receiver.dualMotor128(receiver.eDualMotor.M0, btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor))
+                    receiver.pinServo16(btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo))
+
+                } else {
+                    dualMotor128(eDualMotor.M0, c_DualMotorStop)
+                }
+
+
+
+
+               /*  if (btf.getSensor(buffer, btf.eBufferPointer.m0, btf.eSensor.b6Abstand) // Abstandssensor aktiviert
                     &&
                     selectAbstandSensorConnected()
                     &&
-                    btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor) > 128 // Fahrtrichtung vorwärts
+                    btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor) > c_DualMotorStop // Fahrtrichtung vorwärts
                     &&
                     selectAbstand(true) < btf.getAbstand(buffer)) { // Abstand messen
 
@@ -43,6 +85,7 @@ namespace receiver { // r-fernsteuerung.ts
 
                     setLedColors(eRGBled.b, Colors.Red, false)
                 }
+                 */
             }
 
 
