@@ -49,7 +49,7 @@ namespace receiver { // r-receiver.ts
     export enum eDualMotor { M0, M1, M0_M1 } // muss mit v3 identisch sein
 
     export const c_MotorStop = 128
-    export let a_DualMotorSpeed = [c_MotorStop, c_MotorStop]
+    let a_DualMotorSpeed = [c_MotorStop, c_MotorStop]
 
     //  export let n_dualMotor0Speed = c_DualMotorStop  // aktueller Wert im Chip
     //  let n_dualMotor1Speed = c_DualMotorStop  // aktueller Wert im Chip
@@ -154,6 +154,14 @@ namespace receiver { // r-receiver.ts
         else // Standard M0 Fahrmotor an Calliope v3 Pins
             dualMotor128(eDualMotor.M0, speed)
     }
+
+    export function selectMotorSpeed() {
+        if (n_Hardware == eHardware.car4) // Fahrmotor am Qwiic Modul
+            return a_QwiicMotorSpeed[eQwiicMotor.ma]
+        else
+            return a_DualMotorSpeed[eDualMotor.M0]
+    }
+
 
 
 
