@@ -185,7 +185,8 @@ namespace receiver { // r-receiver.ts
             // winkel 31..16..1
             // 32+14=46 46-1=45     46-16=30    46-31=15
             //          45*3=135    30*3=90     15*3=45
-            pinServo90((46 - winkel) * 3)  // 1->135 16->90 31->45
+            pinServo90((14 + (32 - winkel)) * 3)  // 1->135 16->90 31->45
+        //pinServo90((46 - winkel) * 3)  // 1->135 16->90 31->45
         //  servo_set90((14 + winkel) * 3)  // 1->135 16->90 31->45
         else
             pinServo90(90)
