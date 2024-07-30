@@ -23,14 +23,14 @@ namespace receiver { // r-fernsteuerung.ts
                 if (bAbstand) {
                     setLedColors(eRGBled.b, Colors.Yellow, bAbstand, n_AbstandStop)
                     setLedColors(eRGBled.c, Colors.White, bSpur)
-                    bRichtung_vor = btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor) >= c_MotorStop // Fahrtrichtung vorwärts oder Stop
-                } else if (bSpur) {
-                    setLedColors(eRGBled.b, Colors.White, pinSpurlinks(eDH.hell))
-                    setLedColors(eRGBled.c, Colors.White, pinSpurrechts(eDH.hell))
-                } else { // beide aus
+                    bRichtung_vor = btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor) > c_MotorStop // Fahrtrichtung vorwärts
+                } else /* if (bSpur) */ {
+                    setLedColors(eRGBled.b, Colors.White, pinSpurlinks(eDH.hell), n_SpurStop)
+                    setLedColors(eRGBled.c, Colors.White, pinSpurrechts(eDH.hell), n_SpurStop)
+                } /* else { // beide aus
                     setLedColors(eRGBled.b, Colors.Off, false)
                     setLedColors(eRGBled.c, Colors.Off, false)
-                }
+                } */
 
 
                 if (bAbstand && bRichtung_vor && selectAbstand(true) < btf.getAbstand(buffer)) {
@@ -45,49 +45,49 @@ namespace receiver { // r-fernsteuerung.ts
 
                 if (!n_AbstandStop && !n_SpurStop) {
                     // Motor M0+Servo M1 (Fahren und Lenken)
-                   // dualMotor128(receiver.eDualMotor.M0, btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor))
+                    // dualMotor128(receiver.eDualMotor.M0, btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor))
                     selectMotor(btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor))
                     pinServo16(btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo))
 
                 } else {
-                   // dualMotor128(eDualMotor.M0, c_DualMotorStop)
+                    // dualMotor128(eDualMotor.M0, c_DualMotorStop)
                     selectMotor(c_MotorStop)
                 }
 
 
 
 
-               /*  if (btf.getSensor(buffer, btf.eBufferPointer.m0, btf.eSensor.b6Abstand) // Abstandssensor aktiviert
-                    &&
-                    selectAbstandSensorConnected()
-                    &&
-                    btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor) > c_DualMotorStop // Fahrtrichtung vorwärts
-                    &&
-                    selectAbstand(true) < btf.getAbstand(buffer)) { // Abstand messen
-
-                    dualMotor128(eDualMotor.M0, c_DualMotorStop) //  writeMotorenStop()
-
-                    setLedColors(eRGBled.b, Colors.Red, true)
-                    //rgbLEDs(eRGBled.b, Colors.Red, true)
-                    // writeRgbLed(eRgbLed.lh, Colors.Red, true, true)
-                }
-                else if (btf.getSensor(buffer, btf.eBufferPointer.m0, btf.eSensor.b5Spur) // Spursensor aktiviert
-                    &&
-                    (pinSpurlinks(eDH.dunkel) || pinSpurrechts(eDH.dunkel))) { // schwarze Linie erkannt / nicht hell, hell
-
-                    dualMotor128(eDualMotor.M0, c_DualMotorStop) //  writeMotorenStop()
-
-                    setLedColors(eRGBled.b, Colors.White, true)
-                    //writeRgbLed(eRgbLed.rh, Colors.White, true, true)
-                }
-                else {
-                    // Motor M0+Servo M1 (Fahren und Lenken)
-                    receiver.dualMotor128(receiver.eDualMotor.M0, btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor))
-                    receiver.pinServo16(btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo))
-
-                    setLedColors(eRGBled.b, Colors.Red, false)
-                }
-                 */
+                /*  if (btf.getSensor(buffer, btf.eBufferPointer.m0, btf.eSensor.b6Abstand) // Abstandssensor aktiviert
+                     &&
+                     selectAbstandSensorConnected()
+                     &&
+                     btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor) > c_DualMotorStop // Fahrtrichtung vorwärts
+                     &&
+                     selectAbstand(true) < btf.getAbstand(buffer)) { // Abstand messen
+ 
+                     dualMotor128(eDualMotor.M0, c_DualMotorStop) //  writeMotorenStop()
+ 
+                     setLedColors(eRGBled.b, Colors.Red, true)
+                     //rgbLEDs(eRGBled.b, Colors.Red, true)
+                     // writeRgbLed(eRgbLed.lh, Colors.Red, true, true)
+                 }
+                 else if (btf.getSensor(buffer, btf.eBufferPointer.m0, btf.eSensor.b5Spur) // Spursensor aktiviert
+                     &&
+                     (pinSpurlinks(eDH.dunkel) || pinSpurrechts(eDH.dunkel))) { // schwarze Linie erkannt / nicht hell, hell
+ 
+                     dualMotor128(eDualMotor.M0, c_DualMotorStop) //  writeMotorenStop()
+ 
+                     setLedColors(eRGBled.b, Colors.White, true)
+                     //writeRgbLed(eRgbLed.rh, Colors.White, true, true)
+                 }
+                 else {
+                     // Motor M0+Servo M1 (Fahren und Lenken)
+                     receiver.dualMotor128(receiver.eDualMotor.M0, btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor))
+                     receiver.pinServo16(btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo))
+ 
+                     setLedColors(eRGBled.b, Colors.Red, false)
+                 }
+                  */
             }
 
 
