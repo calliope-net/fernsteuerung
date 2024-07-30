@@ -134,7 +134,7 @@ namespace receiver { // r-pins.ts
         else
             return 0
     }
-
+/* 
     export enum eVergleich {
         //% block=">="
         gt,
@@ -154,7 +154,7 @@ namespace receiver { // r-pins.ts
             default:
                 return false
         }
-    }
+    } */
 
     //% blockId=receiver_getAbstand blockHidden=true
     //% block="%buffer Abstand in cm" weight=3

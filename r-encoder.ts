@@ -141,17 +141,18 @@ namespace receiver { // r-pins.ts
 
 
     //% group="Encoder" subcategory="Encodermotor"
-    //% block="Encoder starten (Stop Ereignis bei %streckecm cm) || AutoStop %autostop" weight=8
-    //% streckecm.min=1 streckecm.max=255 streckecm.defl=20
+    //% block="Encoder starten • AutoStop %autostop bei (cm) %strecke || Impulse %impulse" weight=8
     //% autostop.shadow="toggleYesNo" autostop.defl=1
-    export function encoderStartStrecke(streckecm: number, autostop = true) {
+    //% strecke.min=1 strecke.max=255 strecke.defl=20
+    //% impulse.shadow=toggleYesNo
+    export function encoderStartStrecke(autostop: boolean, strecke: number, impulse = false) {
         n_EncoderCounter = 0 // Impuls Zähler zurück setzen
 
-        if (streckecm > 0) {
-            n_EncoderStrecke_impulse = Math.round(streckecm * n_EncoderFaktor)
+        if (strecke > 0) {
+            n_EncoderStrecke_impulse = impulse ? strecke : Math.round(strecke * n_EncoderFaktor)
             n_EncoderAutoStop = autostop
 
-            btf.n_lastConnectedTime = input.runningTime() // Connection-Timeout Zähler zurück setzen um Abschaltung zu verhindern
+           // btf.n_lastConnectedTime = input.runningTime() // Connection-Timeout Zähler zurück setzen um Abschaltung zu verhindern
         } else {
             n_EncoderStrecke_impulse = 0
         }
@@ -159,21 +160,48 @@ namespace receiver { // r-pins.ts
 
 
 
+    export enum eEncoderEinheit { cm, Impulse }
 
     //% group="Encoder" subcategory="Encodermotor"
-    //% block="Encodermotor starten (1 ↓ 128 ↑ 255) %speed" weight=7
-    //% speed.min=0 speed.max=255 speed.defl=128
-    export function encoderSelectMotor(speed: number) {
-
-        if (n_Hardware == eHardware.v3) // Fahrmotor an Calliope v3 Pins
-            dualMotor128(eDualMotor.M0, speed)
-
-        else if (n_Hardware == eHardware.car4) // Fahrmotor am Qwiic Modul
-            qwiicMotor128(eQwiicMotor.ma, speed)
+    //% block="Encoder Wert (cm) || Impulse %impulse" weight=4
+    //% impulse.shadow=toggleYesNo
+    export function encoderCounter(impulse = false) {
+        if (impulse)
+            return n_EncoderCounter
+        else
+            return Math.round(n_EncoderCounter / n_EncoderFaktor)
     }
 
 
+    // ========== EVENT HANDLER === sichtbarer Event-Block
+    let onEncoderStopHandler: (cm: number) => void
 
+    //% group="Event Handler" subcategory="Encodermotor"
+    //% block="wenn Ziel erreicht"
+    //% draggableParameters=reporter
+    export function onEncoderStop(cb: (cm: number) => void) {
+        onEncoderStopHandler = cb
+    }
+    // ========== EVENT HANDLER === sichtbarer Event-Block
+
+
+
+    /* 
+    
+        //% group="Encoder" subcategory="Encodermotor"
+        //% block="Encodermotor starten (1 ↓ 128 ↑ 255) %speed" weight=7
+        //% speed.min=0 speed.max=255 speed.defl=128
+        export function encoderSelectMotor(speed: number) {
+    
+            if (n_Hardware == eHardware.v3) // Fahrmotor an Calliope v3 Pins
+                dualMotor128(eDualMotor.M0, speed)
+    
+            else if (n_Hardware == eHardware.car4) // Fahrmotor am Qwiic Modul
+                qwiicMotor128(eQwiicMotor.ma, speed)
+        }
+    
+    
+     */
     // ========== group="Encoder" subcategory="Encodermotor"
 
 
@@ -202,7 +230,7 @@ namespace receiver { // r-pins.ts
      */
 
 
-    // ========== group="mehr" subcategory="Encodermotor"
+    /* // ========== group="mehr" subcategory="Encodermotor"
 
     //% group="... mehr" subcategory="Encodermotor"
     //% block="Fahrstrecke %pVergleich %cm cm" weight=7
@@ -223,30 +251,7 @@ namespace receiver { // r-pins.ts
         }
     }
 
-
-
-    export enum eEncoderEinheit { cm, Impulse }
-
-    //% group="... mehr" subcategory="Encodermotor"
-    //% block="Encoder %pEncoderEinheit" weight=4
-    export function encoderCounter(pEncoderEinheit: eEncoderEinheit) {
-        if (pEncoderEinheit == eEncoderEinheit.cm)
-            return Math.round(n_EncoderCounter / n_EncoderFaktor)
-        else
-            return n_EncoderCounter
-    }
-
-
-    // ========== EVENT HANDLER === sichtbarer Event-Block
-    let onEncoderStopHandler: (cm: number) => void
-
-    //% group="Event Handler" subcategory="Encodermotor"
-    //% block="wenn Ziel erreicht"
-    //% draggableParameters=reporter
-    export function onEncoderStop(cb: (cm: number) => void) {
-        onEncoderStopHandler = cb
-    }
-    // ========== EVENT HANDLER === sichtbarer Event-Block
+ */
 
 
 } // r-pins.ts

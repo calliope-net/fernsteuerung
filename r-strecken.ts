@@ -49,7 +49,7 @@ namespace receiver { // r-strecken.ts
 
         if (n_Hardware == eHardware.v3) {
 
-            encoderStartStrecke(strecke, true)
+            encoderStartStrecke(true, strecke)
             pinServo16(servo)
             dualMotor128(eDualMotor.M0, motor) // Fahrmotor an Calliope v3 Motor Pins
 
@@ -59,7 +59,7 @@ namespace receiver { // r-strecken.ts
         }
         else if (n_Hardware == eHardware.car4) {
 
-            encoderStartStrecke(strecke, true)
+            encoderStartStrecke(true, strecke)
             pinServo16(servo)
             qwiicMotor128(eQwiicMotor.ma, motor) // Fahrmotor am Qwiic Modul
 
