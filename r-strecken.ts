@@ -29,9 +29,9 @@ namespace receiver { // r-strecken.ts
 
     //% group="Geschwindigkeit (1 ↓ 128 ↑ 255), Winkel (1 ↖ 16 ↗ 31)" subcategory="Strecken"
     //% block="Fahren (1↓128↑255) %motor Lenken (1↖16↗31) %servo Länge %strecke cm\\|⅒s || Stop %abstandsSensor bei Abstand < (cm) %abstand Spursensor %spurSensor Impulse %impulse Encoder %checkEncoder" weight=5
-    //% motor.min=1 motor.max=255 motor.defl=230
-    //% servo.min=1 servo.max=31 servo.defl=26
-    //% strecke.min=10 strecke.max=255 strecke.defl=250
+    //% motor.min=1 motor.max=255 motor.defl=220
+    //% servo.min=1 servo.max=31 servo.defl=4
+    //% strecke.min=10 strecke.max=255 strecke.defl=152
     //% abstandsSensor.shadow=toggleOnOff
     //% abstand.min=10 abstand.max=50 abstand.defl=20
     //% spurSensor.shadow=toggleOnOff

@@ -6,7 +6,7 @@ namespace btf { // b-fernsteuerung.ts
 
     // private
     let a_StorageBuffer = Buffer.create(4) // lokaler Speicher 4 Byte NumberFormat.UInt32LE
-    enum eStorageBuffer { funkgruppe, modell /* , c, d */ } // Index im Buffer
+    enum eStorageBuffer { funkgruppe, modell, servoKorrektur /* , d */ } // Index im Buffer
 
     // nur Sender
     export let n_sendReset = false // true sendet zurücksetzen zum Empfänger wenn connected
@@ -225,7 +225,7 @@ namespace btf { // b-fernsteuerung.ts
 
     // ========== "Storage (Flash)"
 
-    export function setStorageBuffer(modellFunkgruppe: number) {
+    export function setStorageBuffer(modellFunkgruppe: number, servoKorrektur?: number) {
         // Storage enthält 4 Byte, Funkgruppe und Modell (nur beim Sender), + 2 Byte unbenutzt
         // modellFunkgruppe kann undefined sein, dann Standardwert c_funkgruppe_min nehmen
         // wenn ein gültiger Wert im Flash ist, nicht ändern (Parameter modellFunkgruppe ignorieren)
@@ -235,6 +235,10 @@ namespace btf { // b-fernsteuerung.ts
         // Funkgruppe (am offset 0) muss c_funkgruppe_min .. c_funkgruppe_max sein
         if (!between(a_StorageBuffer[eStorageBuffer.funkgruppe], c_funkgruppe_min, c_funkgruppe_max))
             a_StorageBuffer[eStorageBuffer.funkgruppe] = (modellFunkgruppe) ? modellFunkgruppe : c_funkgruppe_min
+
+        if (!between(a_StorageBuffer[eStorageBuffer.servoKorrektur], 82, 98))
+            a_StorageBuffer[eStorageBuffer.servoKorrektur] = (servoKorrektur) ? servoKorrektur : 90
+
     }
 
 
@@ -255,6 +259,11 @@ namespace btf { // b-fernsteuerung.ts
     export function getStorageModell() {
         return a_StorageBuffer[eStorageBuffer.modell] // liest 8 Bit aus dem Buffer, nicht aus dem Flash
     }
+
+    //export function setStorageServoKorrektur(servoKorrektur: number) {
+    //    a_StorageBuffer[eStorageBuffer.servoKorrektur] = servoKorrektur
+    //    storage.putBuffer(a_StorageBuffer)
+    //}
 
 
 } // b-fernsteuerung.ts
