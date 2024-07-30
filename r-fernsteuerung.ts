@@ -23,15 +23,15 @@ namespace receiver { // r-fernsteuerung.ts
 
                 if (bAbstand) {
                     setLedColors(eRGBled.b, Colors.Yellow, bAbstand) // nicht blinken, bringt I²C Sensor durcheinender
-                    setLedColors(eRGBled.c, 0x101010, bSpur)
+                    setLedColors(eRGBled.c, Colors.White, bSpur)
                     bRichtung_vor = btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor) > c_MotorStop // Fahrtrichtung vorwärts
                     cmAbstandSensor = selectAbstand(true) // immer messen, auch bei Stop, damit der kleiner werdende Wert erkannt wird
                 } else if (bSpur) {
                     setLedColors(eRGBled.b, Colors.White, pinSpurlinks(eDH.hell))
                     setLedColors(eRGBled.c, Colors.White, pinSpurrechts(eDH.hell))
-                } else { // 
-                    setLedColors(eRGBled.b, 0x101010, pinSpurlinks(eDH.hell))
-                    setLedColors(eRGBled.c, 0x101010, pinSpurrechts(eDH.hell))
+                } else { // Spur auch anzeigen, wenn Sensor nicht aktiv
+                    setLedColors(eRGBled.b, 0x404040, pinSpurlinks(eDH.hell))
+                    setLedColors(eRGBled.c, 0x404040, pinSpurrechts(eDH.hell))
                 }
 
 
