@@ -247,7 +247,7 @@ namespace receiver { // r-receiver.ts
             a_RgbLeds[led] = color
 
             let t = input.runningTime() - n_RgbLedTimer // ms seit letztem setLedColor
-            if (t < 10)
+            if (t < 25)
                 basic.pause(t) // restliche Zeit-Differenz bis 10 ms warten
             n_RgbLedTimer = input.runningTime()
 
