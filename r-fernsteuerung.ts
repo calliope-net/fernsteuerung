@@ -26,13 +26,13 @@ namespace receiver { // r-fernsteuerung.ts
                     setLedColors(eRGBled.c, Colors.White, bSpur)
                     bRichtung_vor = btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor) > c_MotorStop // Fahrtrichtung vorwärts
                     cmAbstandSensor = selectAbstand(true) // immer messen, auch bei Stop, damit der kleiner werdende Wert erkannt wird
-                } else /* if (bSpur) */ {
-                    setLedColors(eRGBled.b, Colors.White, pinSpurlinks(eDH.hell), n_SpurStop)
-                    setLedColors(eRGBled.c, Colors.White, pinSpurrechts(eDH.hell), n_SpurStop)
-                } /* else { // beide aus
-                    setLedColors(eRGBled.b, Colors.Off, false)
-                    setLedColors(eRGBled.c, Colors.Off, false)
-                } */
+                } else if (bSpur) {
+                    setLedColors(eRGBled.b, Colors.White, pinSpurlinks(eDH.hell))
+                    setLedColors(eRGBled.c, Colors.White, pinSpurrechts(eDH.hell))
+                } else { // 
+                    setLedColors(eRGBled.b, Colors.Indigo, pinSpurlinks(eDH.hell))
+                    setLedColors(eRGBled.c, Colors.Indigo, pinSpurrechts(eDH.hell))
+                }
 
 
                 if (bAbstand && bRichtung_vor && (cmAbstandSensor <= btf.getAbstand(buffer))) {
