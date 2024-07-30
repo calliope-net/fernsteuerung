@@ -48,8 +48,8 @@ namespace receiver { // r-receiver.ts
 
     export enum eDualMotor { M0, M1, M0_M1 } // muss mit v3 identisch sein
 
-    export const c_DualMotorStop = 128
-    export let a_DualMotorSpeed = [c_DualMotorStop, c_DualMotorStop]
+    export const c_MotorStop = 128
+    export let a_DualMotorSpeed = [c_MotorStop, c_MotorStop]
 
     //  export let n_dualMotor0Speed = c_DualMotorStop  // aktueller Wert im Chip
     //  let n_dualMotor1Speed = c_DualMotorStop  // aktueller Wert im Chip
@@ -118,7 +118,7 @@ namespace receiver { // r-receiver.ts
                 dualMotorPower(motor, duty_percent)
             }
         } else { // n_MotorPower false oder speed=0
-            dualMotor128(motor, c_DualMotorStop) // 128
+            dualMotor128(motor, c_MotorStop) // 128
         }
     }
 

@@ -23,7 +23,7 @@ namespace receiver { // r-fernsteuerung.ts
                 if (bAbstand) {
                     setLedColors(eRGBled.b, Colors.Yellow, bAbstand, n_AbstandStop)
                     setLedColors(eRGBled.c, Colors.White, bSpur)
-                    bRichtung_vor = btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor) >= c_DualMotorStop // Fahrtrichtung vorwärts oder Stop
+                    bRichtung_vor = btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor) >= c_MotorStop // Fahrtrichtung vorwärts oder Stop
                 } else if (bSpur) {
                     setLedColors(eRGBled.b, Colors.White, pinSpurlinks(eDH.hell))
                     setLedColors(eRGBled.c, Colors.White, pinSpurrechts(eDH.hell))
@@ -45,11 +45,13 @@ namespace receiver { // r-fernsteuerung.ts
 
                 if (!n_AbstandStop && !n_SpurStop) {
                     // Motor M0+Servo M1 (Fahren und Lenken)
-                    receiver.dualMotor128(receiver.eDualMotor.M0, btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor))
-                    receiver.pinServo16(btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo))
+                   // dualMotor128(receiver.eDualMotor.M0, btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor))
+                    selectMotor(btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor))
+                    pinServo16(btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo))
 
                 } else {
-                    dualMotor128(eDualMotor.M0, c_DualMotorStop)
+                   // dualMotor128(eDualMotor.M0, c_DualMotorStop)
+                    selectMotor(c_MotorStop)
                 }
 
 

@@ -18,7 +18,7 @@ namespace receiver { // r-pins.ts
             // ========== Event Handler registrieren
             pins.onPulsed(a_PinEncoder[n_Hardware], PulseValue.Low, function () {
 
-                if (a_DualMotorSpeed[eDualMotor.M0] > c_DualMotorStop)
+                if (a_DualMotorSpeed[eDualMotor.M0] > c_MotorStop)
                     n_EncoderCounter++ // vorwärts
                 else
                     n_EncoderCounter-- // rückwärts
@@ -28,7 +28,7 @@ namespace receiver { // r-pins.ts
 
                     if (n_EncoderAutoStop) {
 
-                        dualMotor128(eDualMotor.M0, c_DualMotorStop)
+                        dualMotor128(eDualMotor.M0, c_MotorStop)
                         n_EncoderAutoStop = false
                     }
 
@@ -52,7 +52,7 @@ namespace receiver { // r-pins.ts
             // ========== Event Handler registrieren
             pins.onPulsed(a_PinEncoder[n_Hardware], PulseValue.Low, function () {
 
-                if (a_QwiicMotorSpeed[eQwiicMotor.ma] > c_QwiicMotorStop)
+                if (a_QwiicMotorSpeed[eQwiicMotor.ma] > c_MotorStop)
                     n_EncoderCounter++ // vorwärts
                 else
                     n_EncoderCounter-- // rückwärts
@@ -62,7 +62,7 @@ namespace receiver { // r-pins.ts
 
                     if (n_EncoderAutoStop) {
 
-                        qwiicMotor128(eQwiicMotor.ma, c_QwiicMotorStop) // Qwiic
+                        qwiicMotor128(eQwiicMotor.ma, c_MotorStop) // Qwiic
                         n_EncoderAutoStop = false
                     }
 
