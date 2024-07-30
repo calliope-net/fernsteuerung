@@ -78,8 +78,8 @@ namespace receiver { // r-receiver.ts
         if (zf)
             btf.zeigeFunkgruppe()
 
-        // pins.servoWritePin(a_PinServo[n_Hardware], n_ServoGeradeaus)
-        pinServo90(c_Servo_geradeaus)
+        pins.servoWritePin(a_PinServo[n_Hardware], n_ServoGeradeaus)
+        // pinServo90(c_Servo_geradeaus)
 
         qwiicMotorReset() // dauert länger als 2 Sekunden
 
