@@ -56,7 +56,7 @@ namespace receiver { // r-receiver.ts
 
 
     const c_Servo_geradeaus = 90
-    let n_Servo90Geradeaus = c_Servo_geradeaus // Winkel für geradeaus wird beim Start eingestellt
+    let n_Servo90KorrekturFaktor = 1 // Winkel für geradeaus wird beim Start eingestellt
     let n_Servo90Winkel = c_Servo_geradeaus // aktuell eingestellter Winkel
 
 
@@ -70,23 +70,38 @@ namespace receiver { // r-receiver.ts
     // inlineInputMode=inline
     export function beimStart(modell: eHardware, servoGeradeaus: number, encoder: boolean, radDmm: number, zf = true, modellFunkgruppe?: number) {
         n_Hardware = modell
-        n_Servo90Geradeaus = servoGeradeaus // Parameter
+        // n_Servo90Geradeaus = servoGeradeaus // Parameter
 
         pinRelay(true) // Relais an schalten (braucht gültiges n_Modell, um den Pin zu finden)
 
-        btf.setStorageBuffer(modellFunkgruppe) // prüft und speichert in a_StorageBuffer
-        if (zf)
+        btf.setStorageBuffer(modellFunkgruppe, servoGeradeaus) // prüft und speichert in a_StorageBuffer
+        if (zf) {
             btf.zeigeFunkgruppe()
+            btf.zeigeBIN(btf.getStorageServoKorrektur(), btf.ePlot.bcd, 4)
+        }
+        n_Servo90KorrekturFaktor = btf.getStorageServoKorrektur() / c_Servo_geradeaus // z.B. 95/90=1.05
 
-        pins.servoWritePin(a_PinServo[n_Hardware], n_Servo90Geradeaus)
-        // pinServo90(c_Servo_geradeaus)
+        //pins.servoWritePin(a_PinServo[n_Hardware], n_Servo90Geradeaus)
+        n_Servo90Winkel = undefined
+        pinServo90(c_Servo_geradeaus)
 
         qwiicMotorReset() // dauert länger als 2 Sekunden
 
         if (encoder)
             encoderRegisterEvent(radDmm)
 
-        btf.beimStartintern(btf.eNamespace.receiver) // setzt auch n_start true, muss deshalb zuletzt stehen
+
+        btf.beimStartintern(btf.eNamespace.receiver,
+            function (buttonB: boolean, servoKorrektur: boolean) { // wird bei Button hold aufgerufen von b-fernsteuerung.ts
+                if (servoKorrektur) {
+                    let sK = btf.getStorageServoKorrektur() + (buttonB ? 1 : -1)
+                    btf.setStorageServoKorrektur(sK)
+                    btf.zeigeBIN(sK, btf.ePlot.bcd, 4)
+                    n_Servo90KorrekturFaktor = sK / c_Servo_geradeaus // z.B. 95/90=1.05
+                    pinServo90(c_Servo_geradeaus)
+                }
+            }
+        ) // setzt auch n_start true, muss deshalb zuletzt stehen
 
     }
 
@@ -202,7 +217,8 @@ namespace receiver { // r-receiver.ts
         if (btf.between(winkel, 45, 135) && n_Servo90Winkel != winkel) {
             n_Servo90Winkel = winkel
             // pins.servoWritePin(a_PinServo[n_Hardware], winkel + (n_Servo90Geradeaus - c_Servo_geradeaus))
-            pins.servoWritePin(a_PinServo[n_Hardware], winkel * (n_Servo90Geradeaus / c_Servo_geradeaus))
+            //pins.servoWritePin(a_PinServo[n_Hardware], winkel * (n_Servo90Geradeaus / c_Servo_geradeaus))
+            pins.servoWritePin(a_PinServo[n_Hardware], winkel * n_Servo90KorrekturFaktor)
         }
     }
 

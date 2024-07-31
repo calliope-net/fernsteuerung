@@ -102,7 +102,7 @@ namespace btf { // b-enums.ts
     // f2 = 0x04,
     // block="3. Strecke"
     // f3 = 0x08,
-    // //% block="4. Strecke"
+    // block="4. Strecke"
     // f4 = 0x10,
     // block="5. Strecke"
     // f5 = 0x20,
