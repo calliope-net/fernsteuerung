@@ -286,6 +286,17 @@ namespace receiver { // r-receiver.ts
         }
     }
 
+    //% group="RGB LEDs (Calliope v3)"
+    //% block="RGB LEDs aus" weight=3
+    export function setLedColorsOff() {
+        a_RgbLeds[0] = Colors.Off
+        a_RgbLeds[1] = Colors.Off
+        a_RgbLeds[2] = Colors.Off
+        if (onSetLedColorsHandler)
+            onSetLedColorsHandler(a_RgbLeds[0], a_RgbLeds[1], a_RgbLeds[2], 20) // v3 Ereignis Block auslösen, nur wenn benutzt
+        else
+            basic.setLedColor(a_RgbLeds[0]) // v1 v2
+    }
 
 
 
