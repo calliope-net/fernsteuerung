@@ -13,7 +13,7 @@ namespace sender { // s-buttons.ts
         //% block="Modell Calliope auf Rädern 4"
         car4  // CaR 4
     } // so viele Images müssen im Array sein - Bilder am Ende dieser Datei
-  
+
     export enum eFunktion {
         //% block="gestartet"
         ng = 0, // nicht gestartet
@@ -111,7 +111,7 @@ namespace sender { // s-buttons.ts
         else if (isModell(eModell.mkcg) && isFunktion(eFunktion.m0_m1_s0)) {
             setStatusFunktion(eFunktion.m1abcd_fahrplan)
             setStatusButtonA(false) // beide aus schalten
-            setStatusButtonB(false) 
+            setStatusButtonB(false)
         }
 
 
@@ -193,7 +193,7 @@ namespace sender { // s-buttons.ts
     // group="Image" subcategory="Knopf A B" color=#54C9C9
     //% block="zeige Modell Bild • Pause (ms) %ms" weight=1
     export function zeigeModellImagePause(ms: number) {
-
+/* 
         [images.createImage(`
     . # . # .
     . . . . .
@@ -223,6 +223,31 @@ namespace sender { // s-buttons.ts
     . # . # .
     `)
         ][getStatusModell()].showImage(0)
+ */
+
+        let ai: number[] = []
+        switch (getStatusModell()) {
+            case eModell.cb2e: {
+                ai = [2, 19, 2, 19, 2]
+                break
+            }
+            case eModell.mkcg: {
+                ai = [1, 1, 31, 4, 4]
+                break
+            }
+            case eModell.mkck: {
+                ai = [1, 31, 17, 17, 24]
+                break
+            }
+            case eModell.car4: {
+                ai = [6, 11, 10, 11, 6]
+                break
+            }
+        }
+
+        for (let xLed = 0; xLed < ai.length; xLed++) {
+            btf.zeigeBIN(ai[xLed], btf.ePlot.bin, xLed)
+        }
 
         btf.setClearScreen()
 
