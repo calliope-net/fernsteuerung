@@ -82,7 +82,7 @@ namespace receiver { // r-receiver.ts
         n_Servo90KorrekturFaktor = btf.getStorageServoKorrektur() / c_Servo_geradeaus // z.B. 95/90=1.05
 
         //pins.servoWritePin(a_PinServo[n_Hardware], n_Servo90Geradeaus)
-        n_Servo90Winkel = undefined
+        n_Servo90Winkel = 0
         pinServo90(c_Servo_geradeaus)
 
         qwiicMotorReset() // dauert länger als 2 Sekunden
@@ -98,6 +98,7 @@ namespace receiver { // r-receiver.ts
                     btf.setStorageServoKorrektur(sK)
                     btf.zeigeBIN(sK, btf.ePlot.bcd, 4)
                     n_Servo90KorrekturFaktor = sK / c_Servo_geradeaus // z.B. 95/90=1.05
+                    n_Servo90Winkel = 0
                     pinServo90(c_Servo_geradeaus)
                 }
             }
