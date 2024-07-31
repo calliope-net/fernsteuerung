@@ -23,10 +23,6 @@ namespace receiver { // r-strecken.ts
 
     // ========== group="Geschwindigkeit (1 ↓ 128 ↑ 255), Winkel (1 ↖ 16 ↗ 31)" subcategory="Strecken"
 
-
-    //% group="Programmieren" subcategory="Strecken"
-    //% block="fahre Motor (1 ↓ 128 ↑ 255) %motor Servo (1 ↖ 16 ↗ 31) %servo Strecke (cm) %strecke" weight=3
-
     //% group="Geschwindigkeit (1 ↓ 128 ↑ 255), Winkel (1 ↖ 16 ↗ 31)" subcategory="Strecken"
     //% block="Fahren (1↓128↑255) %motor Lenken (1↖16↗31) %servo Länge %strecke cm\\|⅒s || Stop %abstandsSensor bei Abstand < (cm) %abstand Spursensor %spurSensor Impulse %impulse Encoder %checkEncoder" weight=5
     //% motor.min=1 motor.max=255 motor.defl=220
@@ -38,53 +34,79 @@ namespace receiver { // r-strecken.ts
     //% impulse.shadow=toggleOnOff
     //% checkEncoder.shadow=toggleYesNo checkEncoder.defl=1
     //% inlineInputMode=inline
-
-
-    // motor.min=0 motor.max=255 motor.defl=128
-    // motor.shadow=btf_speedPicker
-    // servo.min=1 servo.max=31 servo.defl=16
-    // servo.shadow=btf_protractorPicker
-    // strecke.min=0 strecke.max=255 strecke.defl=20
     export function fahreStrecke(motor: number, servo: number, strecke: number, abstandsSensor = true, abstand = 20, spurSensor = false, impulse = false, checkEncoder = true) {
 
-        if (n_Hardware == eHardware.v3) {
+        selectMotor(c_MotorStop)
 
-            encoderStartStrecke(true, strecke)
-            pinServo16(servo)
-            dualMotor128(eDualMotor.M0, motor) // Fahrmotor an Calliope v3 Motor Pins
+        if (motor != 0 && motor != c_MotorStop && servo != 0 && strecke != 0) {
 
-            while (n_EncoderAutoStop) {
-                basic.pause(200) // Pause kann größer sein, weil Stop schon im Event erfolgt ist
+            if (n_hasEncoder) {
+
+                let sensor_color = Colors.Off
+                let timeout_Encoder = 100 // 20 s Timeout wenn Encoder nicht zählt
+
+                encoderStartStrecke(true, strecke, impulse)
+                pinServo16(servo)
+                selectMotor(motor)
+
+                while (n_EncoderAutoStop) {
+
+                    if (timeout_Encoder-- <= 0) {
+                        sensor_color = Colors.Red
+                        break
+                    }
+                    if (abstandsSensor && motor > c_MotorStop && abstand > 0 && getQwiicUltrasonic(true) < abstand) {
+                        sensor_color = Colors.Yellow
+                        break
+                    }
+                    if (spurSensor && !readSpursensor(eDH.hell, eDH.hell)) { // Spursensor aktiviert und schwarze Linie erkannt
+                        sensor_color = Colors.White
+                        break
+                    }
+
+                    basic.pause(200) // Pause kann größer sein, weil Stop schon im Event erfolgt ist
+                }
+
+                selectMotor(c_MotorStop)
+
+                if (sensor_color != Colors.Off) {
+                    setLedColors(eRGBled.a, sensor_color, true)
+                    basic.pause(1000)
+                    setLedColors(eRGBled.a, sensor_color, false) // writeRgbLeds(sensor_color, false)
+                }
             }
         }
-        else if (n_Hardware == eHardware.car4) {
+        else { // kein Encoder
 
-            encoderStartStrecke(true, strecke)
-            pinServo16(servo)
-            qwiicMotor128(eQwiicMotor.ma, motor) // Fahrmotor am Qwiic Modul
-
-            while (n_EncoderAutoStop) {
-                basic.pause(200) // Pause kann größer sein, weil Stop schon im Event erfolgt ist
-            }
         }
+    }
+
+
+
+    // ========== group="Zehntelsekunden ⅒s" subcategory="Strecken"
+
+    //% blockId=cb2_zehntelsekunden
+    //% group="Zehntelsekunden ⅒s" subcategory="Strecken"
+    //% block="%pause" weight=4
+    export function cb2_zehntelsekunden(pause: btf.ePause): number {
+        return pause
     }
 
 
 
     // ========== group="Encoder" subcategory="Strecken"
 
-    let n_EncoderCounter: number = 0 // Impuls Zähler
+    let n_hasEncoder = false
     let n_EncoderFaktor = 63.9 * (26 / 14) / (8 * Math.PI) // 63.9 Motorwelle * (26/14) Zahnräder / (8cm * PI) Rad Umfang = 4.6774502 cm
+    let n_EncoderCounter: number = 0 // Impuls Zähler
     let n_EncoderStrecke_impulse: number = 0
     let n_EncoderAutoStop = false // true während der Fahrt, false bei Stop nach Ende der Strecke
 
 
     // aufgerufen von receiver.beimStart
     export function encoderRegisterEvent(radDmm: number) { // radDmm: Rad Durchmesser in Millimeter
-        //   if (n_Hardware == eHardware.v3) {
 
-        // if (!radDmm)
-        //     radDmm = 65
+        n_hasEncoder = true
         n_EncoderFaktor = 63.9 * (26 / 14) / (radDmm / 10 * Math.PI)
 
 
