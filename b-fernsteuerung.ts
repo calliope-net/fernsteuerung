@@ -20,7 +20,7 @@ namespace btf { // b-fernsteuerung.ts
     let n_timeoutDisbled = false // autonomes fahren nach Programm, kein Bluetooth timeout
     export let n_lastConnectedTime = input.runningTime()  // ms seit Start
     let n_lastBetriebsart: e0Betriebsart
-
+    let n_last6Motoren: number
 
     //% group="calliope-net.github.io/fernsteuerung"
     //% block="beim Start || Funkgruppe %modellFunkgruppe" weight=9
@@ -165,10 +165,11 @@ namespace btf { // b-fernsteuerung.ts
             if (onReceivedDataHandler)
                 onReceivedDataHandler(receivedBuffer) // Ereignis Block auslösen, nur wenn benutzt
 
-            if (onReceivedDataChangedHandler)
-                onReceivedDataChangedHandler(receivedBuffer, n_lastBetriebsart != getBetriebsart(receivedBuffer))
+            if (onReceivedDataChangedHandler) // Änderung Betriebsart[0] ODER aktivierte Motoren[3]
+                onReceivedDataChangedHandler(receivedBuffer, n_lastBetriebsart != (receivedBuffer[0] & 0b00110000) || n_last6Motoren != (receivedBuffer[3] & 0b00111111))
 
-            n_lastBetriebsart = getBetriebsart(receivedBuffer)
+            n_lastBetriebsart = receivedBuffer[0] & 0b00110000 // getBetriebsart(receivedBuffer)
+            n_last6Motoren = receivedBuffer[3] & 0b00111111
         }
     })
 
