@@ -36,7 +36,6 @@
         "c-callibot.ts",
         "c-strecken.ts",
         "c-fernsteuerung.ts",
-        "c-fahrplan.ts",
         "c-beispiele.ts"
     ],
     "testFiles": [
