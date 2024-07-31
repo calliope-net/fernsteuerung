@@ -16,9 +16,10 @@ namespace btf { // b-fernsteuerung.ts
     // nur Empfänger
     let n_start = false // nur bei true wird Ereignis 'wenn Datenpaket empfangen' ausgelöst
 
-    export let n_lastConnectedTime = input.runningTime()  // ms seit Start
-    //  let n_lastErrorBufferTime = input.runningTime()
+    // onReceivedBuffer
     let n_timeoutDisbled = false // autonomes fahren nach Programm, kein Bluetooth timeout
+    export let n_lastConnectedTime = input.runningTime()  // ms seit Start
+    let n_lastBetriebsart: e0Betriebsart
 
 
     //% group="calliope-net.github.io/fernsteuerung"
@@ -31,7 +32,6 @@ namespace btf { // b-fernsteuerung.ts
     export enum eNamespace { btf, sender, receiver, cb2 }
     export let m_Namespace: eNamespace
 
-    //  let onFunkgruppeChangedHandler: (int: number) => void
     let onButtonHold: (buttonB: boolean, servoKorrektur: boolean) => void
 
     export function beimStartintern(e: eNamespace, callbackButtonHold?: (buttonB: boolean, servoKorrektur: boolean) => void) { //callbackFunkgruppeChanged?: (int: number) => void)
@@ -134,7 +134,7 @@ namespace btf { // b-fernsteuerung.ts
     // es wird kein Wert zurück gegeben (void)
     // die Variable ist noch undefined, also keiner konkreten Funktion zugeordnet
     let onReceivedDataHandler: (receivedData: Buffer) => void
-    // let onReceivedErrorHandler: (receivedData: Buffer) => void
+    let onReceivedDataChangedHandler: (receivedData: Buffer, changed: boolean) => void
 
     // Event-Handler (aus radio) wenn Buffer empfangen (Event Block ist dort hidden und soll hiermit wieder sichtbar werden)
     // die function 'radio.onReceivedBuffer(cb)' hat einen Parameter 'cb' (das heißt callback)
@@ -164,11 +164,12 @@ namespace btf { // b-fernsteuerung.ts
             // die function ruft mit dem Parameter vom Typ Buffer die Blöcke auf, die im Ereignis-Block stehen
             if (onReceivedDataHandler)
                 onReceivedDataHandler(receivedBuffer) // Ereignis Block auslösen, nur wenn benutzt
+
+            if (onReceivedDataChangedHandler)
+                onReceivedDataChangedHandler(receivedBuffer, n_lastBetriebsart != getBetriebsart(receivedBuffer))
+
+            n_lastBetriebsart = getBetriebsart(receivedBuffer)
         }
-        //else
-        //    n_lastErrorBufferTime = input.runningTime()
-
-
     })
 
 
@@ -181,7 +182,7 @@ namespace btf { // b-fernsteuerung.ts
     // sichtbarer Event-Block
 
     //% group="Bluetooth empfangen (19 Byte)"
-    //% block="wenn Datenpaket empfangen" weight=9
+    //% block="wenn Datenpaket empfangen" weight=9 deprecated=1
     //% draggableParameters=reporter
     export function onReceivedData(cb: (receivedData: Buffer) => void) {
         // das ist der sichtbare Ereignis Block 'wenn Buffer empfangen (receivedData)'
@@ -190,6 +191,13 @@ namespace btf { // b-fernsteuerung.ts
         onReceivedDataHandler = cb
         // aufgerufen wird beim Ereignis 'radio.onReceivedBuffer' die der Variable 'onReceivedDataHandler' zugewiesene function
         // das sind die Blöcke, die später im Ereignis Block 'wenn Buffer empfangen (receivedData)' enthalten sind
+    }
+
+    //% group="Bluetooth empfangen (19 Byte)"
+    //% block="wenn Datenpaket empfangen" weight=8
+    //% draggableParameters=reporter
+    export function onReceivedDataChanged(cb: (receivedData: Buffer, changed: boolean) => void) {
+        onReceivedDataChangedHandler = cb
     }
 
 
@@ -209,14 +217,6 @@ namespace btf { // b-fernsteuerung.ts
         else // längeres Programm-timeout (60s) immer auslösen falls Programm hängt (zum aus schalten)
             return ((input.runningTime() - n_lastConnectedTime) > ms)
     }
-
-
-    // group="Bluetooth empfangen (19 Byte)"
-    // block="ungültige Daten empfangen || < %ms ms" weight=1
-    // ms.defl=2000
-    //export function getReceivedBufferError(ms = 2000) {
-    //    return ((input.runningTime() - n_lastErrorBufferTime) < ms)
-    //}
 
 
 

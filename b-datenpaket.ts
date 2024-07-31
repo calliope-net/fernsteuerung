@@ -20,11 +20,11 @@ für CalliBot, MakerKitCar, CaR4
         buffer[0] |= (betriebsart & 0b00110000) // OR Bit 7-6-3-2-1-0 bleiben; 5-4 auf pByte setzen
     }
 
-    //% group="Datenpaket auslesen (receivedData oder sendData)" subcategory="Datenpaket"
-    //% block="%buffer [0] Betriebsart" weight=6
-    //function getBetriebsart(buffer: Buffer): e0Betriebsart {
-    //    return (buffer[0] & 0b00110000)
-    //}
+    // group="Datenpaket auslesen (receivedData oder sendData)" subcategory="Datenpaket"
+    // block="%buffer [0] Betriebsart" weight=6
+    export function getBetriebsart(buffer: Buffer): e0Betriebsart {
+        return (buffer[0] & 0b00110000)
+    }
 
     //% group="Datenpaket auslesen (receivedData oder sendData)" subcategory="Datenpaket"
     //% block="%buffer [0] Betriebsart == %betriebsart" weight=6
