@@ -39,17 +39,19 @@ namespace receiver { // r-strecken.ts
         selectMotor(c_MotorStop)
 
         if (motor != 0 && motor != c_MotorStop && servo != 0 && strecke != 0) {
+            let sensor_color = Colors.Off
+            let timeout_Encoder: number // 20 s Timeout wenn Encoder nicht zählt
 
             if (n_hasEncoder) {
 
-                let sensor_color = Colors.Off
-                let timeout_Encoder = 100 // 20 s Timeout wenn Encoder nicht zählt
+                timeout_Encoder = 100 // 20 s Timeout wenn Encoder nicht zählt
 
                 encoderStartStrecke(true, strecke, impulse)
                 pinServo16(servo)
                 selectMotor(motor)
 
-                while (n_EncoderAutoStop) {
+                while (n_EncoderAutoStop) //
+                {
 
                     if (timeout_Encoder-- <= 0) {
                         sensor_color = Colors.Red
@@ -66,18 +68,36 @@ namespace receiver { // r-strecken.ts
 
                     basic.pause(200) // Pause kann größer sein, weil Stop schon im Event erfolgt ist
                 }
-
                 selectMotor(c_MotorStop)
 
-                if (sensor_color != Colors.Off) {
-                    setLedColors(eRGBled.a, sensor_color, true)
-                    basic.pause(1000)
-                    setLedColors(eRGBled.a, sensor_color, false) // writeRgbLeds(sensor_color, false)
-                }
             }
-        }
-        else { // kein Encoder
+            else { // kein Encoder
+                timeout_Encoder = strecke // Zehntelsekunden
 
+                pinServo16(servo)
+                selectMotor(motor)
+
+                while (timeout_Encoder-- > 0) //
+                {
+                    if (abstandsSensor && motor > c_MotorStop && abstand > 0 && getQwiicUltrasonic(true) < abstand) {
+                        sensor_color = Colors.Orange
+                        break
+                    }
+                    if (spurSensor && !readSpursensor(eDH.hell, eDH.hell)) { // Spursensor aktiviert und schwarze Linie erkannt
+                        sensor_color = Colors.White
+                        break
+                    }
+
+                    basic.pause(100) // 1 Zehntelsekunde
+                }
+                selectMotor(c_MotorStop)
+            }
+
+            if (sensor_color != Colors.Off) {
+                setLedColors(eRGBled.a, sensor_color, true)
+                basic.pause(1000)
+                setLedColors(eRGBled.a, sensor_color, false) // writeRgbLeds(sensor_color, false)
+            }
         }
     }
 
