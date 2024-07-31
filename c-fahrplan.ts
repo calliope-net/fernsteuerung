@@ -11,7 +11,7 @@ namespace cb2 { // c-fahrplan.ts
     //% block="fahre Strecke 1-5 aus Datenpaket %buffer Start Bit %startBit" weight=4
     //% buffer.shadow=btf_receivedBuffer19
     //% startBit.defl=btf.e3aktiviert.m1
-    export function fahrplanBuffer5Strecken(buffer: Buffer, startBit: btf.e3aktiviert) {
+     function fahrplanBuffer5Strecken(buffer: Buffer, startBit: btf.e3aktiviert) {
 
         if (!n_fahrplanBuffer5Strecken_gestartet && btf.getaktiviert(buffer, startBit)) { // m1 true
             n_fahrplanBuffer5Strecken_gestartet = true
@@ -69,7 +69,7 @@ namespace cb2 { // c-fahrplan.ts
     //% startBit.defl=btf.e3aktiviert.ma
     //% checkEncoder.shadow=toggleYesNo checkEncoder.defl=1
     //% inlineInputMode=inline
-    export function fahrplanBuffer2x2Motoren(buffer: Buffer, startBit: btf.e3aktiviert, checkEncoder = true) {
+     function fahrplanBuffer2x2Motoren(buffer: Buffer, startBit: btf.e3aktiviert, checkEncoder = true) {
 
         if (!n_fahrplanBuffer2x2Motoren_gestartet && btf.getaktiviert(buffer, startBit)) { // ma true
             n_fahrplanBuffer2x2Motoren_gestartet = true
