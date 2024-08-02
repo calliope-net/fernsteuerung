@@ -482,7 +482,7 @@ namespace cb2 { // c-callibot.ts 005F7F
             n_Callibot2_x22Connected = pins.i2cWriteBuffer(eI2C.x22, buffer) == 0
 
             if (!n_Callibot2_x22Connected)
-                btf.zeigeHex(eI2C.x22)
+                btf.zeigeHexFehler(eI2C.x22)
         }
         return n_Callibot2_x22Connected
     }

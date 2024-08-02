@@ -193,6 +193,7 @@ namespace cb2 { // c-fernsteuerung.ts
                         }
                         else {
                             let zehntelsekunden = btf.getByte(buffer, iBufferPointer, btf.eBufferOffset.b2_Fahrstrecke)
+                            
                             if (btf.getSensor(buffer, iBufferPointer, btf.eSensor.b7Impulse))
                                 zehntelsekunden /= n_EncoderFaktor
 

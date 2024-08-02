@@ -46,7 +46,7 @@ SparkFun Qwiic Ultrasonic Distance Sensor (HC-SR04)
             if (n_QwiicUltrasonicConnected)
                 n_QwiicUltrasonic_mm = pins.i2cReadBuffer(i2c, 2).getNumber(NumberFormat.UInt16BE, 0)
             else
-                btf.zeigeHex(i2c)
+                btf.zeigeHexFehler(i2c)
         }
         return n_QwiicUltrasonicConnected
     }

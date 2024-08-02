@@ -45,7 +45,7 @@ namespace sender { // s-qwiicjoystick.ts
             n_qwiicJoystickConnected = pins.i2cWriteBuffer(i2cqwiicJoystick_x20, Buffer.fromArray([3]), true) == 0
 
             if (!n_qwiicJoystickConnected)
-                btf.zeigeHex(i2cqwiicJoystick_x20)
+                btf.zeigeHexFehler(i2cqwiicJoystick_x20)
 
             else {
                 // n_128 = btf.between(p128, 0, 8) ? p128 : 0

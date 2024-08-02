@@ -48,7 +48,7 @@ namespace sender { // s-multiswitch.ts
                 }
             }
             else if (zeigeFehler)
-                btf.zeigeHex(i2cGroveMultiswitch_x03)
+                btf.zeigeHexFehler(i2cGroveMultiswitch_x03)
 
         }
         return n_GroveMultiswitchConnected
