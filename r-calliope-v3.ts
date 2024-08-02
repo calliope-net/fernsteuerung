@@ -55,4 +55,48 @@ So kann getestet werden, ob das Ereignis einen Handler hat:
         motors.dualMotorPower(motor, duty_percent)
     })
 
+/* 
+    let a_RgbLeds = [0, 0, 0] // speichert 3 LEDs, wenn nur eine geändert wird
+    let n_RgbLedTimer = input.runningTime() // ms seit Start, zwischen zwei Aufrufen ist eine Pause erforderlich
+
+
+    receiver.onSetLedColors_v3(function (led: eRGBled, color: number, on = true, blinken = false, helligkeit = 20) {
+        // rgbLEDs(led, (on ? color : 0), blinken, helligkeit)
+
+        if (!on || (blinken && a_RgbLeds[led] == color)) // entweder aus .. oder an und blinken
+            color = Colors.Off // alle Farben aus = 0
+
+        if (a_RgbLeds[led] != color) { // nur wenn Farbe geändert
+
+            a_RgbLeds[led] = color
+
+            let t = input.runningTime() - n_RgbLedTimer // ms seit letztem setLedColor
+            if (t < 25)
+                basic.pause(t) // restliche Zeit-Differenz bis 10 ms warten
+            n_RgbLedTimer = input.runningTime()
+
+            basic.setLedColors(a_RgbLeds[0], a_RgbLeds[1], a_RgbLeds[2], helligkeit)
+
+            //if (onSetLedColorsHandler)
+            //    onSetLedColorsHandler(a_RgbLeds[0], a_RgbLeds[1], a_RgbLeds[2], helligkeit) // v3 Ereignis Block auslösen, nur wenn benutzt
+            //else
+            //    basic.setLedColor(a_RgbLeds[0]) // v1 v2
+        }
+    })
+
+
+    export function setLedColorsOff_v3() {
+        a_RgbLeds[0] = Colors.Off
+        a_RgbLeds[1] = Colors.Off
+        a_RgbLeds[2] = Colors.Off
+        if (onSetLedColorsHandler)
+            onSetLedColorsHandler(a_RgbLeds[0], a_RgbLeds[1], a_RgbLeds[2], 20) // v3 Ereignis Block auslösen, nur wenn benutzt
+        else
+            basic.setLedColor(a_RgbLeds[0]) // v1 v2
+    }
+ */
+
+
+
+
 } // r-calliope-v3.ts
