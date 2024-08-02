@@ -94,9 +94,9 @@ namespace receiver { // r-strecken.ts
             }
 
             if (sensor_color != Colors.Off) {
-                setLedColors(eRGBled.a, sensor_color, true)
+                setLedColors(eRGBled.b, sensor_color, true)
                 basic.pause(1000)
-                setLedColors(eRGBled.a, sensor_color, false) // writeRgbLeds(sensor_color, false)
+                setLedColors(eRGBled.b, sensor_color, false) // writeRgbLeds(sensor_color, false)
             }
         }
     }
