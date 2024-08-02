@@ -42,7 +42,7 @@ namespace cb2 { // c-strecken.ts
 
         if (motor != 0 && motor != c_MotorStop && servo != 0 && strecke != 0) {
             let sensor_color = Colors.Off
-            let timeout_Encoder: number// = 200 // 20 s Timeout wenn Encoder nicht zählt
+            //  let timeout_Encoder: number// = 200 // 20 s Timeout wenn Encoder nicht zählt
             let hasEncoder = false
             if (checkEncoder)
                 hasEncoder = writeEncoderReset() // Testet ob Encoder vorhanden, Ergebnis in n_Callibot2_x22hasEncoder
@@ -52,7 +52,7 @@ namespace cb2 { // c-strecken.ts
             if (hasEncoder) {
                 let encoderImpulse = impulse ? strecke : strecke * n_EncoderFaktor
 
-                timeout_Encoder = 200 // 20 s Timeout wenn Encoder nicht zählt
+                let timeout_Encoder = 200 // 20 s Timeout wenn Encoder nicht zählt
 
                 while (readEncoderMittelwert() < encoderImpulse) // strecke * n_EncoderFaktor 31.25
                 {
@@ -75,8 +75,12 @@ namespace cb2 { // c-strecken.ts
             }
             else {
                 //  basic.pause(buffer[2] * 100)
-                timeout_Encoder = strecke // Zehntelsekunden
-                while (timeout_Encoder-- > 0) //
+                //  timeout_Encoder = strecke // Zehntelsekunden
+                let zehntelsekunden = strecke // Zehntelsekunden
+                if (impulse)
+                    zehntelsekunden /= n_EncoderFaktor
+
+                while (zehntelsekunden-- > 0) //
                 {
                     if (abstandsSensor && motor > c_MotorStop && abstand > 0 && readUltraschallAbstand() < abstand) {
                         sensor_color = Colors.Orange

@@ -40,11 +40,11 @@ namespace receiver { // r-strecken.ts
 
         if (motor != 0 && motor != c_MotorStop && servo != 0 && strecke != 0) {
             let sensor_color = Colors.Off
-            let timeout_Encoder: number // 20 s Timeout wenn Encoder nicht zählt
+            //  let timeout_Encoder: number // 20 s Timeout wenn Encoder nicht zählt
 
             if (n_hasEncoder) {
 
-                timeout_Encoder = 100 // 20 s Timeout wenn Encoder nicht zählt
+                let timeout_Encoder = 100 // 20 s Timeout wenn Encoder nicht zählt
 
                 encoderStartStrecke(true, strecke, impulse)
                 pinServo16(servo)
@@ -54,6 +54,7 @@ namespace receiver { // r-strecken.ts
                 {
 
                     if (timeout_Encoder-- <= 0) {
+                        n_hasEncoder = false // bei ersten 20s timeout false, nächster Aufruf zählt dann nach Zeit
                         sensor_color = Colors.Red
                         break
                     }
@@ -72,12 +73,15 @@ namespace receiver { // r-strecken.ts
 
             }
             else { // kein Encoder
-                timeout_Encoder = strecke // Zehntelsekunden
+                //  timeout_Encoder = strecke // Zehntelsekunden
+                let zehntelsekunden = strecke // Zehntelsekunden
+                if (impulse)
+                    zehntelsekunden /= n_EncoderFaktor
 
                 pinServo16(servo)
                 selectMotor(motor)
 
-                while (timeout_Encoder-- > 0) //
+                while (zehntelsekunden-- > 0) //
                 {
                     if (abstandsSensor && motor > c_MotorStop && abstand > 0 && getQwiicUltrasonic(true) < abstand) {
                         sensor_color = Colors.Orange
@@ -95,8 +99,8 @@ namespace receiver { // r-strecken.ts
 
             if (sensor_color != Colors.Off) {
                 setLedColors(eRGBled.b, sensor_color, true)
-                basic.pause(1000)
-                setLedColors(eRGBled.b, sensor_color, false) // writeRgbLeds(sensor_color, false)
+                //basic.pause(1000)
+                //setLedColors(eRGBled.b, sensor_color, false) // writeRgbLeds(sensor_color, false)
             }
         }
     }
