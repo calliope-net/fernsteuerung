@@ -21,52 +21,53 @@ namespace receiver { // r-beispiele.ts
         if (!repeat) {
             m_lenken = undefined // gespeicherte Werte löschen
             m_inSpur = false     // beim ersten Durchlauf der Schleife
+            setLedColors(eRGBled.b, Colors.Off, false)
             //  writeRgbLeds(Colors.Off, false) // alle 4 aus
         }
 
-        /*  if (stop && abstand > 0 && readUltraschallAbstand() < abstand) {
-             writeMotorenStop()
- 
-           //  writeRgbLed(eRgbLed.lh, Colors.Red, true)
- 
-             basic.pause(Math.randomRange(500, 5000)) // 0.5 .. 5 Sekunden
-         }
-         else { */
+        if (stop && abstand > 0 && getQwiicUltrasonic(true) < abstand) {
+         
+            selectMotor(c_MotorStop)
 
-        let lenken = Math.abs(servo16 - 16)  // 16-16=0 / 1-16=15 / 31-16=15
-
-        // readInputs(i2cSpur) // liest Spursensor ein
-
-        if (readSpursensor(eDH.dunkel, eDH.dunkel)) {
-            dualMotor128(eDualMotor.M0, motor128) //     writeMotor128Servo16(motor128, 16) // nicht lenken
-            pinServo16(16)
-            m_inSpur = true
-        }
-        else if (readSpursensor(eDH.dunkel, eDH.hell)) { // 0% Rad steht bei voller Lenkung (1 oder 31)
-            dualMotor128(eDualMotor.M0, langsamfahren) //   writeMotor128Servo16(langsamfahren, 16 - lenken, lenkenProzent) // links lenken <16 = 1
-            pinServo16(16 - lenken)
-            if (m_inSpur)
-                m_lenken = 16 - lenken
-        }
-        else if (readSpursensor(eDH.hell, eDH.dunkel)) { // 0% Rad steht bei voller Lenkung (1 oder 31)
-            dualMotor128(eDualMotor.M0, langsamfahren) //  writeMotor128Servo16(langsamfahren, 16 + lenken, lenkenProzent) // rechts lenken >16 = 31
-            pinServo16(16 + lenken)
-            if (m_inSpur)
-                m_lenken = 16 + lenken
-        }
-        else if (m_lenken) {
-            dualMotor128(eDualMotor.M0, langsamfahren) //  writeMotor128Servo16(langsamfahren, m_lenken, lenkenProzent) // lenken wie zuletzt gespeichert
-            pinServo16(m_lenken)
-            m_inSpur = false // hell hell
+            setLedColors(eRGBled.b, Colors.Red)
+            basic.pause(Math.randomRange(500, 5000)) // 0.5 .. 5 Sekunden
         }
         else {
-            dualMotor128(eDualMotor.M0, motor128) // writeMotor128Servo16(motor128, 16, 0) // geradeaus fahren bis zur schwarzen Linie
-            pinServo16(16)
-            m_inSpur = false // hell hell
-        }
 
-        //  writeRgbLed(eRgbLed.lh, Colors.Yellow, stop)
-        //  }
+            let lenken = Math.abs(servo16 - 16)  // 16-16=0 / 1-16=15 / 31-16=15
+
+            // readInputs(i2cSpur) // liest Spursensor ein
+
+            if (readSpursensor(eDH.dunkel, eDH.dunkel)) {
+                selectMotor(motor128) // dualMotor128(eDualMotor.M0, motor128) //     writeMotor128Servo16(motor128, 16) // nicht lenken
+                pinServo16(16)
+                m_inSpur = true
+            }
+            else if (readSpursensor(eDH.dunkel, eDH.hell)) { // 0% Rad steht bei voller Lenkung (1 oder 31)
+                selectMotor(langsamfahren) // dualMotor128(eDualMotor.M0, langsamfahren) //   writeMotor128Servo16(langsamfahren, 16 - lenken, lenkenProzent) // links lenken <16 = 1
+                pinServo16(16 - lenken)
+                if (m_inSpur)
+                    m_lenken = 16 - lenken
+            }
+            else if (readSpursensor(eDH.hell, eDH.dunkel)) { // 0% Rad steht bei voller Lenkung (1 oder 31)
+                selectMotor(langsamfahren) // dualMotor128(eDualMotor.M0, langsamfahren) //  writeMotor128Servo16(langsamfahren, 16 + lenken, lenkenProzent) // rechts lenken >16 = 31
+                pinServo16(16 + lenken)
+                if (m_inSpur)
+                    m_lenken = 16 + lenken
+            }
+            else if (m_lenken) {
+                selectMotor(langsamfahren) // dualMotor128(eDualMotor.M0, langsamfahren) //  writeMotor128Servo16(langsamfahren, m_lenken, lenkenProzent) // lenken wie zuletzt gespeichert
+                pinServo16(m_lenken)
+                m_inSpur = false // hell hell
+            }
+            else {
+                selectMotor(motor128) // dualMotor128(eDualMotor.M0, motor128) // writeMotor128Servo16(motor128, 16, 0) // geradeaus fahren bis zur schwarzen Linie
+                pinServo16(16)
+                m_inSpur = false // hell hell
+            }
+            setLedColors(eRGBled.b, Colors.Yellow, stop)
+
+        }
     }
 
 
