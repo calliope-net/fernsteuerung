@@ -87,7 +87,7 @@ So kann getestet werden, ob das Ereignis einen Handler hat:
 
     receiver.onSetLedColors(function (color1, color2, color3, brightness) {
 
-        if (a_RgbLeds[0] != color1 || a_RgbLeds[1] != color2 || a_RgbLeds[2] != color3 || a_RgbLeds[3] != helligkeit) { // nur wenn Farbe oder Helligkeit geändert
+        if (a_RgbLeds[0] != color1 || a_RgbLeds[1] != color2 || a_RgbLeds[2] != color3 || a_RgbLeds[3] != brightness) { // nur wenn Farbe oder Helligkeit geändert
             a_RgbLeds[0] = color1
             a_RgbLeds[1] = color2
             a_RgbLeds[2] = color3
