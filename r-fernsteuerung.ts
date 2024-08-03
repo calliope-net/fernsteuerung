@@ -126,10 +126,10 @@ namespace receiver { // r-fernsteuerung.ts
             n_fahrplanBuffer5Strecken_gestartet = true
             btf.zeigeBIN(0, btf.ePlot.bin, 2)
 
-            if (btf.getSensor(buffer, btf.eBufferPointer.m1, btf.eSensor.b6Abstand)) {
-                readQwiicUltrasonic() // einmal vorher lesen, weil der erste Wert falsch sein kann
-                basic.pause(100)
-            }
+            //if (btf.getSensor(buffer, btf.eBufferPointer.m1, btf.eSensor.b6Abstand)) {
+            //    readQwiicUltrasonic() // einmal vorher lesen, weil der erste Wert falsch sein kann
+            //    basic.pause(100)
+            //}
 
             let i = btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo) // Anzahl Durchläufe gesamt in m0-Servo
             if (i == 0)
