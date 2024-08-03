@@ -47,28 +47,29 @@ So kann getestet werden, ob das Ereignis einen Handler hat:
     */
 
 
-    receiver.onSetLedColors(function (a, b, c, brightness) {
-        basic.setLedColors(a, b, c, brightness) // gibt es nur bei v3, sonst any
-    })
+    //receiver.onSetLedColors(function (a, b, c, brightness) {
+    //    basic.setLedColors(a, b, c, brightness) // gibt es nur bei v3, sonst any
+    //})
 
     receiver.onDualMotorPower(function (motor: Motor, duty_percent) {
         motors.dualMotorPower(motor, duty_percent)
     })
 
-/* 
-    let a_RgbLeds = [0, 0, 0] // speichert 3 LEDs, wenn nur eine geändert wird
+
+
+
+    let a_RgbLeds = [0, 0, 0, 0] // speichert 3 LEDs, wenn nur eine geändert wird
     let n_RgbLedTimer = input.runningTime() // ms seit Start, zwischen zwei Aufrufen ist eine Pause erforderlich
 
-
-    receiver.onSetLedColors_v3(function (led: eRGBled, color: number, on = true, blinken = false, helligkeit = 20) {
-        // rgbLEDs(led, (on ? color : 0), blinken, helligkeit)
+    receiver.onSetLedColors_v3(function (led, color, on, blinken, helligkeit) {
 
         if (!on || (blinken && a_RgbLeds[led] == color)) // entweder aus .. oder an und blinken
             color = Colors.Off // alle Farben aus = 0
 
-        if (a_RgbLeds[led] != color) { // nur wenn Farbe geändert
+        if (a_RgbLeds[led] != color || a_RgbLeds[3] != helligkeit) { // nur wenn Farbe oder Helligkeit geändert
 
             a_RgbLeds[led] = color
+            a_RgbLeds[3] = helligkeit
 
             let t = input.runningTime() - n_RgbLedTimer // ms seit letztem setLedColor
             if (t < 25)
@@ -84,8 +85,19 @@ So kann getestet werden, ob das Ereignis einen Handler hat:
         }
     })
 
+    receiver.onSetLedColors(function (color1, color2, color3, brightness) {
 
-    export function setLedColorsOff_v3() {
+        if (a_RgbLeds[0] != color1 || a_RgbLeds[1] != color2 || a_RgbLeds[2] != color3 || a_RgbLeds[3] != helligkeit) { // nur wenn Farbe oder Helligkeit geändert
+            a_RgbLeds[0] = color1
+            a_RgbLeds[1] = color2
+            a_RgbLeds[2] = color3
+            a_RgbLeds[3] = helligkeit
+
+            basic.setLedColors(a_RgbLeds[0], a_RgbLeds[1], a_RgbLeds[2], brightness) // gibt es nur bei v3, sonst any
+        }
+    })
+
+    /* export function setLedColorsOff_v3() {
         a_RgbLeds[0] = Colors.Off
         a_RgbLeds[1] = Colors.Off
         a_RgbLeds[2] = Colors.Off
@@ -93,8 +105,8 @@ So kann getestet werden, ob das Ereignis einen Handler hat:
             onSetLedColorsHandler(a_RgbLeds[0], a_RgbLeds[1], a_RgbLeds[2], 20) // v3 Ereignis Block auslösen, nur wenn benutzt
         else
             basic.setLedColor(a_RgbLeds[0]) // v1 v2
-    }
- */
+    } */
+
 
 
 
