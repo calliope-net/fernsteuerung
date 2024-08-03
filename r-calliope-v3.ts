@@ -91,7 +91,7 @@ So kann getestet werden, ob das Ereignis einen Handler hat:
             a_RgbLeds[0] = color1
             a_RgbLeds[1] = color2
             a_RgbLeds[2] = color3
-            a_RgbLeds[3] = helligkeit
+            a_RgbLeds[3] = brightness
 
             basic.setLedColors(a_RgbLeds[0], a_RgbLeds[1], a_RgbLeds[2], brightness) // gibt es nur bei v3, sonst any
         }
