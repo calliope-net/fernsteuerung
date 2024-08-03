@@ -1,17 +1,19 @@
 
 namespace sender { // s-buttons.ts
 
-    export const c_ModellCount = 4
+    export const c_ModellCount = 5
 
     export enum eModell { // zuletzt gewähltes Modell wird im Flash offset 1 dauerhaft gespeiechert
         //% block="Modell Calli:Bot"
-        cb2e, // Standardwert CalliBot
+        cb2e,
         //% block="Modell Maker Kit Car"
-        mkcg, // Maker Kit Car ohne und mit Gabelstapler
+        mkc,
+        //% block="Modell Maker Kit Car Gabelstapler"
+        mkcg,
         //% block="Modell Maker Kit Car Kran"
-        mkck, // Maker Kit Car mit Kran
+        mkck,
         //% block="Modell Calliope auf Rädern 4"
-        car4  // CaR 4
+        car4 
     } // so viele Images müssen im Array sein - Bilder am Ende dieser Datei
 
     export enum eFunktion {
@@ -48,7 +50,7 @@ namespace sender { // s-buttons.ts
         }
         // Standardwerte    
         else {
-            setStatusButtonA(!getStatusButtonA())
+            setStatusButtonA(!getStatusButtonA()) // immer wechseln true-false
         }
     }
 
@@ -69,7 +71,7 @@ namespace sender { // s-buttons.ts
         }
         // Standardwerte       
         else {
-            setStatusButtonB(!getStatusButtonB()) // Standardwert immer wechseln true-false
+            setStatusButtonB(!getStatusButtonB()) // immer wechseln true-false
         }
     }
 
@@ -193,42 +195,46 @@ namespace sender { // s-buttons.ts
     // group="Image" subcategory="Knopf A B" color=#54C9C9
     //% block="zeige Modell Bild • Pause (ms) %ms" weight=1
     export function zeigeModellImagePause(ms: number) {
-/* 
-        [images.createImage(`
-    . # . # .
-    . . . . .
-    . . . . .
-    # # # # #
-    . # . # .
-    `),
-        images.createImage(`
-    . . # . .
-    . . # . .
-    . . # # #
-    . . # . .
-    # # # . .
-    `),
-        images.createImage(`
-    . # # # #
-    . # . . #
-    . # . . .
-    . # . . .
-    # # # # .
-    `),
-        images.createImage(`
-    . . . . .
-    . # # # .
-    # . . . #
-    # # # # #
-    . # . # .
-    `)
-        ][getStatusModell()].showImage(0)
- */
+        /* 
+                [images.createImage(`
+            . # . # .
+            . . . . .
+            . . . . .
+            # # # # #
+            . # . # .
+            `),
+                images.createImage(`
+            . . # . .
+            . . # . .
+            . . # # #
+            . . # . .
+            # # # . .
+            `),
+                images.createImage(`
+            . # # # #
+            . # . . #
+            . # . . .
+            . # . . .
+            # # # # .
+            `),
+                images.createImage(`
+            . . . . .
+            . # # # .
+            # . . . #
+            # # # # #
+            . # . # .
+            `)
+                ][getStatusModell()].showImage(0)
+         */
 
         let ai: number[] = []
         switch (getStatusModell()) {
             case eModell.cb2e: {
-                ai = [2, 19, 2, 19, 2]
+                ai = [2, 3, 2, 3, 2]
+                break
+            }
+            case eModell.mkc: {
+                ai = [1, 1, 31, 4, 4]
                 break
             }
             case eModell.mkcg: {
