@@ -6,19 +6,19 @@ namespace sender { // s-buttons.ts
     export enum eModell { // zuletzt gewähltes Modell wird im Flash offset 1 dauerhaft gespeiechert
         //% block="Modell Calli:Bot"
         cb2e,
-        //% block="Modell Maker Kit Car"
-        mkc,
+        //% block="Modell Maker Kit Car Sensoren"
+        mkcs,
         //% block="Modell Maker Kit Car Gabelstapler"
         mkcg,
         //% block="Modell Maker Kit Car Kran"
         mkck,
         //% block="Modell Calliope auf Rädern 4"
-        car4 
+        car4
     } // so viele Images müssen im Array sein - Bilder am Ende dieser Datei
 
     export enum eFunktion {
         //% block="gestartet"
-        ng = 0, // nicht gestartet
+        ng = 0,     // nicht gestartet
         //% block="00 Fahren und Lenken"
         m0_s0,      // Joystick steuert M0 und Servo (Fahren und Lenken)
         //% block="00 Gabelstapler"
@@ -26,11 +26,15 @@ namespace sender { // s-buttons.ts
         //% block="00 Seilrolle und Drehkranz"
         ma_mb,      // MA und MB (Seilrolle und Drehkranz)
         //% block="00 Zahnstange und Drehkranz"
-        mc_mb,       // MC und MB (Zahnstange und Drehkranz)
-        //% block="10 Calli:bot Programm fernstarten"
+        mc_mb,      // MC und MB (Zahnstange und Drehkranz)
+        //% block="10 Programm fernstarten"
+        _10fernstarten,
         mc_md_callibot_beispiele,
         //% block="20 Fahrplan senden"
-        m1abcd_fahrplan
+        _20fahrplan,
+        m1abcd_fahrplan,
+        //% block="30 Sensoren fernprogrammieren"
+        _30sensoren
     }
 
 
@@ -82,34 +86,37 @@ namespace sender { // s-buttons.ts
     export function buttonAB() {
         // wenn einmal A+B geklickt, wird n_Funktion nie wieder ng (nicht gestartet)
         if (!isFunktion(eFunktion.ng)) { // nicht gestartet // beim ersten Mal (nach Reset)
-            //n_einmalgestartet = true//  btf.n_FunkgruppeChanged = true // verhindert Ändern des Modell
-
             setStatusFunktion(eFunktion.m0_s0) // Standardwert immer Fahren und Lenken
-            setStatusButtonA(false) //  n_ButtonA_Switch = false  // beide aus schalten
-            setStatusButtonB(false) // n_ButtonB_Switch = false
+            setStatusButtonA(false) // beide aus schalten
+            setStatusButtonB(false)
         }
+
         // cb2e Calli:bot von Joystick auf fernstarten umschalten
         else if (isModell(eModell.cb2e) && isFunktion(eFunktion.m0_s0)) {
-
-            setStatusButtonA(true) //  n_ButtonA_Switch = true  // Ultraschall Sensor aktiv
-            setStatusButtonB(false) // n_ButtonB_Switch = false // Beispiel noch nicht aktiv senden; erst nach B geklickt
             setStatusFunktion(eFunktion.mc_md_callibot_beispiele)
-            /* if (!btf.between(n_ButtonAB_Counter, 1, 3))
-                n_ButtonAB_Counter = 1 */
+            setStatusButtonA(true)  // Ultraschall Sensor aktiv
+            setStatusButtonB(false) // Beispiel noch nicht aktiv senden; erst nach B geklickt
         }
         // cb2e Calli:bot von fernstarten auf Fahrplan umschalten
         else if (isModell(eModell.cb2e) && isFunktion(eFunktion.mc_md_callibot_beispiele)) {
             setStatusFunktion(eFunktion.m1abcd_fahrplan)
-            setStatusButtonA(false) // n_ButtonA_Switch = false  // beide aus schalten
-            setStatusButtonB(false) // n_ButtonB_Switch = false
+            setStatusButtonA(false) // beide aus schalten
+            setStatusButtonB(false)
         }
 
-        // mkcg Maker Kit Car ohne und mit Gabelstapler // von Joystick auf Gabelstapler umschalten
+        // mkcs Maker Kit Car Sensoren // von Joystick auf Fahrplan umschalten
+        else if (isModell(eModell.mkcs) && isFunktion(eFunktion.m0_s0)) {
+            setStatusFunktion(eFunktion.m1abcd_fahrplan)
+            setStatusButtonA(false) // beide aus schalten
+            setStatusButtonB(false)
+        }
+
+        // mkcg Maker Kit Car mit Gabelstapler // von Joystick auf Gabelstapler umschalten
         else if (isModell(eModell.mkcg) && isFunktion(eFunktion.m0_s0)) {
             setStatusFunktion(eFunktion.m0_m1_s0)
-            setStatusButtonCounter(16)
+            setStatusButtonCounter(16) // Gabelstapler mit A- B+ lenken
         }
-        // mkcg Maker Kit Car ohne und mit Gabelstapler // von Gabelstapler auf Fahrplan umschalten
+        // mkcg Maker Kit Car mit Gabelstapler // von Gabelstapler auf Fahrplan umschalten
         else if (isModell(eModell.mkcg) && isFunktion(eFunktion.m0_m1_s0)) {
             setStatusFunktion(eFunktion.m1abcd_fahrplan)
             setStatusButtonA(false) // beide aus schalten
@@ -117,16 +124,20 @@ namespace sender { // s-buttons.ts
         }
 
 
-        // mkck Maker Kit Car mit Kran
-        else if (isModell(eModell.mkck) && isFunktion(eFunktion.m0_s0))
-            setStatusFunktion(eFunktion.ma_mb) // Funktion weiter schalten
-        else if (isModell(eModell.mkck) && isFunktion(eFunktion.ma_mb))
-            setStatusFunktion(eFunktion.mc_mb) // Funktion weiter schalten
+        // mkck Maker Kit Car mit Kran // von Joystick auf (Seilrolle und Drehkranz) umschalten
+        else if (isModell(eModell.mkck) && isFunktion(eFunktion.m0_s0)) {
+            setStatusFunktion(eFunktion.ma_mb)
+        }
+        // mkck Maker Kit Car mit Kran // von (Seilrolle und Drehkranz) auf (Zahnstange und Drehkranz) umschalten
+        else if (isModell(eModell.mkck) && isFunktion(eFunktion.ma_mb)) {
+            setStatusFunktion(eFunktion.mc_mb)
+        }
 
+        // Standardwert immer Fahren und Lenken
         else {
-            setStatusFunktion(eFunktion.m0_s0) // Standardwert immer Fahren und Lenken
-            setStatusButtonA(false) //  n_ButtonA_Switch = false  // beide aus schalten
-            setStatusButtonB(false) //  n_ButtonB_Switch = false
+            setStatusFunktion(eFunktion.m0_s0)
+            setStatusButtonA(false) // beide aus schalten
+            setStatusButtonB(false)
         }
     }
 
@@ -233,7 +244,7 @@ namespace sender { // s-buttons.ts
                 ai = [2, 19, 2, 19, 2]
                 break
             }
-            case eModell.mkc: {
+            case eModell.mkcs: {
                 ai = [2, 3, 2, 3, 2]
                 break
             }
