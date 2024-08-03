@@ -230,11 +230,11 @@ namespace sender { // s-buttons.ts
         let ai: number[] = []
         switch (getStatusModell()) {
             case eModell.cb2e: {
-                ai = [2, 3, 2, 3, 2]
+                ai = [2, 19, 2, 19, 2]
                 break
             }
             case eModell.mkc: {
-                ai = [1, 1, 31, 4, 4]
+                ai = [2, 3, 2, 3, 2]
                 break
             }
             case eModell.mkcg: {
