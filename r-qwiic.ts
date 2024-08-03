@@ -58,8 +58,8 @@ SparkFun Qwiic Ultrasonic Distance Sensor (HC-SR04)
     //% read.shadow="toggleYesNo"
     export function getQwiicUltrasonic(read: boolean) {
         if (read) {
-            if (n_QwiicUltrasonic_mm < 50) // 50cm
-                readQwiicUltrasonic() // fehlerverdächtig, zweimal lesen
+            //if (n_QwiicUltrasonic_mm < 50) // 50cm
+            //    readQwiicUltrasonic() // fehlerverdächtig, zweimal lesen
             readQwiicUltrasonic()
         }
         return n_QwiicUltrasonic_mm / 10
