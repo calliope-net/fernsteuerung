@@ -114,12 +114,10 @@ namespace receiver { // r-receiver.ts
     //% block="Motor %motor (1 ↓ 128 ↑ 255) %speed (128 ist STOP)" weight=6
     //% speed.min=0 speed.max=255 speed.defl=128
     export function dualMotor128(motor: eDualMotor, speed: number) { // sendet nur an MotorChip, wenn der Wert sich ändert
-        //  if (n_MotorPower) {
+
         if (btf.between(speed, 1, 255)) {
-            //let duty_percent = (speed == c_MotorStop ? 0 : Math.map(speed, 1, 255, -100, 100))
-            //            let duty_percent = Math.round(Math.map(speed, 1, 255, -100, 100))
+           
             let duty_percent = btf.mapInt32(speed, 1, 255, -100, 100)
-            //n_StatusString = duty_percent.toString()
 
             if (motor == eDualMotor.M0 && speed != a_DualMotorSpeed[eDualMotor.M0]) {
                 a_DualMotorSpeed[eDualMotor.M0] = speed
@@ -134,7 +132,8 @@ namespace receiver { // r-receiver.ts
                 a_DualMotorSpeed[eDualMotor.M1] = speed
                 dualMotorPower(motor, duty_percent)
             }
-        } else { // n_MotorPower false oder speed=0
+        } 
+        else { // speed=0
             dualMotor128(motor, c_MotorStop) // 128
         }
     }
@@ -228,9 +227,7 @@ namespace receiver { // r-receiver.ts
     // ========== group="RGB LEDs (v3)" subcategory="Aktoren"
 
     export enum eRGBled { a, b, c } // Index im Array
-    //let a_RgbLeds = [0, 0, 0] // speichert 3 LEDs, wenn nur eine geändert wird
-    //let n_RgbLedTimer = input.runningTime() // ms seit Start, zwischen zwei Aufrufen ist eine Pause erforderlich
-
+    let n_RgbLed = 0 // aktueller Wert v1 v2
 
     // deklariert die Variable mit dem Delegat-Typ '(color1: number, color2: number, color3: number, brightness: number) => void'
     // ein Delegat ist die Signatur einer function mit den selben Parametern
@@ -264,11 +261,10 @@ namespace receiver { // r-receiver.ts
     }
 
 
-    // ========== group="RGB LEDs (Calliope v3)"
+    // ========== group="RGB LEDs"
 
-    let n_RgbLed = 0 // aktueller Wert
 
-    //% group="RGB LEDs (Calliope v3)"
+    //% group="RGB LEDs"
     //% block="RGB LED %led %color || %on blinken %blinken Helligkeit %helligkeit \\%" weight=4
     //% on.shadow=toggleOnOff on.defl=1
     //% color.shadow="colorNumberPicker"
@@ -309,18 +305,13 @@ namespace receiver { // r-receiver.ts
                 } */
     }
 
-    //% group="RGB LEDs (Calliope v3)"
+    //% group="RGB LEDs"
     //% block="RGB LEDs aus" weight=3
     export function setLedColorsOff() {
-        //a_RgbLeds[0] = Colors.Off
-        //a_RgbLeds[1] = Colors.Off
-        //a_RgbLeds[2] = Colors.Off
         if (onSetLedColorsHandler)
             onSetLedColorsHandler(0, 0, 0, 20) // v3 Ereignis Block auslösen, nur wenn benutzt
-        //    onSetLedColorsHandler(a_RgbLeds[0], a_RgbLeds[1], a_RgbLeds[2], 20) // v3 Ereignis Block auslösen, nur wenn benutzt
         else
             basic.setLedColor(0) // v1 v2
-        //    basic.setLedColor(a_RgbLeds[0]) // v1 v2
     }
 
 
