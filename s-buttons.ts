@@ -29,10 +29,10 @@ namespace sender { // s-buttons.ts
         mc_mb,      // MC und MB (Zahnstange und Drehkranz)
         //% block="10 Programm fernstarten"
         _10fernstarten,
-      //  mc_md_callibot_beispiele,
+        //  mc_md_callibot_beispiele,
         //% block="20 Fahrplan senden"
         _20fahrplan,
-      //  m1abcd_fahrplan,
+        //  m1abcd_fahrplan,
         //% block="30 Sensoren fernprogrammieren"
         _30sensoren
     }
@@ -91,25 +91,25 @@ namespace sender { // s-buttons.ts
             setStatusButtonB(false)
         }
 
-        // cb2e Calli:bot von Joystick auf fernstarten umschalten
-        else if (isModell(eModell.cb2e) && isFunktion(eFunktion.m0_s0)) {
+        // cb2e||mkcs // von Joystick auf fernstarten umschalten
+        else if ((isModell(eModell.cb2e) || isModell(eModell.mkcs)) && isFunktion(eFunktion.m0_s0)) {
             setStatusFunktion(eFunktion._10fernstarten)
             setStatusButtonA(true)  // Ultraschall Sensor aktiv
             setStatusButtonB(false) // Beispiel noch nicht aktiv senden; erst nach B geklickt
         }
-        // cb2e Calli:bot von fernstarten auf Fahrplan umschalten
-        else if (isModell(eModell.cb2e) && isFunktion(eFunktion._10fernstarten)) {
+        // cb2e||mkcs // von fernstarten auf Fahrplan umschalten
+        else if ((isModell(eModell.cb2e) || isModell(eModell.mkcs)) && isFunktion(eFunktion._10fernstarten)) {
             setStatusFunktion(eFunktion._20fahrplan)
             setStatusButtonA(false) // beide aus schalten
             setStatusButtonB(false)
         }
 
         // mkcs Maker Kit Car Sensoren // von Joystick auf Fahrplan umschalten
-        else if (isModell(eModell.mkcs) && isFunktion(eFunktion.m0_s0)) {
-            setStatusFunktion(eFunktion._20fahrplan)
-            setStatusButtonA(false) // beide aus schalten
-            setStatusButtonB(false)
-        }
+        //else if (isModell(eModell.mkcs) && isFunktion(eFunktion.m0_s0)) {
+        //    setStatusFunktion(eFunktion._20fahrplan)
+        //    setStatusButtonA(false) // beide aus schalten
+        //    setStatusButtonB(false)
+        //}
 
         // mkcg Maker Kit Car mit Gabelstapler // von Joystick auf Gabelstapler umschalten
         else if (isModell(eModell.mkcg) && isFunktion(eFunktion.m0_s0)) {
@@ -117,11 +117,11 @@ namespace sender { // s-buttons.ts
             setStatusButtonCounter(16) // Gabelstapler mit A- B+ lenken
         }
         // mkcg Maker Kit Car mit Gabelstapler // von Gabelstapler auf Fahrplan umschalten
-        else if (isModell(eModell.mkcg) && isFunktion(eFunktion.m0_m1_s0)) {
-            setStatusFunktion(eFunktion._20fahrplan)
-            setStatusButtonA(false) // beide aus schalten
-            setStatusButtonB(false)
-        }
+        //else if (isModell(eModell.mkcg) && isFunktion(eFunktion.m0_m1_s0)) {
+        //    setStatusFunktion(eFunktion._20fahrplan)
+        //    setStatusButtonA(false) // beide aus schalten
+        //    setStatusButtonB(false)
+        //}
 
 
         // mkck Maker Kit Car mit Kran // von Joystick auf (Seilrolle und Drehkranz) umschalten

@@ -26,15 +26,15 @@ namespace receiver { // r-strecken.ts
     //% group="Geschwindigkeit (1 ↓ 128 ↑ 255), Winkel (1 ↖ 16 ↗ 31)" subcategory="Strecken"
     //% block="Fahren (1↓128↑255) %motor Lenken (1↖16↗31) %servo Länge %strecke cm\\|⅒s || Stop %abstandsSensor bei Abstand < (cm) %abstand Spursensor %spurSensor Impulse %impulse Encoder %checkEncoder" weight=5
     //% motor.min=1 motor.max=255 motor.defl=220
-    //% servo.min=1 servo.max=31 servo.defl=4
-    //% strecke.min=10 strecke.max=255 strecke.defl=152
+    //% servo.min=1 servo.max=31 servo.defl=29
+    //% strecke.min=10 strecke.max=255 strecke.defl=153
     //% abstandsSensor.shadow=toggleOnOff
     //% abstand.min=10 abstand.max=50 abstand.defl=20
     //% spurSensor.shadow=toggleOnOff
     //% impulse.shadow=toggleOnOff
     //% checkEncoder.shadow=toggleYesNo checkEncoder.defl=1
     //% inlineInputMode=inline
-    export function fahreStrecke(motor: number, servo: number, strecke: number, abstandsSensor = true, abstand = 20, spurSensor = false, impulse = false, checkEncoder = true) {
+    export function fahreStrecke(motor: number, servo: number, strecke: number, abstandsSensor = false, abstand = 20, spurSensor = false, impulse = false, checkEncoder = true) {
 
         selectMotor(c_MotorStop)
 
@@ -42,7 +42,7 @@ namespace receiver { // r-strecken.ts
             let sensor_color = Colors.Off
             //  let timeout_Encoder: number // 20 s Timeout wenn Encoder nicht zählt
 
-            if (n_hasEncoder) {
+            if (checkEncoder && n_hasEncoder) {
 
                 let timeout_Encoder = 100 // 20 s Timeout wenn Encoder nicht zählt
 
