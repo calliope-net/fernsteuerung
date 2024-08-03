@@ -29,10 +29,10 @@ namespace sender { // s-buttons.ts
         mc_mb,      // MC und MB (Zahnstange und Drehkranz)
         //% block="10 Programm fernstarten"
         _10fernstarten,
-        mc_md_callibot_beispiele,
+      //  mc_md_callibot_beispiele,
         //% block="20 Fahrplan senden"
         _20fahrplan,
-        m1abcd_fahrplan,
+      //  m1abcd_fahrplan,
         //% block="30 Sensoren fernprogrammieren"
         _30sensoren
     }
@@ -93,20 +93,20 @@ namespace sender { // s-buttons.ts
 
         // cb2e Calli:bot von Joystick auf fernstarten umschalten
         else if (isModell(eModell.cb2e) && isFunktion(eFunktion.m0_s0)) {
-            setStatusFunktion(eFunktion.mc_md_callibot_beispiele)
+            setStatusFunktion(eFunktion._10fernstarten)
             setStatusButtonA(true)  // Ultraschall Sensor aktiv
             setStatusButtonB(false) // Beispiel noch nicht aktiv senden; erst nach B geklickt
         }
         // cb2e Calli:bot von fernstarten auf Fahrplan umschalten
-        else if (isModell(eModell.cb2e) && isFunktion(eFunktion.mc_md_callibot_beispiele)) {
-            setStatusFunktion(eFunktion.m1abcd_fahrplan)
+        else if (isModell(eModell.cb2e) && isFunktion(eFunktion._10fernstarten)) {
+            setStatusFunktion(eFunktion._20fahrplan)
             setStatusButtonA(false) // beide aus schalten
             setStatusButtonB(false)
         }
 
         // mkcs Maker Kit Car Sensoren // von Joystick auf Fahrplan umschalten
         else if (isModell(eModell.mkcs) && isFunktion(eFunktion.m0_s0)) {
-            setStatusFunktion(eFunktion.m1abcd_fahrplan)
+            setStatusFunktion(eFunktion._20fahrplan)
             setStatusButtonA(false) // beide aus schalten
             setStatusButtonB(false)
         }
@@ -118,7 +118,7 @@ namespace sender { // s-buttons.ts
         }
         // mkcg Maker Kit Car mit Gabelstapler // von Gabelstapler auf Fahrplan umschalten
         else if (isModell(eModell.mkcg) && isFunktion(eFunktion.m0_m1_s0)) {
-            setStatusFunktion(eFunktion.m1abcd_fahrplan)
+            setStatusFunktion(eFunktion._20fahrplan)
             setStatusButtonA(false) // beide aus schalten
             setStatusButtonB(false)
         }
