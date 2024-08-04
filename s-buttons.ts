@@ -137,10 +137,11 @@ namespace sender { // s-buttons.ts
 
         // Standardwert immer Fahren und Lenken
         else {
+            setStatusFunktion(eFunktion.ng)
+            zeigeModellImagePause(1500)
             setStatusFunktion(eFunktion.m0_s0)
             setStatusButtonA(false) // beide aus schalten
             setStatusButtonB(false)
-            zeigeModellImagePause(1500)
         }
     }
 
