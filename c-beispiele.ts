@@ -67,7 +67,7 @@ namespace cb2 { // c-beispiele.ts
     }
 
 
-
+/* 
 
     // ========== group="2 fahren und drehen" subcategory=Beispiele ⅒s • 
 
@@ -209,6 +209,6 @@ namespace cb2 { // c-beispiele.ts
 
 
     export enum eRL { rechts = 0, links = 1 } // Index im Array
-
+ */
 
 } // c-beispiele.ts

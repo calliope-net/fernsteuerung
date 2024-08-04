@@ -38,9 +38,9 @@ namespace sender { // s-qwiicjoystick.ts
 
     //% group="Qwiic Joystick 0x20"
     //% block="Joystick einlesen || zeige I²C Fehler %zeigeFehler" weight=9
-    //% zeigeFehler.shadow=toggleYesNo
+    //% zeigeFehler.shadow=toggleYesNo zeigeFehler.defl=1
     // pmax.min=0 pmax.max=20
-    export function joystickQwiic(zeigeFehler = false) {
+    export function joystickQwiic(zeigeFehler = true) {
         if (n_qwiicJoystickConnected) {
             n_qwiicJoystickConnected = pins.i2cWriteBuffer(i2cqwiicJoystick_x20, Buffer.fromArray([3]), true) == 0
 
