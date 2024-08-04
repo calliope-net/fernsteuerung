@@ -23,10 +23,12 @@ namespace sender { // s-sender.ts
             }
 
             btf.beimStartintern(btf.eNamespace.sender, // setzt auch n_start true, startet Bluetooth Empfang
-                function (buttonB: boolean, servoKorrektur: boolean) {
+                function (pStorageChange: btf.eStorageBuffer, buttonB: boolean) {
                     // nur nach Funkgruppe ändern mit buttonAhold oder buttonBhold
-                    if (!servoKorrektur && !isFunktion(eFunktion.ng)) { // und nur wenn (neue Funktion) nicht gestertet
-                        zeigeModellImagePause(1500) // Bild anzeigen mit Pause 1500ms
+                    if (pStorageChange == btf.eStorageBuffer.funkgruppe) {
+                        btf.setStorageModell(getStatusModell()) // mit Funkgruppe ändert sich StatusModell, neues aktuelles Modell in Flash sichern
+                        if (!isFunktion(eFunktion.ng))  // und nur wenn (neue Funktion) nicht gestertet
+                            zeigeModellImagePause(1500) // Bild anzeigen mit Pause 1500ms
                     }
                 }
             )

@@ -4,10 +4,13 @@ namespace btf { // b-fernsteuerung.ts
     export const c_funkgruppe_min = 0xB0 // nur 8 mögliche Funkgruppen als index im StatusBuffer beim Sender
     export const c_funkgruppe_max = 0xB7
 
-    // private
+    // Storage im Flash
     let a_StorageBuffer = Buffer.create(4) // lokaler Speicher 4 Byte NumberFormat.UInt32LE
-    enum eStorageBuffer { funkgruppe, modell, servoKorrektur /* , d */ } // Index im Buffer
-    export let n_servoKorrekturButton = false // false:funkgruppeChanged; true:servoKorrektur (mit A B halten)
+    export enum eStorageBuffer { funkgruppe, modell, servoKorrektur /* , d */ } // Index im Buffer
+    export let n_StorageChange = eStorageBuffer.funkgruppe
+    // export let n_servoKorrekturButton = false // false:funkgruppeChanged; true:servoKorrektur (mit A B halten)
+    let onStorageChanged: (pStorageChange: eStorageBuffer, buttonB: boolean) => void
+    // let onButtonHold: (buttonB: boolean, servoKorrektur: boolean) => void
 
     // nur Sender
     export let n_sendReset = false // true sendet zurücksetzen zum Empfänger wenn connected
@@ -32,12 +35,12 @@ namespace btf { // b-fernsteuerung.ts
     export enum eNamespace { btf, sender, receiver, cb2 }
     export let m_Namespace: eNamespace
 
-    let onButtonHold: (buttonB: boolean, servoKorrektur: boolean) => void
 
-    export function beimStartintern(e: eNamespace, callbackButtonHold?: (buttonB: boolean, servoKorrektur: boolean) => void) { //callbackFunkgruppeChanged?: (int: number) => void)
+    export function beimStartintern(e: eNamespace, callbackStorageChanged?: (pStorageChange: eStorageBuffer, buttonB: boolean) => void) { //callbackFunkgruppeChanged?: (int: number) => void)
         m_Namespace = e
         // onFunkgruppeChangedHandler = callbackFunkgruppeChanged
-        onButtonHold = callbackButtonHold
+        // onButtonHold = callbackButtonHold
+        onStorageChanged = callbackStorageChanged
         radio.setGroup(getStorageFunkgruppe())
         radio.setTransmitPower(7)
         radio.setTransmitSerialNumber(true)
@@ -50,19 +53,21 @@ namespace btf { // b-fernsteuerung.ts
     export function buttonAhold() {
         if (!(input.buttonIsPressed(Button.B))) {
 
-            if (!n_servoKorrekturButton) {
+            if (n_StorageChange == eStorageBuffer.funkgruppe) {
                 if (a_StorageBuffer[eStorageBuffer.funkgruppe] > c_funkgruppe_min) {
                     radio.setGroup(--a_StorageBuffer[eStorageBuffer.funkgruppe]) // erst -1, dann zurück lesen
-                    storage.putBuffer(a_StorageBuffer) // im Flash speichern
+                    //storage.putBuffer(a_StorageBuffer) // im Flash speichern
                 }
                 setClearScreen()
                 zeigeFunkgruppe()
                 basic.pause(1500)
-                //if (onFunkgruppeChangedHandler)
-                //    onFunkgruppeChangedHandler(getStorageFunkgruppe())
             }
-            if (onButtonHold)
-                onButtonHold(false, n_servoKorrekturButton)
+            //if (onButtonHold)
+            //    onButtonHold(false, n_servoKorrekturButton)
+            if (onStorageChanged)
+                onStorageChanged(n_StorageChange, false)
+
+            storage.putBuffer(a_StorageBuffer) // im Flash speichern
         }
     }
 
@@ -71,7 +76,7 @@ namespace btf { // b-fernsteuerung.ts
     export function buttonBhold() {
         if (!(input.buttonIsPressed(Button.A))) {
 
-            if (!n_servoKorrekturButton) {
+            if (n_StorageChange == eStorageBuffer.funkgruppe) {
                 if (a_StorageBuffer[eStorageBuffer.funkgruppe] < c_funkgruppe_max) {
                     radio.setGroup(++a_StorageBuffer[eStorageBuffer.funkgruppe]) // erst +1, dann zurück lesen
                     storage.putBuffer(a_StorageBuffer) // im Flash speichern
@@ -82,16 +87,18 @@ namespace btf { // b-fernsteuerung.ts
                 //if (onFunkgruppeChangedHandler)
                 //    onFunkgruppeChangedHandler(getStorageFunkgruppe())
             }
-            if (onButtonHold)
-                onButtonHold(true, n_servoKorrekturButton)
+            //if (onButtonHold)
+            //    onButtonHold(true, n_servoKorrekturButton)
+            if (onStorageChanged)
+                onStorageChanged(n_StorageChange, true)
         }
     }
 
     //% group="calliope-net.github.io/fernsteuerung"
     //% block="Knopf A+B halten, Servo Korrektur" weight=4 deprecated=1
-    export function buttonABhold() {
-        n_servoKorrekturButton = !n_servoKorrekturButton
-    }
+    //export function buttonABhold() {
+    //    n_servoKorrekturButton = !n_servoKorrekturButton
+    //}
 
     //% group="calliope-net.github.io/fernsteuerung"
     //% block="%id" color="#7E84F7" weight=2

@@ -70,7 +70,7 @@ namespace receiver { // r-receiver.ts
     // inlineInputMode=inline
     export function beimStart(modell: eHardware, servoGeradeaus: number, encoder: boolean, radDmm: number, zf = true, modellFunkgruppe?: number) {
         n_Hardware = modell // !vor pinRelay!
- 
+
         pinRelay(true) // Relais an schalten (braucht gültiges n_Hardware, um den Pin zu finden)
 
         btf.setStorageBuffer(modellFunkgruppe, servoGeradeaus) // prüft und speichert in a_StorageBuffer
@@ -91,8 +91,8 @@ namespace receiver { // r-receiver.ts
 
 
         btf.beimStartintern(btf.eNamespace.receiver,
-            function (buttonB: boolean, servoKorrektur: boolean) { // wird bei Button hold aufgerufen von b-fernsteuerung.ts
-                if (servoKorrektur) {
+            function (pStorageChange: btf.eStorageBuffer, buttonB: boolean) { // wird bei Button hold aufgerufen von b-fernsteuerung.ts
+                if (pStorageChange == btf.eStorageBuffer.servoKorrektur) {
                     let sK = btf.getStorageServoKorrektur() + (buttonB ? 1 : -1)
                     btf.setStorageServoKorrektur(sK)
                     btf.zeigeBIN(sK, btf.ePlot.bcd, 4)
@@ -108,7 +108,8 @@ namespace receiver { // r-receiver.ts
     //% group="calliope-net.github.io/fernsteuerung"
     //% block="Knopf A+B halten, Servo Korrektur" weight=4
     export function buttonABhold() {
-        btf.n_servoKorrekturButton = !btf.n_servoKorrekturButton
+        //btf.n_servoKorrekturButton = !btf.n_servoKorrekturButton
+        btf.n_StorageChange = btf.eStorageBuffer.servoKorrektur
     }
 
 
