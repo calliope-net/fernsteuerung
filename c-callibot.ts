@@ -10,10 +10,7 @@ namespace cb2 { // c-callibot.ts 005F7F
     export const c_MotorStop = 128
     //  const c_Servo_geradeaus = 16
 
-    // let n_EncoderFaktor_fischertechnik = 63.3 * (26 / 14) / (8 * Math.PI) // 63.3 Motorwelle * (26/14) Zähne Differenzial / (8cm * PI) Rad Umfang = 4.6774502 cm
-    // export let n_EncoderFaktor = 32 // Impulse = 31.25 * Fahrstrecke in cm
-    export let n_EncoderFaktor = 3 * 150 / (4.55 * Math.PI) //=31.48 Impulse/cm // 3 Motor*150 Getriebe/(Raddurchmasse*PI=Umfang)
-
+    export let n_EncoderFaktor = 3 * 150 / (4.55 * Math.PI) //=31.48 Impulse/cm // 3 Motor*150 Getriebe/(Raddurchmesser*PI=Umfang)
 
 
     // ========== group="calliope-net.github.io/fernsteuerung"
@@ -92,33 +89,13 @@ namespace cb2 { // c-callibot.ts 005F7F
                 setMotorBuffer[3] = (x_1_128_255 << 1) // linkes Bit weg=0..127 * 2 // 128=00, 129=02, 130=04, 254=FC, 255=FE
                 setMotorBuffer[4] = 0
                 setMotorBuffer[5] = setMotorBuffer[3]
-            } else {                            // 0..127 rückwärts
+            }
+            else {                            // 0..127 rückwärts
                 setMotorBuffer[2] = 1
                 setMotorBuffer[3] = ~(x_1_128_255 << 1) // * 2 und bitweise NOT // 0=FF, 1=FD, 126=03, 127=01,
                 setMotorBuffer[4] = 1
                 setMotorBuffer[5] = setMotorBuffer[3]
             }
-            //   n_MotorPWM_0_255 = setMotorBuffer[3]
-
-            // fahren (beide Motoren gleich)
-            /*    if (radio.between(x1_128_255, 129, 255)) { // vorwärts
-                   setMotorBuffer[2] = 0
-                   setMotorBuffer[3] = radio.mapInt32(x1_128_255, 128, 255, 0, 255)
-                   setMotorBuffer[4] = 0
-                   setMotorBuffer[5] = setMotorBuffer[3]
-               }
-               else if (radio.between(x1_128_255, 1, 127)) { // rückwärts
-                   setMotorBuffer[2] = 1
-                   setMotorBuffer[3] = radio.mapInt32(x1_128_255, 1, 128, 255, 0)
-                   setMotorBuffer[4] = 1
-                   setMotorBuffer[5] = setMotorBuffer[3]
-               }
-               else { // wenn x fahren 0, 128 oder mehr als 8 Bit
-                   setMotorBuffer[2] = 0 // Motor 1 Richtung 0:vorwärts, 1:rückwärts
-                   setMotorBuffer[3] = 0 // Motor 1 PWM (0..255)
-                   setMotorBuffer[4] = 0 // Motor 2 Richtung 0:vorwärts, 1:rückwärts
-                   setMotorBuffer[5] = 0 // Motor 2 PWM (0..255)
-               } */
 
             // lenken (ein Motor wird langsamer)
             if (btf.between(y_1_16_31, 1, 15)) { // links
@@ -147,14 +124,7 @@ namespace cb2 { // c-callibot.ts 005F7F
 
         let m1 = btf.between(m1_1_128_255, 1, 255) && n_m1_1_128_255 != m1_1_128_255
         let m2 = btf.between(m2_1_128_255, 1, 255) && n_m2_1_128_255 != m2_1_128_255
-
-        // if (m1 || m2) {// ((n_m1_1_128_255 != m1_1_128_255 || n_m2_1_128_255 != m2_1_128_255) && m1_1_128_255 != 0 && m2_1_128_255 != 0) {
-        // n_m1_1_128_255 = m1_1_128_255
-        //  n_m2_1_128_255 = m2_1_128_255 // I²C nur bei Änderung
-
-        //  let m1 = btf.between(m1_1_128_255, 1, 255)
-        //  let m2 = btf.between(m2_1_128_255, 1, 255)
-
+     
         let motorBuffer: Buffer // undefined
         let offset = 0
         if (m1 && m2) {
@@ -226,35 +196,8 @@ namespace cb2 { // c-callibot.ts 005F7F
         if (lh) writeRgbLed(eRgbLed.lh, color, on, blink)
         if (rh) writeRgbLed(eRgbLed.rh, color, on, blink)
         if (rv) writeRgbLed(eRgbLed.rv, color, on, blink)
-
-        /* 
-          let buffer = Buffer.create(5)
-          buffer[0] = eRegister.SET_LED
-          buffer.setNumber(NumberFormat.UInt32BE, 1, color) // [1]=0 [2]=r [3]=g [4]=b
-          buffer[2] = buffer[2] >>> 4 // durch 16, gültige rgb Werte für callibot: 0-15
-          buffer[3] = buffer[3] >>> 4
-          buffer[4] = buffer[4] >>> 4
-  
-          if (lv) writeRgbLedBlink(eRgbLed.lv, buffer, blink)
-          if (lh) writeRgbLedBlink(eRgbLed.lh, buffer, blink)
-          if (rh) writeRgbLedBlink(eRgbLed.rh, buffer, blink)
-          if (rv) writeRgbLedBlink(eRgbLed.rv, buffer, blink) */
     }
 
-    // blinken und I²C nur wenn geändert
-    /*  function writeRgbLedBlink(led: eRgbLed, buffer: Buffer, blink: boolean) {
-         if (blink && a_LEDs[led] == buffer.getNumber(NumberFormat.UInt32BE, 1))
-             buffer.setNumber(NumberFormat.UInt32BE, 1, 0) // alle Farben aus
- 
-         if (a_LEDs[led] != buffer.getNumber(NumberFormat.UInt32BE, 1)) {
- 
-             a_LEDs[led] = buffer.getNumber(NumberFormat.UInt32BE, 1)
- 
-             buffer[1] = led // Led-Index 1,2,3,4 für RGB
-             i2cWriteBuffer(buffer)
-             basic.pause(10) // ms
-         }
-     } */
 
     //% group="LED"
     //% block="RGB LED %led %color %on || blinken %blink" weight=6
@@ -287,22 +230,8 @@ namespace cb2 { // c-callibot.ts 005F7F
                 basic.pause(t) // ms
             rgbLedPause = input.runningTime()
 
-            // basic.pause(10) // ms
             i2cWriteBuffer(buffer)
         }
-
-        /*   if (!on)
-              color = Colors.Off
-  
-          let buffer = Buffer.create(5)
-          buffer[0] = eRegister.SET_LED
-          buffer.setNumber(NumberFormat.UInt32BE, 1, color) // [1]=0 [2]=r [3]=g [4]=b
-          buffer[2] = buffer[2] >>> 4 // durch 16, gültige rgb Werte für callibot: 0-15
-          buffer[3] = buffer[3] >>> 4
-          buffer[4] = buffer[4] >>> 4
-  
-          writeRgbLedBlink(led, buffer, blink)
-   */
     }
 
     let rgbLedPause = input.runningTime()  // ms seit Start
@@ -327,8 +256,6 @@ namespace cb2 { // c-callibot.ts 005F7F
             // blinken und I²C nur wenn geändert
             if (blink && a_LEDs[pLed] == pwm)
                 a_LEDs[pLed] = 0
-            // i2cWriteBuffer(Buffer.fromArray([eRegister.SET_LED, pLed, pwm]))
-            // a_LEDs[pLed] = pwm
 
             if (a_LEDs[pLed] != pwm) {
                 a_LEDs[pLed] = pwm
@@ -404,7 +331,6 @@ namespace cb2 { // c-callibot.ts 005F7F
         n_Callibot2_x22hasEncoder = readVersionArray().get(1) == 3 // 2:CB2 3:CB2E 4:CB2A=Gymnasium
         if (n_Callibot2_x22hasEncoder)
             i2cWriteBuffer(Buffer.fromArray([eRegister.RESET_ENCODER, 3])) // 3:beide
-        // return pins.i2cWriteBuffer(eI2C.x22, Buffer.fromArray([eRegister.RESET_ENCODER, 3])) 
         return n_Callibot2_x22hasEncoder
     }
 
@@ -414,7 +340,6 @@ namespace cb2 { // c-callibot.ts 005F7F
         if (n_Callibot2_x22hasEncoder) {
             i2cWriteBuffer(Buffer.fromArray([eRegister.GET_ENCODER_VALUE]))
             return i2cReadBuffer(9).slice(1, 8).toArray(NumberFormat.Int32LE) // 32 Bit mit Vorzeichen
-            // return pins.i2cWriteBuffer(eI2C.x22, Buffer.fromArray([eRegister.GET_ENCODER_VALUE]))
         } else
             return [0, 0]
     }
@@ -463,7 +388,6 @@ namespace cb2 { // c-callibot.ts 005F7F
     export function readSpannung() {
         i2cWriteBuffer(Buffer.fromArray([eRegister.GET_POWER]))
         return Math.idiv(i2cReadBuffer(3).getNumber(NumberFormat.UInt16LE, 1), 100) // 16 Bit (mV)/100 3V=30 3.15V=31
-        // return Math.roundWithPrecision(i2cReadBuffer(3).getNumber(NumberFormat.UInt16LE, 1) / 1000, 1) // 16 Bit (mV)/1000 = Volt mit 1 Kommastelle
     }
 
     //% group="INPUT analog (ab Typ 3)" subcategory="Sensoren"
@@ -563,8 +487,5 @@ namespace cb2 { // c-callibot.ts 005F7F
         //% block="Calli:bot2 (0x21)"
         cb2 = 0b10000000
     }
-    // block="Spursensor beide hell"
-    // spb = 0b00000011,
-    //reserviert = 0b01000000,
 
 } // c-callibot.ts
