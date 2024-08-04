@@ -90,12 +90,7 @@ für CalliBot, MakerKitCar, CaR4
     //% block="%buffer [3] Ultraschall Abstand in cm" weight=3
     export function getAbstand(buffer: Buffer) {
         return a_Abstand[buffer[eBufferPointer.m0 + eBufferOffset.b2_Fahrstrecke] >>> 6]
-        // return (buffer[eBufferPointer.p0 + eBufferOffset.b2_Fahrstrecke] & 0b11000000)
     }
-
-    //export function getAbstand(buffer: Buffer): e3Abstand {// blockHidden=true
-    //    return (buffer[eBufferPointer.p0 + eBufferOffset.b2_Fahrstrecke] & 0b11000000)
-    //}
 
     //% group="Datenpaket auslesen (receivedData oder sendData)" subcategory="Datenpaket" deprecated=true
     //% block="%buffer [3] Ultraschall Abstand == %abstand" weight=3
@@ -113,8 +108,6 @@ für CalliBot, MakerKitCar, CaR4
     //% bit.shadow="toggleOnOff"
     //% inlineInputMode=inline 
     export function setSensor(buffer: Buffer, bufferPointer: eBufferPointer, sensor: eSensor, bit: boolean) {
-        //if (!bufferPointer) bufferPointer = eBufferPointer.p0  // wenn nicht angegeben
-
         if (bit)
             buffer[bufferPointer + eBufferOffset.b1_Servo] |= sensor // OR Nullen bleiben, nur 1 wird gesetzt
         else
@@ -124,8 +117,6 @@ für CalliBot, MakerKitCar, CaR4
     //% group="Datenpaket auslesen (receivedData oder sendData)" subcategory="Datenpaket"
     //% block="%buffer %bufferPointer %sensor" weight=2
     export function getSensor(buffer: Buffer, bufferPointer: eBufferPointer, sensor: eSensor): boolean {
-        //if (!bufferPointer) bufferPointer = eBufferPointer.p0  // wenn nicht angegeben
-
         return (buffer[bufferPointer + eBufferOffset.b1_Servo] & sensor) == sensor
     }
 
@@ -138,8 +129,6 @@ für CalliBot, MakerKitCar, CaR4
     //% byte.min=0 byte.max=255
     //% inlineInputMode=inline 
     export function setByte(buffer: Buffer, bufferPointer: eBufferPointer, bufferOffset: eBufferOffset, byte: number) {
-        //if (!bufferPointer) bufferPointer = eBufferPointer.p0  // wenn nicht angegeben
-
         if (bufferOffset == eBufferOffset.b1_Servo) {
             buffer[bufferPointer + bufferOffset] &= 0b11100000 // AND Bit 7-6-5 bleiben; 4-3-2-1-0 auf 0 setzen
             buffer[bufferPointer + bufferOffset] |= (byte & 0b00011111) // OR Bit 7-6-5 bleiben; 4-3-2-1-0 auf pByte setzen
@@ -151,13 +140,10 @@ für CalliBot, MakerKitCar, CaR4
     //% group="Datenpaket auslesen (receivedData oder sendData)" subcategory="Datenpaket"
     //% block="%buffer %bufferPointer %bufferOffset Byte" weight=1
     export function getByte(buffer: Buffer, bufferPointer: eBufferPointer, bufferOffset: eBufferOffset) {
-        //if (!bufferPointer) bufferPointer = eBufferPointer.p0  // wenn nicht angegeben
-
-        if (bufferOffset == eBufferOffset.b1_Servo) {
+        if (bufferOffset == eBufferOffset.b1_Servo)
             return buffer[bufferPointer + eBufferOffset.b1_Servo] & 0b00011111 // AND Bit 7-6-5 löschen
-        } else {
+        else
             return buffer.getUint8(bufferPointer + bufferOffset)
-        }
     }
 
 
