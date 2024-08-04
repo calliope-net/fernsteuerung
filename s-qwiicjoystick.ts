@@ -37,7 +37,7 @@ namespace sender { // s-qwiicjoystick.ts
 
 
     //% group="Qwiic Joystick 0x20"
-    //% block="Joystick einlesen || max ± %pmax" weight=9
+    //% block="Joystick einlesen || zeige I²C Fehler %zeigeFehler" weight=9
     //% zeigeFehler.shadow=toggleYesNo
     // pmax.min=0 pmax.max=20
     export function joystickQwiic(zeigeFehler = false) {
@@ -153,6 +153,7 @@ namespace sender { // s-qwiicjoystick.ts
         return n_ButtonPosition
     }
 
+
     // ========== blockHidden=true
 
     //% blockId=sender_xmotor blockHidden=true
@@ -172,17 +173,6 @@ namespace sender { // s-qwiicjoystick.ts
     export function sender_servo16() {
         return joystickValue(eJoystickValue.servo16)
     }
-
-    //% group="Qwiic Joystick 0x20"
-    //% block="Joystick Button war gedrückt || Status löschen %clear" weight=6
-    //% clear.shadow="toggleOnOff" clear.defl=1
-    /* export function buttonStatus(clear = true): boolean {
-        if (n_ButtonStatus && clear) {
-            pins.i2cWriteBuffer(i2cqwiicJoystick_x20, Buffer.fromArray([8, 0])) // (8) Status 'Button war gedrückt' löschen
-            n_enableButtonFunkgruppe = false
-        }
-        return n_ButtonStatus
-    } */
 
 
 } // s-qwiicjoystick.ts
