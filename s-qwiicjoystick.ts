@@ -3,8 +3,7 @@ namespace sender { // s-qwiicjoystick.ts
 
     const i2cqwiicJoystick_x20 = 0x20
     let n_qwiicJoystickConnected = true // Antwort von i2cWriteBuffer == 0 wenn angeschlossen
-    // let n_128 = 3 // Korrektur Joystick Nullstellung 128-3 .. 128+3 ist 128
-    let n_max = 0 // Korrektur Joystick Endstellung nur beim Servo
+    // let n_max = 0 // Korrektur Joystick Endstellung nur beim Servo
 
     // speichert die vom Joystick gelesenen Werte
     let n_x: number // Current Horizontal Position (MSB)
@@ -39,17 +38,15 @@ namespace sender { // s-qwiicjoystick.ts
 
     //% group="Qwiic Joystick 0x20"
     //% block="Joystick einlesen || max ± %pmax" weight=9
-    //% pmax.min=0 pmax.max=20
-    export function joystickQwiic(pmax = 0) {
+    //% zeigeFehler.shadow=toggleYesNo
+    // pmax.min=0 pmax.max=20
+    export function joystickQwiic(zeigeFehler = false) {
         if (n_qwiicJoystickConnected) {
             n_qwiicJoystickConnected = pins.i2cWriteBuffer(i2cqwiicJoystick_x20, Buffer.fromArray([3]), true) == 0
 
-            if (!n_qwiicJoystickConnected)
-                btf.zeigeHexFehler(i2cqwiicJoystick_x20)
-
-            else {
+            if (n_qwiicJoystickConnected) {
                 // n_128 = btf.between(p128, 0, 8) ? p128 : 0
-                n_max = btf.between(pmax, 0, 20) ? pmax : 0
+                // n_max = btf.between(pmax, 0, 20) ? pmax : 0
 
                 let bu = pins.i2cReadBuffer(i2cqwiicJoystick_x20, 6)
                 n_x = bu[0] // X_MSB = 0x03,       // Current Horizontal Position (MSB First)
@@ -61,7 +58,8 @@ namespace sender { // s-qwiicjoystick.ts
                     if (btf.between(n_x, 120, 136) && btf.between(n_y, 120, 136)) {
                         n_xNull = n_x
                         n_yNull = n_y
-                    } else
+                    }
+                    else
                         return false // ungültige Werte gleich am Anfang ignorieren
                 }
 
@@ -71,6 +69,8 @@ namespace sender { // s-qwiicjoystick.ts
                 }
 
             }
+            else if (zeigeFehler)
+                btf.zeigeHexFehler(i2cqwiicJoystick_x20)
         }
         return n_qwiicJoystickConnected
     }
@@ -111,14 +111,17 @@ namespace sender { // s-qwiicjoystick.ts
 
                 if (btf.between(n_y, n_yNull - 2, n_yNull + 2)) // Joystick Ruhestellung (n_yNull=126) 124..128 -> 128
                     yServo = 90 // geradeaus 90°
-
-                else if (n_y < (0 + n_max)) // Werte < 0 + pmax wie 0 behandeln (max links)
-                    yServo = 45
-                else if (n_y > (255 - n_max)) // Werte > 235 wie 255 behandeln (max rechts)
-                    yServo = 135
-                else {
-                    yServo = btf.mapInt32(n_y, 0 + n_max, 255 - n_max, 45, 135)
-                }
+                else
+                    yServo = btf.mapInt32(n_y, 0, 255, 45, 135)
+                /* 
+                  else if (n_y < (0 + n_max)) // Werte < 0 + pmax wie 0 behandeln (max links)
+                      yServo = 45
+                  else if (n_y > (255 - n_max)) // Werte > 235 wie 255 behandeln (max rechts)
+                      yServo = 135
+                  else {
+                      yServo = btf.mapInt32(n_y, 0 + n_max, 255 - n_max, 45, 135)
+                  } 
+                */
                 return yServo // (45° ↖ 90° ↗ 135°)
             }
             case eJoystickValue.servo16: {
@@ -163,7 +166,7 @@ namespace sender { // s-qwiicjoystick.ts
     export function sender_ymotor() {
         return joystickValue(eJoystickValue.ymotor)
     }
-    
+
     //% blockId=sender_servo16 blockHidden=true
     //% block="Joystick y (1↖16↗31)"
     export function sender_servo16() {
