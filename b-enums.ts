@@ -30,31 +30,6 @@ namespace btf { // b-enums.ts
         s11 = 16,
     }
 
-
-    // block="M0 | Joystick"
-    // p0 = 1,
-    // block="M1 | 1. Strecke | Ultraschall"
-    // p1 = 4,
-    // block="MA | 2. Strecke | Spur 00"
-    // p2 = 7,
-    // block="MB | 3. Strecke | Spur 01"
-    // p3 = 10,
-    // block="MC | 4. Strecke | Spur 10"
-    // p4 = 13,
-    // block="MD | 5. Strecke | Spur 11"
-    // p5 = 16
-    // block="[4] 1. Strecke"
-    //f1 = 4,
-    // block="[7] 2. Strecke"
-    //f2 = 7,
-    // block="[10] 3. Strecke"
-    //f3 = 10,
-    // block="[13] 4. Strecke"
-    //f4 = 13,
-    // block="[16] 5. Strecke"
-    //f5 = 16,
-
-
     export enum eBufferOffset { // 3 Byte (b0-b1-b2) ab n_BufferPointer
         //% block="Motor (1 ↓ 128 ↑ 255)"
         b0_Motor = 0, // 1..128..255
@@ -96,27 +71,6 @@ namespace btf { // b-enums.ts
         s11 = 0x20
     }
 
-    // block="1. Strecke"
-    // f1 = 0x02,
-    // block="2. Strecke"
-    // f2 = 0x04,
-    // block="3. Strecke"
-    // f3 = 0x08,
-    // block="4. Strecke"
-    // f4 = 0x10,
-    // block="5. Strecke"
-    // f5 = 0x20,
-
-    // block="M0 & M1 (0x03)"
-    //  m01 = m0 + m1,
-    // block="MA & MB (0x0C)"
-    //  mab = ma + mb,
-    // block="MC & MD (0x30)"
-    //  mcd = mc + md,
-    // block="alle 6 Bit (0x3F)"
-    //  m01abcd = m01 + mab + mcd
-
-
     export enum e3Abstand {
         //% block="20 cm"
         u2 = 0x80,
@@ -154,15 +108,6 @@ namespace btf { // b-enums.ts
         p2Fahrplan = 0x20,
         //% block="30 Sensoren fernprogrammieren"
         p3Sensoren = 0x30,
-        // block="00" deprecated=1
-        //p0 = 0x00,
-        // block="10" deprecated=true
-        //p1 = 0x10,
-        // block="20" deprecated=true
-        //p2Strecken = 0x20,
-        // block="30" deprecated=true
-        //p3 = 0x30
-
     }
 
     export enum e0Schalter {
@@ -207,9 +152,6 @@ namespace btf { // b-enums.ts
         s25 = 250
     }
 
-    // blockId=btf_sekunden 
-    // block="%pause" blockHidden=true
-    // export function btf_sekunden(pause: ePause): number { return pause / 10 }
 
     //% blockId=btf_zehntelsekunden
     //% block="%pause" blockHidden=true
