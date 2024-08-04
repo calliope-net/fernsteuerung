@@ -9,8 +9,6 @@ namespace receiver { // r-receiver.ts
         //% block="CaR 4 (Calliope v1)"
         car4 = 1   // Index in Arrays
     }
-    //block="Calli:Bot 2 (v1 v2 v3)"
-    //calli2bot = 2,
 
     export let n_Hardware = eHardware.v3 // Index in Arrays:// 0:_Calliope v3 Pins_
 
@@ -40,49 +38,38 @@ namespace receiver { // r-receiver.ts
     //export const pinSpurlinks = DigitalPin.C11     // 9V fischertechnik 128598 IR-Spursensor
 
 
-
-    // PINs
-    //const c_pinServo: AnalogPin = 108 // v3 AnalogPin.C8 GPIO1 // 5V fischertechnik 132292 Servo
-    //const c_pinServo = c_pinServov3// <AnalogPin><number>DigitalPin.C8
-    //const c_pinEncoder = DigitalPin.P2        // 5V fischertechnik 186175 Encodermotor Competition
-
     export enum eDualMotor { M0, M1, M0_M1 } // muss mit v3 identisch sein
 
     export const c_MotorStop = 128
     let a_DualMotorSpeed = [c_MotorStop, c_MotorStop]
 
-    //  export let n_dualMotor0Speed = c_DualMotorStop  // aktueller Wert im Chip
-    //  let n_dualMotor1Speed = c_DualMotorStop  // aktueller Wert im Chip
-
-
-    const c_Servo_geradeaus = 90
+    const c_Servo90_geradeaus = 90
     let n_Servo90KorrekturFaktor = 1 // Winkel für geradeaus wird beim Start eingestellt
-    let n_Servo90Winkel = c_Servo_geradeaus // aktuell eingestellter Winkel
+    let n_Servo90Winkel = c_Servo90_geradeaus // aktuell eingestellter Winkel
 
 
     //% group="calliope-net.github.io/fernsteuerung"
-    //% block="beim Start: Empfänger | %modell Servo ↑ ° %servoGeradeaus Encoder %encoder Rad Durchmesser mm %radDmm Funkgruppe || anzeigen %zf Funkgruppe %modellFunkgruppe" weight=8
+    //% block="beim Start: Empfänger | %modell Servo ↑ ° %servoGeradeaus Encoder %encoder Rad Durchmesser mm %radDmm Funkgruppe || anzeigen %zf Funkgruppe %funkgruppe" weight=8
     //% servoGeradeaus.min=81 servoGeradeaus.max=99 servoGeradeaus.defl=90
     //% encoder.shadow="toggleOnOff"
     //% radDmm.min=60 radDmm.max=80 radDmm.defl=65
     //% zf.shadow="toggleYesNo" zf.defl=1
-    // modellFunkgruppe.min=160 modellFunkgruppe.max=191
+    // funkgruppe.min=160 funkgruppe.max=191
     // inlineInputMode=inline
-    export function beimStart(modell: eHardware, servoGeradeaus: number, encoder: boolean, radDmm: number, zf = true, modellFunkgruppe?: number) {
+    export function beimStart(modell: eHardware, servoGeradeaus: number, encoder: boolean, radDmm: number, zf = true, funkgruppe?: number) {
         n_Hardware = modell // !vor pinRelay!
 
         pinRelay(true) // Relais an schalten (braucht gültiges n_Hardware, um den Pin zu finden)
 
-        btf.setStorageBuffer(modellFunkgruppe, servoGeradeaus) // prüft und speichert in a_StorageBuffer
+        btf.setStorageBuffer(funkgruppe, servoGeradeaus) // prüft und speichert in a_StorageBuffer
         if (zf) {
             btf.zeigeFunkgruppe()
             btf.zeigeBIN(btf.getStorageServoKorrektur(), btf.ePlot.bcd, 4)
         }
-        n_Servo90KorrekturFaktor = btf.getStorageServoKorrektur() / c_Servo_geradeaus // z.B. 95/90=1.05
-
-        //pins.servoWritePin(a_PinServo[n_Hardware], n_Servo90Geradeaus)
-        n_Servo90Winkel = 0
-        pinServo90(c_Servo_geradeaus)
+        n_Servo90KorrekturFaktor = btf.getStorageServoKorrektur() / c_Servo90_geradeaus // z.B. 95/90=1.05
+      
+        n_Servo90Winkel = 0 // damit der Servo ändert und bewegt
+        pinServo90(c_Servo90_geradeaus)
 
         qwiicMotorReset() // dauert länger als 2 Sekunden
 
@@ -96,9 +83,9 @@ namespace receiver { // r-receiver.ts
                     let sK = btf.getStorageServoKorrektur() + (buttonB ? 1 : -1)
                     btf.setStorageServoKorrektur(sK)
                     btf.zeigeBIN(sK, btf.ePlot.bcd, 4)
-                    n_Servo90KorrekturFaktor = sK / c_Servo_geradeaus // z.B. 95/90=1.05
+                    n_Servo90KorrekturFaktor = sK / c_Servo90_geradeaus // z.B. 95/90=1.05
                     n_Servo90Winkel = 0
-                    pinServo90(c_Servo_geradeaus)
+                    pinServo90(c_Servo90_geradeaus)
                 }
             }
         ) // setzt auch n_start true, muss deshalb zuletzt stehen
@@ -157,7 +144,7 @@ namespace receiver { // r-receiver.ts
 
 
 
-    // ========== group="aktueller Motor (vom gewählten Modell)"
+    // ========== group="Motor (vom gewählten Modell)"
 
     //% group="Motor (vom gewählten Modell)"
     //% block="Fahren (-100 ↓ 0 ↑ +100) %speed \\%" weight=5
@@ -289,25 +276,6 @@ namespace receiver { // r-receiver.ts
                 basic.setLedColor(n_RgbLed) // v1 v2
             }
         }
-
-        /* 
-                if (!on || (blinken && a_RgbLeds[led] == color)) // entweder aus .. oder an und blinken
-                    color = Colors.Off // alle Farben aus = 0
-        
-                if (a_RgbLeds[led] != color) { // nur wenn Farbe geändert
-        
-                    a_RgbLeds[led] = color
-        
-                    let t = input.runningTime() - n_RgbLedTimer // ms seit letztem setLedColor
-                    if (t < 25)
-                        basic.pause(t) // restliche Zeit-Differenz bis 10 ms warten
-                    n_RgbLedTimer = input.runningTime()
-        
-                    if (onSetLedColorsHandler)
-                        onSetLedColorsHandler(a_RgbLeds[0], a_RgbLeds[1], a_RgbLeds[2], helligkeit) // v3 Ereignis Block auslösen, nur wenn benutzt
-                    else
-                        basic.setLedColor(a_RgbLeds[0]) // v1 v2
-                } */
     }
 
     //% group="RGB LEDs"
