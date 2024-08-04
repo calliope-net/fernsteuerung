@@ -170,7 +170,7 @@ namespace cb2 { // c-callibot.ts 005F7F
 
 
 
-    // ========== group="LED"
+    // ========== group="LEDs (Calli:bot)"
 
     // aktuelle Werte // I²C nur bei Änderung
     let a_LEDs = [0, 0, 0, 0, 0, 0, 0, 0, 0] // LED Wert in Register 0x03 merken zum blinken
@@ -183,7 +183,7 @@ namespace cb2 { // c-callibot.ts 005F7F
     export function cb2_colorPicker(value: number) { return value }
     // von "callibot": "github:MKleinSB/pxt-callibot#v2.1.1"
 
-    //% group="LED"
+    //% group="LEDs (Calli:bot)"
     //% block="RGB LEDs %color %on || ↖ %lv ↙ %lh ↘ %rh ↗ %rv blinken %blink" weight=7
     //% color.shadow="cb2_colorPicker"
     //% on.shadow=toggleOnOff on.defl=1
@@ -199,7 +199,7 @@ namespace cb2 { // c-callibot.ts 005F7F
     }
 
 
-    //% group="LED"
+    //% group="LEDs (Calli:bot)"
     //% block="RGB LED %led %color %on || blinken %blink" weight=6
     //% on.shadow=toggleOnOff on.defl=1
     //% color.shadow="cb2_colorPicker"
@@ -236,7 +236,7 @@ namespace cb2 { // c-callibot.ts 005F7F
 
     let rgbLedPause = input.runningTime()  // ms seit Start
 
-    //% group="LED"
+    //% group="LEDs (Calli:bot)"
     //% block="LED %led %on || blinken %blink Helligkeit %pwm" weight=2
     //% on.shadow="toggleOnOff"
     //% blink.shadow="toggleYesNo"

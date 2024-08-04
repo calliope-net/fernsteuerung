@@ -253,10 +253,10 @@ namespace receiver { // r-receiver.ts
     }
 
 
-    // ========== group="RGB LEDs"
+    // ========== group="RGB LEDs (Calliope v1 v2 v3)"
 
 
-    //% group="RGB LEDs"
+    //% group="RGB LEDs (Calliope v1 v2 v3)"
     //% block="RGB LED %led %color || %on blinken %blinken Helligkeit %helligkeit \\%" weight=4
     //% on.shadow=toggleOnOff on.defl=1
     //% color.shadow="colorNumberPicker"
@@ -278,7 +278,7 @@ namespace receiver { // r-receiver.ts
         }
     }
 
-    //% group="RGB LEDs"
+    //% group="RGB LEDs (Calliope v1 v2 v3)"
     //% block="RGB LEDs aus" weight=3
     export function setLedColorsOff() {
         if (onSetLedColorsHandler)
