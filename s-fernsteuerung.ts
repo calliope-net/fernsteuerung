@@ -93,7 +93,7 @@ namespace sender { // s-fernsteuerung.ts
 
     //% blockId=sender_motorProzent
     //% group="00 Fernsteuerung Gabelstapler" subcategory="Fernsteuerung"
-    //% block="%motor0 * %prozent \\%" blockHidden=1
+    //% block="%motor0 * %prozent \\%" weight=3
     //% motor0.shadow=sender_xmotor 
     //% prozent.min=10 prozent.max=100 prozent.defl=50
     export function sender_motorProzent(motor0: number, prozent: number) {
