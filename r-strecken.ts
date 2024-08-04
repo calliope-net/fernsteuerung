@@ -36,14 +36,12 @@ namespace receiver { // r-strecken.ts
     //% inlineInputMode=inline
     export function fahreStrecke(motor: number, servo: number, strecke: number, abstandsSensor = false, abstand = 20, spurSensor = false, impulse = false, checkEncoder = true) {
 
-        selectMotor(c_MotorStop)
+        // selectMotor(c_MotorStop)
 
         if (motor != 0 && motor != c_MotorStop && servo != 0 && strecke != 0) {
             let sensor_color = Colors.Off
-            //  let timeout_Encoder: number // 20 s Timeout wenn Encoder nicht zählt
 
             if (checkEncoder && n_hasEncoder) {
-
                 let timeout_Encoder = 100 // 20 s Timeout wenn Encoder nicht zählt
 
                 encoderStartStrecke(true, strecke, impulse)
@@ -52,7 +50,6 @@ namespace receiver { // r-strecken.ts
 
                 while (n_EncoderAutoStop) //
                 {
-
                     if (timeout_Encoder-- <= 0) {
                         n_hasEncoder = false // bei ersten 20s timeout false, nächster Aufruf zählt dann nach Zeit
                         sensor_color = Colors.Red
@@ -73,7 +70,6 @@ namespace receiver { // r-strecken.ts
 
             }
             else { // kein Encoder
-                //  timeout_Encoder = strecke // Zehntelsekunden
                 let zehntelsekunden = strecke // Zehntelsekunden
                 if (impulse)
                     zehntelsekunden /= n_EncoderFaktor
@@ -146,7 +142,7 @@ namespace receiver { // r-strecken.ts
                 n_EncoderStrecke_impulse = 0 // Ereignis nur einmalig auslösen, wieder aktivieren mit encoder_start
 
                 if (n_EncoderAutoStop) {
-                    selectMotor(c_MotorStop) // dualMotor128(eDualMotor.M0, c_MotorStop)
+                    selectMotor(c_MotorStop)
                     n_EncoderAutoStop = false
                 }
 
@@ -177,7 +173,8 @@ namespace receiver { // r-strecken.ts
             n_EncoderAutoStop = autostop
 
             // btf.n_lastConnectedTime = input.runningTime() // Connection-Timeout Zähler zurück setzen um Abschaltung zu verhindern
-        } else {
+        }
+        else {
             n_EncoderStrecke_impulse = 0
         }
     }
