@@ -111,17 +111,11 @@ namespace cb2 { // c-fernsteuerung.ts
             for (i; i > 0; i--) {
 
                 for (let iBufferPointer = btf.eBufferPointer.m1; iBufferPointer < 19; iBufferPointer += 3) { // 4, 7, 10, 13, 16
-                    //  fahreStrecke(buffer.slice(iBufferPointer, 3))
-
-                    /*  if (btf.getByte(buffer, iBufferPointer, btf.eBufferOffset.b0_Motor) != 0
-                         &&
-                         btf.getByte(buffer, iBufferPointer, btf.eBufferOffset.b1_Servo) != 0
-                         &&
-                         btf.getByte(buffer, iBufferPointer, btf.eBufferOffset.b2_Fahrstrecke) != 0) { */
-
 
                     btf.zeigeBINx234Fahrplan5Strecken(buffer, iBufferPointer) // anzeigen im 5x5 Display
 
+                    // fahreStrecke testet Gültigkeit der Parameter
+                    // fahreStrecke wertet auch Encoder, Abstand- und Spur- Sensoren aus
                     fahreStrecke(
                         btf.getByte(buffer, iBufferPointer, btf.eBufferOffset.b0_Motor),
                         btf.getByte(buffer, iBufferPointer, btf.eBufferOffset.b1_Servo),
@@ -131,7 +125,6 @@ namespace cb2 { // c-fernsteuerung.ts
                         btf.getSensor(buffer, iBufferPointer, btf.eSensor.b5Spur),
                         btf.getSensor(buffer, iBufferPointer, btf.eSensor.b7Impulse)
                     )
-                    // }
                 } // for iBufferPointer
             }
         }
@@ -193,7 +186,7 @@ namespace cb2 { // c-fernsteuerung.ts
                         }
                         else {
                             let zehntelsekunden = btf.getByte(buffer, iBufferPointer, btf.eBufferOffset.b2_Fahrstrecke)
-                            
+
                             if (btf.getSensor(buffer, iBufferPointer, btf.eSensor.b7Impulse))
                                 zehntelsekunden /= n_EncoderFaktor
 
@@ -218,9 +211,6 @@ namespace cb2 { // c-fernsteuerung.ts
         }
 
     }
-
-
-
 
 
 } // c-fernsteuerung.ts
