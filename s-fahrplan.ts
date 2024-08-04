@@ -5,16 +5,18 @@ namespace sender { // s-fahrplan.ts
     // ========== group="20 Fahrplan Fahren und Lenken (5 Teilstrecken) senden" subcategory="Fahrplan"
 
     //% group="20 Fahrplan (5 Teilstrecken) senden" subcategory="Fahrplan"
-    //% block="20 Fahrplan senden • Fahren und Lenken %buffer Strecke 1 %p1 Strecke 2 %p2 Strecke 3 %p3 Strecke 4 %p4 Strecke 5 %p5" weight=8
+    //% block="20 Fahrplan senden • Fahren und Lenken %buffer Strecke 1 %p1 Strecke 2 %p2 Strecke 3 %p3 Strecke 4 %p4 Strecke 5 %p5 || Anzahl Durchläufe %count" weight=8
     //% buffer.shadow="btf_sendBuffer19"
     //% p1.shadow=sender_StreckePicker
     //% p2.shadow=sender_StreckePicker
     //% p3.shadow=sender_StreckePicker
     //% p4.shadow=sender_StreckePicker
     //% p5.shadow=sender_StreckePicker
-    export function send20Strecken(buffer: Buffer, p1: Buffer, p2: Buffer, p3: Buffer, p4: Buffer, p5: Buffer) {
+    //% count.min=1 count.max=8 count.defl=1
+    export function send20Strecken(buffer: Buffer, p1: Buffer, p2: Buffer, p3: Buffer, p4: Buffer, p5: Buffer, count = 1) {
 
         btf.setBetriebsart(buffer, btf.e0Betriebsart.p2Fahrplan)
+        btf.setByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo, count) // m0-Servo alles wiederholen
 
         if (p1 && p1.length == 3) buffer.write(btf.eBufferPointer.m1, p1) // 4-5-6
         if (p2 && p2.length == 3) buffer.write(btf.eBufferPointer.ma, p2)
@@ -85,8 +87,7 @@ namespace sender { // s-fahrplan.ts
     // inlineInputMode=inline
     export function send2x2Motoren(buffer: Buffer, p1: Buffer, p2: Buffer, count = 1) {
         btf.setBetriebsart(buffer, btf.e0Betriebsart.p2Fahrplan)
-
-        btf.setByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo, count) // alles wiederholen
+        btf.setByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo, count) // m0-Servo alles wiederholen
 
         if (p1 && p1.length == 6) buffer.write(btf.eBufferPointer.ma, p1) // 7-8-9-0-11-12
         if (p2 && p2.length == 6) buffer.write(btf.eBufferPointer.mc, p2) // 13-14-15-16-17-18

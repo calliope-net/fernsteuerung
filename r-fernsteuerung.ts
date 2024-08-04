@@ -99,31 +99,18 @@ namespace receiver { // r-fernsteuerung.ts
             n_fahrplanBuffer5Strecken_gestartet = true
             btf.zeigeBIN(0, btf.ePlot.bin, 2)
 
-            //if (btf.getSensor(buffer, btf.eBufferPointer.m1, btf.eSensor.b6Abstand)) {
-            //    readQwiicUltrasonic() // einmal vorher lesen, weil der erste Wert falsch sein kann
-            //    basic.pause(100)
-            //}
-
             let i = btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo) // Anzahl Durchläufe gesamt in m0-Servo
-            if (i == 0)
+            if (i == 0) // 0 wie 1 behandeln = 1 Durchlauf
                 i = 1 // 0=1x 1=1x 2=2x 3=3x ...
 
             for (i; i > 0; i--) {
 
                 for (let iBufferPointer = btf.eBufferPointer.m1; iBufferPointer < 19; iBufferPointer += 3) { // 4, 7, 10, 13, 16
-                    //  fahreStrecke(buffer.slice(iBufferPointer, 3))
-
-                    /*  if (btf.getByte(buffer, iBufferPointer, btf.eBufferOffset.b0_Motor) != 0
-                         &&
-                         btf.getByte(buffer, iBufferPointer, btf.eBufferOffset.b1_Servo) != 0
-                         &&
-                         btf.getByte(buffer, iBufferPointer, btf.eBufferOffset.b2_Fahrstrecke) != 0) { */
-
-
-
 
                     btf.zeigeBINx234Fahrplan5Strecken(buffer, iBufferPointer) // anzeigen im 5x5 Display
 
+                    // fahreStrecke testet Gültigkeit der Parameter
+                    // fahreStrecke wertet auch Encoder, Abstand- und Spur- Sensoren aus
                     fahreStrecke(
                         btf.getByte(buffer, iBufferPointer, btf.eBufferOffset.b0_Motor),
                         btf.getByte(buffer, iBufferPointer, btf.eBufferOffset.b1_Servo),
@@ -133,7 +120,6 @@ namespace receiver { // r-fernsteuerung.ts
                         btf.getSensor(buffer, iBufferPointer, btf.eSensor.b5Spur),
                         btf.getSensor(buffer, iBufferPointer, btf.eSensor.b7Impulse)
                     )
-                    // }
                 } // for iBufferPointer
             }
         }
