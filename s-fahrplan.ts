@@ -2,7 +2,7 @@
 namespace sender { // s-fahrplan.ts
 
 
-    // ========== group="20 Fahrplan Fahren und Lenken (5 Teilstrecken) senden" subcategory="Fahrplan"
+    // ========== group="20 Fahrplan (5 Teilstrecken) senden" subcategory="Fahrplan"
 
     //% group="20 Fahrplan (5 Teilstrecken) senden" subcategory="Fahrplan"
     //% block="20 Fahrplan senden • Fahren und Lenken %buffer Strecke 1 %p1 Strecke 2 %p2 Strecke 3 %p3 Strecke 4 %p4 Strecke 5 %p5 Anzahl Durchläufe %count" weight=8
@@ -16,7 +16,7 @@ namespace sender { // s-fahrplan.ts
     export function send20Strecken(buffer: Buffer, p1: Buffer, p2: Buffer, p3: Buffer, p4: Buffer, p5: Buffer, count = 1) {
 
         btf.setBetriebsart(buffer, btf.e0Betriebsart.p2Fahrplan)
-        btf.setByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo, count) // m0-Servo alles wiederholen
+        btf.setByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo, count) // m0-Servo Anzahl Durchläufe
 
         if (p1 && p1.length == 3) buffer.write(btf.eBufferPointer.m1, p1) // 4-5-6
         if (p2 && p2.length == 3) buffer.write(btf.eBufferPointer.ma, p2)
@@ -34,6 +34,9 @@ namespace sender { // s-fahrplan.ts
     }
 
 
+
+    // ========== group="Geschwindigkeit (-100 ↓ 0 ↑ +100), Winkel (0° ↖ 90° ↗ 180°)" subcategory="Fahrplan"
+
     //% blockId=sender_StreckePicker
     //% group="Geschwindigkeit (-100 ↓ 0 ↑ +100), Winkel (0° ↖ 90° ↗ 180°)" subcategory="Fahrplan"
     //% block="Fahren %motor Lenken %servo Länge %strecke cm\\|⅒s || • Abstandssensor %abstandsSensor Spursensor %spurSensor Impulse %impulse" weight=7
@@ -47,6 +50,10 @@ namespace sender { // s-fahrplan.ts
     export function sender_StreckePicker(motor: number, servo: number, strecke: number, abstandsSensor = true, spurSensor = false, impulse = false) {
         return sender_Strecke(btf.speedPicker(motor), btf.protractorPicker(servo), strecke, abstandsSensor, spurSensor, impulse)
     }
+
+
+
+    // ========== group="Geschwindigkeit (1 ↓ 128 ↑ 255), Winkel (1 ↖ 16 ↗ 31)" subcategory="Fahrplan"
 
     //% blockId=sender_Strecke
     //% group="Geschwindigkeit (1 ↓ 128 ↑ 255), Winkel (1 ↖ 16 ↗ 31)" subcategory="Fahrplan"
@@ -75,8 +82,9 @@ namespace sender { // s-fahrplan.ts
         //    return Buffer.fromArray([motor, servo, strecke])
     }
 
-    // ==========
 
+
+    // ========== group="20 Fahrplan (2 Teilstrecken • 2 Motoren) senden" subcategory="Fahrplan"
 
     //% group="20 Fahrplan (2 Teilstrecken • 2 Motoren) senden" subcategory="Fahrplan"
     //% block="20 Fahrplan senden • 2 Motoren %buffer Strecke 1 %p1 Strecke 2 %p2 Anzahl Durchläufe %count" weight=8
@@ -87,7 +95,7 @@ namespace sender { // s-fahrplan.ts
     // inlineInputMode=inline
     export function send2x2Motoren(buffer: Buffer, p1: Buffer, p2: Buffer, count = 1) {
         btf.setBetriebsart(buffer, btf.e0Betriebsart.p2Fahrplan)
-        btf.setByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo, count) // m0-Servo alles wiederholen
+        btf.setByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo, count) // m0-Servo Anzahl Durchläufe
 
         if (p1 && p1.length == 6) buffer.write(btf.eBufferPointer.ma, p1) // 7-8-9-0-11-12
         if (p2 && p2.length == 6) buffer.write(btf.eBufferPointer.mc, p2) // 13-14-15-16-17-18
@@ -95,10 +103,10 @@ namespace sender { // s-fahrplan.ts
 
 
 
-    // ========== group="Geschwindigkeit (-100 ↓ 0 ↑ +100) • 2 Motoren getrennt • nach Zeit" subcategory="Fahrplan"
+    // ========== group="Geschwindigkeit (-100 ↓ 0 ↑ +100) • 2 Motoren getrennt • nach Zeit • mit Sensoren" subcategory="Fahrplan"
 
     //% blockId=sender_2MotorenZeitPicker
-    //% group="Geschwindigkeit (-100 ↓ 0 ↑ +100) • 2 Motoren getrennt • nach Zeit" subcategory="Fahrplan"
+    //% group="Geschwindigkeit (-100 ↓ 0 ↑ +100) • 2 Motoren getrennt • nach Zeit • mit Sensoren" subcategory="Fahrplan"
     //% block="Motor links %motorA Motor rechts %motorB Zeit ⅒s %zehntelsekunden || • %count Abstandssensor %abstandsSensor Spursensor %spurSensor" weight=4
     //% motorA.shadow=speedPicker motorA.defl=50
     //% motorB.shadow=speedPicker motorB.defl=-50
@@ -112,8 +120,11 @@ namespace sender { // s-fahrplan.ts
     }
 
 
+
+    // ========== group="Geschwindigkeit (1 ↓ 128 ↑ 255) • 2 Motoren getrennt • nach Zeit • mit Sensoren" subcategory="Fahrplan"
+
     //% blockId=sender_2MotorenZeit
-    //% group="Geschwindigkeit (1 ↓ 128 ↑ 255) • 2 Motoren getrennt • nach Zeit" subcategory="Fahrplan"
+    //% group="Geschwindigkeit (1 ↓ 128 ↑ 255) • 2 Motoren getrennt • nach Zeit • mit Sensoren" subcategory="Fahrplan"
     //% block="2 Motoren (1↓128↑255) | links %motorA rechts %motorB Zeit ⅒s %zehntelsekunden || • %count Abstandssensor %abstandsSensor Spursensor %spurSensor" weight=4
     //% motorA.min=1 motorA.max=255 motorA.defl=192
     //% motorB.min=1 motorB.max=255 motorB.defl=64
@@ -128,30 +139,27 @@ namespace sender { // s-fahrplan.ts
         buffer6[1] = count & 0x1F // (1 ↖ 16 ↗ 31)
         buffer6[2] = zehntelsekunden
         buffer6[3] = motorB //  (1 ↓ 128 ↑ 255)
-        //  buffer6[4] = servo & 0x1F // (1 ↖ 16 ↗ 31)
-        // buffer6[5] = strecke
-
 
         if (spurSensor)
             buffer6[1] |= btf.eSensor.b5Spur
         if (abstandsSensor)
             buffer6[1] |= btf.eSensor.b6Abstand
-        //if (impulse)
-        //    buffer[1] |= btf.eSensor.b7Impulse
+
         return buffer6
     }
 
+
+
+    // ========== group="Geschwindigkeit (1 ↓ 128 ↑ 255) • 2 Motoren getrennt • nur mit Encoder • ohne Sensoren" subcategory="Fahrplan"
+
     //% blockId=sender_2MotorenEncoder
-    //% group="Geschwindigkeit (1 ↓ 128 ↑ 255) • 2 Motoren getrennt • nur mit Encoder" subcategory="Fahrplan"
-    // group="20 Fahrplan (2 Teilstrecken • 2 Motoren) senden" subcategory="Fahrplan"
+    //% group="Geschwindigkeit (1 ↓ 128 ↑ 255) • 2 Motoren getrennt • nur mit Encoder • ohne Sensoren" subcategory="Fahrplan"
     //% block="2 Motoren (1↓128↑255) | links %motorA rechts %motorB 2 Encoder (cm\\|Impulse) | links %encoderA rechts %encoderB || • %count Impulse %impulse" weight=3
     //% motorA.min=1 motorA.max=255 motorA.defl=192
     //% motorB.min=1 motorB.max=255 motorB.defl=64
     //% encoderA.min=10 encoderA.max=255 encoderA.defl=25
     //% encoderB.min=10 encoderB.max=255 encoderB.defl=25
     //% count.min=1 count.max=8 count.defl=1
-    // abstandsSensor.shadow=toggleOnOff abstandsSensor.defl=1
-    // spurSensor.shadow=toggleOnOff
     //% impulse.shadow=toggleYesNo
     //% inlineInputMode=inline
     export function sender_2MotorenEncoder(motorA: number, motorB: number, encoderA: number, encoderB: number, count = 1, impulse = false) {
