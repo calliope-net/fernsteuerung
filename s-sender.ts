@@ -12,7 +12,7 @@ namespace sender { // s-sender.ts
         if (!btf.simulator()) {
             btf.setStorageBuffer(modellFunkgruppe) // prüft und speichert in a_StorageBuffer
 
-            setStatusModell(btf.getStorageModell(), zf, 2500, true) // setStatusModell() schreibt auch in Flash
+            setStatusModell(btf.getStorageModell(), zf, 1500, true) // setStatusModell() schreibt auch in Flash
 
             //if (!btf.between(getStatusModell(), 0, c_ModellCount - 1))
             //    setStatusModell(eModell.cb2e, true) // wenn ungültig, Standardwert setzen, setStatusModell() schreibt auch in Flash
