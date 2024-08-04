@@ -7,7 +7,7 @@ namespace receiver { // r-fernsteuerung.ts
     //% group="00 Fernsteuerung mit Joystick (reagiert auf Sensoren)" subcategory="Fernsteuerung"
     //% block="Fahren und Lenken mit Joystick aus Datenpaket %buffer M:01ABCD S:0" weight=5
     //% buffer.shadow="btf_receivedBuffer19"
-    export function sendM0(buffer: Buffer) {
+    export function fahreJoystick(buffer: Buffer) {
 
         if (btf.isBetriebsart(buffer, btf.e0Betriebsart.p0Fahren)) {
 
