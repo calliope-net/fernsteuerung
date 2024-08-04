@@ -12,12 +12,13 @@ namespace sender { // s-sender.ts
         if (!btf.simulator()) {
             btf.setStorageBuffer(modellFunkgruppe) // prüft und speichert in a_StorageBuffer
 
-            setStatusModell(btf.getStorageModell(), false) // übernimmt Modell aus Flash
-            if (!btf.between(getStatusModell(), 0, c_ModellCount - 1))
-                setStatusModell(eModell.cb2e, true) // wenn ungültig, Standardwert setzen, setStatusModell() schreibt auch in Flash
+            setStatusModell(btf.getStorageModell(), zf, 2500, false) // setStatusModell() schreibt auch in Flash
+
+            //if (!btf.between(getStatusModell(), 0, c_ModellCount - 1))
+            //    setStatusModell(eModell.cb2e, true) // wenn ungültig, Standardwert setzen, setStatusModell() schreibt auch in Flash
 
             if (zf) {
-                zeigeModellImagePause(2500) // Bild anzeigen mit Pause 1500ms
+                // zeigeModellImagePause(2500) // Bild anzeigen mit Pause 1500ms
                 btf.zeigeFunkgruppe()
             }
 
@@ -83,8 +84,14 @@ namespace sender { // s-sender.ts
 
     // folgende Funktionen bieten (im namespace sender) Zugriff auf die 3 Variablen modell, funktion, buttons
 
-    export function setStatusModell(pModell: eModell, flash: boolean) {
+    export function setStatusModell(pModell: eModell, zeigeModell: boolean, pause: number, flash: boolean) {
+        if (!btf.between(pModell, 0, c_ModellCount - 1)) {
+            pModell = eModell.cb2e
+            flash = true
+        }
         getCurrentStatusBuffer()[eStatusBuffer.modell] = pModell
+        if (zeigeModell)
+            zeigeModellImagePause(pause)
         if (flash)
             btf.setStorageModell(pModell) // geändertes Modell wird auch im Flash gespeichert
     }
