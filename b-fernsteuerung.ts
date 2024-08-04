@@ -94,8 +94,8 @@ namespace btf { // b-fernsteuerung.ts
         }
     }
 
-    //% group="calliope-net.github.io/fernsteuerung"
-    //% block="Knopf A+B halten, Servo Korrektur" weight=4 deprecated=1
+    // group="calliope-net.github.io/fernsteuerung"
+    // block="Knopf A+B halten, Servo Korrektur" weight=4 deprecated=1
     //export function buttonABhold() {
     //    n_servoKorrekturButton = !n_servoKorrekturButton
     //}
