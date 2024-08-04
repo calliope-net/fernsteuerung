@@ -8,32 +8,18 @@ namespace btf { // b-dispaly5x5.ts
 
     export function setClearScreen() {
         n5x5_setClearScreen = true
-        // n5x5_x01y0 = 0
     }
 
     let n5x5_x01y0 = 0 // Bit 5-4 Betriebsart in x=0-1 y=0
-    // let n5x5_x2 = 0 // Bit 5-4-3-2-1 Motor Power in x=2
-    // let n5x5_x3 = 0 // Motor 1..16..31
-    //  let n5x5_x4 = 0 // Servo 1..16..31
-
     let a5x5_xBuffer = Buffer.create(5)
 
     // ↕↕...
     export function zeigeFunkgruppe() {
-        /*  if (clearScreen) {
-             basic.clearScreen()
-             a5x5_xBuffer.fill(0, 2, 3)
-             // n5x5_x2 = 0 // Bit 5-4-3-2-1 Motor Power in x=2
-             // n5x5_x3 = 0 // Motor 1..16..31
-             // n5x5_x4 = 0 // Servo 1..16..31
-         } */
         let int = getStorageFunkgruppe()
         if (between(int, c_funkgruppe_min, c_funkgruppe_max)) {
             // zeigeBIN(getStorageFunkgruppe() << 4, ePlot.hex, 1) // 5x5 x=0-1 y=1-2-3-4 (y=0 ist bei hex immer aus)
             int = [0x10, 0x30, 0x70, 0xF0, 0xF1, 0xF3, 0xF7, 0xFF][getStorageFunkgruppe() & 0x07] // 3 Bit 0..7 als Index
         }
-        // else
-        //     zeigeBIN(getStorageFunkgruppe(), ePlot.hex, 1) // 5x5 x=0-1 y=1-2-3-4 (y=0 ist bei hex immer aus)
         zeigeBIN(int, ePlot.hex, 1) // 5x5 x=0-1 y=1-2-3-4 (y=0 ist bei hex immer aus)
     }
 
@@ -62,15 +48,6 @@ namespace btf { // b-dispaly5x5.ts
             if (getaktiviert(buffer, e3aktiviert.md)) int |= 1
 
             zeigeBIN(int, ePlot.bin, xLed)
-
-            /*             n5x5_x2 = buffer[3]
-                        // bitweise UND mit 2 4 8 16 32
-                        if ((n5x5_x2 & e3aktiviert.m1) == e3aktiviert.m1) { led.plot(xLed, 0) } else { led.unplot(xLed, 0) }
-                        if ((n5x5_x2 & e3aktiviert.ma) == e3aktiviert.ma) { led.plot(xLed, 1) } else { led.unplot(xLed, 1) }
-                        if ((n5x5_x2 & e3aktiviert.mb) == e3aktiviert.mb) { led.plot(xLed, 2) } else { led.unplot(xLed, 2) }
-                        if ((n5x5_x2 & e3aktiviert.mc) == e3aktiviert.mc) { led.plot(xLed, 3) } else { led.unplot(xLed, 3) }
-                        if ((n5x5_x2 & e3aktiviert.md) == e3aktiviert.md) { led.plot(xLed, 4) } else { led.unplot(xLed, 4) }
-             */
         }
     }
 
@@ -139,41 +116,14 @@ namespace btf { // b-dispaly5x5.ts
         else
             zeigeBIN(mapInt32(int255, 1, 255, 1, 31), ePlot.bin, xLed) // 8 Bit auf 5 Bit verteilen
     }
-    /*
-     function zeigeBINx3Motor_map255(x3: number) {
-         if (n5x5_x3 != x3) { // zeigt Motor0 aus Buffer[1] 1..16..31 (x=3)
-             n5x5_x3 = x3
-             if (x3 == 0)
-                 zeigeBIN(0, ePlot.bin, 3)
-             else
-                 zeigeBIN(mapInt32(x3, 1, 255, 1, 31), ePlot.bin, 3) // 8 Bit auf 5 Bit verteilen
-         }
-     }
- 
-     function zeigeBINx4Motor_map255(x4: number) {
-         if (n5x5_x4 != x4) { // zeigt Motor0 aus Buffer[1] 1..16..31 (x=4)
-             n5x5_x4 = x4
-             if (x4 == 0)
-                 zeigeBIN(0, ePlot.bin, 4)
-             else
-                 zeigeBIN(mapInt32(x4, 1, 255, 1, 31), ePlot.bin, 4) // 8 Bit auf 5 Bit verteilen
-         }
-     }
- 
-   function zeigeBINx4Servo_31(x4: number) {
-         if (n5x5_x4 != x4) { // zeigt Servo0 aus Buffer[2] 1..16..31 (x=4)
-             n5x5_x4 = x4
-             zeigeBIN(x4, ePlot.bin, 4)
-         }
-     } */
 
     function zeigeBIN_BufferPointer(iBufferPointer: btf.eBufferPointer, xLed: number) {
         let int2 = a5x5_xBuffer[xLed]
-        if (iBufferPointer == btf.eBufferPointer.m1) int2 |= 16 // { led.plot(xLed, 0) } //else { led.unplot(x, 0) }
-        if (iBufferPointer == btf.eBufferPointer.ma) int2 |= 8 // { led.plot(xLed, 1) } //else { led.unplot(x, 1) }
-        if (iBufferPointer == btf.eBufferPointer.mb) int2 |= 4 // { led.plot(xLed, 2) } //else { led.unplot(x, 2) }
-        if (iBufferPointer == btf.eBufferPointer.mc) int2 |= 2 // { led.plot(xLed, 3) } //else { led.unplot(x, 3) }
-        if (iBufferPointer == btf.eBufferPointer.md) int2 |= 1 // { led.plot(xLed, 4) } //else { led.unplot(x, 4) }
+        if (iBufferPointer == btf.eBufferPointer.m1) int2 |= 16
+        if (iBufferPointer == btf.eBufferPointer.ma) int2 |= 8
+        if (iBufferPointer == btf.eBufferPointer.mb) int2 |= 4
+        if (iBufferPointer == btf.eBufferPointer.mc) int2 |= 2
+        if (iBufferPointer == btf.eBufferPointer.md) int2 |= 1
 
         zeigeBIN(int2, ePlot.bin, xLed)
     }
@@ -193,9 +143,6 @@ namespace btf { // b-dispaly5x5.ts
 
         zeigeBIN_map255(getByte(buffer, iBufferPointer, eBufferOffset.b0_Motor), 3) // map reduziert 8 Bit auf 5 Bit, damit es ins Display passt
         zeigeBIN(getByte(buffer, iBufferPointer, eBufferOffset.b1_Servo), ePlot.bin, 4) // Servo hat nur 5 Bit
-
-        // zeigeBIN_map255(buffer[iBufferPointer + eBufferOffset.b0_Motor], 3)
-        // zeigeBIN(buffer[iBufferPointer + eBufferOffset.b1_Servo] & 0x1F, ePlot.bin, 4)
     }
 
     export function zeigeBINx234Fahrplan2x2Motoren(buffer: Buffer, iBufferPointer: btf.eBufferPointer) {
@@ -245,7 +192,8 @@ namespace btf { // b-dispaly5x5.ts
                     int = int >> 1 // bitweise Division durch 2
                 }
             }
-        } else {
+        }
+        else {
             // bcd und hex zeigt von rechts nach links so viele Spalten an, wie die Zahl Ziffern hat
             // wenn die nächste Zahl weniger Ziffern hat, werden die links daneben nicht gelöscht
             // pro Ziffer werden mit zeigeBIN immer 5 LEDs geschaltet, die obere 2^4 ist immer aus
