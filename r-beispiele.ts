@@ -11,7 +11,6 @@ namespace receiver { // r-beispiele.ts
     //% motor128.min=1 motor128.max=255 motor128.defl=192
     //% servo16.min=1 servo16.max=31 servo16.defl=31
     //% langsamfahren.min=1 langsamfahren.max=255 langsamfahren.defl=160
-    // lenkenProzent.min=10 lenkenProzent.max=90 lenkenProzent.defl=0
     //% repeat.shadow="toggleYesNo" repeat.defl=1
     //% stop.shadow="toggleYesNo"
     //% abstand.min=10 abstand.max=50 abstand.defl=20
@@ -22,7 +21,6 @@ namespace receiver { // r-beispiele.ts
             m_lenken = undefined // gespeicherte Werte löschen
             m_inSpur = false     // beim ersten Durchlauf der Schleife
             setLedColors(eRGBled.b, Colors.Off, false)
-            //  writeRgbLeds(Colors.Off, false) // alle 4 aus
         }
 
         if (stop && abstand > 0 && getQwiicUltrasonic(true) < abstand) {
@@ -30,42 +28,42 @@ namespace receiver { // r-beispiele.ts
             selectMotor(c_MotorStop)
 
             setLedColors(eRGBled.b, Colors.Red)
-            basic.pause(Math.randomRange(500, 5000)) // 0.5 .. 5 Sekunden
+            basic.pause(Math.randomRange(500, 5000)) // 0.5 .. 5 Sekunden warten bis es wieder los fährt
         }
         else {
 
             let lenken = Math.abs(servo16 - 16)  // 16-16=0 / 1-16=15 / 31-16=15
 
-            // readInputs(i2cSpur) // liest Spursensor ein
+            // readInputs(i2cSpur) // liest I2C Spursensor ein, bei pins nicht relevant
 
             if (readSpursensor(eDH.dunkel, eDH.dunkel)) {
-                selectMotor(motor128) // dualMotor128(eDualMotor.M0, motor128) //     writeMotor128Servo16(motor128, 16) // nicht lenken
-                pinServo16(16)
+                selectMotor(motor128)
+                pinServo16(16) // nicht lenken
                 m_inSpur = true
             }
-            else if (readSpursensor(eDH.dunkel, eDH.hell)) { // 0% Rad steht bei voller Lenkung (1 oder 31)
-                selectMotor(langsamfahren) // dualMotor128(eDualMotor.M0, langsamfahren) //   writeMotor128Servo16(langsamfahren, 16 - lenken, lenkenProzent) // links lenken <16 = 1
+            else if (readSpursensor(eDH.dunkel, eDH.hell)) {
+                selectMotor(langsamfahren) // links lenken <16 = 1
                 pinServo16(16 - lenken)
                 if (m_inSpur)
                     m_lenken = 16 - lenken
             }
-            else if (readSpursensor(eDH.hell, eDH.dunkel)) { // 0% Rad steht bei voller Lenkung (1 oder 31)
-                selectMotor(langsamfahren) // dualMotor128(eDualMotor.M0, langsamfahren) //  writeMotor128Servo16(langsamfahren, 16 + lenken, lenkenProzent) // rechts lenken >16 = 31
-                pinServo16(16 + lenken)
+            else if (readSpursensor(eDH.hell, eDH.dunkel)) {
+                selectMotor(langsamfahren)
+                pinServo16(16 + lenken) // rechts lenken >16 = 31
                 if (m_inSpur)
                     m_lenken = 16 + lenken
             }
-            else if (m_lenken) {
-                selectMotor(langsamfahren) // dualMotor128(eDualMotor.M0, langsamfahren) //  writeMotor128Servo16(langsamfahren, m_lenken, lenkenProzent) // lenken wie zuletzt gespeichert
-                pinServo16(m_lenken)
-                m_inSpur = false // hell hell
+            else if (m_lenken) { // hell hell
+                selectMotor(langsamfahren)
+                pinServo16(m_lenken) // lenken wie zuletzt gespeichert
+                m_inSpur = false
             }
-            else {
-                selectMotor(motor128) // dualMotor128(eDualMotor.M0, motor128) // writeMotor128Servo16(motor128, 16, 0) // geradeaus fahren bis zur schwarzen Linie
-                pinServo16(16)
-                m_inSpur = false // hell hell
+            else { // hell hell
+                selectMotor(motor128) // schnell geradeaus fahren bis zur schwarzen Linie
+                pinServo16(16) // nicht lenken
+                m_inSpur = false
             }
-            setLedColors(eRGBled.b, Colors.Yellow, stop)
+            setLedColors(eRGBled.b, Colors.Yellow, stop) // gelb, wenn Spursensor aktiviert ist
 
         }
     }
