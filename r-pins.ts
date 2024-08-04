@@ -1,13 +1,9 @@
 
 namespace receiver { // r-pins.ts
 
-    // PINs
-    //  const c_pinRelay = DigitalPin.C9 
-    //  const c_pinC12 = DigitalPin.C12 
+    // PINs sind in r-receiver.ts definiert
 
-
-
-    // ========== group="Relais" subcategory="Pins, Sensoren"
+    // ========== group="Digital Pins (vom gewählten Modell)" subcategory="Pins, Sensoren"
     // Relais auf der Leiterplatte schaltet 9V Akku für eigene Stromversorgung an VM+
 
     //% group="Digital Pins (vom gewählten Modell)" subcategory="Pins, Sensoren"
@@ -18,8 +14,6 @@ namespace receiver { // r-pins.ts
             pins.digitalWritePin(a_PinRelay[n_Hardware], pON ? 1 : 0)
     }
 
-    // GPIO für Grove (5V) Licht oder Buzzer
-
     //% group="Digital Pins (vom gewählten Modell)" subcategory="Pins, Sensoren"
     //% block="Licht %pON" weight=7
     //% pON.shadow="toggleOnOff"
@@ -28,7 +22,7 @@ namespace receiver { // r-pins.ts
             pins.digitalWritePin(a_PinLicht[n_Hardware], pON ? 1 : 0)
     }
 
-    export enum eDigitalPins { // Pins gültig für alle Modelle, unterscheiden sich im Enum Wert
+    export enum eDigitalPins { // Pins gültig für alle Modelle, unterscheiden sich bei v3 im Enum Wert
         P0 = DigitalPin.P0,
         P1 = DigitalPin.P1,
         P2 = DigitalPin.P2,
@@ -46,28 +40,7 @@ namespace receiver { // r-pins.ts
         pins.digitalWritePin(<number>pin, pON ? 0 : 1)
     }
 
-    /* 
-    
-        // ========== group="Klingelton (Calliope v3: P0)" subcategory="Pins, Sensoren"
-    
-        let n_ringTone = false
-    
-        // group="Klingelton (Calliope v3: P0)" subcategory="Pins"
-        // block="spiele Note %pON || Frequenz %frequency Hz"
-        // pON.shadow="toggleOnOff"
-        // frequency.defl=262
-        export function ringTone(pON: boolean, frequency = 262) {
-            if (n_ringTone !== pON) { // XOR
-                n_ringTone = pON
-                if (n_ringTone)
-                    music.ringTone(frequency)
-                else
-                    music.stopAllSounds()
-                // pins.digitalWritePin(pinBuzzer, n_buzzer ? 1 : 0)
-            }
-        }
-    
-     */
+  
 
     // ========== group="Spursensor" subcategory="Pins, Sensoren"
 
@@ -95,13 +68,7 @@ namespace receiver { // r-pins.ts
     //% group="Spursensor (vom gewählten Modell)" subcategory="Pins, Sensoren"
     //% block="Spursensor links %l und rechts %r" weight=4
     export function readSpursensor(l: eDH, r: eDH) {
-
         return pinSpurlinks(l) && pinSpurrechts(r)
-
-        //if (read)
-        //    readInputs(i2c)
-        //return (n_Inputs[0] & 0x03) == (l << 1 | r)
-
     }
 
 
@@ -125,44 +92,18 @@ namespace receiver { // r-pins.ts
     //% read.shadow=toggleYesNo
     export function selectAbstand(read: boolean) {
         if (n_Hardware == eHardware.v3)
-            //if (readQwiicUltrasonic()) // i2c einlesen, false wenn Modul nicht angesteckt
-            return getQwiicUltrasonic(read)
-        //else
-        //    return 0
+            return getQwiicUltrasonic(read) // i2c einlesen, false wenn Modul nicht angesteckt
         else if (n_Hardware == eHardware.car4)
             return pinGroveUltraschall_cm() // in r-advanced.ts
         else
             return 0
     }
-/* 
-    export enum eVergleich {
-        //% block=">="
-        gt,
-        //% block="<="
-        lt
-    }
-
-    //% group="Ultraschall (vom gewählten Modell)" subcategory="Pins, Sensoren"
-    //% block="Abstand %e %cm" weight=4
-    //% cm.shadow=receiver_getAbstand
-    export function abstand_vergleich(e: eVergleich, cm: number) { // cm.min=5 cm.max=50 cm.defl=20
-        switch (e) {
-            case eVergleich.gt:
-                return selectAbstand(true) >= cm
-            case eVergleich.lt:
-                return selectAbstand(true) <= cm
-            default:
-                return false
-        }
-    } */
 
     //% blockId=receiver_getAbstand blockHidden=true
     //% block="%buffer Abstand in cm" weight=3
     //% buffer.shadow="btf_receivedBuffer19"
     export function receiver_getAbstand(buffer: Buffer) {
         return btf.getAbstand(buffer)
-        //  return a_Abstand[buffer[eBufferPointer.p0 + eBufferOffset.b2_Fahrstrecke] >>> 6]
-        // return (buffer[eBufferPointer.p0 + eBufferOffset.b2_Fahrstrecke] & 0b11000000)
     }
 
 }
