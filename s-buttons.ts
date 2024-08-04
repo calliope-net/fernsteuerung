@@ -29,10 +29,8 @@ namespace sender { // s-buttons.ts
         mc_mb,      // MC und MB (Zahnstange und Drehkranz)
         //% block="10 Programm fernstarten"
         _10fernstarten,
-        //  mc_md_callibot_beispiele,
         //% block="20 Fahrplan senden"
         _20fahrplan,
-        //  m1abcd_fahrplan,
         //% block="30 Sensoren fernprogrammieren"
         _30sensoren
     }
@@ -141,11 +139,11 @@ namespace sender { // s-buttons.ts
 
         // Standardwert immer Fahren und Lenken
         else {
-            setStatusFunktion(eFunktion.ng)
+            setStatusFunktion(eFunktion.ng) // senden unterbrechen, um Modell anzuzeigen
             zeigeModellImagePause(1500)
-            setStatusFunktion(eFunktion.m0_s0)
-            setStatusButtonA(false) // beide aus schalten
-            setStatusButtonB(false)
+            setStatusFunktion(eFunktion.m0_s0) // Standardwert Fahren und Lenken
+            setStatusButtonA(false)
+            setStatusButtonB(false) // beide aus schalten
         }
     }
 
@@ -166,7 +164,7 @@ namespace sender { // s-buttons.ts
 
     //% blockId=sender_ButtonAB_Counter
     //% group="Schalter / Zähler" subcategory="Knopf A B"
-    //% block="Knopf A-B+ Zähler" weight=1
+    //% block="Knopf A- B+ Zähler" weight=1
     export function sender_ButtonAB_Counter() {
         return getStatusButtonCounter()
     }
@@ -179,39 +177,25 @@ namespace sender { // s-buttons.ts
     //% block="%pModell" weight=4
     export function isModell(pModell: eModell) {
         return getStatusModell() == pModell
-        //return btf.getStorageModell() == pModell
     }
 
 
     // ========== group="aktuelle Funktion" subcategory="Knopf A B"
-    // btf.n_Funktion wird in b-fernsteuerung.ts gespeichert und dort beim Ändern der Funkgruppe auf 0 gesetzt
 
     //% group="aktuelle Funktion" subcategory="Knopf A B"
     //% block="%pFunktion" weight=3
     export function isFunktion(pFunktion: eFunktion) {
         if (pFunktion == eFunktion.ng)
-            return pFunktion != getStatusFunktion()  // true wenn != 0 (nicht nicht) gestartet
-        //return btf.n_Funktion != eFunktion.ng // true wenn != 0 (nicht nicht) gestartet
+            return pFunktion != getStatusFunktion() // true wenn != 0 (nicht nicht) gestartet
         else
             return pFunktion == getStatusFunktion()
-        //return pFunktion == btf.n_Funktion
     }
-
-
-    // group="Ereignisse" subcategory="Knopf A B"
-    // block="%id" deprecated=true
-    // id.defl=ButtonEvent.Hold
-    //export function buttonEventValue(id: ButtonEvent): number {
-    //    return id
-    //}
 
 
 
     // ========== Bilder für Auswahl Modell
 
     //% group="aktuelles Modell" subcategory="Knopf A B"
-    // block="%pModell" weight=2
-    // group="Image" subcategory="Knopf A B" color=#54C9C9
     //% block="zeige Modell Bild • Pause (ms) %ms" weight=1
     export function zeigeModellImagePause(ms: number) {
         /* 
@@ -249,23 +233,23 @@ namespace sender { // s-buttons.ts
         let ai: number[] = []
         switch (getStatusModell()) {
             case eModell.cb2e: {
-                ai = [2, 19, 2, 19, 2]
+                ai = [2, 19, 2, 19, 2] // Calli:bot
                 break
             }
             case eModell.mkcs: {
-                ai = [2, 3, 2, 3, 2]
+                ai = [2, 3, 2, 3, 2] // Sensoren
                 break
             }
             case eModell.mkcg: {
-                ai = [1, 1, 31, 4, 4]
+                ai = [1, 1, 31, 4, 4] // Gabelstapler
                 break
             }
             case eModell.mkck: {
-                ai = [1, 31, 17, 17, 24]
+                ai = [1, 31, 17, 17, 24] // Kran
                 break
             }
             case eModell.car4: {
-                ai = [6, 11, 10, 11, 6]
+                ai = [6, 11, 10, 11, 6] // CaR 4
                 break
             }
         }

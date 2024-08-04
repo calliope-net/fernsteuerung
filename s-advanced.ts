@@ -2,24 +2,6 @@
 namespace sender { // s-advanced.ts
 
 
-
-    // group="Empfänger zurücksetzen" advanced=true
-    // block="Reset senden %reset" weight=2
-    // reset.shadow="toggleYesNo"
-   /*   function setSendReset(reset = false) {
-        // if (isFunktion(sender.eFunktion.ng)) { // nicht nicht gestartet
-        if (getStatusFunktion() != eFunktion.ng) { // nur wenn !=0 (gestartet) wird Bluetooth gesendet
-            btf.n_sendReset = reset
-
-            basic.pause(600) // warten bis gesendet (aller 400ms) und wieder false
-            if (!btf.n_sendReset) {
-                setStatusFunktion(eFunktion.ng) // nach dem Empfänger auch den Sender zurück setzen, sendet dann nicht mehr
-                zeigeModellImagePause(1500)
-            }
-        }
-    } */
-
-
     // ========== wenn Text empfangen (Bluetooth Status zurück senden)
 
     let n_receivedString = ""
