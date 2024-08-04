@@ -29,11 +29,12 @@ namespace btf { // b-advanced.ts
     export function pi() { return Math.PI }
 
 
+    //% blockId=btf_motorProzent
     //% group="Funktionen" advanced=true
-    //% block="Prozent (1 ↓ 128 ↑ 255) %value * %prozent \\%" weight=4
+    //% block="Fahren (1↓128↑255) %value * Prozent %prozent \\%" weight=4
     //% value.min=1 value.max=255 value.defl=128
     //% prozent.min=10 prozent.max=100 prozent.defl=100
-    export function motorProzent(value: number, prozent: number) {
+    export function btf_motorProzent(value: number, prozent: number) {
         return Math.idiv((value - 128) * prozent, 100) + 128
     }
 
