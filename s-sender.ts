@@ -12,9 +12,9 @@ namespace sender { // s-sender.ts
         if (!btf.simulator()) {
             btf.setStorageBuffer(modellFunkgruppe) // prüft und speichert in a_StorageBuffer
 
-            setStatusModell(btf.getStorageModell()) // übernimmt Modell aus Flash
+            setStatusModell(btf.getStorageModell(), false) // übernimmt Modell aus Flash
             if (!btf.between(getStatusModell(), 0, c_ModellCount - 1))
-                setStatusModell(eModell.cb2e) // wenn ungültig, Standardwert setzen, setStatusModell() schreibt auch in Flash
+                setStatusModell(eModell.cb2e, true) // wenn ungültig, Standardwert setzen, setStatusModell() schreibt auch in Flash
 
             if (zf) {
                 zeigeModellImagePause(1500) // Bild anzeigen mit Pause 1500ms
@@ -39,6 +39,23 @@ namespace sender { // s-sender.ts
         }
     }
 
+
+
+    //% group="calliope-net.github.io/fernsteuerung"
+    //% block="Knopf A+B halten, Reset senden %reset" weight=2
+    //% reset.shadow="toggleYesNo"
+    export function setSendReset(reset = false) {
+        // if (isFunktion(sender.eFunktion.ng)) { // nicht nicht gestartet
+        if (getStatusFunktion() != eFunktion.ng) { // nur wenn !=0 (gestartet) wird Bluetooth gesendet
+            btf.n_sendReset = reset
+
+            basic.pause(600) // warten bis gesendet (aller 400ms) und wieder false
+            if (!btf.n_sendReset) {
+                setStatusFunktion(eFunktion.ng) // nach dem Empfänger auch den Sender zurück setzen, sendet dann nicht mehr
+                zeigeModellImagePause(1500)
+            }
+        }
+    }
 
 
 
@@ -73,9 +90,10 @@ namespace sender { // s-sender.ts
 
     // folgende Funktionen bieten (im namespace sender) Zugriff auf die 3 Variablen modell, funktion, buttons
 
-    export function setStatusModell(pModell: eModell) {
+    export function setStatusModell(pModell: eModell, flash: boolean) {
         getCurrentStatusBuffer()[eStatusBuffer.modell] = pModell
-        btf.setStorageModell(pModell) // geändertes Modell wird auch im Flash gespeichert
+        if (flash)
+            btf.setStorageModell(pModell) // geändertes Modell wird auch im Flash gespeichert
     }
     export function getStatusModell(): eModell {
         return getCurrentStatusBuffer()[eStatusBuffer.modell]

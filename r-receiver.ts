@@ -69,10 +69,9 @@ namespace receiver { // r-receiver.ts
     // modellFunkgruppe.min=160 modellFunkgruppe.max=191
     // inlineInputMode=inline
     export function beimStart(modell: eHardware, servoGeradeaus: number, encoder: boolean, radDmm: number, zf = true, modellFunkgruppe?: number) {
-        n_Hardware = modell
-        // n_Servo90Geradeaus = servoGeradeaus // Parameter
-
-        pinRelay(true) // Relais an schalten (braucht gültiges n_Modell, um den Pin zu finden)
+        n_Hardware = modell // !vor pinRelay!
+ 
+        pinRelay(true) // Relais an schalten (braucht gültiges n_Hardware, um den Pin zu finden)
 
         btf.setStorageBuffer(modellFunkgruppe, servoGeradeaus) // prüft und speichert in a_StorageBuffer
         if (zf) {
@@ -106,6 +105,11 @@ namespace receiver { // r-receiver.ts
 
     }
 
+    //% group="calliope-net.github.io/fernsteuerung"
+    //% block="Knopf A+B halten, Servo Korrektur" weight=4
+    export function buttonABhold() {
+        btf.n_servoKorrekturButton = !btf.n_servoKorrekturButton
+    }
 
 
     // ========== group="Motor 0 1 (Calliope v3)"
@@ -116,7 +120,7 @@ namespace receiver { // r-receiver.ts
     export function dualMotor128(motor: eDualMotor, speed: number) { // sendet nur an MotorChip, wenn der Wert sich ändert
 
         if (btf.between(speed, 1, 255)) {
-           
+
             let duty_percent = btf.mapInt32(speed, 1, 255, -100, 100)
 
             if (motor == eDualMotor.M0 && speed != a_DualMotorSpeed[eDualMotor.M0]) {
@@ -132,7 +136,7 @@ namespace receiver { // r-receiver.ts
                 a_DualMotorSpeed[eDualMotor.M1] = speed
                 dualMotorPower(motor, duty_percent)
             }
-        } 
+        }
         else { // speed=0
             dualMotor128(motor, c_MotorStop) // 128
         }

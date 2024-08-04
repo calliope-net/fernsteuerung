@@ -7,7 +7,7 @@ namespace btf { // b-fernsteuerung.ts
     // private
     let a_StorageBuffer = Buffer.create(4) // lokaler Speicher 4 Byte NumberFormat.UInt32LE
     enum eStorageBuffer { funkgruppe, modell, servoKorrektur /* , d */ } // Index im Buffer
-    let n_servoKorrekturButton = false // false:funkgruppeChanged; true:servoKorrektur (mit A B halten)
+    export let n_servoKorrekturButton = false // false:funkgruppeChanged; true:servoKorrektur (mit A B halten)
 
     // nur Sender
     export let n_sendReset = false // true sendet zurücksetzen zum Empfänger wenn connected
@@ -88,7 +88,7 @@ namespace btf { // b-fernsteuerung.ts
     }
 
     //% group="calliope-net.github.io/fernsteuerung"
-    //% block="Knopf A+B halten, Servo Korrektur" weight=4   
+    //% block="Knopf A+B halten, Servo Korrektur" weight=4 deprecated=1
     export function buttonABhold() {
         n_servoKorrekturButton = !n_servoKorrekturButton
     }
