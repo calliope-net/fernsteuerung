@@ -42,7 +42,6 @@ namespace cb2 { // c-strecken.ts
 
         if (motor != 0 && motor != c_MotorStop && servo != 0 && strecke != 0) {
             let sensor_color = Colors.Off
-            //  let timeout_Encoder: number// = 200 // 20 s Timeout wenn Encoder nicht zählt
             let hasEncoder = false
             if (checkEncoder)
                 hasEncoder = writeEncoderReset() // Testet ob Encoder vorhanden, Ergebnis in n_Callibot2_x22hasEncoder
@@ -74,8 +73,6 @@ namespace cb2 { // c-strecken.ts
                 }
             }
             else {
-                //  basic.pause(buffer[2] * 100)
-                //  timeout_Encoder = strecke // Zehntelsekunden
                 let zehntelsekunden = strecke // Zehntelsekunden
                 if (impulse)
                     zehntelsekunden /= n_EncoderFaktor
