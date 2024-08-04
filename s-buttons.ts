@@ -140,6 +140,7 @@ namespace sender { // s-buttons.ts
             setStatusFunktion(eFunktion.m0_s0)
             setStatusButtonA(false) // beide aus schalten
             setStatusButtonB(false)
+            zeigeModellImagePause(1500)
         }
     }
 

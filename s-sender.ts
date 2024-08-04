@@ -17,7 +17,7 @@ namespace sender { // s-sender.ts
                 setStatusModell(eModell.cb2e, true) // wenn ungültig, Standardwert setzen, setStatusModell() schreibt auch in Flash
 
             if (zf) {
-                zeigeModellImagePause(1500) // Bild anzeigen mit Pause 1500ms
+                zeigeModellImagePause(2500) // Bild anzeigen mit Pause 1500ms
                 btf.zeigeFunkgruppe()
             }
 
@@ -28,13 +28,6 @@ namespace sender { // s-sender.ts
                         zeigeModellImagePause(1500) // Bild anzeigen mit Pause 1500ms
                     }
                 }
-                /*  function (int: number) {
-                     // nur nach Funkgruppe ändern mit buttonAhold oder buttonBhold
-                     if (!isFunktion(eFunktion.ng)) { // und nur wenn (neue Funktion) nicht gestertet
-                         zeigeModellImagePause(1500) // Bild anzeigen mit Pause 1500ms
-                     }
-                 } */
-
             )
         }
     }
