@@ -36,10 +36,8 @@ namespace btf { // b-fernsteuerung.ts
     export let m_Namespace: eNamespace
 
 
-    export function beimStartintern(e: eNamespace, callbackStorageChanged?: (pStorageChange: eStorageBuffer, buttonB: boolean) => void) { //callbackFunkgruppeChanged?: (int: number) => void)
+    export function beimStartintern(e: eNamespace, callbackStorageChanged?: (pStorageChange: eStorageBuffer, buttonB: boolean) => void) {
         m_Namespace = e
-        // onFunkgruppeChangedHandler = callbackFunkgruppeChanged
-        // onButtonHold = callbackButtonHold
         onStorageChanged = callbackStorageChanged
         radio.setGroup(getStorageFunkgruppe())
         radio.setTransmitPower(7)
@@ -62,8 +60,7 @@ namespace btf { // b-fernsteuerung.ts
                 zeigeFunkgruppe()
                 basic.pause(1500)
             }
-            //if (onButtonHold)
-            //    onButtonHold(false, n_servoKorrekturButton)
+
             if (onStorageChanged)
                 onStorageChanged(n_StorageChange, false)
 
@@ -79,18 +76,17 @@ namespace btf { // b-fernsteuerung.ts
             if (n_StorageChange == eStorageBuffer.funkgruppe) {
                 if (a_StorageBuffer[eStorageBuffer.funkgruppe] < c_funkgruppe_max) {
                     radio.setGroup(++a_StorageBuffer[eStorageBuffer.funkgruppe]) // erst +1, dann zurück lesen
-                    storage.putBuffer(a_StorageBuffer) // im Flash speichern
+                    //storage.putBuffer(a_StorageBuffer) // im Flash speichern
                 }
                 setClearScreen()
                 zeigeFunkgruppe()
                 basic.pause(1500)
-                //if (onFunkgruppeChangedHandler)
-                //    onFunkgruppeChangedHandler(getStorageFunkgruppe())
             }
-            //if (onButtonHold)
-            //    onButtonHold(true, n_servoKorrekturButton)
+
             if (onStorageChanged)
                 onStorageChanged(n_StorageChange, true)
+
+            storage.putBuffer(a_StorageBuffer) // im Flash speichern
         }
     }
 
@@ -114,7 +110,9 @@ namespace btf { // b-fernsteuerung.ts
 
     //% group="Bluetooth senden (19 Byte)"
     //% block="sendData löschen" weight=7
-    export function fill_sendBuffer19() { a_sendBuffer19.fill(0) }
+    export function fill_sendBuffer19() {
+        a_sendBuffer19.fill(0)
+    }
 
     //% group="Bluetooth senden (19 Byte)"
     //% block="Buffer senden %sendBuffer" weight=5
@@ -248,7 +246,7 @@ namespace btf { // b-fernsteuerung.ts
 
     // ========== "Storage (Flash)"
 
-    export function setStorageBuffer(modellFunkgruppe: number, servoKorrektur?: number) {
+    export function setStorageBuffer(funkgruppe: number, servoKorrektur?: number) {
         // Storage enthält 4 Byte, Funkgruppe und Modell (nur beim Sender), + 2 Byte unbenutzt
         // modellFunkgruppe kann undefined sein, dann Standardwert c_funkgruppe_min nehmen
         // wenn ein gültiger Wert im Flash ist, nicht ändern (Parameter modellFunkgruppe ignorieren)
@@ -257,7 +255,7 @@ namespace btf { // b-fernsteuerung.ts
 
         // Funkgruppe (am offset 0) muss c_funkgruppe_min .. c_funkgruppe_max sein
         if (!between(a_StorageBuffer[eStorageBuffer.funkgruppe], c_funkgruppe_min, c_funkgruppe_max))
-            a_StorageBuffer[eStorageBuffer.funkgruppe] = (modellFunkgruppe) ? modellFunkgruppe : c_funkgruppe_min
+            a_StorageBuffer[eStorageBuffer.funkgruppe] = (funkgruppe) ? funkgruppe : c_funkgruppe_min
 
         if (!between(a_StorageBuffer[eStorageBuffer.servoKorrektur], 82, 98))
             a_StorageBuffer[eStorageBuffer.servoKorrektur] = (servoKorrektur) ? servoKorrektur : 90

@@ -6,13 +6,13 @@ namespace sender { // s-sender.ts
 
 
     //% group="calliope-net.github.io/fernsteuerung"
-    //% block="beim Start: Sender || Modell und Funkgruppe anzeigen %zf %modellFunkgruppe" weight=8
+    //% block="beim Start: Sender || Modell und Funkgruppe anzeigen %zf %funkgruppe" weight=8
     //% zf.shadow="toggleYesNo" zf.defl=1
-    export function beimStart(zf = true, modellFunkgruppe?: number) {
+    export function beimStart(zf = true, funkgruppe?: number) {
         if (!btf.simulator()) {
-            btf.setStorageBuffer(modellFunkgruppe) // prüft und speichert in a_StorageBuffer
+            btf.setStorageBuffer(funkgruppe) // prüft und speichert in a_StorageBuffer
 
-            setStatusModell(btf.getStorageModell(), zf, 1500, true) // setStatusModell() schreibt auch in Flash
+            setStatusModell(btf.getStorageModell(), zf, 1500) // setStatusModell() schreibt auch in Flash
 
             //if (!btf.between(getStatusModell(), 0, c_ModellCount - 1))
             //    setStatusModell(eModell.cb2e, true) // wenn ungültig, Standardwert setzen, setStatusModell() schreibt auch in Flash
@@ -40,7 +40,7 @@ namespace sender { // s-sender.ts
     //% group="calliope-net.github.io/fernsteuerung"
     //% block="Knopf A+B halten, Reset senden %reset" weight=2
     //% reset.shadow="toggleYesNo"
-    export function setSendReset(reset = false) {
+    export function setSendReset(reset: boolean) {
         // if (isFunktion(sender.eFunktion.ng)) { // nicht nicht gestartet
         if (getStatusFunktion() != eFunktion.ng) { // nur wenn !=0 (gestartet) wird Bluetooth gesendet
             btf.n_sendReset = reset
@@ -71,10 +71,7 @@ namespace sender { // s-sender.ts
     // zu jeder Funkgruppe=ferngesteuertes Modell sind die 3 Variablen getrennt gespeichert
     // beim Wechsel wird so der letzte Status wieder hergestellt
     let a_StatusBuffer: Buffer[] = []
-    /*  let a_StatusBuffer: Buffer[] = [
-        Buffer.create(c_sbl), Buffer.create(c_sbl), Buffer.create(c_sbl), Buffer.create(c_sbl),
-        Buffer.create(c_sbl), Buffer.create(c_sbl), Buffer.create(c_sbl), Buffer.create(c_sbl)
-    ] */
+
     function getCurrentStatusBuffer(): Buffer {
         let index = btf.getStorageFunkgruppe() & 0b00000111 // Bitmaske für Index 0..7
         while (a_StatusBuffer.length <= index) {
@@ -86,16 +83,16 @@ namespace sender { // s-sender.ts
 
     // folgende Funktionen bieten (im namespace sender) Zugriff auf die 3 Variablen modell, funktion, buttons
 
-    export function setStatusModell(pModell: eModell, zeigeModell: boolean, pause: number, flash: boolean) {
+    export function setStatusModell(pModell: eModell, zeigeModell: boolean, pause: number) {
         if (!btf.between(pModell, 0, c_ModellCount - 1)) {
             pModell = eModell.cb2e
-            flash = true
+            // flash = true
         }
         getCurrentStatusBuffer()[eStatusBuffer.modell] = pModell
         if (zeigeModell)
             zeigeModellImagePause(pause)
-        if (flash)
-            btf.setStorageModell(pModell) // geändertes Modell wird auch im Flash gespeichert
+        // if (flash)
+        btf.setStorageModell(pModell) // geändertes Modell wird auch im Flash gespeichert
     }
     export function getStatusModell(): eModell {
         return getCurrentStatusBuffer()[eStatusBuffer.modell]

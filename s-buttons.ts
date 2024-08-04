@@ -48,7 +48,7 @@ namespace sender { // s-buttons.ts
             //    setStatusModell(getStatusModell() - 1, true) // setStatusModell() schreibt auch in Flash
             //basic.pause(1500) // zeigeModellImagePause(1500)
 
-            setStatusModell(getStatusModell() - 1, true, 1500, true) // setStatusModell() schreibt auch in Flash
+            setStatusModell(getStatusModell() - 1, true, 1500) // setStatusModell() schreibt auch in Flash
             btf.zeigeFunkgruppe()
         }
         // Maker Kit Car && Gabelstapler (lenken mit Tasten)
@@ -72,7 +72,7 @@ namespace sender { // s-buttons.ts
             //    setStatusModell(getStatusModell() + 1, true) // setStatusModell() schreibt auch in Flash
             //basic.pause(1500) // zeigeModellImagePause(1500)
 
-            setStatusModell(getStatusModell() + 1, true, 1500, true) // setStatusModell() schreibt auch in Flash
+            setStatusModell(getStatusModell() + 1, true, 1500) // setStatusModell() schreibt auch in Flash
             btf.zeigeFunkgruppe()
         }
         // Maker Kit Car && Gabelstapler (lenken mit Tasten)
