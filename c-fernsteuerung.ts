@@ -101,6 +101,23 @@ namespace cb2 { // c-fernsteuerung.ts
 
 
 
+    //% group="10 Fernsteuerung Spurfolger" subcategory="Fernsteuerung"
+    //% block="10 Spurfolger (MS:CD) aus %buffer • Wiederholung %repeat • I²C Spursensor %i2c" weight=8
+    //% buffer.shadow=btf_receivedBuffer19
+    //% repeat.shadow="toggleYesNo" repeat.defl=1
+    export function spurfolgerBuffer(buffer: Buffer, repeat: boolean, i2cSpur: eI2C) {
+        beispielSpurfolger16(
+            btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b0_Motor),
+            btf.getByte(buffer, btf.eBufferPointer.md, btf.eBufferOffset.b0_Motor),
+            btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b1_Servo),
+            btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b2_Fahrstrecke),
+            repeat,
+            btf.getSensor(buffer, btf.eBufferPointer.mc, btf.eSensor.b6Abstand),
+            btf.getAbstand(buffer),
+            i2cSpur
+        )
+    }
+
 
 
     // ========== group="20 Fahrplan (5 Teilstrecken) empfangen" subcategory="Fernsteuerung"
