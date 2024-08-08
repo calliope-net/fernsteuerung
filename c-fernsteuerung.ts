@@ -105,7 +105,7 @@ namespace cb2 { // c-fernsteuerung.ts
     //% startBit.defl=btf.e3aktiviert.mc
     //% blockSetVariable=dauerhaft_Spurfolger
     export function set_dauerhaft_Spurfolger(buffer: Buffer, startBit: btf.e3aktiviert) {
-        return btf.isBetriebsart(buffer, btf.e0Betriebsart.p1Lokal) && startBit
+        return btf.isBetriebsart(buffer, btf.e0Betriebsart.p1Lokal) && btf.getaktiviert(buffer, startBit)
     }
 
     //% group="10 Fernstarten Spurfolger" subcategory="Fernsteuerung"
