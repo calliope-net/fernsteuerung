@@ -101,7 +101,7 @@ namespace cb2 { // c-fernsteuerung.ts
 
     //% group="10 Fernstarten Spurfolger" subcategory="Fernsteuerung"
     //% block="%buffer 10 && Start Bit %startBit" weight=8
-    // buffer.shadow=btf_receivedBuffer19
+    //% buffer.shadow=btf_receivedBuffer19
     //% startBit.defl=btf.e3aktiviert.mc
     //% blockSetVariable=dauerhaft_Spurfolger
     export function set_dauerhaft_Spurfolger(buffer: Buffer, startBit: btf.e3aktiviert) {
