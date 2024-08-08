@@ -130,8 +130,8 @@ namespace cb2 { // c-fernsteuerung.ts
         }
         else if (n_spurfolgerBuffer_repeat) {
             n_spurfolgerBuffer_repeat = false
+            writeMotorenStop()
         }
-
     }
 
 
