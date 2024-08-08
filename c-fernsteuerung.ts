@@ -99,10 +99,17 @@ namespace cb2 { // c-fernsteuerung.ts
         }
     }
 
+    //% group="10 Fernstarten Spurfolger" subcategory="Fernsteuerung"
+    //% block="%buffer 10 && Start Bit %startBit" weight=8
+    // buffer.shadow=btf_receivedBuffer19
+    //% startBit.defl=btf.e3aktiviert.mc
+    //% blockSetVariable=dauerhaft_Spurfolger
+    export function set_dauerhaft_Spurfolger(buffer: Buffer, startBit: btf.e3aktiviert) {
+        return btf.isBetriebsart(buffer, btf.e0Betriebsart.p1Lokal) && startBit
+    }
 
-
-    //% group="10 Fernsteuerung Spurfolger" subcategory="Fernsteuerung"
-    //% block="10 Spurfolger (MS:CD) aus %buffer • Wiederholung %repeat • I²C Spursensor %i2c" weight=8
+    //% group="10 Fernstarten Spurfolger" subcategory="Fernsteuerung"
+    //% block="10 Spurfolger (MS:CD) aus %buffer • Wiederholung %repeat • I²C Spursensor %i2c" weight=7
     //% buffer.shadow=btf_receivedBuffer19
     //% repeat.shadow="toggleYesNo" repeat.defl=1
     export function spurfolgerBuffer(buffer: Buffer, repeat: boolean, i2cSpur: eI2C) {
