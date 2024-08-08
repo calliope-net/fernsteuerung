@@ -100,7 +100,7 @@ namespace cb2 { // c-fernsteuerung.ts
     }
 
     //% group="10 Fernstarten Spurfolger" subcategory="Fernsteuerung"
-    //% block="%buffer 10 && Start Bit %startBit" weight=8
+    //% block="%buffer 10 fernstarten && Start Bit %startBit" weight=8
     //% buffer.shadow=btf_receivedBuffer19
     //% startBit.defl=btf.e3aktiviert.mc
     //% blockSetVariable=dauerhaft_Spurfolger
@@ -108,8 +108,36 @@ namespace cb2 { // c-fernsteuerung.ts
         return btf.isBetriebsart(buffer, btf.e0Betriebsart.p1Lokal) && btf.getaktiviert(buffer, startBit)
     }
 
+    let n_spurfolgerBuffer_repeat = false
+
     //% group="10 Fernstarten Spurfolger" subcategory="Fernsteuerung"
-    //% block="10 Spurfolger (MS:CD) aus %buffer • Wiederholung %repeat • I²C Spursensor %i2c" weight=7
+    //% block="10 Spurfolger (MS:CD) aus %buffer • dauerhaft_Spurfolger: %dauerhaft_Spurfolger • I²C Spursensor %i2c" weight=7
+    //% buffer.shadow=btf_receivedBuffer19
+    //% dauerhaft_Spurfolger.shadow="toggleYesNo" repeat.defl=1
+    export function dauerhaft_SpurfolgerBuffer(buffer: Buffer, dauerhaft_Spurfolger: boolean, i2cSpur: eI2C) {
+        if (dauerhaft_Spurfolger) {
+            beispielSpurfolger16(
+                btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b0_Motor),
+                btf.getByte(buffer, btf.eBufferPointer.md, btf.eBufferOffset.b0_Motor),
+                btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b1_Servo),
+                btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b2_Fahrstrecke),
+                n_spurfolgerBuffer_repeat,
+                btf.getSensor(buffer, btf.eBufferPointer.mc, btf.eSensor.b6Abstand),
+                btf.getAbstand(buffer),
+                i2cSpur
+            )
+            n_spurfolgerBuffer_repeat = true
+        }
+        else if (n_spurfolgerBuffer_repeat) {
+            n_spurfolgerBuffer_repeat = false
+        }
+
+    }
+
+
+
+    //% group="10 Fernstarten Spurfolger" subcategory="Fernsteuerung"
+    //% block="10 Spurfolger (MS:CD) aus %buffer • Wiederholung %repeat • I²C Spursensor %i2c" weight=4
     //% buffer.shadow=btf_receivedBuffer19
     //% repeat.shadow="toggleYesNo" repeat.defl=1
     export function spurfolgerBuffer(buffer: Buffer, repeat: boolean, i2cSpur: eI2C) {
