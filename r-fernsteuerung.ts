@@ -87,6 +87,43 @@ namespace receiver { // r-fernsteuerung.ts
 
 
 
+    // ========== group="10 Fernstarten Spurfolger" subcategory="Fernsteuerung"
+
+    //% group="10 Fernstarten Spurfolger" subcategory="Fernsteuerung"
+    //% block="%buffer 10 fernstarten && Start Bit %startBit" weight=8
+    //% buffer.shadow=btf_receivedBuffer19
+    //% startBit.defl=btf.e3aktiviert.mc
+    //% blockSetVariable=dauerhaft_Spurfolger
+    export function set_dauerhaft_Spurfolger(buffer: Buffer, startBit: btf.e3aktiviert) {
+        return btf.isBetriebsart(buffer, btf.e0Betriebsart.p1Lokal) && btf.getaktiviert(buffer, startBit)
+    }
+
+    let n_spurfolgerBuffer_repeat = false
+
+    //% group="10 Fernstarten Spurfolger" subcategory="Fernsteuerung"
+    //% block="10 dauerhaft Spurfolger: %dauerhaft_Spurfolger (MS:CD) aus %buffer" weight=7
+    //% dauerhaft_Spurfolger.shadow="toggleYesNo"
+    //% buffer.shadow=btf_receivedBuffer19
+    export function dauerhaft_SpurfolgerBuffer(dauerhaft_Spurfolger: boolean, buffer: Buffer) {
+        if (dauerhaft_Spurfolger) {
+            beispielSpurfolger16(
+                btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b0_Motor),
+                btf.getByte(buffer, btf.eBufferPointer.md, btf.eBufferOffset.b0_Motor),
+                btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b1_Servo),
+                n_spurfolgerBuffer_repeat,
+                btf.getSensor(buffer, btf.eBufferPointer.mc, btf.eSensor.b6Abstand),
+                btf.getAbstand(buffer)
+            )
+            n_spurfolgerBuffer_repeat = true
+        }
+        else if (n_spurfolgerBuffer_repeat) {
+            n_spurfolgerBuffer_repeat = false
+            selectMotor(c_MotorStop)
+        }
+    }
+
+
+
     // ========== group="20 Fahrplan (5 Teilstrecken) empfangen" subcategory="Fernsteuerung"
 
     let n_fahrplanBuffer5Strecken_gestartet = false
