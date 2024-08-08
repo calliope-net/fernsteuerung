@@ -67,7 +67,7 @@ namespace receiver { // r-receiver.ts
             btf.zeigeBIN(btf.getStorageServoKorrektur(), btf.ePlot.bcd, 4)
         }
         n_Servo90KorrekturFaktor = btf.getStorageServoKorrektur() / c_Servo90_geradeaus // z.B. 95/90=1.05
-      
+
         n_Servo90Winkel = 0 // damit der Servo ändert und bewegt
         pinServo90(c_Servo90_geradeaus)
 
@@ -161,6 +161,15 @@ namespace receiver { // r-receiver.ts
             qwiicMotor128(eQwiicMotor.ma, speed)
         else // Standard M0 Fahrmotor an Calliope v3 Pins
             dualMotor128(eDualMotor.M0, speed)
+    }
+
+    //% group="Motor (vom gewählten Modell)"
+    //% block="Motor Stop • Servo ↑ %servoGeradeaus" weight=3
+    //% servoGeradeaus.shadow=toggleYesNo servoGeradeaus.defl=1
+    export function selectMotorStop(servoGeradeaus: boolean) {
+        selectMotor(c_MotorStop)
+        if (servoGeradeaus)
+            pinServo90(90)
     }
 
     export function selectMotorSpeed() {
