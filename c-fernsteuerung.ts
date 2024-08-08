@@ -111,10 +111,10 @@ namespace cb2 { // c-fernsteuerung.ts
     let n_spurfolgerBuffer_repeat = false
 
     //% group="10 Fernstarten Spurfolger" subcategory="Fernsteuerung"
-    //% block="10 Spurfolger (MS:CD) aus %buffer • dauerhaft_Spurfolger: %dauerhaft_Spurfolger • I²C Spursensor %i2c" weight=7
+    //% block="10 dauerhaft Spurfolger: %dauerhaft_Spurfolger (MS:CD) aus %buffer • I²C Spursensor %i2c" weight=7
     //% buffer.shadow=btf_receivedBuffer19
     //% dauerhaft_Spurfolger.shadow="toggleYesNo" repeat.defl=1
-    export function dauerhaft_SpurfolgerBuffer(buffer: Buffer, dauerhaft_Spurfolger: boolean, i2cSpur: eI2C) {
+    export function dauerhaft_SpurfolgerBuffer(dauerhaft_Spurfolger: boolean, buffer: Buffer, i2cSpur: eI2C) {
         if (dauerhaft_Spurfolger) {
             beispielSpurfolger16(
                 btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b0_Motor),
@@ -136,11 +136,11 @@ namespace cb2 { // c-fernsteuerung.ts
 
 
 
-    //% group="10 Fernstarten Spurfolger" subcategory="Fernsteuerung"
-    //% block="10 Spurfolger (MS:CD) aus %buffer • Wiederholung %repeat • I²C Spursensor %i2c" weight=4
-    //% buffer.shadow=btf_receivedBuffer19
-    //% repeat.shadow="toggleYesNo" repeat.defl=1
-    export function spurfolgerBuffer(buffer: Buffer, repeat: boolean, i2cSpur: eI2C) {
+    // group="10 Fernstarten Spurfolger" subcategory="Fernsteuerung"
+    // block="10 Spurfolger (MS:CD) aus %buffer • Wiederholung %repeat • I²C Spursensor %i2c" weight=4
+    // buffer.shadow=btf_receivedBuffer19
+    // repeat.shadow="toggleYesNo" repeat.defl=1
+    /* export function spurfolgerBuffer(buffer: Buffer, repeat: boolean, i2cSpur: eI2C) {
         beispielSpurfolger16(
             btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b0_Motor),
             btf.getByte(buffer, btf.eBufferPointer.md, btf.eBufferOffset.b0_Motor),
@@ -151,7 +151,7 @@ namespace cb2 { // c-fernsteuerung.ts
             btf.getAbstand(buffer),
             i2cSpur
         )
-    }
+    } */
 
 
 
