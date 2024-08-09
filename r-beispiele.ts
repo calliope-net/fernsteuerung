@@ -36,18 +36,18 @@ namespace receiver { // r-beispiele.ts
 
             // readInputs(i2cSpur) // liest I2C Spursensor ein, bei pins nicht relevant
 
-            if (readSpursensor(eDH.dunkel, eDH.dunkel)) {
+            if (getSpursensor(eDH.dunkel, eDH.dunkel)) {
                 selectMotor(motor128)
                 pinServo16(16) // nicht lenken
                 m_inSpur = true
             }
-            else if (readSpursensor(eDH.dunkel, eDH.hell)) {
+            else if (getSpursensor(eDH.dunkel, eDH.hell)) {
                 selectMotor(langsamfahren) // links lenken <16 = 1
                 pinServo16(16 - lenken)
                 if (m_inSpur)
                     m_lenken = 16 - lenken
             }
-            else if (readSpursensor(eDH.hell, eDH.dunkel)) {
+            else if (getSpursensor(eDH.hell, eDH.dunkel)) {
                 selectMotor(langsamfahren)
                 pinServo16(16 + lenken) // rechts lenken >16 = 31
                 if (m_inSpur)

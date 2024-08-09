@@ -29,12 +29,12 @@ namespace receiver { // r-fernsteuerung.ts
                     cmAbstandSensor = selectAbstand(true) // immer messen, auch bei Stop, damit der kleiner werdende Wert erkannt wird
                 }
                 else if (bSpur) {
-                    setLedColors(eRGBled.b, Colors.White, getSpursensor(false, true)) // pinSpurlinks(eDH.hell)
-                    setLedColors(eRGBled.c, Colors.White, getSpursensor(true, true)) // pinSpurrechts(eDH.hell)
+                    setLedColors(eRGBled.b, Colors.White, getSpurLinks(eDH.hell)) // pinSpurlinks(eDH.hell)
+                    setLedColors(eRGBled.c, Colors.White, getSpurRechts(eDH.hell)) // pinSpurrechts(eDH.hell)
                 }
                 else { // Spur auch anzeigen, wenn Sensor nicht aktiv (dunkelweiß)
-                    setLedColors(eRGBled.b, 0x404040, getSpursensor(false, true)) // pinSpurlinks(eDH.hell)
-                    setLedColors(eRGBled.c, 0x404040, getSpursensor(true, true)) //pinSpurrechts(eDH.hell)
+                    setLedColors(eRGBled.b, 0x404040, getSpurLinks(eDH.hell)) // pinSpurlinks(eDH.hell)
+                    setLedColors(eRGBled.c, 0x404040, getSpurRechts(eDH.hell)) //pinSpurrechts(eDH.hell)
                 }
 
                 // Abstandssensor auswerten
@@ -44,7 +44,7 @@ namespace receiver { // r-fernsteuerung.ts
                     n_AbstandStop = false
 
                 // Spursensor auswerten
-                if (bSpur && (getSpursensor(false, false) || getSpursensor(true, false))) //  if (bSpur && (pinSpurlinks(eDH.dunkel) || pinSpurrechts(eDH.dunkel)))
+                if (bSpur && (getSpurLinks(eDH.dunkel) || getSpurRechts(eDH.dunkel))) //  if (bSpur && (pinSpurlinks(eDH.dunkel) || pinSpurrechts(eDH.dunkel)))
                     n_SpurStop = true
                 else if (!bSpur)
                     n_SpurStop = false

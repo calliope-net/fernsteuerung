@@ -59,7 +59,7 @@ namespace receiver { // r-strecken.ts
                         sensor_color = Colors.Yellow
                         break
                     }
-                    if (spurSensor && !readSpursensor(eDH.hell, eDH.hell)) { // Spursensor aktiviert und schwarze Linie erkannt
+                    if (spurSensor && !getSpursensor(eDH.hell, eDH.hell)) { // Spursensor aktiviert und schwarze Linie erkannt
                         sensor_color = Colors.White
                         break
                     }
@@ -83,7 +83,7 @@ namespace receiver { // r-strecken.ts
                         sensor_color = Colors.Orange
                         break
                     }
-                    if (spurSensor && !readSpursensor(eDH.hell, eDH.hell)) { // Spursensor aktiviert und schwarze Linie erkannt
+                    if (spurSensor && !getSpursensor(eDH.hell, eDH.hell)) { // Spursensor aktiviert und schwarze Linie erkannt
                         sensor_color = Colors.White
                         break
                     }
