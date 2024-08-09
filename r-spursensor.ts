@@ -3,7 +3,7 @@ namespace receiver { // r-spursensor.ts
 
     let n_SpursensorEventsRegistered = false
     // let n_Spursensor = 0 // Buffer.create(1) // Bit 1=links 0:rechts
-    let n_SpurLinksHell = false
+    let n_SpurLinksHell = false // hell=true
     let n_SpurRechtsHell = false
     const c_pulseDuration = 10000
 
@@ -23,6 +23,8 @@ namespace receiver { // r-spursensor.ts
                 // links hell
                 if (pins.pulseDuration() > c_pulseDuration) { // 10ms
                     n_SpurLinksHell = true
+                    if (onSpurEventHandler)
+                        onSpurEventHandler(n_SpurLinksHell, n_SpurRechtsHell)
                     // n_Spursensor |= 0b10 // OR Nullen bleiben, nur 1 wird gesetzt
                 }
             })
@@ -30,6 +32,8 @@ namespace receiver { // r-spursensor.ts
                 // links dunkel
                 if (pins.pulseDuration() > c_pulseDuration) { // 10ms
                     n_SpurLinksHell = false
+                    if (onSpurEventHandler)
+                        onSpurEventHandler(n_SpurLinksHell, n_SpurRechtsHell)
                     // n_Spursensor &= ~0b10 // AND Einsen bleiben, nur 0 wird gesetzt
                 }
             })
@@ -38,6 +42,8 @@ namespace receiver { // r-spursensor.ts
                 // rechts hell
                 if (pins.pulseDuration() > c_pulseDuration) { // 10ms
                     n_SpurRechtsHell = true
+                    if (onSpurEventHandler)
+                        onSpurEventHandler(n_SpurLinksHell, n_SpurRechtsHell)
                     // n_Spursensor |= 0b01 // OR Nullen bleiben, nur 1 wird gesetzt
                 }
             })
@@ -45,6 +51,8 @@ namespace receiver { // r-spursensor.ts
                 // rechts dunkel
                 if (pins.pulseDuration() > c_pulseDuration) { // 10ms
                     n_SpurRechtsHell = false
+                    if (onSpurEventHandler)
+                        onSpurEventHandler(n_SpurLinksHell, n_SpurRechtsHell)
                     // n_Spursensor &= ~0b01 // AND Einsen bleiben, nur 0 wird gesetzt
                 }
             })
@@ -55,7 +63,7 @@ namespace receiver { // r-spursensor.ts
     }
 
 
-    export enum eDH { dunkel = 0, hell = 1 }
+    export enum eDH { hell = 1, dunkel = 0 }
 
     //% group="Spursensor (vom gewählten Modell)" subcategory="Pins, Sensoren"
     //% block="Spursensor links %l" weight=6
@@ -83,7 +91,7 @@ namespace receiver { // r-spursensor.ts
     } */
 
     //% group="Spursensor (vom gewählten Modell)" subcategory="Pins, Sensoren"
-    //% block="Spursensoren links %l und rechts %r" weight=2
+    //% block="Spursensoren links %l und rechts %r" weight=3
     export function getSpursensor(l: eDH, r: eDH) {
         return getSpurLinks(l) && getSpurRechts(r)
         // return (n_Spursensor & 0x03) == (l << 1 | r)
@@ -95,5 +103,18 @@ namespace receiver { // r-spursensor.ts
         //% block="Spursensor links hell"
         spl = 0b00000010
     } */
+
+    // ========== EVENT HANDLER === sichtbarer Event-Block
+    let onSpurEventHandler: (links: boolean, rechts: boolean) => void
+
+    //% group="Spursensor (vom gewählten Modell)" subcategory="Pins, Sensoren"
+    //% block="wenn Spursensor geändert" weight=2
+    //% draggableParameters=reporter
+    export function onSpurEvent(cb: (links_hell: boolean, rechts_hell: boolean) => void) {
+        onSpurEventHandler = cb
+    }
+    // ========== EVENT HANDLER === sichtbarer Event-Block
+
+
 
 } // r-spursensor.ts
