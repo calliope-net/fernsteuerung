@@ -67,9 +67,9 @@ namespace receiver { // r-pins.ts
 
     //% group="Spursensor (vom gewählten Modell)" subcategory="Pins, Sensoren"
     //% block="Spursensor links %l und rechts %r" weight=4
-    export function readSpursensor(l: eDH, r: eDH) {
-        return pinSpurlinks(l) && pinSpurrechts(r)
-    }
+    //export function readSpursensor(l: eDH, r: eDH) {
+    //    return pinSpurlinks(l) && pinSpurrechts(r)
+    //}
 
 
 

@@ -13,7 +13,7 @@ namespace receiver { // r-receiver.ts
     export let n_Hardware = eHardware.v3 // Index in Arrays:// 0:_Calliope v3 Pins_
 
     // eHardware ist der Index für folgende Arrays:
-    export let a_ModellFunkgruppe = [0xA8, 239] // v3, car4
+    //export let a_ModellFunkgruppe = [0xA8, 239] // v3, car4
 
     // Calliope v3 freie Pins: C8, C9, C12, C13, C14, C15
     export let a_PinRelay: DigitalPin[] = [109, DigitalPin.P0]     // 0:DigitalPin.C9 GPIO2
