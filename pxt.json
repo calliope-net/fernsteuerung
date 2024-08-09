@@ -25,6 +25,7 @@
         "s-advanced.ts",
         "r-receiver.ts",
         "r-pins.ts",
+        "r-spursensor.ts",
         "r-qwiicmotor.ts",
         "r-qwiic.ts",
         "r-strecken.ts",
@@ -35,8 +36,7 @@
         "c-callibot.ts",
         "c-strecken.ts",
         "c-fernsteuerung.ts",
-        "c-beispiele.ts",
-        "r-spursensor.ts"
+        "c-beispiele.ts"
     ],
     "testFiles": [
         "test.ts"
