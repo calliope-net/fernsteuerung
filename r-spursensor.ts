@@ -9,23 +9,23 @@ namespace receiver { // r-spursensor.ts
     //% block="e spursensorRegisterEvents" weight=3
     export function spursensorRegisterEvents() {
 
-        pins.onPulsed(a_PinSpurlinks[n_Hardware], PulseValue.High, function () {
+        pins.onPulsed(a_PinSpurlinks[n_Hardware], PulseValue.Low, function () {
             // links hell
             n_Spursensor |= 0b10 // OR Nullen bleiben, nur 1 wird gesetzt
 
         })
-        pins.onPulsed(a_PinSpurlinks[n_Hardware], PulseValue.Low, function () {
+        pins.onPulsed(a_PinSpurlinks[n_Hardware], PulseValue.High, function () {
             // links dunkel
             n_Spursensor &= ~0b10 // AND Einsen bleiben, nur 0 wird gesetzt
 
         })
 
-        pins.onPulsed(a_PinSpurrechts[n_Hardware], PulseValue.High, function () {
+        pins.onPulsed(a_PinSpurrechts[n_Hardware], PulseValue.Low, function () {
             // rechts hell
             n_Spursensor |= 0b01 // OR Nullen bleiben, nur 1 wird gesetzt
 
         })
-        pins.onPulsed(a_PinSpurrechts[n_Hardware], PulseValue.Low, function () {
+        pins.onPulsed(a_PinSpurrechts[n_Hardware], PulseValue.High, function () {
             // rechts dunkel
             n_Spursensor &= ~0b01 // AND Einsen bleiben, nur 0 wird gesetzt
 
