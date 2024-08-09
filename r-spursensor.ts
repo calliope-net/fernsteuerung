@@ -11,6 +11,8 @@ namespace receiver { // r-spursensor.ts
         // ↑high, ↓low, Event niedrig bei l->h loslassen
         // Zeit wie lange es low ↓↑ war in µs
 
+        n_Spursensor = (pins.digitalReadPin(a_PinSpurlinks[n_Hardware]) << 1) //| pins.digitalReadPin(a_PinSpurrechts[n_Hardware])
+
         pins.onPulsed(a_PinSpurlinks[n_Hardware], PulseValue.Low, function () {
             // links hell
             //if (pins.pulseDuration() > 10000) { // 10ms
@@ -37,7 +39,8 @@ namespace receiver { // r-spursensor.ts
             //}
         })
 
-        n_Spursensor = (pins.digitalReadPin(a_PinSpurlinks[n_Hardware]) << 1) //| pins.digitalReadPin(a_PinSpurrechts[n_Hardware])
+        // danach darf kein pins.digitalReadPin() stehen
+        // das deaktiviert die Ereignisse wieder
 
     }
 
