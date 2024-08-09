@@ -17,28 +17,28 @@ namespace receiver { // r-spursensor.ts
 
             pins.onPulsed(a_PinSpurlinks[n_Hardware], PulseValue.Low, function () {
                 // links hell
-                //if (pins.pulseDuration() > 10000) { // 10ms
-                n_Spursensor |= 0b10 // OR Nullen bleiben, nur 1 wird gesetzt
-                //}
+                if (pins.pulseDuration() > 10000) { // 10ms
+                    n_Spursensor |= 0b10 // OR Nullen bleiben, nur 1 wird gesetzt
+                }
             })
             pins.onPulsed(a_PinSpurlinks[n_Hardware], PulseValue.High, function () {
                 // links dunkel
-                //if (pins.pulseDuration() > 10000) { // 10ms
-                n_Spursensor &= ~0b10 // AND Einsen bleiben, nur 0 wird gesetzt
-                //}
+                if (pins.pulseDuration() > 10000) { // 10ms
+                    n_Spursensor &= ~0b10 // AND Einsen bleiben, nur 0 wird gesetzt
+                }
             })
 
             pins.onPulsed(a_PinSpurrechts[n_Hardware], PulseValue.Low, function () {
                 // rechts hell
-                //if (pins.pulseDuration() > 10000) { // 10ms
-                n_Spursensor |= 0b01 // OR Nullen bleiben, nur 1 wird gesetzt
-                //}
+                if (pins.pulseDuration() > 10000) { // 10ms
+                    n_Spursensor |= 0b01 // OR Nullen bleiben, nur 1 wird gesetzt
+                }
             })
             pins.onPulsed(a_PinSpurrechts[n_Hardware], PulseValue.High, function () {
                 // rechts dunkel
-                //if (pins.pulseDuration() > 10000) { // 10ms
-                n_Spursensor &= ~0b01 // AND Einsen bleiben, nur 0 wird gesetzt
-                //}
+                if (pins.pulseDuration() > 10000) { // 10ms
+                    n_Spursensor &= ~0b01 // AND Einsen bleiben, nur 0 wird gesetzt
+                }
             })
 
             // danach darf kein pins.digitalReadPin() stehen, das deaktiviert die Ereignisse wieder, davor ist möglich
