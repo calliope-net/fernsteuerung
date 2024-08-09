@@ -34,7 +34,27 @@ namespace receiver { // r-spursensor.ts
     }
 
 
-    //  export enum eDH { dunkel = 0, hell = 1 }
+    export enum eDH { dunkel = 0, hell = 1 }
+
+    //% group="Spursensor (vom gewählten Modell)" subcategory="Pins, Sensoren"
+    //% block="Spursensor links %hell" weight=6
+    export function pinSpurlinks(l: eDH) {
+        return (n_Spursensor & 0b10) == (l << 1)
+        /*  if (a_PinSpurlinks.length > n_Hardware)
+             return pins.digitalReadPin(a_PinSpurlinks[n_Hardware]) == hell // 0 ist schwarz
+         else
+             return false */
+    }
+
+    //% group="Spursensor (vom gewählten Modell)" subcategory="Pins, Sensoren"
+    //% block="Spursensor rechts %hell" weight=5
+    export function pinSpurrechts(r: eDH) {
+        return (n_Spursensor & 0b01) == (r)
+        /*  if (a_PinSpurrechts.length > n_Hardware)
+             return pins.digitalReadPin(a_PinSpurrechts[n_Hardware]) == hell // 0 ist schwarz
+         else
+             return false */
+    }
 
     //% group="Spursensor (vom gewählten Modell)" subcategory="Pins, Sensoren"
     //% block="e Spursensor links %l und rechts %r" weight=2

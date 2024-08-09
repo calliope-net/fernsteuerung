@@ -43,7 +43,7 @@ namespace receiver { // r-pins.ts
   
 
     // ========== group="Spursensor" subcategory="Pins, Sensoren"
-
+/* 
     export enum eDH { dunkel = 0, hell = 1 } // 0 ist schwarz
 
     //% group="Spursensor (vom gewählten Modell)" subcategory="Pins, Sensoren"
@@ -63,7 +63,7 @@ namespace receiver { // r-pins.ts
         else
             return false
     }
-
+ */
 
     //% group="Spursensor (vom gewählten Modell)" subcategory="Pins, Sensoren"
     //% block="Spursensor links %l und rechts %r" weight=4
