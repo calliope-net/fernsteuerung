@@ -3,6 +3,10 @@ namespace receiver { // r-spursensor.ts
 
     let n_Spursensor = 0 // Buffer.create(1) // Bit 1=links 0:rechts
 
+
+
+    //% group="Spursensor (vom gewählten Modell)" subcategory="Pins, Sensoren"
+    //% block="e spursensorRegisterEvents" weight=3
     export function spursensorRegisterEvents() {
 
         pins.onPulsed(a_PinSpurlinks[n_Hardware], PulseValue.High, function () {
@@ -33,7 +37,7 @@ namespace receiver { // r-spursensor.ts
     //  export enum eDH { dunkel = 0, hell = 1 }
 
     //% group="Spursensor (vom gewählten Modell)" subcategory="Pins, Sensoren"
-    //% block="Spursensor links %l und rechts %r" weight=2
+    //% block="e Spursensor links %l und rechts %r" weight=2
     export function readSpursensor(l: eDH, r: eDH) {
         return (n_Spursensor & 0x03) == (l << 1 | r)
     }
