@@ -24,7 +24,7 @@ namespace receiver { // r-beispiele.ts
         }
 
         if (stop && abstand > 0 && getQwiicUltrasonic(true) < abstand) {
-         
+
             selectMotor(c_MotorStop)
 
             setLedColors(eRGBled.b, Colors.Red)
@@ -68,6 +68,34 @@ namespace receiver { // r-beispiele.ts
         }
     }
 
+
+    export function eventSpurfolger(buffer: Buffer, abstand: boolean, links_hell: boolean, rechts_hell: boolean) {
+        if (btf.getaktiviert(buffer, btf.e3aktiviert.ue) && abstand) { // 2
+            selectMotor(btf.getByte(buffer, btf.eBufferPointer.ue, btf.eBufferOffset.b0_Motor)) // 4
+            pinServo16(btf.getByte(buffer, btf.eBufferPointer.ue, btf.eBufferOffset.b1_Servo)) // 5
+        }
+        else if (btf.getaktiviert(buffer, btf.e3aktiviert.s00) && !links_hell && !rechts_hell) { // 4
+            selectMotor(btf.getByte(buffer, btf.eBufferPointer.s00, btf.eBufferOffset.b0_Motor)) // 7
+            pinServo16(btf.getByte(buffer, btf.eBufferPointer.s00, btf.eBufferOffset.b1_Servo)) // 8
+        }
+        else if (btf.getaktiviert(buffer, btf.e3aktiviert.s01) && !links_hell && rechts_hell) { // 8
+            selectMotor(btf.getByte(buffer, btf.eBufferPointer.s01, btf.eBufferOffset.b0_Motor)) // 10
+            pinServo16(btf.getByte(buffer, btf.eBufferPointer.s01, btf.eBufferOffset.b1_Servo)) // 11
+        }
+        else if (btf.getaktiviert(buffer, btf.e3aktiviert.s10) && links_hell && !rechts_hell) { // 16
+            selectMotor(btf.getByte(buffer, btf.eBufferPointer.s10, btf.eBufferOffset.b0_Motor)) // 13
+            pinServo16(btf.getByte(buffer, btf.eBufferPointer.s10, btf.eBufferOffset.b1_Servo)) // 14
+        }
+        else if (btf.getaktiviert(buffer, btf.e3aktiviert.s11) && links_hell && rechts_hell) { // 32
+            selectMotor(btf.getByte(buffer, btf.eBufferPointer.s11, btf.eBufferOffset.b0_Motor)) // 16
+            pinServo16(btf.getByte(buffer, btf.eBufferPointer.s11, btf.eBufferOffset.b1_Servo)) // 17
+        }
+        else if (btf.getaktiviert(buffer, btf.e3aktiviert.m0)) { // 1
+            selectMotor(btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor)) // 1
+            pinServo16(btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo)) // 2
+        }
+
+    }
 
 
 } // r-beispiele.ts
