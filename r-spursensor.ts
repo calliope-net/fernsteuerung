@@ -6,7 +6,7 @@ namespace receiver { // r-spursensor.ts
     // let n_Spursensor = 0 // Buffer.create(1) // Bit 1=links 0:rechts
     let n_SpurLinksHell = false // hell=true
     let n_SpurRechtsHell = false
-    const c_pulseDuration = 10000 // 10 ms
+    const c_pulseDuration = 50000 // 50 ms
 
     //% group="Spursensor (vom gewählten Modell)" subcategory="Pins, Sensoren"
     //% block="Spursensor Ereignisse registrieren (beim Start)" weight=8
