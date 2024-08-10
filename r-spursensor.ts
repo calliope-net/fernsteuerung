@@ -85,12 +85,12 @@ namespace receiver { // r-spursensor.ts
 
     function raiseSpurEvent() {
         if (onSpurEventHandler) {
-            //while (n_inEvent > 0) {
-            //    control.waitMicros(10000) // 10 ms
-            //}
-            //n_inEvent++
+            n_inEvent++
+            while (n_inEvent > 1) {
+                control.waitMicros(10000) // 10 ms
+            }
             onSpurEventHandler(n_SpurLinksHell, n_SpurRechtsHell)
-            //n_inEvent--
+            n_inEvent--
         }
     }
 
