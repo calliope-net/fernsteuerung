@@ -65,7 +65,8 @@ namespace receiver { // r-beispiele.ts
 
             if (stop) {
                 setLedColors(eRGBled.b, Colors.Yellow, stop) // gelb, wenn Abstandssensor aktiviert ist
-                // setLedColors(eRGBled.c, Colors.White, getSpursensor(eDH.hell, eDH.hell))
+                setLedColors(eRGBled.c, Colors.Off, false)
+             // setLedColors(eRGBled.c, Colors.White, getSpursensor(eDH.hell, eDH.hell))
             }
             else {
                 setLedColors(eRGBled.b, Colors.White, getSpurLinks(eDH.hell))  // wenn Abstandssensor nicht aktiviert ist
