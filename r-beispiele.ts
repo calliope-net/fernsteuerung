@@ -21,7 +21,6 @@ namespace receiver { // r-beispiele.ts
             m_lenken = undefined // gespeicherte Werte löschen
             m_inSpur = false     // beim ersten Durchlauf der Schleife
             setLedColors(eRGBled.b, Colors.Off, false)
-            setLedColors(eRGBled.c, Colors.Off, false)
         }
 
         if (stop && abstand > 0 && getQwiicUltrasonic(true) < abstand) {
@@ -34,6 +33,8 @@ namespace receiver { // r-beispiele.ts
         else {
 
             let lenken = Math.abs(servo16 - 16)  // 16-16=0 / 1-16=15 / 31-16=15
+
+            // readInputs(i2cSpur) // liest I2C Spursensor ein, bei pins nicht relevant
 
             if (getSpursensor(eDH.dunkel, eDH.dunkel)) {
                 selectMotor(motor128)
@@ -62,15 +63,8 @@ namespace receiver { // r-beispiele.ts
                 pinServo16(16) // nicht lenken
                 m_inSpur = false
             }
+            setLedColors(eRGBled.b, Colors.Yellow, stop) // gelb, wenn Spursensor aktiviert ist
 
-            //if (stop) {
-            setLedColors(eRGBled.b, Colors.Yellow, stop) // gelb, wenn Abstandssensor aktiviert ist
-            //    setLedColors(eRGBled.c, Colors.White, getSpursensor(eDH.hell, eDH.hell))
-            //}
-            //else { // !keine LED schalten, die brauchen zu viel Zeit!
-            //    setLedColors(eRGBled.b, Colors.White, getSpurLinks(eDH.hell))  // wenn Abstandssensor nicht aktiviert ist
-            //    setLedColors(eRGBled.c, Colors.White, getSpurRechts(eDH.hell)) // Spursensor links und rechts anzeigen
-            //}
         }
     }
 
