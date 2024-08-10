@@ -34,7 +34,7 @@ namespace receiver { // r-beispiele.ts
         else {
 
             let lenken = Math.abs(servo16 - 16)  // 16-16=0 / 1-16=15 / 31-16=15
-    
+
             if (getSpursensor(eDH.dunkel, eDH.dunkel)) {
                 selectMotor(motor128)
                 pinServo16(16) // nicht lenken
@@ -65,7 +65,7 @@ namespace receiver { // r-beispiele.ts
 
             if (stop) {
                 setLedColors(eRGBled.b, Colors.Yellow, stop) // gelb, wenn Abstandssensor aktiviert ist
-                setLedColors(eRGBled.c, Colors.White, getSpursensor(eDH.hell, eDH.hell))
+                // setLedColors(eRGBled.c, Colors.White, getSpursensor(eDH.hell, eDH.hell))
             }
             else {
                 setLedColors(eRGBled.b, Colors.White, getSpurLinks(eDH.hell))  // wenn Abstandssensor nicht aktiviert ist
