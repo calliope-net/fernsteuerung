@@ -110,12 +110,6 @@ namespace btf { // b-dispaly5x5.ts
         //    zeigeBINx4Servo_31(buffer[eBufferPointer.m0 + eBufferOffset.b1_Servo] & 0x1F)
         //}
     }
-    function zeigeBIN_map255(int255: number, xLed: number) {
-        if (int255 == 0)
-            zeigeBIN(0, ePlot.bin, xLed)
-        else
-            zeigeBIN(mapInt32(int255, 1, 255, 1, 31), ePlot.bin, xLed) // 8 Bit auf 5 Bit verteilen
-    }
 
     function zeigeBIN_BufferPointer(iBufferPointer: btf.eBufferPointer, xLed: number) {
         let int2 = a5x5_xBuffer[xLed]
@@ -160,11 +154,13 @@ namespace btf { // b-dispaly5x5.ts
         //% block="HEX Zahl"
         hex,
         //% block="BCD Zahl"
-        bcd
+        bcd,
+        //% block="BIN 0..255"
+        map
     }
 
     //% group="BIN" subcategory="Display 5x5" color=#54C9C9
-    //% block="zeige ↕↕↕↕↕ %int %format ←x %xLed" weight=2
+    //% block="zeige ↕↕↕↕↕ %int %format ←x %xLed" weight=3
     //% xLed.min=0 xLed.max=4 xLed.defl=4
     export function zeigeBIN(int: number, format: ePlot, xLed: number) {
         int = Math.imul(int, 1) // 32 bit signed integer
@@ -193,6 +189,12 @@ namespace btf { // b-dispaly5x5.ts
                 }
             }
         }
+        else if (format == ePlot.map) {
+            if (int == 0)
+                zeigeBIN(0, ePlot.bin, xLed)
+            else
+                zeigeBIN(mapInt32(int, 1, 255, 1, 31), ePlot.bin, xLed) // 8 Bit auf 5 Bit verteilen
+        }
         else {
             // bcd und hex zeigt von rechts nach links so viele Spalten an, wie die Zahl Ziffern hat
             // wenn die nächste Zahl weniger Ziffern hat, werden die links daneben nicht gelöscht
@@ -211,6 +213,16 @@ namespace btf { // b-dispaly5x5.ts
         }
     }
 
+    // group="BIN" subcategory="Display 5x5" color=#54C9C9
+    // block="zeige ↕↕↕↕↕ %int255 map255 ←x %xLed" weight=2
+    // int255.min=0 int255.max=255 
+    // xLed.min=0 xLed.max=4 xLed.defl=4
+    function zeigeBIN_map255(int255: number, xLed: number) {
+        if (int255 == 0)
+            zeigeBIN(0, ePlot.bin, xLed)
+        else
+            zeigeBIN(mapInt32(int255, 1, 255, 1, 31), ePlot.bin, xLed) // 8 Bit auf 5 Bit verteilen
+    }
 
 
     let n_showString = ""
