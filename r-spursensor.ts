@@ -27,6 +27,9 @@ namespace receiver { // r-spursensor.ts
                     // raiseSpurEvent()
                     if (onSpurEventHandler)
                         onSpurEventHandler(n_SpurLinksHell, n_SpurRechtsHell)
+                    if (onSpurStopEventHandler)
+                        onSpurStopEventHandler(n_SpurLinksHell, n_SpurRechtsHell, n_AbstandStop)
+
                 }
             })
             pins.onPulsed(a_PinSpurlinks[n_Hardware], PulseValue.High, function () {
@@ -36,6 +39,8 @@ namespace receiver { // r-spursensor.ts
                     // raiseSpurEvent()
                     if (onSpurEventHandler)
                         onSpurEventHandler(n_SpurLinksHell, n_SpurRechtsHell)
+                    if (onSpurStopEventHandler)
+                        onSpurStopEventHandler(n_SpurLinksHell, n_SpurRechtsHell, n_AbstandStop)
                 }
             })
 
@@ -46,6 +51,8 @@ namespace receiver { // r-spursensor.ts
                     // raiseSpurEvent()
                     if (onSpurEventHandler)
                         onSpurEventHandler(n_SpurLinksHell, n_SpurRechtsHell)
+                    if (onSpurStopEventHandler)
+                        onSpurStopEventHandler(n_SpurLinksHell, n_SpurRechtsHell, n_AbstandStop)
                 }
             })
             pins.onPulsed(a_PinSpurrechts[n_Hardware], PulseValue.High, function () {
@@ -55,6 +62,8 @@ namespace receiver { // r-spursensor.ts
                     // raiseSpurEvent()
                     if (onSpurEventHandler)
                         onSpurEventHandler(n_SpurLinksHell, n_SpurRechtsHell)
+                    if (onSpurStopEventHandler)
+                        onSpurStopEventHandler(n_SpurLinksHell, n_SpurRechtsHell, n_AbstandStop)
                 }
             })
 
@@ -63,25 +72,25 @@ namespace receiver { // r-spursensor.ts
             n_SpursensorEventsRegistered = true
         }
     }
-/* 
-    function raiseSpurEvent() {
-        if (onSpurEventHandler) {
-            n_inEvent++
-            //while (n_inEvent > 1) {
-            //    control.waitMicros(10000) // 10 ms
-            //}
-            //onSpurEventHandler(n_SpurLinksHell, n_SpurRechtsHell)
-            //n_inEvent--
-            n_inEvent++
-            if (n_inEvent == 1) {
-                onSpurEventHandler(n_SpurLinksHell, n_SpurRechtsHell)
-                if (n_inEvent > 1)
+    /* 
+        function raiseSpurEvent() {
+            if (onSpurEventHandler) {
+                n_inEvent++
+                //while (n_inEvent > 1) {
+                //    control.waitMicros(10000) // 10 ms
+                //}
+                //onSpurEventHandler(n_SpurLinksHell, n_SpurRechtsHell)
+                //n_inEvent--
+                n_inEvent++
+                if (n_inEvent == 1) {
                     onSpurEventHandler(n_SpurLinksHell, n_SpurRechtsHell)
-                n_inEvent = 0
+                    if (n_inEvent > 1)
+                        onSpurEventHandler(n_SpurLinksHell, n_SpurRechtsHell)
+                    n_inEvent = 0
+                }
             }
         }
-    }
-*/
+    */
 
     export enum eDH { hell = 1, dunkel = 0 }
 
@@ -126,6 +135,7 @@ namespace receiver { // r-spursensor.ts
 
     // ========== EVENT HANDLER === sichtbarer Event-Block
     let onSpurEventHandler: (links: boolean, rechts: boolean) => void
+    let onSpurStopEventHandler: (links: boolean, rechts: boolean, abstand_Stop: boolean) => void
 
     //% group="Spursensor (vom gewählten Modell)" subcategory="Pins, Sensoren"
     //% block="wenn Spursensor geändert" weight=2
@@ -133,8 +143,35 @@ namespace receiver { // r-spursensor.ts
     export function onSpurEvent(cb: (links_hell: boolean, rechts_hell: boolean) => void) {
         onSpurEventHandler = cb
     }
+
+    //% group="Spursensor (vom gewählten Modell)" subcategory="Pins, Sensoren"
+    //% block="wenn Sensor geändert" weight=2
+    //% draggableParameters=reporter
+    export function onSpurStopEvent(cb: (links_hell: boolean, rechts_hell: boolean, abstand_Stop: boolean) => void) {
+        onSpurStopEventHandler = cb
+    }
     // ========== EVENT HANDLER === sichtbarer Event-Block
 
 
+    let n_AbstandStop = false
+
+    //% group="Ultrasonic Distance Sensor (I²C: 0x00)" subcategory="Qwiic" color=#5FA38F
+    //% block="Q Abstand Ereignis auslösen Stop %stop cm Start %start cm" weight=2
+    //% stop.defl=30
+    //% start.defl=35
+    export function raiseQwiicAbstandEvent(stop: number, start: number) {
+        let cm = getQwiicUltrasonic(true)
+        if (cm < stop) {
+            n_AbstandStop = true
+            if (onSpurStopEventHandler)
+                onSpurStopEventHandler(n_SpurLinksHell, n_SpurRechtsHell, n_AbstandStop)
+        }
+        else if (cm > Math.max(start, stop)) {
+            n_AbstandStop = false
+            if (onSpurStopEventHandler)
+                onSpurStopEventHandler(n_SpurLinksHell, n_SpurRechtsHell, n_AbstandStop)
+        }
+
+    }
 
 } // r-spursensor.ts

@@ -52,7 +52,7 @@ SparkFun Qwiic Ultrasonic Distance Sensor (HC-SR04)
     }
 
     //% group="Ultrasonic Distance Sensor (I²C: 0x00)" subcategory="Qwiic" color=#5FA38F
-    //% block="Q Abstand cm • einlesen %read" weight=3
+    //% block="Q Abstand cm • einlesen %read" weight=6
     //% read.shadow="toggleYesNo"
     export function getQwiicUltrasonic(read: boolean) {
         if (read) {
@@ -64,7 +64,6 @@ SparkFun Qwiic Ultrasonic Distance Sensor (HC-SR04)
         }
         return n_QwiicUltrasonic_mm / 10
     }
-
 
 
 } // r-qwiic.ts
