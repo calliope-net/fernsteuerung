@@ -2,7 +2,7 @@
 namespace receiver { // r-spursensor.ts
 
     let n_SpursensorEventsRegistered = false
-    let n_inEvent = 0
+    //let n_inEvent = 0
     // let n_Spursensor = 0 // Buffer.create(1) // Bit 1=links 0:rechts
     let n_SpurLinksHell = false // hell=true
     let n_SpurRechtsHell = false
@@ -24,29 +24,18 @@ namespace receiver { // r-spursensor.ts
                 // links hell
                 if (pins.pulseDuration() > c_pulseDuration) { // 10ms
                     n_SpurLinksHell = true
-                    raiseSpurEvent()
-                    /*  if (onSpurEventHandler) {
-                         while (m_inEvent) {
- 
-                         }
-                         m_inEvent = true
-                         onSpurEventHandler(n_SpurLinksHell, n_SpurRechtsHell)
-                         m_inEvent = false
-                     } */
-                    // n_Spursensor |= 0b10 // OR Nullen bleiben, nur 1 wird gesetzt
+                    // raiseSpurEvent()
+                    if (onSpurEventHandler)
+                        onSpurEventHandler(n_SpurLinksHell, n_SpurRechtsHell)
                 }
             })
             pins.onPulsed(a_PinSpurlinks[n_Hardware], PulseValue.High, function () {
                 // links dunkel
                 if (pins.pulseDuration() > c_pulseDuration) { // 10ms
                     n_SpurLinksHell = false
-                    raiseSpurEvent()
-                    /*  if (!m_inEvent && onSpurEventHandler) {
-                         m_inEvent = true
-                         onSpurEventHandler(n_SpurLinksHell, n_SpurRechtsHell)
-                         m_inEvent = false
-                     } */
-                    // n_Spursensor &= ~0b10 // AND Einsen bleiben, nur 0 wird gesetzt
+                    // raiseSpurEvent()
+                    if (onSpurEventHandler)
+                        onSpurEventHandler(n_SpurLinksHell, n_SpurRechtsHell)
                 }
             })
 
@@ -54,43 +43,35 @@ namespace receiver { // r-spursensor.ts
                 // rechts hell
                 if (pins.pulseDuration() > c_pulseDuration) { // 10ms
                     n_SpurRechtsHell = true
-                    raiseSpurEvent()
-                    /* if (!m_inEvent && onSpurEventHandler) {
-                        m_inEvent = true
+                    // raiseSpurEvent()
+                    if (onSpurEventHandler)
                         onSpurEventHandler(n_SpurLinksHell, n_SpurRechtsHell)
-                        m_inEvent = false
-                    } */
-                    // n_Spursensor |= 0b01 // OR Nullen bleiben, nur 1 wird gesetzt
                 }
             })
             pins.onPulsed(a_PinSpurrechts[n_Hardware], PulseValue.High, function () {
                 // rechts dunkel
                 if (pins.pulseDuration() > c_pulseDuration) { // 10ms
                     n_SpurRechtsHell = false
-                    raiseSpurEvent()
-                    /* if (!m_inEvent && onSpurEventHandler) {
-                        m_inEvent = true
+                    // raiseSpurEvent()
+                    if (onSpurEventHandler)
                         onSpurEventHandler(n_SpurLinksHell, n_SpurRechtsHell)
-                        m_inEvent = false
-                    } */
-                    // n_Spursensor &= ~0b01 // AND Einsen bleiben, nur 0 wird gesetzt
                 }
             })
 
             // danach darf kein pins.digitalReadPin() stehen, das deaktiviert die Ereignisse wieder, davor ist möglich
-            n_inEvent = 0
+            //n_inEvent = 0
             n_SpursensorEventsRegistered = true
         }
     }
-
+/* 
     function raiseSpurEvent() {
         if (onSpurEventHandler) {
-            /* n_inEvent++
-            while (n_inEvent > 1) {
-                control.waitMicros(10000) // 10 ms
-            }
-            onSpurEventHandler(n_SpurLinksHell, n_SpurRechtsHell)
-            n_inEvent-- */
+            n_inEvent++
+            //while (n_inEvent > 1) {
+            //    control.waitMicros(10000) // 10 ms
+            //}
+            //onSpurEventHandler(n_SpurLinksHell, n_SpurRechtsHell)
+            //n_inEvent--
             n_inEvent++
             if (n_inEvent == 1) {
                 onSpurEventHandler(n_SpurLinksHell, n_SpurRechtsHell)
@@ -100,7 +81,7 @@ namespace receiver { // r-spursensor.ts
             }
         }
     }
-
+*/
 
     export enum eDH { hell = 1, dunkel = 0 }
 
