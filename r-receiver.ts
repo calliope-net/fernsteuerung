@@ -185,7 +185,7 @@ namespace receiver { // r-receiver.ts
     // ========== group="Servo (vom gewählten Modell)"
 
     //% group="Servo (vom gewählten Modell)"
-    //% block="Servo %servo °" weight=4
+    //% block="Servo (Picker) %servo °" weight=4
     //% servo.shadow=protractorPicker servo.defl=90
     export function pinServoPicker(servo: number) {
         pinServo16(btf.protractorPicker(servo))
@@ -205,9 +205,8 @@ namespace receiver { // r-receiver.ts
         //pinServo90((46 - winkel) * 3)  // 1->135 16->90 31->45
         //  servo_set90((14 + winkel) * 3)  // 1->135 16->90 31->45
         else
-            pinServo90(90)
+            pinServo90(c_Servo90_geradeaus)
     }
-
 
     //% group="Servo (vom gewählten Modell)"
     //% block="Servo (135° ↖ 90° ↗ 45°) %winkel °" weight=2
@@ -223,6 +222,11 @@ namespace receiver { // r-receiver.ts
         }
     }
 
+    //% group="Servo (vom gewählten Modell)"
+    //% block="Servo geradeaus" weight=1
+    export function pinServoGeradeaus() {
+        pinServo90(c_Servo90_geradeaus)
+    }
 
 
     // ========== group="RGB LEDs (v3)" subcategory="Aktoren"
