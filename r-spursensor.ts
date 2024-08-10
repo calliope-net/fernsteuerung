@@ -2,6 +2,7 @@
 namespace receiver { // r-spursensor.ts
 
     let n_SpursensorEventsRegistered = false
+    let m_inEvent = false
     // let n_Spursensor = 0 // Buffer.create(1) // Bit 1=links 0:rechts
     let n_SpurLinksHell = false // hell=true
     let n_SpurRechtsHell = false
@@ -23,8 +24,11 @@ namespace receiver { // r-spursensor.ts
                 // links hell
                 if (pins.pulseDuration() > c_pulseDuration) { // 10ms
                     n_SpurLinksHell = true
-                    if (onSpurEventHandler)
+                    if (!m_inEvent && onSpurEventHandler) {
+                        m_inEvent = true
                         onSpurEventHandler(n_SpurLinksHell, n_SpurRechtsHell)
+                        m_inEvent = false
+                    }
                     // n_Spursensor |= 0b10 // OR Nullen bleiben, nur 1 wird gesetzt
                 }
             })
@@ -32,8 +36,11 @@ namespace receiver { // r-spursensor.ts
                 // links dunkel
                 if (pins.pulseDuration() > c_pulseDuration) { // 10ms
                     n_SpurLinksHell = false
-                    if (onSpurEventHandler)
+                    if (!m_inEvent && onSpurEventHandler) {
+                        m_inEvent = true
                         onSpurEventHandler(n_SpurLinksHell, n_SpurRechtsHell)
+                        m_inEvent = false
+                    }
                     // n_Spursensor &= ~0b10 // AND Einsen bleiben, nur 0 wird gesetzt
                 }
             })
@@ -42,8 +49,11 @@ namespace receiver { // r-spursensor.ts
                 // rechts hell
                 if (pins.pulseDuration() > c_pulseDuration) { // 10ms
                     n_SpurRechtsHell = true
-                    if (onSpurEventHandler)
+                    if (!m_inEvent && onSpurEventHandler) {
+                        m_inEvent = true
                         onSpurEventHandler(n_SpurLinksHell, n_SpurRechtsHell)
+                        m_inEvent = false
+                    }
                     // n_Spursensor |= 0b01 // OR Nullen bleiben, nur 1 wird gesetzt
                 }
             })
@@ -51,8 +61,11 @@ namespace receiver { // r-spursensor.ts
                 // rechts dunkel
                 if (pins.pulseDuration() > c_pulseDuration) { // 10ms
                     n_SpurRechtsHell = false
-                    if (onSpurEventHandler)
+                    if (!m_inEvent && onSpurEventHandler) {
+                        m_inEvent = true
                         onSpurEventHandler(n_SpurLinksHell, n_SpurRechtsHell)
+                        m_inEvent = false
+                    }
                     // n_Spursensor &= ~0b01 // AND Einsen bleiben, nur 0 wird gesetzt
                 }
             })
