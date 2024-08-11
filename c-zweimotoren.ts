@@ -7,8 +7,20 @@ namespace cb2 { // c-zweimotoren.ts
     export let n_m1_1_128_255: number
     export let n_m2_1_128_255: number
 
-    //% group="Fahren mit 2 Motoren (1 ↓ 128 ↑ 255) (0: keine Änderung)" subcategory="2 Motoren"
-    //% block="2 Motoren (1↓128↑255) links %m1_1_128_255 rechts %m2_1_128_255" weight=3
+
+    //% group="Fahren mit 2 Motoren (-100% ↓ 0 ↑ +100%)" subcategory="2 Motoren"
+    //% block="2 Motoren links %mA %motorA \\% • rechts %mB %motorB \\%" weight=4
+    //% mA.shadow=toggleOnOff mA.defl=1
+    //% motorA.shadow=speedPicker motorA.defl=50
+    //% mB.shadow=toggleOnOff mB.defl=1
+    //% motorB.shadow=speedPicker motorB.defl=-50
+    //% inlineInputMode=inline
+    export function writeMotorenPicker(mA: boolean, motorA: number, mB: boolean, motorB: number) {
+        writeMotoren128(mA ? btf.speedPicker(motorA) : 0, mB ? btf.speedPicker(motorB) : 0)
+    }
+
+    //% group="Fahren mit 2 Motoren (0: keine Änderung)" subcategory="2 Motoren"
+    //% block="2 Motoren (1↓128↑255) links %m1_1_128_255 • rechts %m2_1_128_255" weight=3
     //% m1_1_128_255.min=0 m1_1_128_255.max=255 m1_1_128_255.defl=0
     //% m2_1_128_255.min=0 m2_1_128_255.max=255 m2_1_128_255.defl=0
     export function writeMotoren128(m1_1_128_255: number, m2_1_128_255: number) {
@@ -67,8 +79,8 @@ namespace cb2 { // c-zweimotoren.ts
 
     // ========== group="2 Motoren (-100 ↓ 0 ↑ +100) nach Zeit (1.0 - 25.5 s) steuern" subcategory="2 Motoren"
 
-    //% group="Strecke mit 2 Motoren (-100 ↓ 0 ↑ +100) nach Zeit (1.0 - 25.5 s) fahren" subcategory="2 Motoren"
-    //% block="2 Motoren links %motorA \\% rechts %motorB \\% Zeit %zehntelsekunden ⅒s || Stop %abstandsSensor bei Abstand < (cm) %abstand Spursensor %spurSensor "
+    //% group="Strecke mit 2 Motoren nach Zeit (1.0 - 25.5 s) fahren" subcategory="2 Motoren"
+    //% block="2 Motoren (Picker) links %motorA \\% • rechts %motorB \\% Zeit %zehntelsekunden ⅒s || Stop %abstandsSensor bei Abstand < (cm) %abstand Spursensor %spurSensor" weight=6
     //% motorA.shadow=speedPicker motorA.defl=50
     //% motorB.shadow=speedPicker motorB.defl=-50
     //% zehntelsekunden.shadow=cb2_zehntelsekunden
@@ -84,8 +96,8 @@ namespace cb2 { // c-zweimotoren.ts
 
     // ========== group="2 Motoren (1 ↓ 128 ↑ 255) nach Zeit (1.0 - 25.5 s) steuern" subcategory="2 Motoren"
 
-    //% group="Strecke mit 2 Motoren (1 ↓ 128 ↑ 255) nach Zeit (1.0 - 25.5 s) fahren" subcategory="2 Motoren"
-    //% block="2 Motoren (1↓128↑255) links %motorA rechts %motorB Zeit %zehntelsekunden ⅒s || Stop %abstandsSensor bei Abstand < (cm) %abstand Spursensor %spurSensor "
+    //% group="Strecke mit 2 Motoren nach Zeit (1.0 - 25.5 s) fahren" subcategory="2 Motoren"
+    //% block="2 Motoren (1↓128↑255) links %motorA rechts %motorB Zeit %zehntelsekunden ⅒s || Stop %abstandsSensor bei Abstand < (cm) %abstand Spursensor %spurSensor" weight=5
     //% motorA.min=1 motorA.max=255 motorA.defl=192
     //% motorB.min=1 motorB.max=255 motorB.defl=64
     //% zehntelsekunden.min=10 zehntelsekunden.max=255 zehntelsekunden.defl=25
