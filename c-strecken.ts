@@ -115,4 +115,42 @@ namespace cb2 { // c-strecken.ts
     }
 
 
+
+
+
+
+    // ========== group="Encoder (Calli:bot 2E)" subcategory="Strecken"
+    
+    let n_Callibot2_x22hasEncoder = false // 2:CB2 3:CB2E 4:CB2A=Gymnasium
+
+
+    //% group="Encoder (Calli:bot 2E)" subcategory="Strecken"
+    //% block="Encoder Test und Zähler löschen" weight=3
+    export function writeEncoderReset() {
+        n_Callibot2_x22hasEncoder = readVersionArray().get(1) == 3 // 2:CB2 3:CB2E 4:CB2A=Gymnasium
+        if (n_Callibot2_x22hasEncoder)
+            i2cWriteBuffer(Buffer.fromArray([eRegister.RESET_ENCODER, 3])) // 3:beide
+        return n_Callibot2_x22hasEncoder
+    }
+
+    //% group="Encoder (Calli:bot 2E)" subcategory="Strecken"
+    //% block="Encoder Werte [l,r] (Int32LE)" weight=2
+    export function readEncoderValues() {
+        if (n_Callibot2_x22hasEncoder) {
+            i2cWriteBuffer(Buffer.fromArray([eRegister.GET_ENCODER_VALUE]))
+            return i2cReadBuffer(9).slice(1, 8).toArray(NumberFormat.Int32LE) // 32 Bit mit Vorzeichen
+        } else
+            return [0, 0]
+    }
+
+    //% group="Encoder (Calli:bot 2E)" subcategory="Strecken"
+    //% block="Encoder Mittelwert (abs)" weight=1
+    export function readEncoderMittelwert() {
+        let encoderValues = readEncoderValues()
+        return Math.idiv(Math.abs(encoderValues[0]) + Math.abs(encoderValues[1]), 2)
+    }
+
+
+
+
 } // c-strecken.ts
