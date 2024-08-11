@@ -14,6 +14,8 @@
         "b-fernsteuerung.ts",
         "b-datenpaket.ts",
         "b-display5x5.ts",
+        "b-rgbleds.ts",
+        "b-rgbleds-v3.ts",
         "b-enums.ts",
         "b-advanced.ts",
         "s-sender.ts",
@@ -44,6 +46,7 @@
         "test.ts"
     ],
     "fileDependencies": {
+        "b-rgbleds-v3.ts": "v3",
         "r-calliope-v3.ts": "v3"
     },
     "targetVersions": {

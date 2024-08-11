@@ -23,7 +23,7 @@ namespace btf { // b-dispaly5x5.ts
         zeigeBIN(int, ePlot.hex, 1) // 5x5 x=0-1 y=1-2-3-4 (y=0 ist bei hex immer aus)
     }
 
-    //% group="BIN" subcategory="Display 5x5" color=#54C9C9
+    //% group="BIN" subcategory="LEDs, Display" color=#54C9C9
     //% block="zeige ↑↑↕.. aktive Motoren %buffer" weight=8
     //% buffer.shadow="btf_sendBuffer19"
     export function zeige5x5Buffer(buffer: Buffer) {
@@ -52,7 +52,7 @@ namespace btf { // b-dispaly5x5.ts
     }
 
 
-    //% group="BIN" subcategory="Display 5x5" color=#54C9C9
+    //% group="BIN" subcategory="LEDs, Display" color=#54C9C9
     //% block="zeige ...↕↕ Joystick %buffer" weight=7
     //% buffer.shadow="btf_sendBuffer19"
     export function zeige5x5Joystick(buffer: Buffer) {
@@ -159,7 +159,7 @@ namespace btf { // b-dispaly5x5.ts
         map
     }
 
-    //% group="BIN" subcategory="Display 5x5" color=#54C9C9
+    //% group="BIN" subcategory="LEDs, Display" color=#54C9C9
     //% block="zeige ↕↕↕↕↕ %int %format ←x %xLed" weight=3
     //% xLed.min=0 xLed.max=4 xLed.defl=4
     export function zeigeBIN(int: number, format: ePlot, xLed: number) {
@@ -213,7 +213,7 @@ namespace btf { // b-dispaly5x5.ts
         }
     }
 
-    // group="BIN" subcategory="Display 5x5" color=#54C9C9
+    // group="BIN" subcategory="LEDs, Display" color=#54C9C9
     // block="zeige ↕↕↕↕↕ %int255 map255 ←x %xLed" weight=2
     // int255.min=0 int255.max=255 
     // xLed.min=0 xLed.max=4 xLed.defl=4
@@ -227,7 +227,7 @@ namespace btf { // b-dispaly5x5.ts
 
     let n_showString = ""
 
-    //% group="Text" subcategory="Display 5x5" color=#54C9C9
+    //% group="Text" subcategory="LEDs, Display" color=#54C9C9
     //% block="zeige Text wenn geändert %text" weight=1
     //% text.shadow="btf_text"
     export function zeigeText(text: any) {
