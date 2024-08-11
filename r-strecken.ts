@@ -55,7 +55,7 @@ namespace receiver { // r-strecken.ts
                         sensor_color = Colors.Red
                         break
                     }
-                    if (abstandsSensor && motor > c_MotorStop && abstand > 0 && getQwiicUltrasonic(true) < abstand) {
+                    if (abstandsSensor && motor > c_MotorStop && abstand > 0 && selectAbstand(true) < abstand) {
                         sensor_color = Colors.Yellow
                         break
                     }
@@ -79,7 +79,7 @@ namespace receiver { // r-strecken.ts
 
                 while (zehntelsekunden-- > 0) //
                 {
-                    if (abstandsSensor && motor > c_MotorStop && abstand > 0 && getQwiicUltrasonic(true) < abstand) {
+                    if (abstandsSensor && motor > c_MotorStop && abstand > 0 && selectAbstand(true) < abstand) {
                         sensor_color = Colors.Orange
                         break
                     }

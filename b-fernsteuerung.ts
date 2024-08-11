@@ -206,7 +206,7 @@ namespace btf { // b-fernsteuerung.ts
 
 
     //% group="Bluetooth empfangen (19 Byte)"
-    //% block="timeout > %ms ms || und deaktiviert %timeoutDisbled" weight=3
+    //% block="Timeout > %ms ms || und deaktiviert %timeoutDisbled" weight=3
     //% timeoutDisbled.shadow="toggleYesNo"
     //% ms.defl=1000
     export function timeout(ms: number, timeoutDisbled = false) {
@@ -235,7 +235,7 @@ namespace btf { // b-fernsteuerung.ts
     }
 
     //% group="lokales Programm (ohne Fernsteuerung)"
-    //% block="Reset Timer" weight=1
+    //% block="Reset Timeout Timer" weight=1
     export function reset_timer() {
         n_lastConnectedTime = input.runningTime()
     }
