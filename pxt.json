@@ -35,9 +35,9 @@
         "r-calliope-v3.ts",
         "c-callibot.ts",
         "c-strecken.ts",
+        "c-zweimotoren.ts",
         "c-fernsteuerung.ts",
-        "c-beispiele.ts",
-        "c-zweimotoren.ts"
+        "c-beispiele.ts"
     ],
     "testFiles": [
         "test.ts"
