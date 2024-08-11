@@ -150,30 +150,37 @@ namespace receiver { // r-spursensor.ts
 
     // ========== group="Ultraschall (vom gewählten Modell)" subcategory="Pins, Sensoren"
 
-    let onStopEventHandler: (abstand_Stop: boolean) => void
+    let onStopEventHandler: (abstand_Stop: boolean, cm: number) => void
 
-
+    let n_AbstandTimer = input.runningTime()
     let n_AbstandStop = false
 
     // group="Ultrasonic Distance Sensor (I²C: 0x00)" subcategory="Qwiic" color=#5FA38F
     //% group="Ultraschall (vom gewählten Modell)" subcategory="Pins, Sensoren"
-    //% block="Abstand Ereignis auslösen Stop %stop cm Start %start cm" weight=2
-    //% stop.defl=30
-    //% start.defl=35
-    export function raiseAbstandEvent(stop: number, start: number) {
+    //% block="Abstand Ereignis auslösen Stop %stop cm Start %start cm || Pause %ms ms" weight=2
+    //% stop.defl=20
+    //% start.defl=25
+    //% ms.defl=25
+    export function raiseAbstandEvent(stop: number, start: number, ms = 25) {
         if (selectAbstandSensorConnected()) {
+            let t = input.runningTime() - n_AbstandTimer // ms seit letztem raiseAbstandEvent
+            if (t < ms)
+                basic.pause(t) // restliche Zeit-Differenz warten
+            n_AbstandTimer = input.runningTime()
+
             let cm = selectAbstand(true)
+
             if (cm < stop) {
                 n_AbstandStop = true
                 if (onStopEventHandler)
-                    onStopEventHandler(n_AbstandStop)
+                    onStopEventHandler(n_AbstandStop, cm)
                 if (onSpurStopEventHandler)
                     onSpurStopEventHandler(n_SpurLinksHell, n_SpurRechtsHell, n_AbstandStop)
             }
             else if (cm > Math.max(start, stop)) {
                 n_AbstandStop = false
                 if (onStopEventHandler)
-                    onStopEventHandler(n_AbstandStop)
+                    onStopEventHandler(n_AbstandStop, cm)
                 if (onSpurStopEventHandler)
                     onSpurStopEventHandler(n_SpurLinksHell, n_SpurRechtsHell, n_AbstandStop)
             }
@@ -183,7 +190,7 @@ namespace receiver { // r-spursensor.ts
     //% group="Ultraschall (vom gewählten Modell)" subcategory="Pins, Sensoren"
     //% block="wenn Abstand Sensor geändert" weight=1
     //% draggableParameters=reporter
-    export function onStopEvent(cb: (abstand_Stop: boolean) => void) {
+    export function onStopEvent(cb: (abstand_Stop: boolean, cm: number) => void) {
         onStopEventHandler = cb
     }
 
