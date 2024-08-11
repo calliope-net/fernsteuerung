@@ -36,7 +36,8 @@
         "c-callibot.ts",
         "c-strecken.ts",
         "c-fernsteuerung.ts",
-        "c-beispiele.ts"
+        "c-beispiele.ts",
+        "c-zweimotoren.ts"
     ],
     "testFiles": [
         "test.ts"
