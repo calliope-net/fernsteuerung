@@ -3,7 +3,7 @@ namespace btf { // b-rgbleds.ts
 
     // ========== group="RGB LEDs (v3)" subcategory="Aktoren"
 
-    export enum eRGBled { a, b, c } // Index im Array
+    export enum eRgbLed { a, b, c } // Index im Array
     let n_RgbLed = 0 // aktueller Wert v1 v2
 
     // deklariert die Variable mit dem Delegat-Typ '(color1: number, color2: number, color3: number, brightness: number) => void'
@@ -29,11 +29,11 @@ namespace btf { // b-rgbleds.ts
     }
 
 
-    let onSetLedColorsHandler_v3: (led: eRGBled, color: number, on: boolean, blinken: boolean, helligkeit: number) => void
+    let onSetLedColorsHandler_v3: (led: eRgbLed, color: number, on: boolean, blinken: boolean, helligkeit: number) => void
     //% group="RGB LEDs (Calliope v3)" deprecated=true
     //% block="SetLedColors" weight=9
     //% draggableParameters=reporter
-    export function onSetLedColors_v3(cb: (led: eRGBled, color: number, on: boolean, blinken: boolean, helligkeit: number) => void) {
+    export function onSetLedColors_v3(cb: (led: eRgbLed, color: number, on: boolean, blinken: boolean, helligkeit: number) => void) {
         onSetLedColorsHandler_v3 = cb
     }
 
@@ -48,11 +48,11 @@ namespace btf { // b-rgbleds.ts
     //% blinken.shadow=toggleYesNo
     //% helligkeit.min=5 helligkeit.max=100 helligkeit.defl=20
     //% inlineInputMode=inline
-    export function setLedColors(led: eRGBled, color: number, on = true, blinken = false, helligkeit = 20) {
+    export function setLedColors(led: eRgbLed, color: number, on = true, blinken = false, helligkeit = 20) {
         if (onSetLedColorsHandler_v3) { // v3 hat 3 RgbLeds
             onSetLedColorsHandler_v3(led, color, on, blinken, helligkeit)
         }
-        else if (led == eRGBled.a) { // b und c wird ignoriert
+        else if (led == eRgbLed.a) { // b und c wird ignoriert
             if (!on || (blinken && n_RgbLed == color)) // entweder aus .. oder an und blinken
                 color = Colors.Off // alle Farben aus = 0
 

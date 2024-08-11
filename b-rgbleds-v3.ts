@@ -1,8 +1,8 @@
 
-namespace btf { //  b-rgbleds-v3.ts
+namespace btf { // b-rgbleds-v3.ts
 
 
-    let a_RgbLeds = [0, 0, 0, 0] // speichert 3 LEDs, wenn nur eine geändert wird
+    let a_RgbLeds = [0, 0, 0, 0] // speichert 3 LEDs + Helligkeit, wenn nur eine geändert wird
     let n_RgbLedTimer = input.runningTime() // ms seit Start, zwischen zwei Aufrufen ist eine Pause erforderlich
 
     function rgbLedPause() {
@@ -21,12 +21,7 @@ namespace btf { //  b-rgbleds-v3.ts
 
             a_RgbLeds[led] = color
             a_RgbLeds[3] = helligkeit
-
-            //let t = input.runningTime() - n_RgbLedTimer // ms seit letztem setLedColors
-            //if (t < 25)
-            //    basic.pause(t) // restliche Zeit-Differenz bis 10 ms warten
-            //n_RgbLedTimer = input.runningTime()
-
+         
             rgbLedPause()
             basic.setLedColors(a_RgbLeds[0], a_RgbLeds[1], a_RgbLeds[2], helligkeit)
         }
