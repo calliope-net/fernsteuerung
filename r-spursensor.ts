@@ -155,13 +155,14 @@ namespace receiver { // r-spursensor.ts
     let n_AbstandTimer = input.runningTime()
     let n_AbstandStop = false
 
+
     // group="Ultrasonic Distance Sensor (I²C: 0x00)" subcategory="Qwiic" color=#5FA38F
     //% group="Ultraschall (vom gewählten Modell)" subcategory="Pins, Sensoren"
-    //% block="Abstand Ereignis auslösen Stop %stop cm Start %start cm || Pause %ms ms" weight=2
-    //% stop.defl=20
-    //% start.defl=25
+    //% block="Abstand Ereignis auslösen Stop %stop_cm cm Start %start_cm cm || Pause %ms ms" weight=2
+    //% stop_cm.defl=20
+    //% start_cm.defl=25
     //% ms.defl=25
-    export function raiseAbstandEvent(stop: number, start: number, ms = 25) {
+    export function raiseAbstandEvent(stop_cm: number, start_cm: number, ms = 25) {
         if (selectAbstandSensorConnected()) {
             let t = input.runningTime() - n_AbstandTimer // ms seit letztem raiseAbstandEvent
             if (t < ms)
@@ -170,14 +171,14 @@ namespace receiver { // r-spursensor.ts
 
             let cm = selectAbstand(true)
 
-            if (cm < stop) {
+            if (!n_AbstandStop && cm < stop_cm) {
                 n_AbstandStop = true
                 if (onStopEventHandler)
                     onStopEventHandler(n_AbstandStop, cm)
                 if (onSpurStopEventHandler)
                     onSpurStopEventHandler(n_SpurLinksHell, n_SpurRechtsHell, n_AbstandStop)
             }
-            else if (cm > Math.max(start, stop)) {
+            else if (n_AbstandStop && cm > Math.max(start_cm, stop_cm)) {
                 n_AbstandStop = false
                 if (onStopEventHandler)
                     onStopEventHandler(n_AbstandStop, cm)
