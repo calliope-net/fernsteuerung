@@ -105,10 +105,10 @@ namespace cb2 { // c-strecken.ts
 
 
 
-    // ========== group="Zehntelsekunden ⅒s" subcategory="Strecken"
+    // ========== group="Länge in Zehntelsekunden ⅒s" subcategory="Strecken"
 
     //% blockId=cb2_zehntelsekunden
-    //% group="Zehntelsekunden ⅒s" subcategory="Strecken"
+    //% group="Länge in Zehntelsekunden ⅒s" subcategory="Strecken"
     //% block="%pause" weight=4
     export function cb2_zehntelsekunden(pause: btf.ePause): number {
         return pause

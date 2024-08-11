@@ -2,6 +2,23 @@
 namespace receiver { // r-advanced.ts
 
 
+    // ========== group="aktuelle Werte (vom gewählten Modell)" advanced=true
+
+    //% group="aktuelle Werte (vom gewählten Modell)" advanced=true
+    //% block="Motor Speed (1 ↓ 128 ↑ 255)" weight=3
+    export function selectMotorSpeed() {
+        if (n_Hardware == eHardware.car4) // Fahrmotor am Qwiic Modul
+            return a_QwiicMotorSpeed[eQwiicMotor.ma]
+        else
+            return a_DualMotorSpeed[eDualMotor.M0]
+    }
+
+    //% group="aktuelle Werte (vom gewählten Modell)" advanced=true
+    //% block="Servo Winkel (1 ↖ 16 ↗ 31)" weight=2
+    export function pinServoWinkel() {
+        return Math.idiv(n_Servo90Winkel, 3) - 14
+    }
+
 
     // ========== group="Klingelton (Calliope v3: P0)" advanced=true
 

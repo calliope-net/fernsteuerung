@@ -41,11 +41,11 @@ namespace receiver { // r-receiver.ts
     export enum eDualMotor { M0, M1, M0_M1 } // muss mit v3 identisch sein
 
     export const c_MotorStop = 128
-    let a_DualMotorSpeed = [c_MotorStop, c_MotorStop]
+    export let a_DualMotorSpeed = [c_MotorStop, c_MotorStop]
 
     const c_Servo90_geradeaus = 90
     let n_Servo90KorrekturFaktor = 1 // Winkel für geradeaus wird beim Start eingestellt
-    let n_Servo90Winkel = c_Servo90_geradeaus // aktuell eingestellter Winkel
+    export let n_Servo90Winkel = c_Servo90_geradeaus // aktuell eingestellter Winkel
 
 
     //% group="calliope-net.github.io/fernsteuerung"
@@ -147,14 +147,14 @@ namespace receiver { // r-receiver.ts
     // ========== group="Motor (vom gewählten Modell)"
 
     //% group="Motor (vom gewählten Modell)"
-    //% block="Fahren (-100 ↓ 0 ↑ +100) %speed \\%" weight=5
+    //% block="Motor (-100 ↓ 0 ↑ +100) %speed \\%" weight=5
     //% speed.shadow=speedPicker
     export function selectMotorPicker(speed: number) {
         selectMotor(btf.speedPicker(speed))
     }
 
     //% group="Motor (vom gewählten Modell)"
-    //% block="Fahren (1 ↓ 128 ↑ 255) %speed (128 ist STOP)" weight=4
+    //% block="Motor (1 ↓ 128 ↑ 255) %speed (128 ist STOP)" weight=4
     //% speed.min=0 speed.max=255 speed.defl=128
     export function selectMotor(speed: number) {
         if (n_Hardware == eHardware.car4) // Fahrmotor am Qwiic Modul
@@ -171,24 +171,24 @@ namespace receiver { // r-receiver.ts
         if (servoGeradeaus)
             pinServo90(90)
     }
-
-    // ========== group="aktuelle Werte (vom gewählten Modell)" advanced=true
-
-    //% group="aktuelle Werte (vom gewählten Modell)" advanced=true
-    //% block="Motor Speed (1 ↓ 128 ↑ 255)" weight=3
-    export function selectMotorSpeed() {
-        if (n_Hardware == eHardware.car4) // Fahrmotor am Qwiic Modul
-            return a_QwiicMotorSpeed[eQwiicMotor.ma]
-        else
-            return a_DualMotorSpeed[eDualMotor.M0]
-    }
-
-    //% group="aktuelle Werte (vom gewählten Modell)" advanced=true
-    //% block="Servo Winkel (1 ↖ 16 ↗ 31)" weight=2
-    export function pinServoWinkel() {
-        return Math.idiv(n_Servo90Winkel, 3) - 14
-    }
-
+    /* 
+        // ========== group="aktuelle Werte (vom gewählten Modell)" advanced=true
+    
+        // group="aktuelle Werte (vom gewählten Modell)" advanced=true
+        // block="Motor Speed (1 ↓ 128 ↑ 255)" weight=3
+        export function selectMotorSpeed() {
+            if (n_Hardware == eHardware.car4) // Fahrmotor am Qwiic Modul
+                return a_QwiicMotorSpeed[eQwiicMotor.ma]
+            else
+                return a_DualMotorSpeed[eDualMotor.M0]
+        }
+    
+        // group="aktuelle Werte (vom gewählten Modell)" advanced=true
+        // block="Servo Winkel (1 ↖ 16 ↗ 31)" weight=2
+        export function pinServoWinkel() {
+            return Math.idiv(n_Servo90Winkel, 3) - 14
+        }
+     */
 
     // ========== group="Servo (vom gewählten Modell)"
 

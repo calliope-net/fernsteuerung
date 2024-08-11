@@ -103,10 +103,10 @@ namespace receiver { // r-strecken.ts
 
 
 
-    // ========== group="Zehntelsekunden ⅒s" subcategory="Strecken"
+    // ========== group="Länge in Zehntelsekunden ⅒s" subcategory="Strecken"
 
     //% blockId=receiver_zehntelsekunden
-    //% group="Zehntelsekunden ⅒s" subcategory="Strecken"
+    //% group="Länge in Zehntelsekunden ⅒s" subcategory="Strecken"
     //% block="%pause" weight=4
     export function receiver_zehntelsekunden(pause: btf.ePause): number {
         return pause

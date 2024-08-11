@@ -22,19 +22,19 @@ namespace cb2 { // c-sensoren.ts
     }
 
     //% group="INPUT digital" subcategory="Sensoren"
-    //% block="%n %e einlesen %read || I²C %i2c" weight=7
+    //% block="%e einlesen %read || I²C %i2c" weight=7
     //% read.shadow="toggleYesNo"
     //% inlineInputMode=inline
-    export function getInputs(n: btf.eNOT, e: cb2.eINPUTS, read: boolean, i2c = eI2C.x22): boolean {
+    export function getInputs(e: cb2.eINPUTS, read: boolean, i2c = eI2C.x22): boolean {
         if (read)
             readInputs(i2c)
-        if (n == btf.eNOT.t)
-            return (n_Inputs[0] & e) == e
-        else
-            return (n_Inputs[0] & e) == 0
+        //if (n == btf.eNOT.t)
+        return (n_Inputs[0] & e) == e
+        //else
+        //    return (n_Inputs[0] & e) == 0
     }
 
-    export enum eDH { dunkel = 0, hell = 1 }
+    export enum eDH { hell = 1, dunkel = 0 }
 
     //% group="INPUT digital" subcategory="Sensoren"
     //% block="Spursensor links %l und rechts %r einlesen %read || I²C %i2c" weight=5
@@ -50,12 +50,61 @@ namespace cb2 { // c-sensoren.ts
 
 
     // ========== group="Ultraschall Sensor" subcategory="Sensoren"
+    /* 
+        let n_SpurLinksHell = false // hell=true
+        let n_SpurRechtsHell = false
+    
+        let onSpurEventHandler: (links: boolean, rechts: boolean) => void
+        let onSpurStopEventHandler: (links: boolean, rechts: boolean, abstand_Stop: boolean) => void
+     */
+    let onStopEventHandler: (abstand_Stop: boolean, cm: number) => void
+
+    let n_AbstandTimer = input.runningTime()
+    let n_AbstandStop = false
 
     //% group="Ultraschall Sensor" subcategory="Sensoren"
     //% block="Abstand cm" weight=4
     export function readUltraschallAbstand() {
         i2cWriteBuffer(Buffer.fromArray([eRegister.GET_INPUT_US]))
         return i2cReadBuffer(3).getNumber(NumberFormat.UInt16LE, 1) / 10 // 16 Bit (mm)/10 = cm mit 1 Kommastelle
+    }
+
+    //% group="Ultraschall Sensor" subcategory="Sensoren"
+    //% block="Abstand Ereignis auslösen Stop %stop_cm cm Start %start_cm cm || Pause %ms ms" weight=2
+    //% stop_cm.defl=20
+    //% start_cm.defl=25
+    //% ms.defl=25
+    export function raiseAbstandEvent(stop_cm: number, start_cm: number, ms = 25) {
+        //if (selectAbstandSensorConnected()) {
+        let t = input.runningTime() - n_AbstandTimer // ms seit letztem raiseAbstandEvent
+        if (t < ms)
+            basic.pause(t) // restliche Zeit-Differenz warten
+        n_AbstandTimer = input.runningTime()
+
+        let cm = readUltraschallAbstand()
+
+        if (!n_AbstandStop && cm < stop_cm) {
+            n_AbstandStop = true
+            if (onStopEventHandler)
+                onStopEventHandler(n_AbstandStop, cm)
+            //if (onSpurStopEventHandler)
+            //    onSpurStopEventHandler(n_SpurLinksHell, n_SpurRechtsHell, n_AbstandStop)
+        }
+        else if (n_AbstandStop && cm > Math.max(start_cm, stop_cm)) {
+            n_AbstandStop = false
+            if (onStopEventHandler)
+                onStopEventHandler(n_AbstandStop, cm)
+            //if (onSpurStopEventHandler)
+            //    onSpurStopEventHandler(n_SpurLinksHell, n_SpurRechtsHell, n_AbstandStop)
+        }
+        //}
+    }
+
+    //% group="Ultraschall Sensor" subcategory="Sensoren"
+    //% block="wenn Abstand Sensor geändert" weight=1
+    //% draggableParameters=reporter
+    export function onStopEvent(cb: (abstand_Stop: boolean, cm: number) => void) {
+        onStopEventHandler = cb
     }
 
 
@@ -102,66 +151,6 @@ namespace cb2 { // c-sensoren.ts
     export function readSpursensorAnalog() {
         i2cWriteBuffer(Buffer.fromArray([eRegister.GET_LINE_SEN_VALUE]))
         return i2cReadBuffer(5).slice(1, 4).toArray(NumberFormat.UInt16LE) // 2 * 16 Bit
-    }
-
-
-
-
-
-
-
-    let n_SpurLinksHell = false // hell=true
-    let n_SpurRechtsHell = false
-
-    let onSpurEventHandler: (links: boolean, rechts: boolean) => void
-    let onSpurStopEventHandler: (links: boolean, rechts: boolean, abstand_Stop: boolean) => void
-
-
-    // ========== group="Ultraschall (vom gewählten Modell)" subcategory="Pins, Sensoren"
-
-    let onStopEventHandler: (abstand_Stop: boolean, cm: number) => void
-
-    let n_AbstandTimer = input.runningTime()
-    let n_AbstandStop = false
-
-
-    // group="Ultrasonic Distance Sensor (I²C: 0x00)" subcategory="Qwiic" color=#5FA38F
-    //% group="Ultraschall (vom gewählten Modell)" subcategory="Pins, Sensoren"
-    //% block="Abstand Ereignis auslösen Stop %stop_cm cm Start %start_cm cm || Pause %ms ms" weight=2
-    //% stop_cm.defl=20
-    //% start_cm.defl=25
-    //% ms.defl=25
-    export function raiseAbstandEvent(stop_cm: number, start_cm: number, ms = 25) {
-        //if (selectAbstandSensorConnected()) {
-        let t = input.runningTime() - n_AbstandTimer // ms seit letztem raiseAbstandEvent
-        if (t < ms)
-            basic.pause(t) // restliche Zeit-Differenz warten
-        n_AbstandTimer = input.runningTime()
-
-        let cm = readUltraschallAbstand()
-
-        if (!n_AbstandStop && cm < stop_cm) {
-            n_AbstandStop = true
-            if (onStopEventHandler)
-                onStopEventHandler(n_AbstandStop, cm)
-            if (onSpurStopEventHandler)
-                onSpurStopEventHandler(n_SpurLinksHell, n_SpurRechtsHell, n_AbstandStop)
-        }
-        else if (n_AbstandStop && cm > Math.max(start_cm, stop_cm)) {
-            n_AbstandStop = false
-            if (onStopEventHandler)
-                onStopEventHandler(n_AbstandStop, cm)
-            if (onSpurStopEventHandler)
-                onSpurStopEventHandler(n_SpurLinksHell, n_SpurRechtsHell, n_AbstandStop)
-        }
-        //}
-    }
-
-    //% group="Ultraschall (vom gewählten Modell)" subcategory="Pins, Sensoren"
-    //% block="wenn Abstand Sensor geändert" weight=1
-    //% draggableParameters=reporter
-    export function onStopEvent(cb: (abstand_Stop: boolean, cm: number) => void) {
-        onStopEventHandler = cb
     }
 
 
