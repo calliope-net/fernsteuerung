@@ -38,36 +38,15 @@ namespace cb2 { // c-callibot.ts 005F7F
 
 
 
-    // ========== group="Motoren"
+    // ========== group="Fahren und Lenken"
 
     // aktuelle Werte // I²C nur bei Änderung
-    let n_x1_128_255: number
-    let n_y1_16_31: number
-    let n_m1_1_128_255: number
-    let n_m2_1_128_255: number
+    export let n_x1_128_255: number
+    export let n_y1_16_31: number
 
 
-    //% group="Motoren"
-    //% block="beide Motoren Stop" weight=1
-    export function writeMotorenStop() {
-        if (n_x1_128_255 != c_MotorStop || n_m1_1_128_255 != c_MotorStop || n_m2_1_128_255 != c_MotorStop) {
-
-            n_x1_128_255 = c_MotorStop
-            n_y1_16_31 = undefined // die anderen zwischengespeicherten Werte ungültig machen
-
-            n_m1_1_128_255 = c_MotorStop
-            n_m2_1_128_255 = c_MotorStop // I²C nur bei Änderung
-
-            let setMotorBuffer = Buffer.create(6)
-            setMotorBuffer[0] = eRegister.SET_MOTOR   // 2
-            setMotorBuffer[1] = 3 // ec2Motor.beide     // 3
-            setMotorBuffer.fill(0, 2)
-
-            i2cWriteBuffer(setMotorBuffer)
-        }
-    }
-
-    //% group="Geschwindigkeit (1 ↓ 128 ↑ 255), Winkel (1 ↖ 16 ↗ 31)"
+    // group="Geschwindigkeit (1 ↓ 128 ↑ 255), Winkel (1 ↖ 16 ↗ 31)"
+    //% group="Fahren und Lenken"
     //% block="Fahren (1↓128↑255) %x_1_128_255 Lenken (1↖16↗31) %y_1_16_31 || Lenken %lenkenProzent \\%" weight=4
     //% x_1_128_255.min=1 x_1_128_255.max=255 x_1_128_255.defl=128
     //% y_1_16_31.min=1 y_1_16_31.max=31 y_1_16_31.defl=16
@@ -111,64 +90,27 @@ namespace cb2 { // c-callibot.ts 005F7F
         }
     }
 
-    //% group="Geschwindigkeit (1 ↓ 128 ↑ 255) (0: keine Änderung)"
-    //% block="2 Motoren (1↓128↑255) links %m1_1_128_255 rechts %m2_1_128_255" weight=3
-    //% m1_1_128_255.min=0 m1_1_128_255.max=255 m1_1_128_255.defl=0
-    //% m2_1_128_255.min=0 m2_1_128_255.max=255 m2_1_128_255.defl=0
-    export function writeMotoren128(m1_1_128_255: number, m2_1_128_255: number) {
-        n_x1_128_255 = undefined
-        n_y1_16_31 = undefined // die anderen zwischengespeicherten Werte ungültig machen
 
-        // ist ein Parameter 0, wird der Motor nicht angesteuert: keine Änderung
-        // ist ein Parameter gleich dem letzten Wert, wird der Motor nicht geändert (I²C)
 
-        let m1 = btf.between(m1_1_128_255, 1, 255) && n_m1_1_128_255 != m1_1_128_255
-        let m2 = btf.between(m2_1_128_255, 1, 255) && n_m2_1_128_255 != m2_1_128_255
+    //% group="Fahren und Lenken"
+    //% block="beide Motoren Stop" weight=1
+    export function writeMotorenStop() {
+        if (n_x1_128_255 != c_MotorStop || n_m1_1_128_255 != c_MotorStop || n_m2_1_128_255 != c_MotorStop) {
 
-        let motorBuffer: Buffer // undefined
-        let offset = 0
-        if (m1 && m2) {
-            motorBuffer = Buffer.create(6)
-            motorBuffer[offset++] = eRegister.SET_MOTOR
-            motorBuffer[offset++] = 3 // 3 beide Motoren
-        } else if (m1) {
-            motorBuffer = Buffer.create(4)
-            motorBuffer[offset++] = eRegister.SET_MOTOR
-            motorBuffer[offset++] = 1
-        } else if (m2) {
-            motorBuffer = Buffer.create(4)
-            motorBuffer[offset++] = eRegister.SET_MOTOR
-            motorBuffer[offset++] = 2
+            n_x1_128_255 = c_MotorStop
+            n_y1_16_31 = undefined // die anderen zwischengespeicherten Werte ungültig machen
+
+            n_m1_1_128_255 = c_MotorStop
+            n_m2_1_128_255 = c_MotorStop // I²C nur bei Änderung
+
+            let setMotorBuffer = Buffer.create(6)
+            setMotorBuffer[0] = eRegister.SET_MOTOR   // 2
+            setMotorBuffer[1] = 3 // ec2Motor.beide     // 3
+            setMotorBuffer.fill(0, 2)
+
+            i2cWriteBuffer(setMotorBuffer)
         }
-
-        // M1 offset 2:Richtung, 3:PWM
-        if (m1 && (m1_1_128_255 & 0x80) == 0x80) { // 128..255 M1 vorwärts
-            n_m1_1_128_255 = m1_1_128_255 // letzten Wert merken
-            motorBuffer[offset++] = 0
-            motorBuffer[offset++] = (m1_1_128_255 << 1)
-        } else if (m1) { // 1..127 M1 rückwärts
-            n_m1_1_128_255 = m1_1_128_255
-            motorBuffer[offset++] = 1
-            motorBuffer[offset++] = ~(m1_1_128_255 << 1)
-        }
-
-        // M2 wenn !m1 offset 2:Richtung, 3:PWM sonst offset 4:Richtung, 5:PWM
-        if (m2 && (m2_1_128_255 & 0x80) == 0x80) { // 128..255 M2 vorwärts
-            n_m2_1_128_255 = m2_1_128_255 // letzten Wert merken
-            motorBuffer[offset++] = 0
-            motorBuffer[offset++] = (m2_1_128_255 << 1)
-        } else if (m2) { // 1..127 M2 rückwärts
-            n_m2_1_128_255 = m2_1_128_255
-            motorBuffer[offset++] = 1
-            motorBuffer[offset++] = ~(m2_1_128_255 << 1)
-        }
-
-        if (motorBuffer) // wenn beide false, ist motorBuffer undefined
-            i2cWriteBuffer(motorBuffer)
-        //  }
     }
-
-
 
     // ========== group="LEDs (Calli:bot)"
 
