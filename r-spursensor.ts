@@ -24,8 +24,8 @@ namespace receiver { // r-spursensor.ts
                 if (pins.pulseDuration() > c_pulseDuration) { // 10ms
                     n_SpurLinksHell = true
                     // raiseSpurEvent()
-                    // if (onSpurEventHandler)
-                    //     onSpurEventHandler(n_SpurLinksHell, n_SpurRechtsHell)
+                    if (onSpurEventHandler)
+                        onSpurEventHandler(n_SpurLinksHell, n_SpurRechtsHell)
                     if (onSpurStopEventHandler)
                         onSpurStopEventHandler(n_SpurLinksHell, n_SpurRechtsHell, n_AbstandStop)
 
@@ -36,8 +36,8 @@ namespace receiver { // r-spursensor.ts
                 if (pins.pulseDuration() > c_pulseDuration) { // 10ms
                     n_SpurLinksHell = false
                     // raiseSpurEvent()
-                    // if (onSpurEventHandler)
-                    //     onSpurEventHandler(n_SpurLinksHell, n_SpurRechtsHell)
+                    if (onSpurEventHandler)
+                        onSpurEventHandler(n_SpurLinksHell, n_SpurRechtsHell)
                     if (onSpurStopEventHandler)
                         onSpurStopEventHandler(n_SpurLinksHell, n_SpurRechtsHell, n_AbstandStop)
                 }
@@ -48,8 +48,8 @@ namespace receiver { // r-spursensor.ts
                 if (pins.pulseDuration() > c_pulseDuration) { // 10ms
                     n_SpurRechtsHell = true
                     // raiseSpurEvent()
-                    // if (onSpurEventHandler)
-                    //     onSpurEventHandler(n_SpurLinksHell, n_SpurRechtsHell)
+                    if (onSpurEventHandler)
+                        onSpurEventHandler(n_SpurLinksHell, n_SpurRechtsHell)
                     if (onSpurStopEventHandler)
                         onSpurStopEventHandler(n_SpurLinksHell, n_SpurRechtsHell, n_AbstandStop)
                 }
@@ -59,8 +59,8 @@ namespace receiver { // r-spursensor.ts
                 if (pins.pulseDuration() > c_pulseDuration) { // 10ms
                     n_SpurRechtsHell = false
                     // raiseSpurEvent()
-                    // if (onSpurEventHandler)
-                    //     onSpurEventHandler(n_SpurLinksHell, n_SpurRechtsHell)
+                    if (onSpurEventHandler)
+                        onSpurEventHandler(n_SpurLinksHell, n_SpurRechtsHell)
                     if (onSpurStopEventHandler)
                         onSpurStopEventHandler(n_SpurLinksHell, n_SpurRechtsHell, n_AbstandStop)
                 }
@@ -97,16 +97,12 @@ namespace receiver { // r-spursensor.ts
     //% block="Spursensor links %l" weight=6
     export function getSpurLinks(l: eDH) {
         return (l == eDH.hell) ? n_SpurLinksHell : !n_SpurLinksHell
-        // return n_SpurLinksHell
-        // return (n_Spursensor & 0b10) == (l << 1)
     }
 
     //% group="Spursensor (vom gewählten Modell)" subcategory="Pins, Sensoren"
     //% block="Spursensor rechts %r" weight=5
     export function getSpurRechts(r: eDH) {
         return (r == eDH.hell) ? n_SpurRechtsHell : !n_SpurRechtsHell
-        // return n_SpurRechtsHell
-        // return (n_Spursensor & 0b01) == (r)
     }
 
     //% group="Spursensor (vom gewählten Modell)" subcategory="Pins, Sensoren"
@@ -122,7 +118,6 @@ namespace receiver { // r-spursensor.ts
     //% block="Spursensoren links %l und rechts %r" weight=3
     export function getSpursensor(l: eDH, r: eDH) {
         return getSpurLinks(l) && getSpurRechts(r)
-        // return (n_Spursensor & 0x03) == (l << 1 | r)
     }
 
     /* export enum eINPUTS {
@@ -166,17 +161,21 @@ namespace receiver { // r-spursensor.ts
     //% stop.defl=30
     //% start.defl=35
     export function raiseAbstandEvent(stop: number, start: number) {
-        if (onSpurStopEventHandler && selectAbstandSensorConnected()) {
+        if (selectAbstandSensorConnected()) {
             let cm = selectAbstand(true)
             if (cm < stop) {
                 n_AbstandStop = true
-                // if (onSpurStopEventHandler)
-                onSpurStopEventHandler(n_SpurLinksHell, n_SpurRechtsHell, n_AbstandStop)
+                if (onStopEventHandler)
+                    onStopEventHandler(n_AbstandStop)
+                if (onSpurStopEventHandler)
+                    onSpurStopEventHandler(n_SpurLinksHell, n_SpurRechtsHell, n_AbstandStop)
             }
             else if (cm > Math.max(start, stop)) {
                 n_AbstandStop = false
-                // if (onSpurStopEventHandler)
-                onSpurStopEventHandler(n_SpurLinksHell, n_SpurRechtsHell, n_AbstandStop)
+                if (onStopEventHandler)
+                    onStopEventHandler(n_AbstandStop)
+                if (onSpurStopEventHandler)
+                    onSpurStopEventHandler(n_SpurLinksHell, n_SpurRechtsHell, n_AbstandStop)
             }
         }
     }
