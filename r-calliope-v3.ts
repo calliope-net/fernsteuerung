@@ -64,7 +64,7 @@ So kann getestet werden, ob das Ereignis einen Handler hat:
     function rgbLedPause() {
         let t = input.runningTime() - n_RgbLedTimer // ms seit letztem setLedColors
         if (t < 25)
-            basic.pause(t) // restliche Zeit-Differenz bis 10 ms warten
+            basic.pause(t) // restliche Zeit-Differenz bis 25 ms warten
         n_RgbLedTimer = input.runningTime()
     }
 
