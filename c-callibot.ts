@@ -45,9 +45,18 @@ namespace cb2 { // c-callibot.ts 005F7F
     export let n_y1_16_31: number
 
 
+    //% group="Fahren und Lenken"
+    //% block="Fahren %motor \\% • Lenken %servo ° || • Lenken %lenkenProzent \\%" weight=5
+    //% motor.shadow=speedPicker motor.defl=50
+    //% servo.shadow=protractorPicker servo.defl=90
+    //% lenkenProzent.min=10 lenkenProzent.max=90 lenkenProzent.defl=50
+    export function writeMotorServoPicker(motor: number, servo: number, lenkenProzent = 50) {
+        writeMotor128Servo16(btf.speedPicker(motor), btf.protractorPicker(servo), lenkenProzent)
+    }
+
     // group="Geschwindigkeit (1 ↓ 128 ↑ 255), Winkel (1 ↖ 16 ↗ 31)"
     //% group="Fahren und Lenken"
-    //% block="Fahren (1↓128↑255) %x_1_128_255 Lenken (1↖16↗31) %y_1_16_31 || Lenken %lenkenProzent \\%" weight=4
+    //% block="Fahren (1↓128↑255) %x_1_128_255 • Lenken (1↖16↗31) %y_1_16_31 || • Lenken %lenkenProzent \\%" weight=4
     //% x_1_128_255.min=1 x_1_128_255.max=255 x_1_128_255.defl=128
     //% y_1_16_31.min=1 y_1_16_31.max=31 y_1_16_31.defl=16
     //% lenkenProzent.min=10 lenkenProzent.max=90 lenkenProzent.defl=50
@@ -90,8 +99,6 @@ namespace cb2 { // c-callibot.ts 005F7F
         }
     }
 
-
-
     //% group="Fahren und Lenken"
     //% block="beide Motoren Stop" weight=1
     export function writeMotorenStop() {
@@ -111,6 +118,8 @@ namespace cb2 { // c-callibot.ts 005F7F
             i2cWriteBuffer(setMotorBuffer)
         }
     }
+
+
 
     // ========== group="LEDs (Calli:bot)"
 

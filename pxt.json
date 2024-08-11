@@ -34,11 +34,11 @@
         "r-advanced.ts",
         "r-calliope-v3.ts",
         "c-callibot.ts",
+        "c-sensoren.ts",
         "c-strecken.ts",
         "c-zweimotoren.ts",
         "c-fernsteuerung.ts",
-        "c-beispiele.ts",
-        "c-sensoren.ts"
+        "c-beispiele.ts"
     ],
     "testFiles": [
         "test.ts"
