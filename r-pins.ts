@@ -92,7 +92,7 @@ namespace receiver { // r-pins.ts
     //% read.shadow=toggleYesNo
     export function selectAbstand(read: boolean) {
         if (n_Hardware == eHardware.v3)
-            return getQwiicUltrasonic(read) // i2c einlesen, false wenn Modul nicht angesteckt
+            return getQwiicUltrasonic(read) // in r-qwiic.ts i2c einlesen
         else if (n_Hardware == eHardware.car4)
             return pinGroveUltraschall_cm() // in r-advanced.ts
         else
