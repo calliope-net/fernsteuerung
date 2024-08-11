@@ -37,7 +37,8 @@
         "c-strecken.ts",
         "c-zweimotoren.ts",
         "c-fernsteuerung.ts",
-        "c-beispiele.ts"
+        "c-beispiele.ts",
+        "c-sensoren.ts"
     ],
     "testFiles": [
         "test.ts"

@@ -105,10 +105,10 @@ namespace receiver { // r-strecken.ts
 
     // ========== group="Zehntelsekunden ⅒s" subcategory="Strecken"
 
-    //% blockId=cb2_zehntelsekunden
+    //% blockId=receiver_zehntelsekunden
     //% group="Zehntelsekunden ⅒s" subcategory="Strecken"
     //% block="%pause" weight=4
-    export function cb2_zehntelsekunden(pause: btf.ePause): number {
+    export function receiver_zehntelsekunden(pause: btf.ePause): number {
         return pause
     }
 
