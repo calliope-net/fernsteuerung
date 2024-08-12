@@ -8,8 +8,8 @@ namespace cb2 { // c-beispiele.ts
     let m_lenken: number
     let m_inSpur = false
 
-    //% group="1 Spurfolger (1 ↓ 128 ↑ 255) (1 ↖ 16 ↗ 31)" subcategory=Beispiele
-    //% block="Spurfolger: Calli:bot | fahren (1↓128↑255) %motor128 langsam fahren %langsamfahren lenken (1↖16↗31) %servo16 lenkender Motor \\% %lenkenProzent Wiederholung %repeat Stop %stop bei Abstand < (cm) %abstand I²C Spursensor %i2c" weight=2
+    //% group="Spurfolger" subcategory=Beispiele
+    //% block="Spurfolger: Calli:bot | Fahren (1↓128↑255) %motor128 langsam Fahren %langsamfahren Lenken (1↖16↗31) %servo16 lenkender Motor \\% %lenkenProzent Wiederholung %repeat Stop %stop bei Abstand < (cm) %abstand I²C Spursensor %i2c" weight=2
     //% motor128.min=1 motor128.max=255 motor128.defl=192
     //% servo16.min=1 servo16.max=31 servo16.defl=31
     //% langsamfahren.min=1 langsamfahren.max=255 langsamfahren.defl=160
@@ -66,25 +66,43 @@ namespace cb2 { // c-beispiele.ts
         }
     }
 
-    let n_AbstandAusweichen = false
 
 
-    export function eventAbstandAusweichen(abstand_Stop: boolean, speed: number) {
-        if (n_AbstandAusweichen) {
+    //  let n_AbstandAusweichen = false
+
+
+    //% group="Abstand Sensor" subcategory=Beispiele
+    //% block="Abstand ausweichen %on abstand_Stop %abstand_Stop Fahren (1↓128↑255) %motor128 Lenken (1↖16↗31) %servo16 rückwärts Fahren %langsamfahren Pause ⅒s %pause_zs" weight=2
+    //% on.shadow=toggleOnOff
+    //% abstand_Stop.shadow=toggleYesNo
+    //% motor128.min=1 motor128.max=255 motor128.defl=255
+    //% servo16.min=1 servo16.max=31 servo16.defl=8
+    //% langsamfahren.min=1 langsamfahren.max=255 langsamfahren.defl=64
+    //% pause_zs.shadow=cb2_zehntelsekunden
+    export function eventAbstandAusweichen(on: boolean, abstand_Stop: boolean, motor128: number, servo16: number, langsamfahren: number, pause_zs: number) {
+        if (on) {
             btf.reset_timer()
             if (abstand_Stop) {
-                if (Math.randomBoolean()) {
-                    cb2.writeMotor128Servo16(64, randint(1, 9))
-                } else {
-                    cb2.writeMotor128Servo16(64, randint(23, 31))
-                }
+                writeMotor128Servo16(langsamfahren, servo16)
+                //if (Math.randomBoolean()) 
+                //    cb2.writeMotor128Servo16(64, randint(1, 9))
+                // else 
+                //    cb2.writeMotor128Servo16(64, randint(23, 31))
             }
             else {
-                basic.pause(1000)
-                cb2.writeMotor128Servo16(speed, 16)
+                basic.pause(pause_zs * 100)
+                writeMotor128Servo16(motor128, 16)
             }
         }
 
+    }
+
+
+    export function zufallServo16(lvon = 1, lbis = 9, rvon = 23, rbis = 31, lr = false) {
+        if (Math.randomBoolean())
+            return randint(lvon, lbis)
+        else
+            return randint(rvon, rbis)
     }
 
 
