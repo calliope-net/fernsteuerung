@@ -9,13 +9,13 @@ namespace cb2 { // c-beispiele.ts
     let m_inSpur = false
 
     //% group="Spurfolger" subcategory=Beispiele
-    //% block="Spurfolger: Calli:bot | Fahren (1↓128↑255) %motor128 langsam Fahren %langsamfahren Lenken (1↖16↗31) %servo16 lenkender Motor \\% %lenkenProzent Wiederholung %repeat Stop %stop bei Abstand < (cm) %abstand I²C Spursensor %i2c" weight=2
+    //% block="Spurfolger: Calli:bot | Fahren (1↓128↑255) %motor128 langsam Fahren %langsamfahren Lenken (1↖16↗31) %servo16 lenkender Motor \\% %lenkenProzent Wiederholung %repeat Abstandssensor %stop bei Abstand < (cm) %abstand I²C Spursensor %i2c" weight=2
     //% motor128.min=1 motor128.max=255 motor128.defl=192
     //% servo16.min=1 servo16.max=31 servo16.defl=31
     //% langsamfahren.min=1 langsamfahren.max=255 langsamfahren.defl=160
     //% lenkenProzent.min=10 lenkenProzent.max=90 lenkenProzent.defl=0
     //% repeat.shadow="toggleYesNo" repeat.defl=1
-    //% stop.shadow="toggleYesNo" stop.defl=1
+    //% stop.shadow=toggleOnOff stop.defl=1
     //% abstand.min=10 abstand.max=50 abstand.defl=20
     // inlineInputMode=inline
     export function beispielSpurfolger16(motor128: number, langsamfahren: number, servo16: number, lenkenProzent: number, repeat: boolean, stop: boolean, abstand: number, i2cSpur: eI2C) {
@@ -72,13 +72,13 @@ namespace cb2 { // c-beispiele.ts
 
 
     //% group="Abstand Sensor" subcategory=Beispiele
-    //% block="Abstand ausweichen %dauerhaft_Ausweichen <abstand_Stop> %abstand_Stop Fahren (1↓128↑255) %vMotor Lenken (1↖16↗31) %vServo rückwärts Fahren %rMotor Lenken %rServo Pause ⅒s %pause_zs" weight=2
+    //% block="Abstand ausweichen %dauerhaft_Ausweichen <abstand_Stop> %abstand_Stop Fahren (1↓128↑255) %vMotor Lenken (1↖16↗31) %vServo rückwärts Fahren %rMotor rückwärts Lenken %rServo Pause ⅒s %pause_zs" weight=6
     //% dauerhaft_Ausweichen.shadow=toggleOnOff
     //% abstand_Stop.shadow=toggleYesNo
     //% vMotor.min=1 vMotor.max=255 vMotor.defl=255
-    //% vServo.min=1 vServo.max=31 vServo.defl=8
+    //% vServo.min=1 vServo.max=31 vServo.defl=16
     //% rMotor.min=1 rMotor.max=255 rMotor.defl=64
-    //% rServo.min=1 rServo.max=31 rServo.defl=16
+    //% rServo.min=1 rServo.max=31 rServo.defl=8
     //% pause_zs.shadow=cb2_zehntelsekunden
     export function beispielAbstandAusweichen(dauerhaft_Ausweichen: boolean, abstand_Stop: boolean, vMotor: number, vServo: number, rMotor: number, rServo: number, pause_zs: number) {
         if (dauerhaft_Ausweichen) {
@@ -99,7 +99,7 @@ namespace cb2 { // c-beispiele.ts
     }
 
     //% group="Abstand Sensor" subcategory=Beispiele
-    //% block="Zufall Lenken (1↖16↗31) links %lvon - %lbis • rechts %rvon - %rbis || • l-r %lr"
+    //% block="Zufall Lenken (1↖16↗31) links %lvon - %lbis • rechts %rvon - %rbis || • l-r %lr" weight=5
     //% lvon.min=1 lvon.max=15 lvon.defl=1
     //% lbis.min=1 lbis.max=15 lbis.defl=9
     //% rvon.min=17 rvon.max=31 rvon.defl=23
