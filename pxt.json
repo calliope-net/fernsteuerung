@@ -6,7 +6,7 @@
         "core": "*",
         "radio": "*",
         "storageBuffer": "github:calliope-net/storagebuffer#v0.2.0",
-        "pins": "github:calliope-net/pins#v0.0.3"
+        "pins": "github:calliope-net/pins#v1.0.0"
     },
     "files": [
         "main.blocks",
