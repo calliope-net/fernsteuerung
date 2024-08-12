@@ -5,7 +5,8 @@
     "dependencies": {
         "core": "*",
         "radio": "*",
-        "storageBuffer": "github:calliope-net/storagebuffer#v0.2.0"
+        "storageBuffer": "github:calliope-net/storagebuffer#v0.2.0",
+        "pins": "github:calliope-net/pins#v0.0.3"
     },
     "files": [
         "main.blocks",
@@ -40,8 +41,7 @@
         "c-strecken.ts",
         "c-zweimotoren.ts",
         "c-fernsteuerung.ts",
-        "c-beispiele.ts",
-        "pins.ts"
+        "c-beispiele.ts"
     ],
     "testFiles": [
         "test.ts"

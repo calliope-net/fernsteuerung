@@ -68,7 +68,7 @@ namespace btf { // b-advanced.ts
         return mapInt32(angle, 0, 180, 1, 31)
     }
 
-
+/* 
 
     // ========== group="Buffer" advanced=true
 
@@ -121,6 +121,6 @@ namespace btf { // b-advanced.ts
     export function toHex(bytes: number[]): string {
         return Buffer.fromArray(bytes).toHex()
     }
-
+ */
 
 } // b-advanced.ts
