@@ -70,34 +70,36 @@ namespace cb2 { // c-sensoren.ts
     }
 
     //% group="Ultraschall Sensor" subcategory="Sensoren"
-    //% block="Abstand Ereignis auslösen Stop %stop_cm cm Start %start_cm cm || Pause %ms ms" weight=2
-    //% stop_cm.defl=20
-    //% start_cm.defl=25
+    //% block="Abstand Ereignis auslösen %on • Stop %stop_cm cm • Start %start_cm cm || • Pause %ms ms" weight=2
+    //% on.shadow=toggleYesNo
+    //% stop_cm.defl=30
+    //% start_cm.defl=35
     //% ms.defl=25
-    export function raiseAbstandEvent(stop_cm: number, start_cm: number, ms = 25) {
-        //if (selectAbstandSensorConnected()) {
-        let t = input.runningTime() - n_AbstandTimer // ms seit letztem raiseAbstandEvent
-        if (t < ms)
-            basic.pause(t) // restliche Zeit-Differenz warten
-        n_AbstandTimer = input.runningTime()
+    //% inlineInputMode=inline
+    export function raiseAbstandEvent(on: boolean, stop_cm: number, start_cm: number, ms = 25) {
+        if (on) {
+            let t = input.runningTime() - n_AbstandTimer // ms seit letztem raiseAbstandEvent
+            if (t < ms)
+                basic.pause(t) // restliche Zeit-Differenz warten
+            n_AbstandTimer = input.runningTime()
 
-        let cm = readUltraschallAbstand()
+            let cm = readUltraschallAbstand()
 
-        if (!n_AbstandStop && cm < stop_cm) {
-            n_AbstandStop = true
-            if (onStopEventHandler)
-                onStopEventHandler(n_AbstandStop, cm)
-            //if (onSpurStopEventHandler)
-            //    onSpurStopEventHandler(n_SpurLinksHell, n_SpurRechtsHell, n_AbstandStop)
+            if (!n_AbstandStop && cm < stop_cm) {
+                n_AbstandStop = true
+                if (onStopEventHandler)
+                    onStopEventHandler(n_AbstandStop, cm)
+                //if (onSpurStopEventHandler)
+                //    onSpurStopEventHandler(n_SpurLinksHell, n_SpurRechtsHell, n_AbstandStop)
+            }
+            else if (n_AbstandStop && cm > Math.max(start_cm, stop_cm)) {
+                n_AbstandStop = false
+                if (onStopEventHandler)
+                    onStopEventHandler(n_AbstandStop, cm)
+                //if (onSpurStopEventHandler)
+                //    onSpurStopEventHandler(n_SpurLinksHell, n_SpurRechtsHell, n_AbstandStop)
+            }
         }
-        else if (n_AbstandStop && cm > Math.max(start_cm, stop_cm)) {
-            n_AbstandStop = false
-            if (onStopEventHandler)
-                onStopEventHandler(n_AbstandStop, cm)
-            //if (onSpurStopEventHandler)
-            //    onSpurStopEventHandler(n_SpurLinksHell, n_SpurRechtsHell, n_AbstandStop)
-        }
-        //}
     }
 
     //% group="Ultraschall Sensor" subcategory="Sensoren"
