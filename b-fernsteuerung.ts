@@ -120,7 +120,9 @@ namespace btf { // b-fernsteuerung.ts
     //% blockId=btf_sendBuffer19
     //% group="Bluetooth senden (19 Byte)"
     //% block="sendData" color="#7E84F7" weight=3
-    export function btf_sendBuffer19(): Buffer { return a_sendBuffer19 }
+    export function btf_sendBuffer19(): Buffer {
+        return a_sendBuffer19
+    }
 
 
 

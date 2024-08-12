@@ -77,7 +77,7 @@ namespace receiver { // r-beispiele.ts
 
 
     //% group="1 Spurfolger (1 ↓ 128 ↑ 255) (1 ↖ 16 ↗ 31)" subcategory=Beispiele
-    //% block="Spurfolger (Spur-Events) | links hell %links_hell rechts hell %rechts_hell Abstandssensor %stop fahren (1↓128↑255) %motor128 langsam fahren %langsamfahren lenken (1↖16↗31) %servo16 Wiederholung %repeat" weight=2
+    //% block="Spurfolger (Pin-Events) | links hell %links_hell rechts hell %rechts_hell Abstandssensor %stop fahren (1↓128↑255) %motor128 langsam fahren %langsamfahren lenken (1↖16↗31) %servo16 Wiederholung %repeat" weight=2
     //% stop.shadow="toggleYesNo"
     //% motor128.min=1 motor128.max=255 motor128.defl=192
     //% langsamfahren.min=1 langsamfahren.max=255 langsamfahren.defl=160

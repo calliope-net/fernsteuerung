@@ -12,7 +12,7 @@ namespace btf { // b-rgbleds-v3.ts
         n_RgbLedTimer = input.runningTime()
     }
 
-    btf.onSetLedColors_v3(function (led, color, on, blinken, helligkeit) {
+    btf.onSetLedColors(function (led, color, on, blinken, helligkeit) {
 
         if (!on || (blinken && a_RgbLeds[led] == color)) // entweder aus .. oder an und blinken
             color = Colors.Off // alle Farben aus = 0
@@ -27,7 +27,7 @@ namespace btf { // b-rgbleds-v3.ts
         }
     })
 
-    btf.onSetLedColors(function (color1, color2, color3, brightness) {
+    btf.onSetLedColors3(function (color1, color2, color3, brightness) {
 
         if (a_RgbLeds[0] != color1 || a_RgbLeds[1] != color2 || a_RgbLeds[2] != color3 || a_RgbLeds[3] != brightness) { // nur wenn Farbe oder Helligkeit geändert
             a_RgbLeds[0] = color1
@@ -36,7 +36,7 @@ namespace btf { // b-rgbleds-v3.ts
             a_RgbLeds[3] = brightness
 
             rgbLedPause()
-            basic.setLedColors(a_RgbLeds[0], a_RgbLeds[1], a_RgbLeds[2], brightness) // gibt es nur bei v3, sonst any
+            basic.setLedColors(a_RgbLeds[0], a_RgbLeds[1], a_RgbLeds[2], brightness) // gibt es nur bei v3
         }
     })
 

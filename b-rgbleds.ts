@@ -6,53 +6,58 @@ namespace btf { // b-rgbleds.ts
     export enum eRgbLed { a, b, c } // Index im Array
     let n_RgbLed = 0 // aktueller Wert v1 v2
 
+    //% blockId=btf_RgbLed block="%led" color=#54C9C9 blockHidden=true
+    export function btf_RgbLed(led: eRgbLed): number {
+        return led
+    }
+
     // deklariert die Variable mit dem Delegat-Typ '(color1: number, color2: number, color3: number, brightness: number) => void'
     // ein Delegat ist die Signatur einer function mit den selben Parametern
     // es wird kein Wert zurück gegeben (void)
     // die Variable ist noch undefined, also keiner konkreten Funktion zugeordnet
-    let onSetLedColorsHandler: (color1: number, color2: number, color3: number, brightness: number) => void
+    let onSetLedColorsHandler3: (color1: number, color2: number, color3: number, brightness: number) => void
+    let onSetLedColorsHandler: (led: eRgbLed, color: number, on: boolean, blinken: boolean, helligkeit: number) => void
 
 
     // sichtbarer Event-Block; deprecated=true
-    // wird bei v3 automatisch im Code r-aktoren-v3.ts aufgerufen und deshalb nicht als Block angezeigt
+    // wird bei v3 automatisch im Code b-rgbleds-v3.ts aufgerufen und deshalb nicht als Block angezeigt
 
     //% group="RGB LEDs (Calliope v3)" deprecated=true
     //% block="SetLedColors" weight=9
     //% draggableParameters=reporter
-    export function onSetLedColors(cb: (a: number, b: number, c: number, brightness: number) => void) {
+    export function onSetLedColors3(cb: (a: number, b: number, c: number, brightness: number) => void) {
         // das ist der sichtbare Ereignis Block 'SetLedColors (a, b, c, brightness)'
         // hier wird nur der Delegat-Variable eine konkrete callback function zugewiesen
         // dieser Block speichert in der Variable, dass er beim Ereignis zurückgerufen werden soll
-        onSetLedColorsHandler = cb
+        onSetLedColorsHandler3 = cb
         // aufgerufen wird in der function 'rgbLEDs' die der Variable 'onSetLedColorsHandler' zugewiesene function
         // das sind die Blöcke, die später im Ereignis Block 'SetLedColors (a, b, c, brightness)' enthalten sind
     }
 
-
-    let onSetLedColorsHandler_v3: (led: eRgbLed, color: number, on: boolean, blinken: boolean, helligkeit: number) => void
     //% group="RGB LEDs (Calliope v3)" deprecated=true
     //% block="SetLedColors" weight=9
     //% draggableParameters=reporter
-    export function onSetLedColors_v3(cb: (led: eRgbLed, color: number, on: boolean, blinken: boolean, helligkeit: number) => void) {
-        onSetLedColorsHandler_v3 = cb
+    export function onSetLedColors(cb: (led: eRgbLed, color: number, on: boolean, blinken: boolean, helligkeit: number) => void) {
+        onSetLedColorsHandler = cb
     }
 
 
 
     // ========== group="RGB LEDs (Calliope v1 v2 v3)" subcategory="LEDs, Display" color=#54C9C9
 
-    //% group="RGB LEDs (Calliope v1 v2 v3)" subcategory="LEDs, Display" color=#54C9C9
-    //% block="RGB LED %led %color || %on blinken %blinken Helligkeit %helligkeit \\%" weight=4
-    //% on.shadow=toggleOnOff on.defl=1
+    //% group="RGB LEDs (Calliope v1 v2 nur LED a)" subcategory="LEDs, Display" color=#54C9C9
+    //% block="RGB LED %led %color || %on blinken %blinken Helligkeit %helligkeit \\%" weight=5
+    //% led.shadow=btf_RgbLed
     //% color.shadow="colorNumberPicker"
+    //% on.shadow=toggleOnOff on.defl=1
     //% blinken.shadow=toggleYesNo
     //% helligkeit.min=5 helligkeit.max=100 helligkeit.defl=20
     //% inlineInputMode=inline
-    export function setLedColors(led: eRgbLed, color: number, on = true, blinken = false, helligkeit = 20) {
-        if (onSetLedColorsHandler_v3) { // v3 hat 3 RgbLeds
-            onSetLedColorsHandler_v3(led, color, on, blinken, helligkeit)
+    export function setLedColors(led: number, color: number, on = true, blinken = false, helligkeit = 20) {
+        if (onSetLedColorsHandler) { // v3 hat 3 RgbLeds
+            onSetLedColorsHandler(led, color, on, blinken, helligkeit)
         }
-        else if (led == eRgbLed.a) { // b und c wird ignoriert
+        else if (led == eRgbLed.a) { // v1, v2: b und c wird ignoriert
             if (!on || (blinken && n_RgbLed == color)) // entweder aus .. oder an und blinken
                 color = Colors.Off // alle Farben aus = 0
 
@@ -63,13 +68,29 @@ namespace btf { // b-rgbleds.ts
         }
     }
 
-    //% group="RGB LEDs (Calliope v1 v2 v3)" subcategory="LEDs, Display" color=#54C9C9
+
+    //% group="RGB LEDs (Calliope v1 v2 nur LED a)" subcategory="LEDs, Display" color=#54C9C9
+    //% block="RGB LEDs a %color1 b %color2 c %color3 || Helligkeit %helligkeit \\%" weight=4
+    //% color1.shadow="colorNumberPicker"  
+    //% color2.shadow="colorNumberPicker"  
+    //% color3.shadow="colorNumberPicker"  
+    //% brightness.min=5 brightness.max=100 brightness.defl=20
+    //% inlineInputMode=inline
+    export function setLedColors3(color1: number, color2: number, color3: number, brightness = 20) {
+        if (onSetLedColorsHandler3)
+            onSetLedColorsHandler3(color1, color2, color3, brightness) // v3 Ereignis Block auslösen, nur wenn benutzt
+        else
+            basic.setLedColor(color1) // v1 v2
+    }
+
+    //% group="RGB LEDs (Calliope v1 v2 nur LED a)" subcategory="LEDs, Display" color=#54C9C9
     //% block="RGB LEDs aus" weight=3
     export function setLedColorsOff() {
-        if (onSetLedColorsHandler)
-            onSetLedColorsHandler(0, 0, 0, 20) // v3 Ereignis Block auslösen, nur wenn benutzt
-        else
-            basic.setLedColor(0) // v1 v2
+        setLedColors3(0, 0, 0)
+        //if (onSetLedColorsHandler3)
+        //    onSetLedColorsHandler3(0, 0, 0, 20) // v3 Ereignis Block auslösen, nur wenn benutzt
+        //else
+        //    basic.setLedColor(0) // v1 v2
     }
 
 } // b-rgbleds.ts
