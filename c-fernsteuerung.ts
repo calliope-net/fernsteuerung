@@ -92,35 +92,43 @@ namespace cb2 { // c-fernsteuerung.ts
     // ========== group="10 Fernstarten Abstand ausweichen" subcategory="Fernsteuerung"
 
     //% group="10 Fernstarten Abstand ausweichen" subcategory="Fernsteuerung"
-    //% block="%buffer 10 fernstarten && Start Bit %startBit" weight=8
+    //% block="Starten wenn %buffer 10 fernstarten && Start Bit %startBit" weight=8
     //% buffer.shadow=btf_receivedBuffer19
     //% startBit.defl=btf.e3aktiviert.md
     //% blockSetVariable=dauerhaft_Ausweichen
     export function set_AbstandAusweichen(buffer: Buffer, startBit: btf.e3aktiviert) {
-        return btf.isBetriebsart(buffer, btf.e0Betriebsart.p1Lokal) && btf.getaktiviert(buffer, startBit)
+        let start = btf.isBetriebsart(buffer, btf.e0Betriebsart.p1Lokal) && btf.getaktiviert(buffer, startBit)
+        if (start)
+            writeMotor128Servo16(
+                btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b0_Motor), // MC vorwärts gerade
+                btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b1_Servo)
+            )
+        else
+            writeMotorenStop()
+        return start
     }
 
 
-    let n_AbstandAusweichen = false
+      let n_AbstandAusweichen_repeat = false
 
     //% group="10 Fernstarten Abstand ausweichen" subcategory="Fernsteuerung"
-    //% block="10 <dauerhaft_Ausweichen> %dauerhaft_Ausweichen (MS:CD) aus %buffer" weight=7
+    //% block="10 <dauerhaft_Ausweichen> %dauerhaft_Ausweichen <abstand_Stop> %abstand_Stop (MS:CD) aus %buffer" weight=7
     //% dauerhaft_Ausweichen.shadow="toggleYesNo"
+    //% abstand_Stop.shadow="toggleYesNo"
     //% buffer.shadow=btf_receivedBuffer19
-    export function dauerhaft_AbstandAusweichen(dauerhaft_Ausweichen: boolean, buffer: Buffer) {
-        if (dauerhaft_Ausweichen) {
-            eventAbstandAusweichen(
-                true,
-                true,
-                btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b0_Motor),
+    export function dauerhaft_AbstandAusweichen(dauerhaft_Ausweichen: boolean, abstand_Stop: boolean, buffer: Buffer) {
+        if (buffer) {
+            beispielAbstandAusweichen(
+                dauerhaft_Ausweichen,
+                abstand_Stop,
+                btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b0_Motor), // MC vorwärts gerade
                 btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b1_Servo),
-                btf.getByte(buffer, btf.eBufferPointer.md, btf.eBufferOffset.b0_Motor),
-                25
+                btf.getByte(buffer, btf.eBufferPointer.md, btf.eBufferOffset.b0_Motor), // MD rückwärts lenken
+                btf.getByte(buffer, btf.eBufferPointer.md, btf.eBufferOffset.b1_Servo),
+                btf.getByte(buffer, btf.eBufferPointer.md, btf.eBufferOffset.b2_Fahrstrecke) // Pause Zehntelsekunden 10zs=1000ms
             )
         }
-        else {
 
-        }
     }
 
 

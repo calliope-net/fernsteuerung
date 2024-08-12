@@ -72,18 +72,19 @@ namespace cb2 { // c-beispiele.ts
 
 
     //% group="Abstand Sensor" subcategory=Beispiele
-    //% block="Abstand ausweichen %on <abstand_Stop> %abstand_Stop Fahren (1↓128↑255) %motor128 Lenken (1↖16↗31) %servo16 rückwärts Fahren %langsamfahren Pause ⅒s %pause_zs" weight=2
-    //% on.shadow=toggleOnOff
+    //% block="Abstand ausweichen %dauerhaft_Ausweichen <abstand_Stop> %abstand_Stop Fahren (1↓128↑255) %vMotor Lenken (1↖16↗31) %vServo rückwärts Fahren %rMotor Lenken %rServo Pause ⅒s %pause_zs" weight=2
+    //% dauerhaft_Ausweichen.shadow=toggleOnOff
     //% abstand_Stop.shadow=toggleYesNo
-    //% motor128.min=1 motor128.max=255 motor128.defl=255
-    //% servo16.min=1 servo16.max=31 servo16.defl=8
-    //% langsamfahren.min=1 langsamfahren.max=255 langsamfahren.defl=64
+    //% vMotor.min=1 vMotor.max=255 vMotor.defl=255
+    //% vServo.min=1 vServo.max=31 vServo.defl=8
+    //% rMotor.min=1 rMotor.max=255 rMotor.defl=64
+    //% rServo.min=1 rServo.max=31 rServo.defl=16
     //% pause_zs.shadow=cb2_zehntelsekunden
-    export function eventAbstandAusweichen(on: boolean, abstand_Stop: boolean, motor128: number, servo16: number, langsamfahren: number, pause_zs: number) {
-        if (on) {
+    export function beispielAbstandAusweichen(dauerhaft_Ausweichen: boolean, abstand_Stop: boolean, vMotor: number, vServo: number, rMotor: number, rServo: number, pause_zs: number) {
+        if (dauerhaft_Ausweichen) {
             btf.reset_timer()
             if (abstand_Stop) {
-                writeMotor128Servo16(langsamfahren, servo16)
+                writeMotor128Servo16(rMotor, rServo)
                 //if (Math.randomBoolean()) 
                 //    cb2.writeMotor128Servo16(64, randint(1, 9))
                 // else 
@@ -91,7 +92,7 @@ namespace cb2 { // c-beispiele.ts
             }
             else {
                 basic.pause(pause_zs * 100)
-                writeMotor128Servo16(motor128, 16)
+                writeMotor128Servo16(vMotor, vServo)
             }
         }
 
