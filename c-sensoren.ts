@@ -71,7 +71,7 @@ namespace cb2 { // c-sensoren.ts
 
     //% group="Ultraschall Sensor" subcategory="Sensoren"
     //% block="Abstand Ereignis auslösen %on • Stop %stop_cm cm • Start %start_cm cm || • Pause %ms ms" weight=2
-    //% on.shadow=toggleYesNo
+    //% on.shadow=toggleOnOff
     //% stop_cm.defl=30
     //% start_cm.defl=35
     //% ms.defl=25

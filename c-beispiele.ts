@@ -72,7 +72,7 @@ namespace cb2 { // c-beispiele.ts
 
 
     //% group="Abstand Sensor" subcategory=Beispiele
-    //% block="Abstand ausweichen %on abstand_Stop %abstand_Stop Fahren (1↓128↑255) %motor128 Lenken (1↖16↗31) %servo16 rückwärts Fahren %langsamfahren Pause ⅒s %pause_zs" weight=2
+    //% block="Abstand ausweichen %on <abstand_Stop> %abstand_Stop Fahren (1↓128↑255) %motor128 Lenken (1↖16↗31) %servo16 rückwärts Fahren %langsamfahren Pause ⅒s %pause_zs" weight=2
     //% on.shadow=toggleOnOff
     //% abstand_Stop.shadow=toggleYesNo
     //% motor128.min=1 motor128.max=255 motor128.defl=255
@@ -97,9 +97,18 @@ namespace cb2 { // c-beispiele.ts
 
     }
 
-
-    export function zufallServo16(lvon = 1, lbis = 9, rvon = 23, rbis = 31, lr = false) {
-        if (Math.randomBoolean())
+    //% group="Abstand Sensor" subcategory=Beispiele
+    //% block="Zufall Lenken (1↖16↗31) links %lvon - %lbis • rechts %rvon - %rbis || • l-r %lr"
+    //% lvon.min=1 lvon.max=15 lvon.defl=1
+    //% lbis.min=1 lbis.max=15 lbis.defl=9
+    //% rvon.min=17 rvon.max=31 rvon.defl=23
+    //% rbis.min=17 rbis.max=31 rbis.defl=31
+    //% lr.shadow=btf_randomBoolean
+    //% inlineInputMode=inline
+    export function zufallServo16(lvon = 1, lbis = 9, rvon = 23, rbis = 31, lr?: boolean) {
+        if (lr == undefined)
+            lr = btf.btf_randomBoolean()
+        if (lr)
             return randint(lvon, lbis)
         else
             return randint(rvon, rbis)
