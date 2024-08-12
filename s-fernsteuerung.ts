@@ -163,7 +163,7 @@ namespace sender { // s-fernsteuerung.ts
     //% vMotor.min=1 vMotor.max=255 vMotor.defl=255
     //% vServo.min=1 vServo.max=31 vServo.defl=16
     //% rMotor.min=1 rMotor.max=255 rMotor.defl=64
-    //% rServo.min=1 rServo.max=31 rServo.defl=8
+    //% rServo.min=1 rServo.max=31 rServo.defl=0
     //% pause_zs.shadow=cb2_zehntelsekunden
     export function send10AbstandAusweichen(buffer: Buffer, vMotor: number, vServo: number, rMotor: number, rServo: number, pause_zs: number, abstand: btf.e3Abstand) {
 
