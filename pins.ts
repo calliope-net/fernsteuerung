@@ -1,6 +1,9 @@
 
 namespace pins { // pins.ts
 
+
+    // ========== group="Digital"
+
     export enum eDigitalPins { // Pins gültig für alle Modelle, unterscheiden sich bei v3 im Enum Wert
         P0 = DigitalPin.P0,
         P1 = DigitalPin.P1,
@@ -39,6 +42,10 @@ namespace pins { // pins.ts
         return pin
     }
 
+
+
+    // ========== group="Analog"
+
     //% blockId=pins_AnalogPin
     //% group="Analog"
     //% block="AnalogPin %pin" weight=1
@@ -46,6 +53,9 @@ namespace pins { // pins.ts
         return pin
     }
 
+
+
+    // ========== group="Servo"
 
     //% group="Servo"
     //% block="Servo Pin %pin Winkel %winkel °" weight=2
@@ -56,6 +66,8 @@ namespace pins { // pins.ts
     }
 
 
+
+    // ========== group="I²C" subcategory=Buffer
 
     //% group="I²C" subcategory=Buffer
     //% block="i2cWriteBuffer I²C %i2c_address Buffer %buf || repeat %repeat" weight=9
@@ -76,10 +88,7 @@ namespace pins { // pins.ts
 
 
 
-
-
     // ========== group="Buffer create" subcategory=Buffer
-
 
     //% group="Buffer create" subcategory=Buffer
     //% block="Buffer.create size %size" weight=9
@@ -104,16 +113,28 @@ namespace pins { // pins.ts
 
 
 
-    //% group="Buffer set" subcategory=Buffer
+    // ========== group="Byte (UInt8)" subcategory=Buffer
+
+    //% group="Byte (UInt8)" subcategory=Buffer
     //% block="Buffer %buffer .setUint8(offset %off value %v)" weight=8
     //% off.min=0 off.max=18
     export function buffer_setUint8(buffer: Buffer, off: number, v: number) {
         buffer.setUint8(off, v)
     }
 
+    //% group="Byte (UInt8)" subcategory=Buffer
+    //% block="Buffer %buffer .getUint8(offset %off)" weight=7
+    //% off.min=0 off.max=18
+    export function buffer_getUint8(buffer: Buffer, off: number) {
+        return buffer.getUint8(off)
+    }
 
-    //% group="Buffer set" subcategory=Buffer
-    //% block="Buffer %buffer setNumber(%format offset %offset value %value)" weight=7
+
+
+    // ========== group="Zahl (Number)" subcategory=Buffer
+
+    //% group="Zahl (Number)" subcategory=Buffer
+    //% block="Buffer %buffer .setNumber(%format offset %offset value %value)" weight=6
     //% format.defl=NumberFormat.UInt8LE
     //% offset.min=0 offset.max=18
     //% inlineInputMode=inline
@@ -122,8 +143,20 @@ namespace pins { // pins.ts
     }
 
 
-    //% group="Buffer set" subcategory=Buffer
-    //% block="Buffer %buffer offset %offset setBit 2** %exp %pBit" weight=3
+    //% group="Zahl (Number)" subcategory=Buffer
+    //% block="Buffer %buffer .getNumber(%format offset %offset)" weight=5
+    //% format.defl=NumberFormat.UInt8LE
+    //% offset.min=0 offset.max=18
+    export function buffer_getNumber(buffer: Buffer, format: NumberFormat, offset: number): number {
+        return buffer.getNumber(format, offset)
+    }
+
+
+
+    // ========== group="Bit (boolean)" subcategory=Buffer
+
+    //% group="Bit (boolean)" subcategory=Buffer
+    //% block="Buffer %buffer offset %offset setBit 2** %exp %pBit" weight=4
     //% offset.min=0 offset.max=18
     //% exp.min=0 exp.max=7
     //% inlineInputMode=inline
@@ -134,26 +167,8 @@ namespace pins { // pins.ts
             buffer[offset] & ~(2 ** Math.trunc(exp))
     }
 
-
-
-    //% group="Buffer get" subcategory=Buffer
-    //% block="Buffer %buffer .getUint8(offset %off)" weight=8
-    //% off.min=0 off.max=18
-    export function buffer_getUint8(buffer: Buffer, off: number) {
-        return buffer.getUint8(off)
-    }
-
-
-    //% group="Buffer get" subcategory=Buffer
-    //% block="Buffer %buffer getNumber(%format offset %offset)" weight=8
-    //% format.defl=NumberFormat.UInt8LE
-    //% offset.min=0 offset.max=18
-    export function buffer_getNumber(buffer: Buffer, format: NumberFormat, offset: number): number {
-        return buffer.getNumber(format, offset)
-    }
-
-    //% group="Buffer get" subcategory=Buffer
-    //% block="Buffer %buffer offset %offset getBit 2** %exp" weight=4
+    //% group="Bit (boolean)" subcategory=Buffer
+    //% block="Buffer %buffer offset %offset getBit 2** %exp" weight=3
     //% offset.min=0 offset.max=18
     //% exp.min=0 exp.max=7
     export function buffer_getBit(buffer: Buffer, offset: number, exp: number): boolean {
@@ -161,8 +176,12 @@ namespace pins { // pins.ts
     }
 
 
+
+    // ========== group="Buffer write to" subcategory=Buffer
+
     //% group="Buffer write to" subcategory=Buffer
     //% block="Buffer %buffer .toArray() %format" weight=7
+    //% format.defl=NumberFormat.UInt8LE
     export function buffer_toArray(buffer: Buffer, format: NumberFormat) {
         return buffer.toArray(format)
     }
