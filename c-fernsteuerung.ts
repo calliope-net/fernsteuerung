@@ -64,7 +64,7 @@ namespace cb2 { // c-fernsteuerung.ts
     let n_spurfolgerBuffer_repeat = false
 
     //% group="10 Fernstarten Spurfolger" subcategory="Fernsteuerung"
-    //% block="10 dauerhaft Spurfolger: %dauerhaft_Spurfolger (MS:CD) aus %buffer • I²C Spursensor %i2c" weight=7
+    //% block="10 <dauerhaft_Spurfolger> %dauerhaft_Spurfolger (MS:CD) aus %buffer • I²C Spursensor %i2c" weight=7
     //% dauerhaft_Spurfolger.shadow="toggleYesNo"
     //% buffer.shadow=btf_receivedBuffer19
     export function dauerhaft_SpurfolgerBuffer(dauerhaft_Spurfolger: boolean, buffer: Buffer, i2cSpur: eI2C) {
@@ -89,24 +89,38 @@ namespace cb2 { // c-fernsteuerung.ts
 
 
 
+    // ========== group="10 Fernstarten Abstand ausweichen" subcategory="Fernsteuerung"
+
     //% group="10 Fernstarten Abstand ausweichen" subcategory="Fernsteuerung"
-    //% block="%buffer 10 fernstarten && Start Bit %startBit" weight=6
+    //% block="%buffer 10 fernstarten && Start Bit %startBit" weight=8
     //% buffer.shadow=btf_receivedBuffer19
     //% startBit.defl=btf.e3aktiviert.md
     //% blockSetVariable=dauerhaft_Ausweichen
-    export function set_AbstandAusweichen(buffer: Buffer, startBit: btf.e3aktiviert){
+    export function set_AbstandAusweichen(buffer: Buffer, startBit: btf.e3aktiviert) {
         return btf.isBetriebsart(buffer, btf.e0Betriebsart.p1Lokal) && btf.getaktiviert(buffer, startBit)
     }
 
 
     let n_AbstandAusweichen = false
 
-    //% group="10 Fernstarten Spurfolger" subcategory="Fernsteuerung"
-    //% block="10 dauerhaft Spurfolger: %dauerhaft_Spurfolger (MS:CD) aus %buffer • I²C Spursensor %i2c" weight=7
-    //% dauerhaft_Spurfolger.shadow="toggleYesNo"
+    //% group="10 Fernstarten Abstand ausweichen" subcategory="Fernsteuerung"
+    //% block="10 <dauerhaft_Ausweichen> %dauerhaft_Ausweichen (MS:CD) aus %buffer" weight=7
+    //% dauerhaft_Ausweichen.shadow="toggleYesNo"
     //% buffer.shadow=btf_receivedBuffer19
-    export function dauerhaft_AbstandAusweichen() {
+    export function dauerhaft_AbstandAusweichen(dauerhaft_Ausweichen: boolean, buffer: Buffer) {
+        if (dauerhaft_Ausweichen) {
+            eventAbstandAusweichen(
+                true,
+                true,
+                btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b0_Motor),
+                btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b1_Servo),
+                btf.getByte(buffer, btf.eBufferPointer.md, btf.eBufferOffset.b0_Motor),
+                25
+            )
+        }
+        else {
 
+        }
     }
 
 
