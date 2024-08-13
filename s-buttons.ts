@@ -28,7 +28,7 @@ namespace sender { // s-buttons.ts
         //% block="00 Zahnstange und Drehkranz"
         mc_mb,      // MC und MB (Zahnstange und Drehkranz)
        
-        _10fernstarten,
+       // _10fernstarten,
         //% block="10 Spurfolger fernstarten"
         f10fernstartenSpurfolger,
         //% block="10 Abstand fernstarten"
@@ -36,7 +36,7 @@ namespace sender { // s-buttons.ts
         //% block="20 Fahrplan senden"
         f20fahrplan,
 
-        _20fahrplan,
+       // _20fahrplan,
         //% block="30 Sensoren fernprogrammieren"
         f30sensoren
     }
