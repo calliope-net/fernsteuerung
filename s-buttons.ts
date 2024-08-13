@@ -27,12 +27,18 @@ namespace sender { // s-buttons.ts
         ma_mb,      // MA und MB (Seilrolle und Drehkranz)
         //% block="00 Zahnstange und Drehkranz"
         mc_mb,      // MC und MB (Zahnstange und Drehkranz)
-        //% block="10 Programm fernstarten"
+       
         _10fernstarten,
+        //% block="10 Spurfolger fernstarten"
+        f10fernstartenSpurfolger,
+        //% block="10 Abstand fernstarten"
+        f10fernstartenAbstand,
         //% block="20 Fahrplan senden"
+        f20fahrplan,
+
         _20fahrplan,
         //% block="30 Sensoren fernprogrammieren"
-        _30sensoren
+        f30sensoren
     }
 
 
@@ -49,6 +55,18 @@ namespace sender { // s-buttons.ts
             setStatusModell(getStatusModell() - 1, true, 1500) // setStatusModell() schreibt auch in Flash
             btf.zeigeFunkgruppe()
         }
+
+        // cb2e||mkcs // von 'fernstarten Spurfolger' auf 'fernstarten Abstand' umschalten
+        else if ((isModell(eModell.cb2e) || isModell(eModell.mkcs)) && !getStatusButtonB() && isFunktion(eFunktion.f10fernstartenSpurfolger)) {
+            // wenn B aus ist, wechselt A zwischen Spurfolger und Abstand
+            setStatusFunktion(eFunktion.f10fernstartenAbstand)
+        }
+        // cb2e||mkcs // von 'fernstarten Abstand' auf 'fernstarten Spurfolger' umschalten
+        else if ((isModell(eModell.cb2e) || isModell(eModell.mkcs)) && !getStatusButtonB() && isFunktion(eFunktion.f10fernstartenAbstand)) {
+            // wenn B aus ist, wechselt A zwischen Spurfolger und Abstand
+            setStatusFunktion(eFunktion.f10fernstartenSpurfolger)
+        } // wenn B an ist, Standardwerte (A wechseln true-false)
+
         // Maker Kit Car && Gabelstapler (lenken mit Tasten)
         else if (isModell(eModell.mkcg) && isFunktion(eFunktion.m0_m1_s0)) {
             addStatusButtonCounter(-1, 1, 31)
@@ -95,15 +113,15 @@ namespace sender { // s-buttons.ts
             setStatusButtonB(false)
         }
 
-        // cb2e||mkcs // von Joystick auf fernstarten umschalten
+        // cb2e||mkcs // von 'Joystick' auf 'fernstarten Spurfolger' umschalten
         else if ((isModell(eModell.cb2e) || isModell(eModell.mkcs)) && isFunktion(eFunktion.m0_s0)) {
-            setStatusFunktion(eFunktion._10fernstarten)
-            setStatusButtonA(true)  // Ultraschall Sensor aktiv
+            setStatusFunktion(eFunktion.f10fernstartenSpurfolger)
+            setStatusButtonA(false) // Ultraschall Sensor aktiv bei false
             setStatusButtonB(false) // Beispiel noch nicht aktiv senden; erst nach B geklickt
         }
-        // cb2e||mkcs // von fernstarten auf Fahrplan umschalten
-        else if ((isModell(eModell.cb2e) || isModell(eModell.mkcs)) && isFunktion(eFunktion._10fernstarten)) {
-            setStatusFunktion(eFunktion._20fahrplan)
+        // cb2e||mkcs // von 'fernstarten Spurfolger' auf 'Fahrplan' umschalten
+        else if ((isModell(eModell.cb2e) || isModell(eModell.mkcs)) && isFunktion(eFunktion.f10fernstartenSpurfolger)) {
+            setStatusFunktion(eFunktion.f20fahrplan)
             setStatusButtonA(false) // beide aus schalten
             setStatusButtonB(false)
         }
