@@ -103,7 +103,7 @@ namespace cb2 { // c-sensoren.ts
     }
 
     //% group="Ultraschall Sensor" subcategory="Sensoren"
-    //% block="wenn Abstand Sensor geändert" weight=1
+    //% block="wenn Abstand Sensor Ereignis" weight=1
     //% draggableParameters=reporter
     export function onStopEvent(cb: (abstand_Stop: boolean, cm: number) => void) {
         onStopEventHandler = cb
