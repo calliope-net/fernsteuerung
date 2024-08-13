@@ -69,8 +69,10 @@ namespace cb2 { // c-sensoren.ts
         return i2cReadBuffer(3).getNumber(NumberFormat.UInt16LE, 1) / 10 // 16 Bit (mm)/10 = cm mit 1 Kommastelle
     }
 
+    let n_raiseAbstandEvent_gestartet = false
+
     //% group="Ultraschall Sensor" subcategory="Sensoren"
-    //% block="Abstand Ereignis auslösen %on • Stop %stop_cm cm • Start %start_cm cm || • Pause %ms ms" weight=2
+    //% block="Abstand Sensor Ereignis auslösen %on • Stop %stop_cm cm • Start %start_cm cm || • Pause %ms ms" weight=2
     //% on.shadow=toggleOnOff
     //% stop_cm.defl=30
     //% start_cm.defl=35
@@ -89,17 +91,33 @@ namespace cb2 { // c-sensoren.ts
                 n_AbstandStop = true
                 if (onStopEventHandler)
                     onStopEventHandler(n_AbstandStop, cm)
-                //if (onSpurStopEventHandler)
-                //    onSpurStopEventHandler(n_SpurLinksHell, n_SpurRechtsHell, n_AbstandStop)
             }
             else if (n_AbstandStop && cm > Math.max(start_cm, stop_cm)) {
                 n_AbstandStop = false
                 if (onStopEventHandler)
                     onStopEventHandler(n_AbstandStop, cm)
-                //if (onSpurStopEventHandler)
-                //    onSpurStopEventHandler(n_SpurLinksHell, n_SpurRechtsHell, n_AbstandStop)
             }
+            else if (!n_raiseAbstandEvent_gestartet) {
+                stopEventHandler(false, cm)
+                //n_AbstandStop = false // Start Ereignis auslösen
+                //if (onStopEventHandler)
+                //    onStopEventHandler(n_AbstandStop, cm)
+            }
+            n_raiseAbstandEvent_gestartet = true
         }
+        else if (n_raiseAbstandEvent_gestartet) {
+            n_raiseAbstandEvent_gestartet = false
+            stopEventHandler(true, 0) // Stop Ereignis auslösen
+            //n_AbstandStop = true
+            //if (onStopEventHandler)
+            //    onStopEventHandler(n_AbstandStop, 0)
+        }
+    }
+
+    function stopEventHandler(abstand_Stop: boolean, cm: number) {
+        n_AbstandStop = abstand_Stop
+        if (onStopEventHandler)
+            onStopEventHandler(n_AbstandStop, cm)
     }
 
     //% group="Ultraschall Sensor" subcategory="Sensoren"
