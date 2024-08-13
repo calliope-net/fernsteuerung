@@ -106,7 +106,7 @@ namespace cb2 { // c-fernsteuerung.ts
     }
 
 
-    let n_AbstandAusweichen_gestartet = false
+   // let n_AbstandAusweichen_gestartet = false
 
     //% group="10 Fernstarten Hindernis ausweichen" subcategory="Fernsteuerung"
     //% block="10 <dauerhaft_Ausweichen> %dauerhaft_Ausweichen <abstand_Stop> %abstand_Stop (MS:CD) aus %buffer" weight=7
@@ -118,13 +118,14 @@ namespace cb2 { // c-fernsteuerung.ts
         // Parameter blockSetVariable=<dauerhaft_Ausweichen> und Sensor Ereignis <abstand_Stop>
         if (buffer) {
             lokalAbstandAusweichen(
-                dauerhaft_Ausweichen, abstand_Stop,
-
+                dauerhaft_Ausweichen,
+                abstand_Stop,
                 btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b0_Motor), // MC vorwärts gerade
                 btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b1_Servo),
                 btf.getByte(buffer, btf.eBufferPointer.md, btf.eBufferOffset.b0_Motor), // MD rückwärts lenken
                 btf.getByte(buffer, btf.eBufferPointer.md, btf.eBufferOffset.b1_Servo),
-                btf.getByte(buffer, btf.eBufferPointer.md, btf.eBufferOffset.b2_Fahrstrecke) // Pause Zehntelsekunden 10zs=1000ms
+                btf.getByte(buffer, btf.eBufferPointer.md, btf.eBufferOffset.b2_Fahrstrecke), // Pause Zehntelsekunden 10zs=1000ms
+                1
             )
         }
         /* 
