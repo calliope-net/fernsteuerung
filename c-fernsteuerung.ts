@@ -102,19 +102,11 @@ namespace cb2 { // c-fernsteuerung.ts
     //% blockSetVariable=dauerhaft_Ausweichen
     export function set_AbstandAusweichen(buffer: Buffer, startBit: btf.e3aktiviert) {
         // Block (SetVariable) steht in Bluetooth receivedData
-        let start = btf.isBetriebsart(buffer, btf.e0Betriebsart.p1Lokal) && btf.getaktiviert(buffer, startBit)
-        /* if (start)
-            writeMotor128Servo16(
-                btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b0_Motor), // MC vorwärts gerade
-                btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b1_Servo)
-            )
-        else
-            writeMotorenStop() */
-        return start
+        return btf.isBetriebsart(buffer, btf.e0Betriebsart.p1Lokal) && btf.getaktiviert(buffer, startBit)
     }
 
 
-    let n_AbstandAusweichen_gestartet = false
+    // let n_AbstandAusweichen_gestartet = false
 
     //% group="10 Fernstarten Hindernis ausweichen" subcategory="Fernsteuerung"
     //% block="10 <dauerhaft_Ausweichen> %dauerhaft_Ausweichen <abstand_Stop> %abstand_Stop (MS:CD) aus %buffer" weight=7
@@ -124,28 +116,40 @@ namespace cb2 { // c-fernsteuerung.ts
     export function dauerhaft_AbstandAusweichen(dauerhaft_Ausweichen: boolean, abstand_Stop: boolean, buffer: Buffer) {
         // Block steht im Abstand Sensor Ereignis, das kommt aus der dauerhaft Schleife (Pin-Ereignis nur beim Laser Abstand Sensor)
         // Parameter blockSetVariable=<dauerhaft_Ausweichen> und Sensor Ereignis <abstand_Stop>
-        if (dauerhaft_Ausweichen && buffer) {
 
-            let rServo = btf.getByte(buffer, btf.eBufferPointer.md, btf.eBufferOffset.b1_Servo)
-            if (rServo == 0)
-                rServo = zufallServo16(1, 5, 27, 31, btf.btf_randomBoolean())
+        lokalAbstandAusweichen(
+            dauerhaft_Ausweichen, abstand_Stop,
 
-            beispielAbstandAusweichen(
-                n_AbstandAusweichen_gestartet,
-                abstand_Stop,
-                btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b0_Motor), // MC vorwärts gerade
-                btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b1_Servo),
-                btf.getByte(buffer, btf.eBufferPointer.md, btf.eBufferOffset.b0_Motor), // MD rückwärts lenken
-                rServo,
-                btf.getByte(buffer, btf.eBufferPointer.md, btf.eBufferOffset.b2_Fahrstrecke) // Pause Zehntelsekunden 10zs=1000ms
-            )
-            n_AbstandAusweichen_gestartet = true
-        }
-        else if (n_AbstandAusweichen_gestartet) {
-            n_AbstandAusweichen_gestartet = false
-            writeMotorenStop()
-        }
-
+            btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b0_Motor), // MC vorwärts gerade
+            btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b1_Servo),
+            btf.getByte(buffer, btf.eBufferPointer.md, btf.eBufferOffset.b0_Motor), // MD rückwärts lenken
+            btf.getByte(buffer, btf.eBufferPointer.md, btf.eBufferOffset.b1_Servo),
+            btf.getByte(buffer, btf.eBufferPointer.md, btf.eBufferOffset.b2_Fahrstrecke) // Pause Zehntelsekunden 10zs=1000ms
+        )
+        /* 
+        
+                if (dauerhaft_Ausweichen && buffer) {
+        
+                    let rServo = btf.getByte(buffer, btf.eBufferPointer.md, btf.eBufferOffset.b1_Servo)
+                    if (rServo == 0)
+                        rServo = zufallServo16(1, 5, 27, 31, btf.btf_randomBoolean())
+        
+                    beispielAbstandAusweichen(
+                        n_AbstandAusweichen_gestartet,
+                        abstand_Stop,
+                        btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b0_Motor), // MC vorwärts gerade
+                        btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b1_Servo),
+                        btf.getByte(buffer, btf.eBufferPointer.md, btf.eBufferOffset.b0_Motor), // MD rückwärts lenken
+                        rServo,
+                        btf.getByte(buffer, btf.eBufferPointer.md, btf.eBufferOffset.b2_Fahrstrecke) // Pause Zehntelsekunden 10zs=1000ms
+                    )
+                    n_AbstandAusweichen_gestartet = true
+                }
+                else if (n_AbstandAusweichen_gestartet) {
+                    n_AbstandAusweichen_gestartet = false
+                    writeMotorenStop()
+                }
+         */
     }
 
 
