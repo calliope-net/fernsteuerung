@@ -95,11 +95,11 @@ namespace cb2 { // c-beispiele.ts
             //    n_AbstandAusweichen_gestartet, abstand_Stop,
             //    vMotor, vServo, rMotor, rServo, pause_zs
             //)
+            btf.reset_timer()
 
             if (!n_AbstandAusweichen_gestartet) // ganz am Anfang
                 writeMotor128Servo16(vMotor, vServo)
 
-            btf.reset_timer()
 
             if (abstand_Stop) { // Sensor Ereignis Abstand zu klein - rückwärts
                 writeMotor128Servo16(rMotor, rServo)

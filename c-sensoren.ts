@@ -59,8 +59,6 @@ namespace cb2 { // c-sensoren.ts
      */
     let onStopEventHandler: (abstand_Stop: boolean, cm: number) => void
 
-    let n_AbstandTimer = input.runningTime()
-    let n_AbstandStop = false
 
     //% group="Ultraschall Sensor" subcategory="Sensoren"
     //% block="Abstand cm" weight=4
@@ -69,6 +67,8 @@ namespace cb2 { // c-sensoren.ts
         return i2cReadBuffer(3).getNumber(NumberFormat.UInt16LE, 1) / 10 // 16 Bit (mm)/10 = cm mit 1 Kommastelle
     }
 
+    let n_AbstandTimer = input.runningTime()
+    let n_AbstandStop = false
     let n_raiseAbstandEvent_gestartet = false
 
     //% group="Ultraschall Sensor" subcategory="Sensoren"
