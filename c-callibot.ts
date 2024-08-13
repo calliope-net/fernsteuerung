@@ -141,12 +141,12 @@ namespace cb2 { // c-callibot.ts 005F7F
     //% lv.shadow="toggleYesNo" lh.shadow="toggleYesNo" rh.shadow="toggleYesNo" rv.shadow="toggleYesNo"
     //% blink.shadow="toggleYesNo"
     //% inlineInputMode=inline expandableArgumentMode="toggle"
-    export function writeRgbLeds(color: number, on: boolean, lv = true, lh = true, rh = true, rv = true, blink = false) {
+    export function writecb2RgbLeds(color: number, on: boolean, lv = true, lh = true, rh = true, rv = true, blink = false) {
 
-        if (lv) writeRgbLed(eRgbLed.lv, color, on, blink)
-        if (lh) writeRgbLed(eRgbLed.lh, color, on, blink)
-        if (rh) writeRgbLed(eRgbLed.rh, color, on, blink)
-        if (rv) writeRgbLed(eRgbLed.rv, color, on, blink)
+        if (lv) writecb2RgbLed(eRgbLed.lv, color, on, blink)
+        if (lh) writecb2RgbLed(eRgbLed.lh, color, on, blink)
+        if (rh) writecb2RgbLed(eRgbLed.rh, color, on, blink)
+        if (rv) writecb2RgbLed(eRgbLed.rv, color, on, blink)
     }
 
 
@@ -156,7 +156,7 @@ namespace cb2 { // c-callibot.ts 005F7F
     //% color.shadow="cb2_colorPicker"
     //% blink.shadow=toggleYesNo
     //% inlineInputMode=inline 
-    export function writeRgbLed(led: eRgbLed, color: number, on: boolean, blink = false) {
+ export    function writecb2RgbLed(led: eRgbLed, color: number, on: boolean, blink = false) {
         if (!on || (blink && a_LEDs[led] == color))
             color = Colors.Off // alle Farben aus = 0
 
@@ -193,15 +193,15 @@ namespace cb2 { // c-callibot.ts 005F7F
     //% blink.shadow="toggleYesNo"
     //% pwm.min=1 pwm.max=16 pwm.defl=16
     //% inlineInputMode=inline 
-    export function writeLed(pLed: eLed, on: boolean, blink = false, pwm?: number) {
+    export function writecb2Led(pLed: eLed, on: boolean, blink = false, pwm?: number) {
         if (!on)
             pwm = 0 // LED aus schalten
         else if (!btf.between(pwm, 0, 16))
             pwm = 16 // bei ungültigen Werten max. Helligkeit
 
         if (pLed == eLed.redb) {
-            writeLed(eLed.redl, on, blink, pwm) // 2 mal rekursiv aufrufen für beide rote LED
-            writeLed(eLed.redr, on, blink, pwm)
+            writecb2Led(eLed.redl, on, blink, pwm) // 2 mal rekursiv aufrufen für beide rote LED
+            writecb2Led(eLed.redr, on, blink, pwm)
         }
         else {
             // blinken und I²C nur wenn geändert

@@ -135,9 +135,9 @@ namespace cb2 { // c-zweimotoren.ts
             writeMotorenStop()
 
             if (sensor_color != Colors.Off) {
-                writeRgbLeds(sensor_color, true)
+                writecb2RgbLeds(sensor_color, true)
                 basic.pause(1000)
-                writeRgbLeds(sensor_color, false)
+                writecb2RgbLeds(sensor_color, false)
             }
         } // if
     }
@@ -189,7 +189,7 @@ namespace cb2 { // c-zweimotoren.ts
                     if (letzteEncoderWerte[0] == aEncoderWerte[0] && letzteEncoderWerte[1] == aEncoderWerte[1]) {
                         // in 500 * pause 2 (unten) = 1 s Timeout hat sich kein Wert geändert
                         writeMotorenStop()
-                        writeRgbLeds(Colors.Red, true)
+                        writecb2RgbLeds(Colors.Red, true)
                         // basic.pause(1000)
                         //  writeRgbLeds(Colors.Red, false) // aus nach 1 Sekunde
                         break
@@ -248,7 +248,7 @@ namespace cb2 { // c-zweimotoren.ts
 
                 writeMotorenStop()
 
-                writeRgbLed(eRgbLed.lh, Colors.Red, true, true)
+                writecb2RgbLed(eRgbLed.lh, Colors.Red, true, true)
             }
             else if (btf.getSensor(buffer, iBufferPointerA, btf.eSensor.b5Spur) // Spursensor aktiviert
                 &&
@@ -256,7 +256,7 @@ namespace cb2 { // c-zweimotoren.ts
 
                 writeMotorenStop()
 
-                writeRgbLed(eRgbLed.rh, Colors.White, true, true)
+                writecb2RgbLed(eRgbLed.rh, Colors.White, true, true)
             }
             // Stoßstange noch abfragen
             else {
@@ -266,9 +266,9 @@ namespace cb2 { // c-zweimotoren.ts
                     btf.getByte(buffer, btf.eBufferPointer.mb, btf.eBufferOffset.b0_Motor)
                 )
 
-                writeRgbLed(eRgbLed.lh, Colors.Yellow, btf.getSensor(buffer, iBufferPointerA, btf.eSensor.b6Abstand))
+                writecb2RgbLed(eRgbLed.lh, Colors.Yellow, btf.getSensor(buffer, iBufferPointerA, btf.eSensor.b6Abstand))
 
-                writeRgbLed(eRgbLed.rh, Colors.White, btf.getSensor(buffer, iBufferPointerA, btf.eSensor.b5Spur))
+                writecb2RgbLed(eRgbLed.rh, Colors.White, btf.getSensor(buffer, iBufferPointerA, btf.eSensor.b5Spur))
             }
         }
     }

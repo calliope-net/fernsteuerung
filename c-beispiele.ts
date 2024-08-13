@@ -23,13 +23,13 @@ namespace cb2 { // c-beispiele.ts
         if (!repeat) {
             m_lenken = undefined // gespeicherte Werte löschen
             m_inSpur = false     // beim ersten Durchlauf der Schleife
-            writeRgbLeds(Colors.Off, false) // alle 4 aus
+            writecb2RgbLeds(Colors.Off, false) // alle 4 aus
         }
 
         if (stop && abstand > 0 && readUltraschallAbstand() < abstand) {
             writeMotorenStop()
 
-            writeRgbLed(eRgbLed.lh, Colors.Red, true)
+            writecb2RgbLed(eRgbLed.lh, Colors.Red, true)
 
             basic.pause(Math.randomRange(500, 5000)) // 0.5 .. 5 Sekunden
         }
@@ -62,7 +62,7 @@ namespace cb2 { // c-beispiele.ts
                 m_inSpur = false // hell hell
             }
 
-            writeRgbLed(eRgbLed.lh, Colors.Yellow, stop)
+            writecb2RgbLed(eRgbLed.lh, Colors.Yellow, stop)
         }
     }
 

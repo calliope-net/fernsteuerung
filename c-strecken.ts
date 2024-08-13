@@ -95,9 +95,9 @@ namespace cb2 { // c-strecken.ts
             writeMotorenStop()
 
             if (sensor_color != Colors.Off) {
-                writeRgbLeds(sensor_color, true)
+                writecb2RgbLeds(sensor_color, true)
                 basic.pause(1000)
-                writeRgbLeds(sensor_color, false)
+                writecb2RgbLeds(sensor_color, false)
             }
         }
 

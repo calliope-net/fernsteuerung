@@ -22,7 +22,7 @@ namespace cb2 { // c-fernsteuerung.ts
 
                 writeMotorenStop()
 
-                writeRgbLed(eRgbLed.lh, Colors.Red, true, true)
+                writecb2RgbLed(eRgbLed.lh, Colors.Red, true, true)
             }
             else if (btf.getSensor(buffer, iBufferPointer, btf.eSensor.b5Spur) // Spursensor aktiviert
                 &&
@@ -30,7 +30,7 @@ namespace cb2 { // c-fernsteuerung.ts
 
                 writeMotorenStop()
 
-                writeRgbLed(eRgbLed.rh, Colors.White, true, true)
+                writecb2RgbLed(eRgbLed.rh, Colors.White, true, true)
             }
             // Stoßstange noch abfragen
             else {
@@ -41,9 +41,9 @@ namespace cb2 { // c-fernsteuerung.ts
                     lenkenProzent
                 )
 
-                writeRgbLed(eRgbLed.lh, Colors.Yellow, btf.getSensor(buffer, iBufferPointer, btf.eSensor.b6Abstand))
+                writecb2RgbLed(eRgbLed.lh, Colors.Yellow, btf.getSensor(buffer, iBufferPointer, btf.eSensor.b6Abstand))
 
-                writeRgbLed(eRgbLed.rh, Colors.White, btf.getSensor(buffer, iBufferPointer, btf.eSensor.b5Spur))
+                writecb2RgbLed(eRgbLed.rh, Colors.White, btf.getSensor(buffer, iBufferPointer, btf.eSensor.b5Spur))
             }
         }
     }
