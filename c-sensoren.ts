@@ -36,7 +36,7 @@ namespace cb2 { // c-sensoren.ts
 
     export enum eDH { hell = 1, dunkel = 0 }
 
-    //% group="INPUT digital" subcategory="Sensoren"
+    //% group="Spursensor" subcategory="Sensoren"
     //% block="Spursensor links %l und rechts %r einlesen %read || I²C %i2c" weight=5
     //% read.shadow="toggleYesNo"
     //% inlineInputMode=inline
@@ -45,6 +45,45 @@ namespace cb2 { // c-sensoren.ts
             readInputs(i2c)
         return (n_Inputs[0] & 0x03) == (l << 1 | r)
         // return (n_Inputs & 0x03) == (l * 2 + r)
+    }
+
+    let onSpurEventHandler: (links: boolean, rechts: boolean) => void
+    let n_raiseSpurEvent_gestartet = false
+    let n_SpurTimer = input.runningTime()
+    let n_Spur = 0
+
+    //% group="Spursensor" subcategory="Sensoren"
+    //% block="Spur Sensor Ereignis auslösen %on || • Pause %ms ms • I²C %i2c" weight=2
+    //% on.shadow=toggleOnOff
+    //% ms.defl=25
+    export function raiseSpurEvent(on: boolean, ms = 25, i2c = eI2C.x22) {
+        if (on) {
+            let t = input.runningTime() - n_SpurTimer // ms seit letztem raiseAbstandEvent
+            if (t < ms)
+                basic.pause(t) // restliche Zeit-Differenz warten
+            n_SpurTimer = input.runningTime()
+
+            let spur = readInputs(i2c)[0] & 0b11
+
+            if (n_Spur != spur || !n_raiseAbstandEvent_gestartet) {
+                n_Spur = spur
+                if (onSpurEventHandler)
+                    onSpurEventHandler((n_Spur & 0b10) == 0b10, (n_Spur & 0b01) == 0b01)
+            }
+            n_raiseSpurEvent_gestartet = true
+        }
+        else if (n_raiseSpurEvent_gestartet) {
+            n_raiseSpurEvent_gestartet = false
+            if (onSpurEventHandler)
+                onSpurEventHandler((n_Spur & 0b10) == 0b10, (n_Spur & 0b01) == 0b01)
+        }
+    }
+
+    //% group="Spursensor" subcategory="Sensoren"
+    //% block="wenn Spur Sensor Ereignis" weight=1
+    //% draggableParameters=reporter
+    export function onSpurEvent(cb: (links_hell: boolean, rechts_hell: boolean) => void) {
+        onSpurEventHandler = cb
     }
 
 
@@ -59,7 +98,6 @@ namespace cb2 { // c-sensoren.ts
      */
     let onStopEventHandler: (abstand_Stop: boolean, cm: number) => void
 
-
     //% group="Ultraschall Sensor" subcategory="Sensoren"
     //% block="Abstand cm" weight=4
     export function readUltraschallAbstand() {
@@ -68,7 +106,7 @@ namespace cb2 { // c-sensoren.ts
     }
 
     let n_AbstandTimer = input.runningTime()
-    let n_AbstandStop = false
+    let n_AbstandStop = false // letzter Status
     let n_raiseAbstandEvent_gestartet = false
 
     //% group="Ultraschall Sensor" subcategory="Sensoren"
@@ -87,30 +125,18 @@ namespace cb2 { // c-sensoren.ts
 
             let cm = readUltraschallAbstand()
 
-            if (!n_AbstandStop && cm < stop_cm) {
-                n_AbstandStop = true
-                if (onStopEventHandler)
-                    onStopEventHandler(n_AbstandStop, cm)
-            }
-            else if (n_AbstandStop && cm > Math.max(start_cm, stop_cm)) {
-                n_AbstandStop = false
-                if (onStopEventHandler)
-                    onStopEventHandler(n_AbstandStop, cm)
-            }
-            else if (!n_raiseAbstandEvent_gestartet) {
-                stopEventHandler(false, cm)
-                //n_AbstandStop = false // Start Ereignis auslösen
-                //if (onStopEventHandler)
-                //    onStopEventHandler(n_AbstandStop, cm)
-            }
+            if (!n_AbstandStop && cm < stop_cm)
+                stopEventHandler(true, cm) // Stop Ereignis auslösen
+            else if (n_AbstandStop && cm > Math.max(start_cm, stop_cm))
+                stopEventHandler(false, cm) // Start Ereignis auslösen
+            else if (!n_raiseAbstandEvent_gestartet)
+                stopEventHandler(false, cm) // Start Ereignis auslösen am Anfang
+
             n_raiseAbstandEvent_gestartet = true
         }
         else if (n_raiseAbstandEvent_gestartet) {
             n_raiseAbstandEvent_gestartet = false
-            stopEventHandler(true, 0) // Stop Ereignis auslösen
-            //n_AbstandStop = true
-            //if (onStopEventHandler)
-            //    onStopEventHandler(n_AbstandStop, 0)
+            stopEventHandler(true, 0) // Stop Ereignis auslösen am Ende
         }
     }
 
