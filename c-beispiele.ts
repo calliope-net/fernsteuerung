@@ -70,7 +70,7 @@ namespace cb2 { // c-beispiele.ts
 
     // ========== group="Abstand Sensor Ereignis" subcategory=Beispiele
 
-    let n_AbstandAusweichen_gestartet: boolean[] = [false, false] // index 0=block, 1=buffer in c-fernsteuerung.ts
+    let a_AbstandAusweichen_gestartet: boolean[] = [false, false] // index 0=block, 1=buffer in c-fernsteuerung.ts
 
     //% group="Abstand Sensor Ereignis" subcategory=Beispiele
     //% block="Hindernis ausweichen: Calli:bot | gestartet %gestartet <abstand_Stop> %abstand_Stop Fahren (1↓128↑255) %vMotor Lenken (1↖16↗31) %vServo rückwärts Fahren %rMotor rückwärts Lenken %rServo rückwärts Lenken (0) = Zufall | Pause ⅒s %pause_zs" weight=6
@@ -105,10 +105,10 @@ namespace cb2 { // c-beispiele.ts
                 basic.pause(pause_zs * 100)
                 writeMotor128Servo16(vMotor, (vServo == 0) ? 16 : vServo)
             }
-            n_AbstandAusweichen_gestartet[index] = true
+            a_AbstandAusweichen_gestartet[index] = true
         }
-        else if (n_AbstandAusweichen_gestartet) {
-            n_AbstandAusweichen_gestartet[index] = false
+        else if (a_AbstandAusweichen_gestartet[index]) {
+            a_AbstandAusweichen_gestartet[index] = false
             writeMotorenStop() // ganz am Ende
         }
     }
