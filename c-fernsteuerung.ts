@@ -96,7 +96,7 @@ namespace cb2 { // c-fernsteuerung.ts
     // ========== group="10 Fernstarten Hindernis ausweichen" subcategory="Fernsteuerung"
 
     //% group="10 Fernstarten Hindernis ausweichen" subcategory="Fernsteuerung"
-    //% block="Starten wenn %buffer 10 fernstarten && Start Bit %startBit" weight=8
+    //% block="%buffer 10 fernstarten && Start Bit %startBit" weight=8
     //% buffer.shadow=btf_receivedBuffer19
     //% startBit.defl=btf.e3aktiviert.md
     //% blockSetVariable=dauerhaft_Ausweichen

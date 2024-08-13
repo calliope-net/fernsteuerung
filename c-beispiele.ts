@@ -70,8 +70,57 @@ namespace cb2 { // c-beispiele.ts
 
     // ========== group="Abstand Sensor Ereignis" subcategory=Beispiele
 
+    let n_AbstandAusweichen_gestartet = false
+
     //% group="Abstand Sensor Ereignis" subcategory=Beispiele
     //% block="Hindernis ausweichen: Calli:bot | gestartet %gestartet <abstand_Stop> %abstand_Stop Fahren (1↓128↑255) %vMotor Lenken (1↖16↗31) %vServo rückwärts Fahren %rMotor rückwärts Lenken %rServo Pause ⅒s %pause_zs" weight=6
+    //% gestartet.shadow=toggleYesNo
+    //% abstand_Stop.shadow=toggleYesNo
+    //% vMotor.min=1 vMotor.max=255 vMotor.defl=255
+    //% vServo.min=1 vServo.max=31 vServo.defl=16
+    //% rMotor.min=1 rMotor.max=255 rMotor.defl=64
+    //% rServo.min=1 rServo.max=31 rServo.defl=8
+    //% pause_zs.shadow=cb2_zehntelsekunden
+    export function lokalAbstandAusweichen(gestartet: boolean, abstand_Stop: boolean, vMotor: number, vServo: number, rMotor: number, rServo: number, pause_zs: number) {
+        // Block steht im Abstand Sensor Ereignis, das kommt aus der dauerhaft Schleife (Pin-Ereignis nur beim Laser Abstand Sensor)
+        // Parameter abstand_Knopf_A und Sensor Ereignis <abstand_Stop>
+        if (gestartet) {
+
+            if (vServo == 0)
+                vServo = zufallServo16(1, 5, 27, 31)
+            if (rServo == 0)
+                rServo = zufallServo16(1, 5, 27, 31)
+
+            //beispielAbstandAusweichen(
+            //    n_AbstandAusweichen_gestartet, abstand_Stop,
+            //    vMotor, vServo, rMotor, rServo, pause_zs
+            //)
+
+            if (!n_AbstandAusweichen_gestartet) // ganz am Anfang
+                writeMotor128Servo16(vMotor, vServo)
+
+            btf.reset_timer()
+
+            if (abstand_Stop) { // Sensor Ereignis Abstand zu klein - rückwärts
+                writeMotor128Servo16(rMotor, rServo)
+            }
+            else { // Sensor Ereignis Abstand wieder groß - vorwärts
+                basic.pause(pause_zs * 100)
+                writeMotor128Servo16(vMotor, vServo) // ganz am Ende
+            }
+
+
+            n_AbstandAusweichen_gestartet = true
+        }
+        else if (n_AbstandAusweichen_gestartet) {
+            n_AbstandAusweichen_gestartet = false
+            writeMotorenStop()
+        }
+    }
+
+
+    //% group="Abstand Sensor Ereignis" subcategory=Beispiele
+    //% block="--Hindernis ausweichen: Calli:bot | gestartet %gestartet <abstand_Stop> %abstand_Stop Fahren (1↓128↑255) %vMotor Lenken (1↖16↗31) %vServo rückwärts Fahren %rMotor rückwärts Lenken %rServo Pause ⅒s %pause_zs" weight=6
     //% gestartet.shadow=toggleYesNo
     //% abstand_Stop.shadow=toggleYesNo
     //% vMotor.min=1 vMotor.max=255 vMotor.defl=255
