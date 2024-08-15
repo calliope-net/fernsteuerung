@@ -114,7 +114,7 @@ namespace cb2 { // c-fernsteuerung.ts
     //% inlineInputMode=inline
     export function buffer_Spur_folgen(spur_folgen: boolean, links_hell: boolean, rechts_hell: boolean, abstand_Stop: boolean, buffer: Buffer) {
         if (buffer)
-            eventSpurfolger(spur_folgen, links_hell, rechts_hell, abstand_Stop,
+            event_Spur_folgen(spur_folgen, links_hell, rechts_hell, abstand_Stop,
                 btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b0_Motor),
                 btf.getByte(buffer, btf.eBufferPointer.md, btf.eBufferOffset.b0_Motor),
                 btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b1_Servo),
@@ -133,10 +133,10 @@ namespace cb2 { // c-fernsteuerung.ts
     //% buffer.shadow=btf_receivedBuffer19
     //% startBit.defl=btf.e3aktiviert.md
     //% blockSetVariable=dauerhaft_Ausweichen
-    export function set_AbstandAusweichen(buffer: Buffer, startBit: btf.e3aktiviert) {
+    /* export function set_AbstandAusweichen(buffer: Buffer, startBit: btf.e3aktiviert) {
         // Block (SetVariable) steht in Bluetooth receivedData
         return btf.isBetriebsart(buffer, btf.e0Betriebsart.p1Lokal) && btf.getaktiviert(buffer, startBit)
-    }
+    } */
 
     //% group="10 Fernstarten Hindernis ausweichen" subcategory="Fernsteuerung"
     //% block="%buffer 10 fernstarten && Start Bit %startBit" weight=8
@@ -157,7 +157,7 @@ namespace cb2 { // c-fernsteuerung.ts
         // Block steht im Abstand Sensor Ereignis, das kommt aus der dauerhaft Schleife (Pin-Ereignis nur beim Laser Abstand Sensor)
         // Parameter blockSetVariable=<dauerhaft_Ausweichen> und Sensor Ereignis <abstand_Stop>
         if (buffer) {
-            eventAbstandAusweichen(
+            event_Hindernis_ausweichen(
                 hindernis_ausweichen,
                 abstand_Stop,
                 btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b0_Motor), // MC vorwärts gerade
@@ -174,11 +174,11 @@ namespace cb2 { // c-fernsteuerung.ts
     // let n_AbstandAusweichen_gestartet = false
 
     //% group="10 Fernstarten Hindernis ausweichen" subcategory="Fernsteuerung"
-    //% block="10 <dauerhaft_Ausweichen> %dauerhaft_Ausweichen <abstand_Stop> %abstand_Stop (MS:CD) aus %buffer" weight=7
+    //% block="--10 <dauerhaft_Ausweichen> %dauerhaft_Ausweichen <abstand_Stop> %abstand_Stop (MS:CD) aus %buffer" weight=7
     //% dauerhaft_Ausweichen.shadow="toggleYesNo"
     //% abstand_Stop.shadow="toggleYesNo"
     //% buffer.shadow=btf_receivedBuffer19
-    export function dauerhaft_AbstandAusweichen(dauerhaft_Ausweichen: boolean, abstand_Stop: boolean, buffer: Buffer) {
+ /*    export function dauerhaft_AbstandAusweichen(dauerhaft_Ausweichen: boolean, abstand_Stop: boolean, buffer: Buffer) {
         // Block steht im Abstand Sensor Ereignis, das kommt aus der dauerhaft Schleife (Pin-Ereignis nur beim Laser Abstand Sensor)
         // Parameter blockSetVariable=<dauerhaft_Ausweichen> und Sensor Ereignis <abstand_Stop>
         if (buffer) {
@@ -192,7 +192,7 @@ namespace cb2 { // c-fernsteuerung.ts
                 btf.getByte(buffer, btf.eBufferPointer.md, btf.eBufferOffset.b2_Fahrstrecke), // Pause Zehntelsekunden 10zs=1000ms
                 1
             )
-        }
+        } */
         /* 
         
                 if (dauerhaft_Ausweichen && buffer) {
@@ -217,7 +217,7 @@ namespace cb2 { // c-fernsteuerung.ts
                     writeMotorenStop()
                 } */
 
-    }
+  /*   } */
 
 
 
