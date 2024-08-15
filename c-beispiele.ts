@@ -3,7 +3,63 @@ namespace cb2 { // c-beispiele.ts
 
     // ========== subcategory=Beispiele
 
-    // ========== group="1 Spurfolger (1 ↓ 128 ↑ 255) (1 ↖ 16 ↗ 31)" subcategory=Beispiele
+
+
+    // ========== group="Abstand Sensor Ereignis" subcategory=Beispiele
+
+    let a_AbstandAusweichen_gestartet: boolean[] = [false, false] // index 0=block, 1=buffer in c-fernsteuerung.ts
+
+    //% group="Abstand Sensor Ereignis" subcategory=Beispiele
+    //% block="Hindernis ausweichen: Calli:bot | gestartet %gestartet <abstand_Stop> %abstand_Stop Fahren (1↓128↑255) %vMotor Lenken (1↖16↗31) %vServo rückwärts Fahren %rMotor rückwärts Lenken %rServo rückwärts Lenken (0) = Zufall | Pause ⅒s %pause_zs" weight=6
+    //% gestartet.shadow=toggleYesNo
+    // abstand_Stop.shadow=toggleYesNo
+    //% vMotor.min=1 vMotor.max=255 vMotor.defl=255
+    //% vServo.min=1 vServo.max=31 vServo.defl=16
+    //% rMotor.min=1 rMotor.max=255 rMotor.defl=64
+    //% rServo.min=1 rServo.max=31 rServo.defl=0
+    //% pause_zs.shadow=cb2_zehntelsekunden
+    export function eventAbstandAusweichen(gestartet: boolean, abstand_Stop: boolean, vMotor: number, vServo: number, rMotor: number, rServo: number, pause_zs: number, index = 0) {
+        // Block steht im Abstand Sensor Ereignis, das kommt aus der dauerhaft Schleife (Pin-Ereignis nur beim Laser Abstand Sensor)
+        // Parameter abstand_Knopf_A und Sensor Ereignis <abstand_Stop>
+        if (gestartet) {
+          
+            btf.reset_timer()
+          
+            if (abstand_Stop) { // Sensor Ereignis Abstand zu klein - rückwärts
+                writeMotor128Servo16(rMotor, (rServo == 0) ? zufallServo16(1, 5, 27, 31) : rServo)
+            }
+            else { // Sensor Ereignis Abstand wieder groß - vorwärts
+                basic.pause(pause_zs * 100)
+                writeMotor128Servo16(vMotor, (vServo == 0) ? 16 : vServo)
+            }
+            a_AbstandAusweichen_gestartet[index] = true
+        }
+        else if (a_AbstandAusweichen_gestartet[index]) {
+            a_AbstandAusweichen_gestartet[index] = false
+            writeMotorenStop() // ganz am Ende
+        }
+    }
+
+    //% group="Abstand Sensor Ereignis" subcategory=Beispiele
+    //% block="Zufall Lenken (1↖16↗31) links %lvon - %lbis • rechts %rvon - %rbis || • l-r %lr" weight=5
+    //% lvon.min=1 lvon.max=15 lvon.defl=1
+    //% lbis.min=1 lbis.max=15 lbis.defl=5
+    //% rvon.min=17 rvon.max=31 rvon.defl=27
+    //% rbis.min=17 rbis.max=31 rbis.defl=31
+    //% lr.shadow=btf_randomBoolean
+    //% inlineInputMode=inline
+    export function zufallServo16(lvon = 1, lbis = 5, rvon = 27, rbis = 31, lr?: boolean) {
+        if (lr == undefined)
+            lr = Math.randomBoolean() // btf.btf_randomBoolean()
+        if (lr)
+            return randint(lvon, lbis)
+        else
+            return randint(rvon, rbis)
+    }
+
+
+
+    // ========== group="Spur Sensor Ereignis" subcategory=Beispiele
 
     let a_eventSpurfolger_gestartet: boolean[] = [false, false] // index 0=block, 1=buffer in c-fernsteuerung.ts
 
@@ -140,10 +196,10 @@ namespace cb2 { // c-beispiele.ts
 
     // ========== group="Abstand Sensor Ereignis" subcategory=Beispiele
 
-    let a_AbstandAusweichen_gestartet: boolean[] = [false, false] // index 0=block, 1=buffer in c-fernsteuerung.ts
+ //   let a_AbstandAusweichen_gestartet: boolean[] = [false, false] // index 0=block, 1=buffer in c-fernsteuerung.ts
 
     //% group="Abstand Sensor Ereignis" subcategory=Beispiele
-    //% block="Hindernis ausweichen: Calli:bot | gestartet %gestartet <abstand_Stop> %abstand_Stop Fahren (1↓128↑255) %vMotor Lenken (1↖16↗31) %vServo rückwärts Fahren %rMotor rückwärts Lenken %rServo rückwärts Lenken (0) = Zufall | Pause ⅒s %pause_zs" weight=6
+    //% block="--Hindernis ausweichen: Calli:bot | gestartet %gestartet <abstand_Stop> %abstand_Stop Fahren (1↓128↑255) %vMotor Lenken (1↖16↗31) %vServo rückwärts Fahren %rMotor rückwärts Lenken %rServo rückwärts Lenken (0) = Zufall | Pause ⅒s %pause_zs" weight=3
     //% gestartet.shadow=toggleYesNo
     // abstand_Stop.shadow=toggleYesNo
     //% vMotor.min=1 vMotor.max=255 vMotor.defl=255
@@ -215,24 +271,6 @@ namespace cb2 { // c-beispiele.ts
         //}
 
     } */
-
-    //% group="Abstand Sensor Ereignis" subcategory=Beispiele
-    //% block="Zufall Lenken (1↖16↗31) links %lvon - %lbis • rechts %rvon - %rbis || • l-r %lr" weight=5
-    //% lvon.min=1 lvon.max=15 lvon.defl=1
-    //% lbis.min=1 lbis.max=15 lbis.defl=5
-    //% rvon.min=17 rvon.max=31 rvon.defl=27
-    //% rbis.min=17 rbis.max=31 rbis.defl=31
-    //% lr.shadow=btf_randomBoolean
-    //% inlineInputMode=inline
-    export function zufallServo16(lvon = 1, lbis = 5, rvon = 27, rbis = 31, lr?: boolean) {
-        if (lr == undefined)
-            lr = Math.randomBoolean() // btf.btf_randomBoolean()
-        if (lr)
-            return randint(lvon, lbis)
-        else
-            return randint(rvon, rbis)
-    }
-
 
 
     /* // ========== ARCHIV aus der Anleitung
