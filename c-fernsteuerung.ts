@@ -52,8 +52,8 @@ namespace cb2 { // c-fernsteuerung.ts
 
     // ========== group="10 Fernstarten Spurfolger" subcategory="Fernsteuerung"
 
-    //% group="10 Fernstarten Spurfolger" subcategory="Fernsteuerung"
-    //% block="%buffer 10 fernstarten && Start Bit %startBit" weight=8
+    //% group="10 Fernstarten Spur folgen" subcategory="Fernsteuerung"
+    //% block="--%buffer 10 fernstarten && Start Bit %startBit" weight=8
     //% buffer.shadow=btf_receivedBuffer19
     //% startBit.defl=btf.e3aktiviert.mc
     //% blockSetVariable=dauerhaft_Spurfolger
@@ -62,11 +62,23 @@ namespace cb2 { // c-fernsteuerung.ts
         return btf.isBetriebsart(buffer, btf.e0Betriebsart.p1Lokal) && btf.getaktiviert(buffer, startBit)
     }
 
+    //% group="10 Fernstarten Spur folgen" subcategory="Fernsteuerung"
+    //% block="%buffer 10 fernstarten && Start Bit %startBit" weight=8
+    //% buffer.shadow=btf_receivedBuffer19
+    //% startBit.defl=btf.e3aktiviert.mc
+    //% blockSetVariable=Spur_folgen
+    export function setSpur_folgen(buffer: Buffer, startBit: btf.e3aktiviert) {
+        // Block (SetVariable) steht in Bluetooth receivedData
+        return btf.isBetriebsart(buffer, btf.e0Betriebsart.p1Lokal) && btf.getaktiviert(buffer, startBit)
+    }
+
+
+
     let n_spurfolgerBuffer_repeat = false
 
-    //% group="10 Fernstarten Spurfolger" subcategory="Fernsteuerung"
-    //% block="10 <dauerhaft_Spurfolger> %dauerhaft_Spurfolger (MS:CD) aus %buffer • I²C Spursensor %i2c" weight=7
-    //% dauerhaft_Spurfolger.shadow="toggleYesNo"
+    //% group="10 Fernstarten Spur folgen" subcategory="Fernsteuerung"
+    //% block="--10 <dauerhaft_Spurfolger> %dauerhaft_Spurfolger (MS:CD) aus %buffer • I²C Spursensor %i2c" weight=7
+    //% dauerhaft_Spurfolger.shadow=toggleOnOff
     //% buffer.shadow=btf_receivedBuffer19
     export function dauerhaft_SpurfolgerBuffer(dauerhaft_Spurfolger: boolean, buffer: Buffer, i2cSpur: eI2C) {
         // Block steht in dauerhaft Schleife
@@ -92,6 +104,27 @@ namespace cb2 { // c-fernsteuerung.ts
     }
 
 
+    //% group="10 Fernstarten Spur folgen" subcategory="Fernsteuerung"
+    //% block="10 <Spur_folgen> %spur_folgen <links_hell> %links_hell <rechts_hell> %rechts_hell <abstand_Stop> %abstand_Stop (MS:CD) aus %buffer" weight=7
+    //% dauerhaft_Spurfolger.shadow=toggleOnOff
+    // links_hell.shadow=toggleYesNo
+    // rechts_hell.shadow=toggleYesNo
+    // abstand_Stop.shadow=toggleYesNo
+    //% buffer.shadow=btf_receivedBuffer19
+    //% inlineInputMode=inline
+    export function eventSpurfolgerBuffer(spur_folgen: boolean, links_hell: boolean, rechts_hell: boolean, abstand_Stop: boolean, buffer: Buffer) {
+        if (buffer)
+            eventSpurfolger(spur_folgen, links_hell, rechts_hell, abstand_Stop,
+                btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b0_Motor),
+                btf.getByte(buffer, btf.eBufferPointer.md, btf.eBufferOffset.b0_Motor),
+                btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b1_Servo),
+                btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b2_Fahrstrecke),
+                btf.getSensor(buffer, btf.eBufferPointer.mc, btf.eSensor.b6Abstand),
+                btf.getAbstand(buffer),
+                1
+            )
+    }
+
 
     // ========== group="10 Fernstarten Hindernis ausweichen" subcategory="Fernsteuerung"
 
@@ -106,7 +139,7 @@ namespace cb2 { // c-fernsteuerung.ts
     }
 
 
-   // let n_AbstandAusweichen_gestartet = false
+    // let n_AbstandAusweichen_gestartet = false
 
     //% group="10 Fernstarten Hindernis ausweichen" subcategory="Fernsteuerung"
     //% block="10 <dauerhaft_Ausweichen> %dauerhaft_Ausweichen <abstand_Stop> %abstand_Stop (MS:CD) aus %buffer" weight=7
