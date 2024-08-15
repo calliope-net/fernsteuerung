@@ -2,7 +2,7 @@
 namespace cb2 { // c-sensorevents.ts
 
 
-    let onSpurEventHandler: (links: boolean, rechts: boolean) => void
+    let onSpurEventHandler: (links_hell: boolean, rechts_hell: boolean) => void
     let n_raiseSpurEvent_gestartet = false
     let n_SpurTimer = input.runningTime()
     let n_Spur = 0 // letzter Status
@@ -21,17 +21,28 @@ namespace cb2 { // c-sensorevents.ts
             let spur = readInputs(i2c)[0] & 0b11
 
             if (n_Spur != spur || !n_raiseSpurEvent_gestartet) { // bei Änderung oder beim ersten Mal - ganz am Anfang
-                n_Spur = spur
-                if (onSpurEventHandler)
-                    onSpurEventHandler((n_Spur & 0b10) == 0b10, (n_Spur & 0b01) == 0b01)
+                //n_Spur = spur
+                spurEventHandler(n_Spur)
+                //if (onSpurEventHandler)
+                //    onSpurEventHandler((n_Spur & 0b10) == 0b10, (n_Spur & 0b01) == 0b01)
             }
             n_raiseSpurEvent_gestartet = true
         }
         else if (n_raiseSpurEvent_gestartet) {
             n_raiseSpurEvent_gestartet = false
-            if (onSpurEventHandler)
-                onSpurEventHandler((n_Spur & 0b10) == 0b10, (n_Spur & 0b01) == 0b01) // ganz am Ende
+            spurEventHandler(n_Spur)
+            //if (onSpurEventHandler)
+            //    onSpurEventHandler((n_Spur & 0b10) == 0b10, (n_Spur & 0b01) == 0b01) // ganz am Ende
         }
+    }
+
+    function spurEventHandler(spur: number) {
+        n_Spur = spur
+        if (onSpurEventHandler)
+            onSpurEventHandler((n_Spur & 0b10) == 0b10, (n_Spur & 0b01) == 0b01)
+        if (onSensorEventHandler)
+            onSensorEventHandler((n_Spur & 0b10) == 0b10, (n_Spur & 0b01) == 0b01, n_AbstandStop, 0)
+        //onSensorEventHandler(links_hell, rechts_hell, n_AbstandStop, 0)
     }
 
     //% group="Spur Sensor" subcategory="Sensoren"
@@ -87,6 +98,8 @@ namespace cb2 { // c-sensorevents.ts
         n_AbstandStop = abstand_Stop
         if (onAbstandEventHandler)
             onAbstandEventHandler(n_AbstandStop, cm)
+        if (onSensorEventHandler)
+            onSensorEventHandler((n_Spur & 0b10) == 0b10, (n_Spur & 0b01) == 0b01, n_AbstandStop, cm)
     }
 
 
@@ -99,12 +112,14 @@ namespace cb2 { // c-sensorevents.ts
 
 
 
-    // group="Ultraschall Sensor" subcategory="Sensoren"
-    // block="--wenn Abstand Sensor Ereignis" weight=4
-    // draggableParameters=reporter
-    //export function onStopEvent(cb: (abstand_Stop: boolean, cm: number) => void) {
-    //    onAbstandEventHandler = cb
-    //}
+    let onSensorEventHandler: (links_hell: boolean, rechts_hell: boolean, abstand_Stop: boolean, cm: number) => void
+
+    //% group="Ultraschall Sensor" subcategory="Sensoren"
+    //% block="wenn Sensor Ereignis" weight=3
+    //% draggableParameters=reporter
+    export function onSensorEvent(cb: (links_hell: boolean, rechts_hell: boolean, abstand_Stop: boolean, cm: number) => void) {
+        onSensorEventHandler = cb
+    }
 
 
 } // c-sensorevents.ts
