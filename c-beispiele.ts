@@ -10,15 +10,18 @@ namespace cb2 { // c-beispiele.ts
     let m_lenken: number
     let m_inSpur = false
 
-    //% group="Spurfolger Ereignis" subcategory=Beispiele
+    //% group="Spur Sensor Ereignis" subcategory=Beispiele
     //% block="Spurfolger: Calli:bot | gestartet %gestartet <links_hell> %links_hell <rechts_hell> %rechts_hell <abstand_Stop> %abstand_Stop Fahren (1↓128↑255) %motor128 langsam Fahren %motorLenken Lenken (1↖16↗31) %servo16 lenkender Motor \\% %lenkenProzent Abstand Sensor %abstandSensor bei Abstand < (cm) %abstand" weight=6
+    //% gestartet.shadow=toggleYesNo
+    // links_hell.shadow=toggleYesNo
+    // rechts_hell.shadow=toggleYesNo
+    // abstand_Stop.shadow=toggleYesNo
     //% motor128.min=1 motor128.max=255 motor128.defl=192
+    //% motorLenken.min=1 motorLenken.max=255 motorLenken.defl=160
     //% servo16.min=1 servo16.max=31 servo16.defl=31
-    //% langsamfahren.min=1 langsamfahren.max=255 langsamfahren.defl=160
     //% lenkenProzent.min=10 lenkenProzent.max=90 lenkenProzent.defl=0
-    //% repeat.shadow="toggleYesNo" repeat.defl=1
-    //% stop.shadow=toggleOnOff stop.defl=1
-    //% abstand.min=10 abstand.max=50 abstand.defl=20
+    //% abstandSensor.shadow=toggleOnOff abstandSensor.defl=1
+    //% abstand.min=10 abstand.max=50 abstand.defl=30
     export function eventSpurfolger(gestartet: boolean, links_hell: boolean, rechts_hell: boolean, abstand_Stop: boolean, motor128: number, motorLenken: number, servo16: number, lenkenProzent: number, abstandSensor: boolean, abstand: number, index = 0) {
         if (gestartet) {
 
@@ -142,7 +145,7 @@ namespace cb2 { // c-beispiele.ts
     //% group="Abstand Sensor Ereignis" subcategory=Beispiele
     //% block="Hindernis ausweichen: Calli:bot | gestartet %gestartet <abstand_Stop> %abstand_Stop Fahren (1↓128↑255) %vMotor Lenken (1↖16↗31) %vServo rückwärts Fahren %rMotor rückwärts Lenken %rServo rückwärts Lenken (0) = Zufall | Pause ⅒s %pause_zs" weight=6
     //% gestartet.shadow=toggleYesNo
-    //% abstand_Stop.shadow=toggleYesNo
+    // abstand_Stop.shadow=toggleYesNo
     //% vMotor.min=1 vMotor.max=255 vMotor.defl=255
     //% vServo.min=1 vServo.max=31 vServo.defl=16
     //% rMotor.min=1 rMotor.max=255 rMotor.defl=64
