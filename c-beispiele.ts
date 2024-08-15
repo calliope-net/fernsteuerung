@@ -51,7 +51,7 @@ namespace cb2 { // c-beispiele.ts
     //% rMotor.min=1 rMotor.max=255 rMotor.defl=64
     //% rServo.min=1 rServo.max=31 rServo.defl=0
     //% pause_zs.shadow=cb2_zehntelsekunden
-    export function eventAbstandAusweichen(gestartet: boolean, abstand_Stop: boolean, vMotor: number, vServo: number, rMotor: number, rServo: number, pause_zs: number, index = 0) {
+    /* export function eventAbstandAusweichen(gestartet: boolean, abstand_Stop: boolean, vMotor: number, vServo: number, rMotor: number, rServo: number, pause_zs: number, index = 0) {
         // Block steht im Abstand Sensor Ereignis, das kommt aus der dauerhaft Schleife (Pin-Ereignis nur beim Laser Abstand Sensor)
         // Parameter abstand_Knopf_A und Sensor Ereignis <abstand_Stop>
         if (gestartet) {
@@ -71,7 +71,7 @@ namespace cb2 { // c-beispiele.ts
             a_AbstandAusweichen_gestartet[index] = false
             writeMotorenStop() // ganz am Ende
         }
-    }
+    } */
 
     //% group="Abstand Sensor Ereignis" subcategory=Beispiele
     //% block="Zufall Lenken (1↖16↗31) links %lvon - %lbis • rechts %rvon - %rbis || • l-r %lr" weight=5
@@ -181,7 +181,7 @@ namespace cb2 { // c-beispiele.ts
     //% lenkenProzent.min=10 lenkenProzent.max=90 lenkenProzent.defl=0
     //% abstandSensor.shadow=toggleOnOff abstandSensor.defl=1
     //% abstand.min=10 abstand.max=50 abstand.defl=30
-    export function eventSpurfolger(gestartet: boolean, links_hell: boolean, rechts_hell: boolean, abstand_Stop: boolean, motor128: number, motorLenken: number, servo16: number, lenkenProzent: number, abstandSensor: boolean, abstand: number, index = 0) {
+    /* export function eventSpurfolger(gestartet: boolean, links_hell: boolean, rechts_hell: boolean, abstand_Stop: boolean, motor128: number, motorLenken: number, servo16: number, lenkenProzent: number, abstandSensor: boolean, abstand: number, index = 0) {
         if (gestartet) {
 
             btf.reset_timer()
@@ -235,7 +235,7 @@ namespace cb2 { // c-beispiele.ts
             writeMotorenStop() // ganz am Ende
             writecb2RgbLed(eRgbLed.lh, Colors.Yellow, false)
         }
-    }
+    } */
 
 
     //% group="Spurfolger" subcategory=Beispiele
