@@ -11,18 +11,18 @@ namespace cb2 { // c-beispiele.ts
 
 
     //% group="Abstand Sensor Ereignis" subcategory=Beispiele
-    //% block="Hindernis ausweichen: Calli:bot | gestartet %gestartet <abstand_Stop> %abstand_Stop Fahren (1↓128↑255) %vMotor Lenken (1↖16↗31) %vServo rückwärts Fahren %rMotor rückwärts Lenken %rServo rückwärts Lenken (0) = Zufall | Pause ⅒s %pause_zs" weight=6
-    //% gestartet.shadow=toggleYesNo
+    //% block="Hindernis ausweichen: Calli:bot | gestartet %hindernis_ausweichen <abstand_Stop> %abstand_Stop Fahren (1↓128↑255) %vMotor Lenken (1↖16↗31) %vServo rückwärts Fahren %rMotor rückwärts Lenken %rServo rückwärts Lenken (0) = Zufall | Pause ⅒s %pause_zs" weight=6
+    //% hindernis_ausweichen.shadow=toggleOnOff
     // abstand_Stop.shadow=toggleYesNo
     //% vMotor.min=1 vMotor.max=255 vMotor.defl=255
     //% vServo.min=1 vServo.max=31 vServo.defl=16
     //% rMotor.min=1 rMotor.max=255 rMotor.defl=64
     //% rServo.min=1 rServo.max=31 rServo.defl=0
     //% pause_zs.shadow=cb2_zehntelsekunden
-    export function event_Hindernis_ausweichen(gestartet: boolean, abstand_Stop: boolean, vMotor: number, vServo: number, rMotor: number, rServo: number, pause_zs: number, index = 0) {
+    export function event_Hindernis_ausweichen(hindernis_ausweichen: boolean, abstand_Stop: boolean, vMotor: number, vServo: number, rMotor: number, rServo: number, pause_zs: number, index = 0) {
         // Block steht im Abstand Sensor Ereignis, das kommt aus der dauerhaft Schleife (Pin-Ereignis nur beim Laser Abstand Sensor)
         // Parameter abstand_Knopf_A und Sensor Ereignis <abstand_Stop>
-        if (gestartet) {
+        if (hindernis_ausweichen) {
 
             btf.reset_timer()
 
@@ -101,8 +101,8 @@ namespace cb2 { // c-beispiele.ts
 
 
     //% group="Spur Sensor Ereignis" subcategory=Beispiele
-    //% block="Spur folgen: Calli:bot | gestartet %gestartet <links_hell> %links_hell <rechts_hell> %rechts_hell <abstand_Stop> %abstand_Stop Fahren (1↓128↑255) %motor128 langsam Fahren %motorLenken Lenken (1↖16↗31) %servo16 lenkender Motor \\% %lenkenProzent Abstand Sensor %abstandSensor bei Abstand < (cm) %abstand" weight=6
-    //% gestartet.shadow=toggleYesNo
+    //% block="Spur folgen: Calli:bot | gestartet %spur_folgen <links_hell> %links_hell <rechts_hell> %rechts_hell <abstand_Stop> %abstand_Stop Fahren (1↓128↑255) %motor128 langsam Fahren %motorLenken Lenken (1↖16↗31) %servo16 lenkender Motor \\% %lenkenProzent Abstand Sensor %abstandSensor bei Abstand < (cm) %abstand" weight=6
+    //% spur_folgen.shadow=toggleOnOff
     // links_hell.shadow=toggleYesNo
     // rechts_hell.shadow=toggleYesNo
     // abstand_Stop.shadow=toggleYesNo
@@ -112,8 +112,8 @@ namespace cb2 { // c-beispiele.ts
     //% lenkenProzent.min=10 lenkenProzent.max=90 lenkenProzent.defl=0
     //% abstandSensor.shadow=toggleOnOff abstandSensor.defl=1
     //% abstand.min=10 abstand.max=50 abstand.defl=30
-    export function event_Spur_folgen(gestartet: boolean, links_hell: boolean, rechts_hell: boolean, abstand_Stop: boolean, motor128: number, motorLenken: number, servo16: number, lenkenProzent: number, abstandSensor: boolean, abstand: number, index = 0) {
-        if (gestartet) {
+    export function event_Spur_folgen(spur_folgen: boolean, links_hell: boolean, rechts_hell: boolean, abstand_Stop: boolean, motor128: number, motorLenken: number, servo16: number, lenkenProzent: number, abstandSensor: boolean, abstand: number, index = 0) {
+        if (spur_folgen) {
 
             btf.reset_timer()
 
