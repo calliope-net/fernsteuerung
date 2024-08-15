@@ -117,7 +117,7 @@ namespace cb2 { // c-fernsteuerung.ts
         // Block steht im Abstand Sensor Ereignis, das kommt aus der dauerhaft Schleife (Pin-Ereignis nur beim Laser Abstand Sensor)
         // Parameter blockSetVariable=<dauerhaft_Ausweichen> und Sensor Ereignis <abstand_Stop>
         if (buffer) {
-            lokalAbstandAusweichen(
+            eventAbstandAusweichen(
                 dauerhaft_Ausweichen,
                 abstand_Stop,
                 btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b0_Motor), // MC vorwärts gerade
