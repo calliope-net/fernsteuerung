@@ -101,7 +101,7 @@ namespace cb2 { // c-beispiele.ts
 
 
     //% group="Spur Sensor Ereignis" subcategory=Beispiele
-    //% block="Spur folgen: Calli:bot | gestartet %spur_folgen <links_hell> %links_hell <rechts_hell> %rechts_hell <abstand_Stop> %abstand_Stop Fahren (1↓128↑255) %motor128 langsam Fahren %motorLenken Lenken (1↖16↗31) %servo16 lenkender Motor \\% %lenkenProzent Abstand Sensor %abstandSensor bei Abstand < (cm) %abstand" weight=6
+    //% block="Spur folgen: Calli:bot | gestartet %spur_folgen <links_hell> %links_hell <rechts_hell> %rechts_hell <abstand_Stop> %abstand_Stop Fahren (1↓128↑255) %motor128 langsam Fahren %motorLenken Lenken (1↖16↗31) %servo16 lenkender Motor \\% %lenkenProzent Abstand Sensor %abstandSensor %index" weight=6
     //% spur_folgen.shadow=toggleOnOff
     // links_hell.shadow=toggleYesNo
     // rechts_hell.shadow=toggleYesNo
@@ -111,8 +111,8 @@ namespace cb2 { // c-beispiele.ts
     //% servo16.min=1 servo16.max=31 servo16.defl=31
     //% lenkenProzent.min=10 lenkenProzent.max=90 lenkenProzent.defl=0
     //% abstandSensor.shadow=toggleOnOff abstandSensor.defl=1
-    //% abstand.min=10 abstand.max=50 abstand.defl=30
-    export function event_Spur_folgen(spur_folgen: boolean, links_hell: boolean, rechts_hell: boolean, abstand_Stop: boolean, motor128: number, motorLenken: number, servo16: number, lenkenProzent: number, abstandSensor: boolean, abstand: number, index = 0) {
+    // abstand.min=10 abstand.max=50 abstand.defl=30
+    export function event_Spur_folgen(spur_folgen: boolean, links_hell: boolean, rechts_hell: boolean, abstand_Stop: boolean, motor128: number, motorLenken: number, servo16: number, lenkenProzent: number, abstandSensor: boolean, index = 0, abstand?: number) {
         if (spur_folgen) {
 
             btf.reset_timer()
@@ -123,7 +123,7 @@ namespace cb2 { // c-beispiele.ts
                 writecb2RgbLeds(Colors.Off, false) // alle 4 aus
             }
 
-            if (abstandSensor && abstand > 0 && abstand_Stop) {
+            if (abstandSensor && abstand_Stop) {
                 writeMotorenStop()
                 writecb2RgbLed(eRgbLed.lh, Colors.Red, true)
                 basic.pause(Math.randomRange(500, 5000)) // 0.5 .. 5 Sekunden warten bis es wieder los fährt
