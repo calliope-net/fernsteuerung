@@ -67,7 +67,7 @@ namespace cb2 { // c-fernsteuerung.ts
     //% buffer.shadow=btf_receivedBuffer19
     //% startBit.defl=btf.e3aktiviert.mc
     //% blockSetVariable=Spur_folgen
-    export function setSpur_folgen(buffer: Buffer, startBit: btf.e3aktiviert) {
+    export function set_Spur_folgen(buffer: Buffer, startBit: btf.e3aktiviert) {
         // Block (SetVariable) steht in Bluetooth receivedData
         return btf.isBetriebsart(buffer, btf.e0Betriebsart.p1Lokal) && btf.getaktiviert(buffer, startBit)
     }
@@ -112,7 +112,7 @@ namespace cb2 { // c-fernsteuerung.ts
     // abstand_Stop.shadow=toggleYesNo
     //% buffer.shadow=btf_receivedBuffer19
     //% inlineInputMode=inline
-    export function eventSpurfolgerBuffer(spur_folgen: boolean, links_hell: boolean, rechts_hell: boolean, abstand_Stop: boolean, buffer: Buffer) {
+    export function buffer_Spur_folgen(spur_folgen: boolean, links_hell: boolean, rechts_hell: boolean, abstand_Stop: boolean, buffer: Buffer) {
         if (buffer)
             eventSpurfolger(spur_folgen, links_hell, rechts_hell, abstand_Stop,
                 btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b0_Motor),
