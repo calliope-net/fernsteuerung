@@ -11,7 +11,7 @@ namespace cb2 { // c-beispiele.ts
 
 
     //% group="Abstand Sensor Ereignis" subcategory=Beispiele
-    //% block="Hindernis ausweichen: Calli:bot | gestartet %hindernis_ausweichen <abstand_Stop> %abstand_Stop Fahren (1↓128↑255) %vMotor Lenken (1↖16↗31) %vServo rückwärts Fahren %rMotor rückwärts Lenken %rServo rückwärts Lenken (0) = Zufall | Pause ⅒s %pause_zs || %index" weight=6
+    //% block="Hindernis ausweichen: Calli:bot | gestartet %hindernis_ausweichen <abstand_Stop> %abstand_Stop Fahren (1↓128↑255) %vMotor Lenken (1↖16↗31) %vServo rückwärts Fahren %rMotor rückwärts Lenken %rServo rückwärts Lenken (0) = Zufall | Pause ⅒s %pause_zs" weight=6
     //% hindernis_ausweichen.shadow=toggleOnOff
     // abstand_Stop.shadow=toggleYesNo
     //% vMotor.min=1 vMotor.max=255 vMotor.defl=255
