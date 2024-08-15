@@ -120,7 +120,6 @@ namespace cb2 { // c-fernsteuerung.ts
                 btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b1_Servo),
                 btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b2_Fahrstrecke),
                 btf.getSensor(buffer, btf.eBufferPointer.mc, btf.eSensor.b6Abstand),
-                btf.getAbstand(buffer),
                 1
             )
     }

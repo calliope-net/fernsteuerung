@@ -112,7 +112,7 @@ namespace cb2 { // c-beispiele.ts
     //% lenkenProzent.min=10 lenkenProzent.max=90 lenkenProzent.defl=0
     //% abstandSensor.shadow=toggleOnOff abstandSensor.defl=1
     // abstand.min=10 abstand.max=50 abstand.defl=30
-    export function event_Spur_folgen(spur_folgen: boolean, links_hell: boolean, rechts_hell: boolean, abstand_Stop: boolean, motor128: number, motorLenken: number, servo16: number, lenkenProzent: number, abstandSensor: boolean, index = 0, abstand?: number) {
+    export function event_Spur_folgen(spur_folgen: boolean, links_hell: boolean, rechts_hell: boolean, abstand_Stop: boolean, motor128: number, motorLenken: number, servo16: number, lenkenProzent: number, abstandSensor: boolean, index = 0) {
         if (spur_folgen) {
 
             btf.reset_timer()
