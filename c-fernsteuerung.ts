@@ -57,10 +57,10 @@ namespace cb2 { // c-fernsteuerung.ts
     //% buffer.shadow=btf_receivedBuffer19
     //% startBit.defl=btf.e3aktiviert.mc
     //% blockSetVariable=dauerhaft_Spurfolger
-    export function set_dauerhaft_Spurfolger(buffer: Buffer, startBit: btf.e3aktiviert) {
+    /* export function set_dauerhaft_Spurfolger(buffer: Buffer, startBit: btf.e3aktiviert) {
         // Block (SetVariable) steht in Bluetooth receivedData
         return btf.isBetriebsart(buffer, btf.e0Betriebsart.p1Lokal) && btf.getaktiviert(buffer, startBit)
-    }
+    } */
 
     //% group="10 Fernstarten Spur folgen" subcategory="Fernsteuerung"
     //% block="%buffer 10 fernstarten && Start Bit %startBit" weight=8
@@ -74,13 +74,13 @@ namespace cb2 { // c-fernsteuerung.ts
 
 
 
-    let n_spurfolgerBuffer_repeat = false
+  //  let n_spurfolgerBuffer_repeat = false
 
     //% group="10 Fernstarten Spur folgen" subcategory="Fernsteuerung"
     //% block="--10 <dauerhaft_Spurfolger> %dauerhaft_Spurfolger (MS:CD) aus %buffer • I²C Spursensor %i2c" weight=7
     //% dauerhaft_Spurfolger.shadow=toggleOnOff
     //% buffer.shadow=btf_receivedBuffer19
-    export function dauerhaft_SpurfolgerBuffer(dauerhaft_Spurfolger: boolean, buffer: Buffer, i2cSpur: eI2C) {
+    /* export function dauerhaft_SpurfolgerBuffer(dauerhaft_Spurfolger: boolean, buffer: Buffer, i2cSpur: eI2C) {
         // Block steht in dauerhaft Schleife
         // Parameter blockSetVariable=<dauerhaft_Spurfolger> und Spur-Sensor wird in beispielSpurfolger16 direkt abgefragt (Pins)
         if (dauerhaft_Spurfolger) {
@@ -101,7 +101,7 @@ namespace cb2 { // c-fernsteuerung.ts
             writeMotorenStop()
             writecb2RgbLed(eRgbLed.lh, Colors.Yellow, false)
         }
-    }
+    } */
 
 
     //% group="10 Fernstarten Spur folgen" subcategory="Fernsteuerung"
@@ -129,13 +129,45 @@ namespace cb2 { // c-fernsteuerung.ts
     // ========== group="10 Fernstarten Hindernis ausweichen" subcategory="Fernsteuerung"
 
     //% group="10 Fernstarten Hindernis ausweichen" subcategory="Fernsteuerung"
-    //% block="%buffer 10 fernstarten && Start Bit %startBit" weight=8
+    //% block="--%buffer 10 fernstarten && Start Bit %startBit" weight=8
     //% buffer.shadow=btf_receivedBuffer19
     //% startBit.defl=btf.e3aktiviert.md
     //% blockSetVariable=dauerhaft_Ausweichen
     export function set_AbstandAusweichen(buffer: Buffer, startBit: btf.e3aktiviert) {
         // Block (SetVariable) steht in Bluetooth receivedData
         return btf.isBetriebsart(buffer, btf.e0Betriebsart.p1Lokal) && btf.getaktiviert(buffer, startBit)
+    }
+
+    //% group="10 Fernstarten Hindernis ausweichen" subcategory="Fernsteuerung"
+    //% block="%buffer 10 fernstarten && Start Bit %startBit" weight=8
+    //% buffer.shadow=btf_receivedBuffer19
+    //% startBit.defl=btf.e3aktiviert.md
+    //% blockSetVariable=Hindernis_ausweichen
+    export function set_Hindernis_ausweichen(buffer: Buffer, startBit: btf.e3aktiviert) {
+        // Block (SetVariable) steht in Bluetooth receivedData
+        return btf.isBetriebsart(buffer, btf.e0Betriebsart.p1Lokal) && btf.getaktiviert(buffer, startBit)
+    }
+
+    //% group="10 Fernstarten Hindernis ausweichen" subcategory="Fernsteuerung"
+    //% block="10 <Hindernis_ausweichen> %hindernis_ausweichen <abstand_Stop> %abstand_Stop (MS:CD) aus %buffer" weight=7
+    //% hindernis_ausweichen.shadow="toggleYesNo"
+    //% abstand_Stop.shadow="toggleYesNo"
+    //% buffer.shadow=btf_receivedBuffer19
+    export function buffer_Hindernis_ausweichen(hindernis_ausweichen: boolean, abstand_Stop: boolean, buffer: Buffer) {
+        // Block steht im Abstand Sensor Ereignis, das kommt aus der dauerhaft Schleife (Pin-Ereignis nur beim Laser Abstand Sensor)
+        // Parameter blockSetVariable=<dauerhaft_Ausweichen> und Sensor Ereignis <abstand_Stop>
+        if (buffer) {
+            eventAbstandAusweichen(
+                hindernis_ausweichen,
+                abstand_Stop,
+                btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b0_Motor), // MC vorwärts gerade
+                btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b1_Servo),
+                btf.getByte(buffer, btf.eBufferPointer.md, btf.eBufferOffset.b0_Motor), // MD rückwärts lenken
+                btf.getByte(buffer, btf.eBufferPointer.md, btf.eBufferOffset.b1_Servo),
+                btf.getByte(buffer, btf.eBufferPointer.md, btf.eBufferOffset.b2_Fahrstrecke), // Pause Zehntelsekunden 10zs=1000ms
+                1
+            )
+        }
     }
 
 
