@@ -21,8 +21,8 @@ namespace cb2 { // c-sensorevents.ts
             let spur = readInputs(i2c)[0] & 0b11
 
             if (n_Spur != spur || !n_raiseSpurEvent_gestartet) { // bei Änderung oder beim ersten Mal - ganz am Anfang
-                //n_Spur = spur
-                spurEventHandler(n_Spur)
+                n_Spur = spur
+                spurEventHandler()
                 //if (onSpurEventHandler)
                 //    onSpurEventHandler((n_Spur & 0b10) == 0b10, (n_Spur & 0b01) == 0b01)
             }
@@ -30,14 +30,14 @@ namespace cb2 { // c-sensorevents.ts
         }
         else if (n_raiseSpurEvent_gestartet) {
             n_raiseSpurEvent_gestartet = false
-            spurEventHandler(n_Spur)
+            spurEventHandler()
             //if (onSpurEventHandler)
             //    onSpurEventHandler((n_Spur & 0b10) == 0b10, (n_Spur & 0b01) == 0b01) // ganz am Ende
         }
     }
 
-    function spurEventHandler(spur: number) {
-        n_Spur = spur
+    function spurEventHandler() {
+       // n_Spur = spur
         if (onSpurEventHandler)
             onSpurEventHandler((n_Spur & 0b10) == 0b10, (n_Spur & 0b01) == 0b01)
         if (onSensorEventHandler)
