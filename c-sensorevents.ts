@@ -89,13 +89,6 @@ namespace cb2 { // c-sensorevents.ts
             onAbstandEventHandler(n_AbstandStop, cm)
     }
 
-    //% group="Ultraschall Sensor" subcategory="Sensoren"
-    //% block="--wenn Abstand Sensor Ereignis" weight=4
-    //% draggableParameters=reporter
-    export function onStopEvent(cb: (abstand_Stop: boolean, cm: number) => void) {
-        onAbstandEventHandler = cb
-    }
-
 
     //% group="Ultraschall Sensor" subcategory="Sensoren"
     //% block="wenn Abstand Sensor Ereignis" weight=4
@@ -105,6 +98,13 @@ namespace cb2 { // c-sensorevents.ts
     }
 
 
+
+    // group="Ultraschall Sensor" subcategory="Sensoren"
+    // block="--wenn Abstand Sensor Ereignis" weight=4
+    // draggableParameters=reporter
+    //export function onStopEvent(cb: (abstand_Stop: boolean, cm: number) => void) {
+    //    onAbstandEventHandler = cb
+    //}
 
 
 } // c-sensorevents.ts
