@@ -40,10 +40,12 @@ namespace cb2 { // c-sensorevents.ts
     }
 
     function spurEventHandler() {
+        if (onAbstandEventHandler)
+            onAbstandEventHandler(n_AbstandSensor, n_AbstandStop, 0)
         if (onSpurEventHandler)
             onSpurEventHandler((n_Spur & 0b10) == 0b10, (n_Spur & 0b01) == 0b01, n_AbstandStop)
-        if (onSensorEventHandler)
-            onSensorEventHandler((n_Spur & 0b10) == 0b10, (n_Spur & 0b01) == 0b01, n_AbstandStop, n_AbstandSensor, 0)
+        //if (onSensorEventHandler)
+        //   onSensorEventHandler((n_Spur & 0b10) == 0b10, (n_Spur & 0b01) == 0b01, n_AbstandStop, n_AbstandSensor, 0)
     }
 
     let onSpurEventHandler: (links_hell: boolean, rechts_hell: boolean, abstand_Stop: boolean) => void
@@ -102,8 +104,10 @@ namespace cb2 { // c-sensorevents.ts
         n_AbstandStop = abstand_Stop
         if (onAbstandEventHandler)
             onAbstandEventHandler(n_AbstandSensor, n_AbstandStop, cm)
-        if (onSensorEventHandler)
-            onSensorEventHandler((n_Spur & 0b10) == 0b10, (n_Spur & 0b01) == 0b01, n_AbstandStop, n_AbstandSensor, cm)
+       // if (onSpurEventHandler)
+       //    onSpurEventHandler((n_Spur & 0b10) == 0b10, (n_Spur & 0b01) == 0b01, n_AbstandStop)
+        // if (onSensorEventHandler)
+        //     onSensorEventHandler((n_Spur & 0b10) == 0b10, (n_Spur & 0b01) == 0b01, n_AbstandStop, n_AbstandSensor, cm)
     }
 
     let onAbstandEventHandler: (abstand_Sensor: boolean, abstand_Stop: boolean, cm: number) => void
@@ -118,17 +122,17 @@ namespace cb2 { // c-sensorevents.ts
 
 
     // ========== group="Spur Sensor und Ultraschall Sensor" subcategory="Sensoren"
-
-    let onSensorEventHandler: (links_hell: boolean, rechts_hell: boolean, abstand_Stop: boolean, abstand_Sensor: boolean, cm: number) => void
-
-
-    //% group="Spur Sensor und Ultraschall Sensor" subcategory="Sensoren"
-    //% block="wenn Sensor Ereignis" weight=3
-    //% draggableParameters=reporter
-    export function onSensorEvent(cb: (links_hell: boolean, rechts_hell: boolean, abstand_Stop: boolean, abstand_Sensor: boolean, cm: number) => void) {
-        onSensorEventHandler = cb
-    }
-
+    /* 
+        let onSensorEventHandler: (links_hell: boolean, rechts_hell: boolean, abstand_Stop: boolean, abstand_Sensor: boolean, cm: number) => void
+    
+    
+        //% group="Spur Sensor und Ultraschall Sensor" subcategory="Sensoren"
+        //% block="wenn Sensor Ereignis" weight=3
+        //% draggableParameters=reporter
+        export function onSensorEvent(cb: (links_hell: boolean, rechts_hell: boolean, abstand_Stop: boolean, abstand_Sensor: boolean, cm: number) => void) {
+            onSensorEventHandler = cb
+        }
+     */
 
     //% group="Spur Sensor und Ultraschall Sensor" subcategory="Sensoren"
     //% block="Spur und Abstand Sensor Ereignis auslösen %on • Stop %stop_cm cm • Start %start_cm cm || • Pause %ms ms • I²C %i2c" weight=6
