@@ -7,10 +7,14 @@ namespace cb2 { // c-sensorevents.ts
     let n_SpurTimer = input.runningTime()
     let n_Spur = 0 // letzter Status
 
+
+
+
     //% group="Spur Sensor" subcategory="Sensoren"
     //% block="Spur Sensor Ereignis auslösen %on || • Pause %ms ms • I²C %i2c" weight=6
     //% on.shadow=toggleOnOff
     //% ms.defl=25
+    //% inlineInputMode=inline
     export function raiseSpurEvent(on: boolean, ms = 25, i2c = eI2C.x22, index = 0) {
         if (on) {
             let t = input.runningTime() - n_SpurTimer // ms seit letztem raiseAbstandEvent
@@ -37,12 +41,10 @@ namespace cb2 { // c-sensorevents.ts
     }
 
     function spurEventHandler() {
-        // n_Spur = spur
         if (onSpurEventHandler)
             onSpurEventHandler((n_Spur & 0b10) == 0b10, (n_Spur & 0b01) == 0b01)
         if (onSensorEventHandler)
             onSensorEventHandler((n_Spur & 0b10) == 0b10, (n_Spur & 0b01) == 0b01, n_AbstandStop, 0)
-        //onSensorEventHandler(links_hell, rechts_hell, n_AbstandStop, 0)
     }
 
     //% group="Spur Sensor" subcategory="Sensoren"
