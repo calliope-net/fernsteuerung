@@ -101,7 +101,7 @@ namespace cb2 { // c-beispiele.ts
 
 
     //% group="Spur Sensor Ereignis" subcategory=Beispiele
-    //% block="Spur folgen: Calli:bot | gestartet %spur_folgen <links_hell> %links_hell <rechts_hell> %rechts_hell <abstand_Stop> %abstand_Stop Fahren (1↓128↑255) %motor128 langsam Fahren %motorLenken Lenken (1↖16↗31) %servo16 lenkender Motor \\% %lenkenProzent || Abstand Sensor %abstandSensor" weight=6
+    //% block="Spur folgen: Calli:bot | gestartet %spur_folgen <links_hell> %links_hell <rechts_hell> %rechts_hell <abstand_Stop> %abstand_Stop Fahren (1↓128↑255) %motor128 langsam Fahren %motorLenken Lenken (1↖16↗31) %servo16 lenkender Motor \\% %lenkenProzent" weight=6
     //% spur_folgen.shadow=toggleOnOff
     // links_hell.shadow=toggleYesNo
     // rechts_hell.shadow=toggleYesNo
@@ -112,7 +112,7 @@ namespace cb2 { // c-beispiele.ts
     //% lenkenProzent.min=10 lenkenProzent.max=90 lenkenProzent.defl=0
     //% abstandSensor.shadow=toggleOnOff abstandSensor.defl=1
     // abstand.min=10 abstand.max=50 abstand.defl=30
-    export function event_Spur_folgen(spur_folgen: boolean, links_hell: boolean, rechts_hell: boolean, abstand_Stop: boolean, motor128: number, motorLenken: number, servo16: number, lenkenProzent: number, abstandSensor?: boolean, index = 0) {
+    export function event_Spur_folgen(spur_folgen: boolean, links_hell: boolean, rechts_hell: boolean, abstand_Stop: boolean, motor128: number, motorLenken: number, servo16: number, lenkenProzent: number, index = 0) {
         if (spur_folgen) {
 
             btf.reset_timer()
