@@ -58,17 +58,7 @@ namespace cb2 { // c-fernsteuerung.ts
     //% inlineInputMode=inline expandableArgumentMode="toggle"
     export function raiseBufferEvents(buffer: Buffer, start_cm = 5, ms = 25, i2c = eI2C.x22) {
         if (buffer) {
-
-            /*  let spur_folgen =
-                 btf.isBetriebsart(buffer, btf.e0Betriebsart.p1Lokal) // 10 Programm fernstarten + B
-                 && btf.getaktiviert(buffer, btf.e3aktiviert.mc) // MC-4 Spur folgen
- 
-             let hindernis_ausweichen =
-                 !spur_folgen
-                 && btf.isBetriebsart(buffer, btf.e0Betriebsart.p1Lokal) // 10 Programm fernstarten + A
-                 && btf.getaktiviert(buffer, btf.e3aktiviert.md) // MD-5 Hindernis ausweichen
-  */
-
+          
             // Events müssen auch mit on=false aufgerufen werden, damit das Programm beendet wird (Motor Stop)
             raiseAbstandEvent( // MD-5 Hindernis ausweichen ODER // MC-4 Spur folgen und Abstand Sensor aktiviert
                 hindernis_ausweichen(buffer) || (spur_folgen(buffer) && btf.getSensor(buffer, btf.eBufferPointer.mc, btf.eSensor.b6Abstand)),

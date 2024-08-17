@@ -2,12 +2,11 @@
 namespace cb2 { // c-sensorevents.ts
 
 
+    // ========== group="Spur Sensor" subcategory="Sensoren"
+
     let a_raiseSpurEvent_gestartet = [false, false]
     let n_SpurTimer = input.runningTime()
     let n_Spur = 0 // letzter Status
-
-
-
 
     //% group="Spur Sensor" subcategory="Sensoren"
     //% block="Spur Sensor Ereignis auslösen %on || • Pause %ms ms • I²C %i2c" weight=6
@@ -26,16 +25,12 @@ namespace cb2 { // c-sensorevents.ts
             if (n_Spur != spur || !a_raiseSpurEvent_gestartet[index]) { // bei Änderung oder beim ersten Mal - ganz am Anfang
                 n_Spur = spur
                 spurEventHandler()
-                //if (onSpurEventHandler)
-                //    onSpurEventHandler((n_Spur & 0b10) == 0b10, (n_Spur & 0b01) == 0b01)
             }
             a_raiseSpurEvent_gestartet[index] = true
         }
         else if (a_raiseSpurEvent_gestartet[index]) {
             a_raiseSpurEvent_gestartet[index] = false
             spurEventHandler()
-            //if (onSpurEventHandler)
-            //    onSpurEventHandler((n_Spur & 0b10) == 0b10, (n_Spur & 0b01) == 0b01) // ganz am Ende
         }
     }
 
@@ -44,8 +39,6 @@ namespace cb2 { // c-sensorevents.ts
             onAbstandEventHandler(n_AbstandSensor, n_AbstandStop, 0)
         if (onSpurEventHandler)
             onSpurEventHandler((n_Spur & 0b10) == 0b10, (n_Spur & 0b01) == 0b01, n_AbstandStop)
-        //if (onSensorEventHandler)
-        //   onSensorEventHandler((n_Spur & 0b10) == 0b10, (n_Spur & 0b01) == 0b01, n_AbstandStop, n_AbstandSensor, 0)
     }
 
     let onSpurEventHandler: (links_hell: boolean, rechts_hell: boolean, abstand_Stop: boolean) => void
@@ -66,7 +59,7 @@ namespace cb2 { // c-sensorevents.ts
     let a_raiseAbstandEvent_gestartet = [false, false]
     let n_AbstandTimer = input.runningTime()
     let n_AbstandStop = false // letzter Status
-    let n_AbstandSensor = false // Sensor aktiviert (im Buffer bzw, Knopf A)
+    let n_AbstandSensor = false // Sensor aktiviert (im Buffer bzw. Knopf A)
 
     //% group="Ultraschall Sensor" subcategory="Sensoren"
     //% block="Abstand Sensor Ereignis auslösen %on • Stop %stop_cm cm • Start %start_cm cm || • Pause %ms ms" weight=6
@@ -106,8 +99,6 @@ namespace cb2 { // c-sensorevents.ts
             onAbstandEventHandler(n_AbstandSensor, n_AbstandStop, cm)
         if (onSpurEventHandler)
             onSpurEventHandler((n_Spur & 0b10) == 0b10, (n_Spur & 0b01) == 0b01, n_AbstandStop)
-        // if (onSensorEventHandler)
-        //     onSensorEventHandler((n_Spur & 0b10) == 0b10, (n_Spur & 0b01) == 0b01, n_AbstandStop, n_AbstandSensor, cm)
     }
 
     let onAbstandEventHandler: (abstand_Sensor: boolean, abstand_Stop: boolean, cm: number) => void
@@ -134,13 +125,13 @@ namespace cb2 { // c-sensorevents.ts
         }
      */
 
-    //% group="Spur Sensor und Ultraschall Sensor" subcategory="Sensoren"
-    //% block="Spur und Abstand Sensor Ereignis auslösen %on • Stop %stop_cm cm • Start %start_cm cm || • Pause %ms ms • I²C %i2c" weight=6
-    //% on.shadow=toggleOnOff
-    //% stop_cm.defl=30
-    //% start_cm.defl=35
-    //% ms.defl=25
-    //% inlineInputMode=inline
+    // group="Spur Sensor und Ultraschall Sensor" subcategory="Sensoren"
+    // block="Spur und Abstand Sensor Ereignis auslösen %on • Stop %stop_cm cm • Start %start_cm cm || • Pause %ms ms • I²C %i2c" weight=6
+    // on.shadow=toggleOnOff
+    // stop_cm.defl=30
+    // start_cm.defl=35
+    // ms.defl=25
+    // inlineInputMode=inline
     /*    export function raiseSensorEvent(on: boolean, stop_cm: number, start_cm: number, ms = 25, i2c = eI2C.x22) {
            raiseAbstandEvent(on, stop_cm, start_cm, ms, 1)
            raiseSpurEvent(on, ms, i2c, 1)

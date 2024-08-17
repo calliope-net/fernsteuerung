@@ -126,7 +126,6 @@ namespace cb2 { // c-beispiele.ts
             if (abstand_Stop) {
                 writeMotorenStop()
                 // writecb2RgbLed(eRgbLed.lh, Colors.Red, true)
-                basic.showNumber(pause_zs)
                 basic.pause(pause_zs * 100)
                 // basic.pause(Math.randomRange(500, 5000)) // 0.5 .. 5 Sekunden warten bis es wieder los fährt
             }
