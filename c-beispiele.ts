@@ -101,7 +101,7 @@ namespace cb2 { // c-beispiele.ts
 
 
     //% group="Spur Sensor Ereignis" subcategory=Beispiele
-    //% block="Spur folgen: Calli:bot | gestartet %spur_folgen <links_hell> %links_hell <rechts_hell> %rechts_hell <abstand_Stop> %abstand_Stop Fahren (1↓128↑255) %motor128 langsam Fahren %motorLenken Lenken (1↖16↗31) %servo16 lenkender Motor \\% %lenkenProzent" weight=6
+    //% block="Spur folgen: Calli:bot | gestartet %spur_folgen <links_hell> %links_hell <rechts_hell> %rechts_hell <abstand_Stop> %abstand_Stop Fahren (1↓128↑255) %motor128 langsam Fahren %motorLenken Lenken (1↖16↗31) %servo16 lenkender Motor \\% %lenkenProzent || Pause ⅒s %pause_zs" weight=6
     //% spur_folgen.shadow=toggleOnOff
     // links_hell.shadow=toggleYesNo
     // rechts_hell.shadow=toggleYesNo
@@ -110,9 +110,10 @@ namespace cb2 { // c-beispiele.ts
     //% motorLenken.min=1 motorLenken.max=255 motorLenken.defl=160
     //% servo16.min=1 servo16.max=31 servo16.defl=31
     //% lenkenProzent.min=10 lenkenProzent.max=90 lenkenProzent.defl=0
-    //% abstandSensor.shadow=toggleOnOff abstandSensor.defl=1
+    // abstandSensor.shadow=toggleOnOff abstandSensor.defl=1
+    //% pause_zs.shadow=cb2_zehntelsekunden
     // abstand.min=10 abstand.max=50 abstand.defl=30
-    export function event_Spur_folgen(spur_folgen: boolean, links_hell: boolean, rechts_hell: boolean, abstand_Stop: boolean, motor128: number, motorLenken: number, servo16: number, lenkenProzent: number, index = 0) {
+    export function event_Spur_folgen(spur_folgen: boolean, links_hell: boolean, rechts_hell: boolean, abstand_Stop: boolean, motor128: number, motorLenken: number, servo16: number, lenkenProzent: number, pause_zs?: number, index = 0) {
         if (spur_folgen) {
 
             btf.reset_timer()
@@ -120,18 +121,19 @@ namespace cb2 { // c-beispiele.ts
             if (!a_eventSpurfolger_gestartet[index]) { // ganz am Anfang
                 m_lenken = undefined // gespeicherte Werte löschen
                 m_inSpur = false     // beim ersten Durchlauf der Schleife
-               // writecb2RgbLeds(Colors.Off, false) // alle 4 aus
+                // writecb2RgbLeds(Colors.Off, false) // alle 4 aus
             }
 
             if (abstand_Stop) {
                 writeMotorenStop()
-               // writecb2RgbLed(eRgbLed.lh, Colors.Red, true)
-               // basic.pause(Math.randomRange(500, 5000)) // 0.5 .. 5 Sekunden warten bis es wieder los fährt
+                // writecb2RgbLed(eRgbLed.lh, Colors.Red, true)
+                basic.pause(pause_zs * 100)
+            // basic.pause(Math.randomRange(500, 5000)) // 0.5 .. 5 Sekunden warten bis es wieder los fährt
             }
             else {
 
                 let lenken = Math.abs(servo16 - 16)  // 16-16=0 / 1-16=15 / 31-16=15
-             
+
                 if (!links_hell && !rechts_hell) { // dunkel dunkel
                     writeMotor128Servo16(motor128, 16) // nicht lenken
                     m_inSpur = true
@@ -155,14 +157,14 @@ namespace cb2 { // c-beispiele.ts
                     m_inSpur = false // hell hell
                 }
 
-               // writecb2RgbLed(eRgbLed.lh, Colors.Yellow, abstandSensor)
+                // writecb2RgbLed(eRgbLed.lh, Colors.Yellow, abstandSensor)
             }
             a_eventSpurfolger_gestartet[index] = true
         }
         else if (a_eventSpurfolger_gestartet[index]) {
             a_eventSpurfolger_gestartet[index] = false
             writeMotorenStop() // ganz am Ende
-           // writecb2RgbLed(eRgbLed.lh, Colors.Yellow, false)
+            // writecb2RgbLed(eRgbLed.lh, Colors.Yellow, false)
         }
     }
 
