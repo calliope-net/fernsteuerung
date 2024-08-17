@@ -56,7 +56,7 @@ namespace cb2 { // c-fernsteuerung.ts
     //% start_cm.defl=5
     //% ms.defl=25
     //% inlineInputMode=inline
-    export function raiseBufferEvents(buffer: Buffer, start_cm: number, ms = 25, i2c = eI2C.x22) {
+    export function raiseBufferEvents(buffer: Buffer, start_cm = 5, ms = 25, i2c = eI2C.x22) {
         if (buffer) {
 
             /*  let spur_folgen =
