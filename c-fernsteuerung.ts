@@ -55,7 +55,7 @@ namespace cb2 { // c-fernsteuerung.ts
     //% buffer.shadow=btf_receivedBuffer19
     //% start_cm.defl=5
     //% ms.defl=25
-    //% inlineInputMode=inline
+    //% inlineInputMode=inline expandableArgumentMode="toggle"
     export function raiseBufferEvents(buffer: Buffer, start_cm = 5, ms = 25, i2c = eI2C.x22) {
         if (buffer) {
 
@@ -107,10 +107,10 @@ namespace cb2 { // c-fernsteuerung.ts
     //% buffer.shadow=btf_receivedBuffer19
     //% startBit.defl=btf.e3aktiviert.mc
     //% blockSetVariable=Spur_folgen
-    export function set_Spur_folgen(buffer: Buffer, startBit: btf.e3aktiviert) {
-        // Block (SetVariable) steht in Bluetooth receivedData
-        return btf.isBetriebsart(buffer, btf.e0Betriebsart.p1Lokal) && btf.getaktiviert(buffer, startBit)
-    }
+    /*  export function set_Spur_folgen(buffer: Buffer, startBit: btf.e3aktiviert) {
+         // Block (SetVariable) steht in Bluetooth receivedData
+         return btf.isBetriebsart(buffer, btf.e0Betriebsart.p1Lokal) && btf.getaktiviert(buffer, startBit)
+     } */
 
 
     //  let n_spurfolgerBuffer_repeat = false
@@ -200,22 +200,21 @@ namespace cb2 { // c-fernsteuerung.ts
     //% buffer.shadow=btf_receivedBuffer19
     //% startBit.defl=btf.e3aktiviert.md
     //% blockSetVariable=Hindernis_ausweichen
-    export function set_Hindernis_ausweichen(buffer: Buffer, startBit: btf.e3aktiviert) {
-        // Block (SetVariable) steht in Bluetooth receivedData
-        return btf.isBetriebsart(buffer, btf.e0Betriebsart.p1Lokal) && btf.getaktiviert(buffer, startBit)
-    }
+    /*   export function set_Hindernis_ausweichen(buffer: Buffer, startBit: btf.e3aktiviert) {
+          // Block (SetVariable) steht in Bluetooth receivedData
+          return btf.isBetriebsart(buffer, btf.e0Betriebsart.p1Lokal) && btf.getaktiviert(buffer, startBit)
+      } */
 
     //% group="10 Programm fernstarten" subcategory="Fernsteuerung"
-    //% block="10 <Hindernis_ausweichen> %hindernis_ausweichen <abstand_Stop> %abstand_Stop (MS:CD) aus %buffer" weight=7
-    //% hindernis_ausweichen.shadow="toggleYesNo"
-    //% abstand_Stop.shadow="toggleYesNo"
+    //% block="Hindernis ausweichen %buffer <abstand_Stop> %abstand_Stop" weight=7
     //% buffer.shadow=btf_receivedBuffer19
-    export function buffer_Hindernis_ausweichen(hindernis_ausweichen: boolean, abstand_Stop: boolean, buffer: Buffer) {
+    //% abstand_Stop.shadow="toggleYesNo"
+    export function buffer_Hindernis_ausweichen(buffer: Buffer, abstand_Stop: boolean) {
         // Block steht im Abstand Sensor Ereignis, das kommt aus der dauerhaft Schleife (Pin-Ereignis nur beim Laser Abstand Sensor)
         // Parameter blockSetVariable=<dauerhaft_Ausweichen> und Sensor Ereignis <abstand_Stop>
         if (buffer) {
             event_Hindernis_ausweichen(
-                hindernis_ausweichen,
+                hindernis_ausweichen(buffer),
                 abstand_Stop,
                 btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b0_Motor), // MC vorwärts gerade
                 btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b1_Servo),
