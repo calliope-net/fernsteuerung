@@ -123,7 +123,7 @@ namespace cb2 { // c-beispiele.ts
                 writecb2RgbLeds(Colors.Off, false) // alle 4 aus
             }
 
-            if (abstandSensor && abstand_Stop) {
+            if (abstand_Stop) {
                 writeMotorenStop()
                 writecb2RgbLed(eRgbLed.lh, Colors.Red, true)
                 basic.pause(Math.randomRange(500, 5000)) // 0.5 .. 5 Sekunden warten bis es wieder los fährt
