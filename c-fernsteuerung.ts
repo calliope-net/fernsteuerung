@@ -75,6 +75,7 @@ namespace cb2 { // c-fernsteuerung.ts
                 btf.getAbstand(buffer),
                 btf.getAbstand(buffer) + start_cm,
                 ms,
+                btf.getSensor(buffer, btf.eBufferPointer.mc, btf.eSensor.b6Abstand),
                 1
             )
 
