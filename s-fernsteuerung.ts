@@ -135,15 +135,16 @@ namespace sender { // s-fernsteuerung.ts
     // ========== group="10 Programm fernstarten" subcategory="Fernsteuerung"
 
     //% group="10 Programm fernstarten" subcategory="Fernsteuerung"
-    //% block="10 Spurfolger %buffer Fahren (1↓128↑255) %motor128 langsam Fahren %langsamfahren Lenken (1↖16↗31) %servo16 lenkender Motor \\% %lenkenProzent Abstanssensor %stop bei Abstand < %abstand" weight=6
+    //% block="10 Spurfolger %buffer Fahren (1↓128↑255) %motor128 langsam Fahren %langsamfahren Lenken (1↖16↗31) %servo16 lenkender Motor \\% %lenkenProzent Abstanssensor %stop bei Abstand < %abstand Pause ⅒s %pause_zs" weight=6
     //% buffer.shadow="btf_sendBuffer19"
     //% motor128.min=1 motor128.max=255 motor128.defl=192
     //% langsamfahren.min=1 langsamfahren.max=255 langsamfahren.defl=160
     //% servo16.min=1 servo16.max=31 servo16.defl=31
     //% lenkenProzent.min=10 lenkenProzent.max=90 lenkenProzent.defl=0
     //% stop.shadow=sender_ButtonA_Switch
+    //% pause_zs.shadow=sender_zehntelsekunden
     // inlineInputMode=inline
-    export function send10Spurfolger(buffer: Buffer, motor128: number, langsamfahren: number, servo16: number, lenkenProzent: number, stop: boolean, abstand: btf.e3Abstand) {
+    export function send10Spurfolger(buffer: Buffer, motor128: number, langsamfahren: number, servo16: number, lenkenProzent: number, stop: boolean, abstand: btf.e3Abstand, pause_zs: number) {
 
         btf.setBetriebsart(buffer, btf.e0Betriebsart.p1Lokal)
         btf.setByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b0_Motor, motor128)
@@ -152,6 +153,8 @@ namespace sender { // s-fernsteuerung.ts
         btf.setByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b2_Fahrstrecke, lenkenProzent)
 
         btf.setSensor(buffer, btf.eBufferPointer.mc, btf.eSensor.b6Abstand, stop)
+        btf.setByte(buffer, btf.eBufferPointer.md, btf.eBufferOffset.b2_Fahrstrecke, pause_zs)
+
         btf.setAbstand(buffer, abstand)
     }
 
