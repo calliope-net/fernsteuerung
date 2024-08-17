@@ -50,10 +50,59 @@ namespace cb2 { // c-fernsteuerung.ts
 
 
 
+    //% group="10 Programm fernstarten" subcategory="Fernsteuerung"
+    //% block="Sensor Ereignisse auslösen %buffer || • Start+ %start_cm cm • Pause %ms ms • I²C %i2c" weight=6
+    //% buffer.shadow=btf_receivedBuffer19
+    //% start_cm.defl=5
+    //% ms.defl=25
+    //% inlineInputMode=inline
+    export function raiseBufferEvents(buffer: Buffer, start_cm: number, ms = 25, i2c = eI2C.x22) {
+        if (buffer) {
+
+            /*  let spur_folgen =
+                 btf.isBetriebsart(buffer, btf.e0Betriebsart.p1Lokal) // 10 Programm fernstarten + B
+                 && btf.getaktiviert(buffer, btf.e3aktiviert.mc) // MC-4 Spur folgen
+ 
+             let hindernis_ausweichen =
+                 !spur_folgen
+                 && btf.isBetriebsart(buffer, btf.e0Betriebsart.p1Lokal) // 10 Programm fernstarten + A
+                 && btf.getaktiviert(buffer, btf.e3aktiviert.md) // MD-5 Hindernis ausweichen
+  */
+
+            // Events müssen auch mit on=false aufgerufen werden, damit das Programm beendet wird (Motor Stop)
+            raiseAbstandEvent( // MD-5 Hindernis ausweichen ODER // MC-4 Spur folgen und Abstand Sensor aktiviert
+                hindernis_ausweichen(buffer) || (spur_folgen(buffer) && btf.getSensor(buffer, btf.eBufferPointer.mc, btf.eSensor.b6Abstand)),
+                btf.getAbstand(buffer),
+                btf.getAbstand(buffer) + start_cm,
+                ms,
+                1
+            )
+
+            raiseSpurEvent( // MC-4 Spur folgen
+                spur_folgen(buffer),
+                ms,
+                i2c,
+                1
+            )
+        }
+    }
+
+    function spur_folgen(buffer: Buffer) { // if (buffer) muss vor Aufruf erfolgen
+        return btf.isBetriebsart(buffer, btf.e0Betriebsart.p1Lokal) // 10 Programm fernstarten + B
+            && btf.getaktiviert(buffer, btf.e3aktiviert.mc) // MC-4 Spur folgen
+    }
+
+    function hindernis_ausweichen(buffer: Buffer) { // if (buffer) muss vor Aufruf erfolgen
+        return btf.isBetriebsart(buffer, btf.e0Betriebsart.p1Lokal) // 10 Programm fernstarten + A
+            && !btf.getaktiviert(buffer, btf.e3aktiviert.mc) // NOT ! MC-4 Spur folgen !
+            && btf.getaktiviert(buffer, btf.e3aktiviert.md) // MD-5 Hindernis ausweichen
+    }
+
+
     // ========== group="10 Fernstarten Spurfolger" subcategory="Fernsteuerung"
 
 
-    //% group="10 Fernstarten Spur folgen" subcategory="Fernsteuerung"
+    //% group="10 Programm fernstarten" subcategory="Fernsteuerung"
     //% block="%buffer 10 fernstarten && Start Bit %startBit" weight=8
     //% buffer.shadow=btf_receivedBuffer19
     //% startBit.defl=btf.e3aktiviert.mc
@@ -62,28 +111,6 @@ namespace cb2 { // c-fernsteuerung.ts
         // Block (SetVariable) steht in Bluetooth receivedData
         return btf.isBetriebsart(buffer, btf.e0Betriebsart.p1Lokal) && btf.getaktiviert(buffer, startBit)
     }
-
-
-    //% group="10 Fernstarten Spur folgen" subcategory="Fernsteuerung"
-    //% block="Ereignis auslösen %buffer %startBit || • Pause %ms ms • I²C %i2c" weight=6
-    //% buffer.shadow=btf_receivedBuffer19
-    //% startBit.defl=btf.e3aktiviert.mc
-    //% ms.defl=25
-    //% inlineInputMode=inline
-    export function raiseBufferEvents(buffer: Buffer, startBit: btf.e3aktiviert, ms = 25, i2c = eI2C.x22, index = 0) {
-        if (buffer) {
-            let on = btf.isBetriebsart(buffer, btf.e0Betriebsart.p1Lokal) && btf.getaktiviert(buffer, startBit)
-       
-            raiseAbstandEvent(on, btf.getAbstand(buffer), btf.getAbstand(buffer) + 5, ms, index)
-
-            btf.getSensor(buffer, btf.eBufferPointer.mc, btf.eSensor.b6Abstand)
-
-
-
-            raiseSpurEvent(on, ms, i2c, index)
-        }
-    }
-
 
 
     //  let n_spurfolgerBuffer_repeat = false
@@ -116,7 +143,7 @@ namespace cb2 { // c-fernsteuerung.ts
     } */
 
 
-    //% group="10 Fernstarten Spur folgen" subcategory="Fernsteuerung"
+    //% group="10 Programm fernstarten" subcategory="Fernsteuerung"
     //% block="10 <Spur_folgen> %spur_folgen <links_hell> %links_hell <rechts_hell> %rechts_hell <abstand_Stop> %abstand_Stop (MS:CD) aus %buffer" weight=4
     //% dauerhaft_Spurfolger.shadow=toggleOnOff
     // links_hell.shadow=toggleYesNo
@@ -149,7 +176,7 @@ namespace cb2 { // c-fernsteuerung.ts
         return btf.isBetriebsart(buffer, btf.e0Betriebsart.p1Lokal) && btf.getaktiviert(buffer, startBit)
     } */
 
-    //% group="10 Fernstarten Hindernis ausweichen" subcategory="Fernsteuerung"
+    //% group="10 Programm fernstarten" subcategory="Fernsteuerung"
     //% block="%buffer 10 fernstarten && Start Bit %startBit" weight=8
     //% buffer.shadow=btf_receivedBuffer19
     //% startBit.defl=btf.e3aktiviert.md
@@ -159,7 +186,7 @@ namespace cb2 { // c-fernsteuerung.ts
         return btf.isBetriebsart(buffer, btf.e0Betriebsart.p1Lokal) && btf.getaktiviert(buffer, startBit)
     }
 
-    //% group="10 Fernstarten Hindernis ausweichen" subcategory="Fernsteuerung"
+    //% group="10 Programm fernstarten" subcategory="Fernsteuerung"
     //% block="10 <Hindernis_ausweichen> %hindernis_ausweichen <abstand_Stop> %abstand_Stop (MS:CD) aus %buffer" weight=7
     //% hindernis_ausweichen.shadow="toggleYesNo"
     //% abstand_Stop.shadow="toggleYesNo"
