@@ -150,7 +150,7 @@ namespace cb2 { // c-fernsteuerung.ts
     // rechts_hell.shadow=toggleYesNo
     // abstand_Stop.shadow=toggleYesNo
     //% inlineInputMode=inline
-    export function spurBufferEvent(buffer: Buffer, links_hell: boolean, rechts_hell: boolean, abstand_Stop: boolean) {
+    export function buffer_Spur_folgen(buffer: Buffer, links_hell: boolean, rechts_hell: boolean, abstand_Stop: boolean) {
         if (buffer)
             event_Spur_folgen(spur_folgen(buffer), links_hell, rechts_hell, abstand_Stop,
                 btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b0_Motor),
@@ -170,7 +170,7 @@ namespace cb2 { // c-fernsteuerung.ts
     // abstand_Stop.shadow=toggleYesNo
     //% buffer.shadow=btf_receivedBuffer19
     //% inlineInputMode=inline
-    export function buffer_Spur_folgen(spur_folgen: boolean, links_hell: boolean, rechts_hell: boolean, abstand_Stop: boolean, buffer: Buffer) {
+    /* export function buffer_Spur_folgen(spur_folgen: boolean, links_hell: boolean, rechts_hell: boolean, abstand_Stop: boolean, buffer: Buffer) {
         if (buffer)
             event_Spur_folgen(spur_folgen, links_hell, rechts_hell, abstand_Stop,
                 btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b0_Motor),
@@ -180,7 +180,7 @@ namespace cb2 { // c-fernsteuerung.ts
                 btf.getSensor(buffer, btf.eBufferPointer.mc, btf.eSensor.b6Abstand),
                 1
             )
-    }
+    } */
 
 
     // ========== group="10 Fernstarten Hindernis ausweichen" subcategory="Fernsteuerung"
