@@ -144,6 +144,25 @@ namespace cb2 { // c-fernsteuerung.ts
 
 
     //% group="10 Programm fernstarten" subcategory="Fernsteuerung"
+    //% block="Spur folgen %buffer <links_hell> %links_hell <rechts_hell> %rechts_hell <abstand_Stop> %abstand_Stop" weight=4
+    //% buffer.shadow=btf_receivedBuffer19
+    // links_hell.shadow=toggleYesNo
+    // rechts_hell.shadow=toggleYesNo
+    // abstand_Stop.shadow=toggleYesNo
+    //% inlineInputMode=inline
+    export function spurBufferEvent(buffer: Buffer, links_hell: boolean, rechts_hell: boolean, abstand_Stop: boolean) {
+        if (buffer)
+            event_Spur_folgen(spur_folgen(buffer), links_hell, rechts_hell, abstand_Stop,
+                btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b0_Motor),
+                btf.getByte(buffer, btf.eBufferPointer.md, btf.eBufferOffset.b0_Motor),
+                btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b1_Servo),
+                btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b2_Fahrstrecke),
+                btf.getSensor(buffer, btf.eBufferPointer.mc, btf.eSensor.b6Abstand),
+                1
+            )
+    }
+
+    //% group="10 Programm fernstarten" subcategory="Fernsteuerung"
     //% block="10 <Spur_folgen> %spur_folgen <links_hell> %links_hell <rechts_hell> %rechts_hell <abstand_Stop> %abstand_Stop (MS:CD) aus %buffer" weight=4
     //% dauerhaft_Spurfolger.shadow=toggleOnOff
     // links_hell.shadow=toggleYesNo
