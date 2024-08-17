@@ -104,8 +104,8 @@ namespace cb2 { // c-sensorevents.ts
         n_AbstandStop = abstand_Stop
         if (onAbstandEventHandler)
             onAbstandEventHandler(n_AbstandSensor, n_AbstandStop, cm)
-       // if (onSpurEventHandler)
-       //    onSpurEventHandler((n_Spur & 0b10) == 0b10, (n_Spur & 0b01) == 0b01, n_AbstandStop)
+        if (onSpurEventHandler)
+            onSpurEventHandler((n_Spur & 0b10) == 0b10, (n_Spur & 0b01) == 0b01, n_AbstandStop)
         // if (onSensorEventHandler)
         //     onSensorEventHandler((n_Spur & 0b10) == 0b10, (n_Spur & 0b01) == 0b01, n_AbstandStop, n_AbstandSensor, cm)
     }
