@@ -94,7 +94,7 @@ namespace cb2 { // c-sensorevents.ts
         }
         else if (a_raiseAbstandEvent_gestartet[index]) {
             a_raiseAbstandEvent_gestartet[index] = false
-            abstandEventHandler(true, 0) // Stop Ereignis auslösen am Ende
+            abstandEventHandler(false, 0) // kein Stop Ereignis auslösen am Ende
         }
     }
 
