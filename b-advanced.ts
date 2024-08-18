@@ -1,4 +1,6 @@
-
+/* 
+,"yotta":{"config":{"microbit-dal":{"bluetooth":{"pairing_mode":1,"partial_flashing":0}}}}
+*/
 namespace btf { // b-advanced.ts
 
     // ========== group="Funktionen" advanced=true
