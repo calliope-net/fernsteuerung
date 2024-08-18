@@ -8,18 +8,19 @@ namespace receiver { // r-sensorevents.ts
     let n_Spur = 0 // letzter Status
 
     //% group="Spur Sensor" subcategory="Sensoren"
-    //% block="Spur Sensor Ereignis auslösen %on || • Pause %ms ms • I²C %i2c" weight=6
+    //% block="Spur Sensor Ereignis auslösen %on || • Pause %ms ms" weight=6
     //% on.shadow=toggleOnOff
     //% ms.defl=25
     //% inlineInputMode=inline
-  /*   export function raiseSpurEvent(on: boolean, ms = 25, i2c = eI2C.x22, index = 0) {
+    export function raiseSpurEvent(on: boolean, ms = 25, index = 0) {
         if (on) {
             let t = input.runningTime() - n_SpurTimer // ms seit letztem raiseAbstandEvent
             if (t < ms)
                 basic.pause(t) // restliche Zeit-Differenz warten
             n_SpurTimer = input.runningTime()
 
-            let spur = readInputs(i2c)[0] & 0b11
+            //let spur = readInputs(i2c)[0] & 0b11
+            let spur = (n_SpurLinksHell ? 0b10 : 0) + (n_SpurRechtsHell ? 0b01 : 0)
 
             if (n_Spur != spur || !a_raiseSpurEvent_gestartet[index]) { // bei Änderung oder beim ersten Mal - ganz am Anfang
                 n_Spur = spur
@@ -31,7 +32,7 @@ namespace receiver { // r-sensorevents.ts
             a_raiseSpurEvent_gestartet[index] = false
             spurEventHandler()
         }
-    } */
+    }
 
     function spurEventHandler() {
         if (onAbstandEventHandler)
