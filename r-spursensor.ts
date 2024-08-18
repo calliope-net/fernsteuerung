@@ -134,9 +134,9 @@ namespace receiver { // r-spursensor.ts
     //% group="Spursensor (vom gewählten Modell)" subcategory="Pins, Sensoren"
     //% block="wenn Spur Sensor geändert" weight=2
     //% draggableParameters=reporter
-    export function onSpurEvent(cb: (links_hell: boolean, rechts_hell: boolean) => void) {
+   /*  export function onSpurEvent(cb: (links_hell: boolean, rechts_hell: boolean) => void) {
         onSpurEventHandler = cb
-    }
+    } */
 
     //% group="Spursensor (vom gewählten Modell)" subcategory="Pins, Sensoren"
     //% block="wenn Sensor geändert" weight=1
@@ -162,7 +162,7 @@ namespace receiver { // r-spursensor.ts
     //% stop_cm.defl=20
     //% start_cm.defl=25
     //% ms.defl=25
-    export function raiseAbstandEvent(stop_cm: number, start_cm: number, ms = 25) {
+  /*   export function raiseAbstandEvent(stop_cm: number, start_cm: number, ms = 25) {
         if (selectAbstandSensorConnected()) {
             let t = input.runningTime() - n_AbstandTimer // ms seit letztem raiseAbstandEvent
             if (t < ms)
@@ -186,7 +186,7 @@ namespace receiver { // r-spursensor.ts
                     onSpurStopEventHandler(n_SpurLinksHell, n_SpurRechtsHell, n_AbstandStop)
             }
         }
-    }
+    } */
 
     //% group="Ultraschall (vom gewählten Modell)" subcategory="Pins, Sensoren"
     //% block="wenn Abstand Sensor geändert" weight=1
