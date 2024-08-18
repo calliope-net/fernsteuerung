@@ -181,17 +181,17 @@ namespace receiver { // r-fernsteuerung.ts
     //% buffer.shadow=btf_receivedBuffer19
     //% startBit.defl=btf.e3aktiviert.mc
     //% blockSetVariable=dauerhaft_Spurfolger
-    export function set_dauerhaft_Spurfolger(buffer: Buffer, startBit: btf.e3aktiviert) {
-        return btf.isBetriebsart(buffer, btf.e0Betriebsart.p1Lokal) && btf.getaktiviert(buffer, startBit)
-    }
+  //  export function set_dauerhaft_Spurfolger(buffer: Buffer, startBit: btf.e3aktiviert) {
+   //     return btf.isBetriebsart(buffer, btf.e0Betriebsart.p1Lokal) && btf.getaktiviert(buffer, startBit)
+  //  }
 
-    let n_spurfolgerBuffer_repeat = false
+  //  let n_spurfolgerBuffer_repeat = false
 
     //% group="10 Fernstarten Spurfolger" subcategory="Fernsteuerung"
     //% block="10 dauerhaft Spurfolger: %dauerhaft_Spurfolger (MS:CD) aus %buffer" weight=7
     //% dauerhaft_Spurfolger.shadow="toggleYesNo"
     //% buffer.shadow=btf_receivedBuffer19
-    export function dauerhaft_SpurfolgerBuffer(dauerhaft_Spurfolger: boolean, buffer: Buffer) {
+  /*   export function dauerhaft_SpurfolgerBuffer(dauerhaft_Spurfolger: boolean, buffer: Buffer) {
         if (dauerhaft_Spurfolger) {
             beispielSpurfolger16(
                 btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b0_Motor),
@@ -207,7 +207,7 @@ namespace receiver { // r-fernsteuerung.ts
             n_spurfolgerBuffer_repeat = false
             selectMotor(c_MotorStop)
         }
-    }
+    } */
 
 
 

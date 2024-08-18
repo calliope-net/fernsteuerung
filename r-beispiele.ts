@@ -19,7 +19,7 @@ namespace receiver { // r-beispiele.ts
 
 
     //% group="Abstand Sensor Ereignis" subcategory=Beispiele
-    //% block="Hindernis ausweichen: Calli:bot | gestartet %hindernis_ausweichen <abstand_Stop> %abstand_Stop Fahren (1↓128↑255) %vMotor Lenken (1↖16↗31) %vServo rückwärts Fahren %rMotor rückwärts Lenken %rServo rückwärts Lenken (0) = Zufall | Pause ⅒s %pause_zs" weight=6
+    //% block="Hindernis ausweichen | gestartet %hindernis_ausweichen <abstand_Stop> %abstand_Stop Fahren (1↓128↑255) %vMotor Lenken (1↖16↗31) %vServo rückwärts Fahren %rMotor rückwärts Lenken %rServo rückwärts Lenken (0) = Zufall | Pause ⅒s %pause_zs" weight=6
     //% hindernis_ausweichen.shadow=toggleOnOff
     // abstand_Stop.shadow=toggleYesNo
     //% vMotor.min=1 vMotor.max=255 vMotor.defl=255
@@ -79,7 +79,7 @@ namespace receiver { // r-beispiele.ts
 
 
     //% group="Spur Sensor Ereignis" subcategory=Beispiele
-    //% block="Spur folgen: Calli:bot | gestartet %spur_folgen <links_hell> %links_hell <rechts_hell> %rechts_hell Fahren (1↓128↑255) %motor128 langsam Fahren %motorLenken Lenken (1↖16↗31) %servo16 <abstand_Stop> %abstand_Stop Pause ⅒s %pause_zs" weight=6
+    //% block="Spur folgen | gestartet %spur_folgen <links_hell> %links_hell <rechts_hell> %rechts_hell Fahren (1↓128↑255) %motor128 langsam Fahren %motorLenken Lenken (1↖16↗31) %servo16 <abstand_Stop> %abstand_Stop Pause ⅒s %pause_zs" weight=6
     //% spur_folgen.shadow=toggleOnOff
     // links_hell.shadow=toggleYesNo
     // rechts_hell.shadow=toggleYesNo
@@ -162,7 +162,7 @@ namespace receiver { // r-beispiele.ts
     //% stop.shadow="toggleYesNo"
     //% abstand.min=10 abstand.max=50 abstand.defl=20
     // inlineInputMode=inline
-    export function beispielSpurfolger16(motor128: number, langsamfahren: number, servo16: number, repeat: boolean, stop: boolean, abstand: number) {
+  /*   export function beispielSpurfolger16(motor128: number, langsamfahren: number, servo16: number, repeat: boolean, stop: boolean, abstand: number) {
         // repeat ist false beim ersten Durchlauf der Schleife, true bei Wiederholungen
         if (!repeat) {
             m_lenken = undefined // gespeicherte Werte löschen
@@ -220,7 +220,7 @@ namespace receiver { // r-beispiele.ts
                 setLedColors(eRGBled.c, Colors.White, getSpurRechts(eDH.hell)) // Spursensor links und rechts anzeigen
             }
         }
-    }
+    } */
 
 
     //% group="1 Spurfolger (1 ↓ 128 ↑ 255) (1 ↖ 16 ↗ 31)" subcategory=Beispiele
@@ -232,7 +232,7 @@ namespace receiver { // r-beispiele.ts
     //% repeat.shadow="toggleYesNo" repeat.defl=1
     // abstand.min=10 abstand.max=50 abstand.defl=20
     // inlineInputMode=inline
-    export function eventSpurfolger(links_hell: boolean, rechts_hell: boolean, stop: boolean, motor128: number, langsamfahren: number, servo16: number, repeat: boolean) {
+  /*   export function eventSpurfolger(links_hell: boolean, rechts_hell: boolean, stop: boolean, motor128: number, langsamfahren: number, servo16: number, repeat: boolean) {
         // repeat ist false beim ersten Durchlauf der Schleife, true bei Wiederholungen
         if (!repeat) {
             m_lenken = undefined // gespeicherte Werte löschen
@@ -278,7 +278,7 @@ namespace receiver { // r-beispiele.ts
             }
             setLedColors(eRGBled.b, Colors.Yellow, stop) // gelb, wenn Spursensor aktiviert ist
         }
-    }
+    } */
 
 
 
