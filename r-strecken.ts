@@ -41,6 +41,8 @@ namespace receiver { // r-strecken.ts
         if (motor != 0 && motor != c_MotorStop && servo != 0 && strecke != 0) {
             let sensor_color = Colors.Off
 
+            btf.resetTimer()
+
             if (checkEncoder && n_hasEncoder) {
                 let timeout_Encoder = 100 // 20 s Timeout wenn Encoder nicht zählt
 
