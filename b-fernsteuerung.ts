@@ -239,7 +239,7 @@ namespace btf { // b-fernsteuerung.ts
     //% group="lokales Programm (ohne Fernsteuerung)"
     //% block="Reset Timeout Timer" weight=1
     export function reset_timer() {
-        n_lastConnectedTime = input.runningTime() + 3000
+        n_lastConnectedTime = input.runningTime() - 3000
     }
 
     // ========== "Storage (Flash)"
