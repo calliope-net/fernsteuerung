@@ -293,6 +293,8 @@ namespace cb2 { // c-zweimotoren.ts
                 n_fahrplanBuffer2x2Motoren_gestartet = true
                 btf.zeigeBIN(0, btf.ePlot.bin, 2) // x=2 löschen
 
+                btf.resetTimer()
+
                 let hasEncoder = false
                 if (checkEncoder)
                     hasEncoder = writeEncoderReset() // Testet ob Encoder vorhanden, Ergebnis in n_Callibot2_x22hasEncoder

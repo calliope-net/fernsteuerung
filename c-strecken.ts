@@ -46,6 +46,8 @@ namespace cb2 { // c-strecken.ts
             if (checkEncoder)
                 hasEncoder = writeEncoderReset() // Testet ob Encoder vorhanden, Ergebnis in n_Callibot2_x22hasEncoder
 
+            btf.resetTimer()
+
             writeMotor128Servo16(motor, servo & 0b00011111, lenkenProzent) //, prozent
 
             if (hasEncoder) {
