@@ -156,7 +156,6 @@ namespace btf { // b-fernsteuerung.ts
 
             n_lastConnectedTime = input.runningTime() // Connection-Timeout Zähler zurück setzen
 
-
             // die Variable 'onReceivedDataHandler' ist normalerweise undefined, dann passiert nichts
             // die Variable erhält einen Wert, wenn der folgende Ereignis Block 'onReceivedData' einmal im Code vorkommt
             // der Wert der Variable 'onReceivedDataHandler' ist die function, die bei true zurück gerufen wird
@@ -238,8 +237,9 @@ namespace btf { // b-fernsteuerung.ts
 
     //% group="lokales Programm (ohne Fernsteuerung)"
     //% block="Reset Timeout Timer" weight=1
-    export function reset_timer() {
-        n_lastConnectedTime = input.runningTime() - 3000
+    export function resetTimer() {
+        if ((input.runningTime() - n_lastConnectedTime) > 3000)
+            n_lastConnectedTime = input.runningTime()
     }
 
     // ========== "Storage (Flash)"

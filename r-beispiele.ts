@@ -32,7 +32,7 @@ namespace receiver { // r-beispiele.ts
         // Parameter abstand_Knopf_A und Sensor Ereignis <abstand_Stop>
         if (hindernis_ausweichen) {
 
-            btf.reset_timer()
+            btf.resetTimer()
 
             if (abstand_Stop) { // Sensor Ereignis Abstand zu klein - rückwärts
                 writeMotor128Servo16(rMotor, (rServo == 0) ? zufallServo16(1, 5, 27, 31) : rServo)
@@ -93,7 +93,7 @@ namespace receiver { // r-beispiele.ts
     export function event_Spur_folgen(spur_folgen: boolean, links_hell: boolean, rechts_hell: boolean, motor128: number, motorLenken: number, servo16: number,  abstand_Stop: boolean, pause_zs: number, index = 0) {
         if (spur_folgen) {
 
-            btf.reset_timer()
+            btf.resetTimer()
 
             if (!a_eventSpurfolger_gestartet[index]) { // ganz am Anfang
                 m_lenken = undefined // gespeicherte Werte löschen
