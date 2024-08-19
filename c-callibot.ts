@@ -156,7 +156,7 @@ namespace cb2 { // c-callibot.ts 005F7F
     //% color.shadow="cb2_colorPicker"
     //% blink.shadow=toggleYesNo
     //% inlineInputMode=inline 
- export    function writecb2RgbLed(led: eRgbLed, color: number, on: boolean, blink = false) {
+    export function writecb2RgbLed(led: eRgbLed, color: number, on: boolean, blink = false) {
         if (!on || (blink && a_LEDs[led] == color))
             color = Colors.Off // alle Farben aus = 0
 
