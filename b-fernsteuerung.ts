@@ -152,7 +152,7 @@ namespace btf { // b-fernsteuerung.ts
             n_timeoutDisbled =
                 ((receivedBuffer[0] & 0x20) == 0x20) // Bit 5 Programm=1 / Betriebsart ..10.... oder ..11....
                 ||
-                (((receivedBuffer[0] & 0x30) == 0x10) && ((receivedBuffer[3] & 0x01) == 0x00)) // Betriebsart 10 und Joystick nicht aktiv ([3]Bit 0=0) M0 Power
+                (((receivedBuffer[0] & 0x30) == 0x10) && ((receivedBuffer[3] & 0x01) == 0x00)) // Betriebsart 01 und Joystick nicht aktiv ([3]Bit 0=0) M0 Power
 
             n_lastConnectedTime = input.runningTime() // Connection-Timeout Zähler zurück setzen
 
@@ -238,7 +238,7 @@ namespace btf { // b-fernsteuerung.ts
     //% group="lokales Programm (ohne Fernsteuerung)"
     //% block="Reset Timeout Timer" weight=1
     export function resetTimer() {
-        if ((input.runningTime() - n_lastConnectedTime) > 3000)
+        if ((input.runningTime() - n_lastConnectedTime) > 2500)
             n_lastConnectedTime = input.runningTime()
     }
 
