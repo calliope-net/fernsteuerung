@@ -41,8 +41,8 @@
         "c-sensorevents.ts",
         "c-sensoren.ts",
         "c-strecken.ts",
-        "c-zweimotoren.ts",
         "c-fernsteuerung.ts",
+        "c-zweimotoren.ts",
         "c-beispiele.ts"
     ],
     "testFiles": [
