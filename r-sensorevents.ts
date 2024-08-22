@@ -2,10 +2,11 @@
 namespace receiver { // r-sensorevents.ts
 
 
+ 
+    let n_SpurLinksHell = false // hell=true
+    let n_SpurRechtsHell = false
+ 
     let n_SpursensorEventsRegistered = false
-    //let n_inEvent = 0
-    export let n_SpurLinksHell = false // hell=true
-    export let n_SpurRechtsHell = false
     const c_pulseDuration = 60000 // µs 50 ms
 
     //% group="Spur Sensor (beim Start)" subcategory="Sensoren"
@@ -75,14 +76,38 @@ namespace receiver { // r-sensorevents.ts
 
 
 
+    export enum eDH { hell = 1, dunkel = 0 }
+
+    //% group="Spur Sensor" subcategory="Sensoren"
+    //% block="Spursensor links %l" weight=7
+    export function getSpurLinks(l: eDH) {
+        return (l == eDH.hell) ? n_SpurLinksHell : !n_SpurLinksHell
+    }
+
+    //% group="Spur Sensor" subcategory="Sensoren"
+    //% block="Spursensor rechts %r" weight=6
+    export function getSpurRechts(r: eDH) {
+        return (r == eDH.hell) ? n_SpurRechtsHell : !n_SpurRechtsHell
+    }
+
+    //% group="Spur Sensor" subcategory="Sensoren"
+    //% block="Spursensoren links %l und rechts %r" weight=5
+    export function getSpursensor(l: eDH, r: eDH) {
+        return getSpurLinks(l) && getSpurRechts(r)
+    }
+
+
+
+
+
     // ========== group="Spur Sensor" subcategory="Sensoren"
 
     let a_raiseSpurEvent_gestartet = [false, false]
     let n_SpurTimer = input.runningTime()
     let n_Spur = 0 // letzter Status
 
-    //% group="Spur Sensor Ereignis" subcategory="Sensoren"
-    //% block="Spur Sensor Ereignis auslösen %on || • Pause %ms ms" weight=6
+    //% group="Spur Sensor" subcategory="Sensoren"
+    //% block="Spur Sensor Ereignis auslösen %on || • Pause %ms ms" weight=3
     //% on.shadow=toggleOnOff
     //% ms.defl=25
     //% inlineInputMode=inline
@@ -117,32 +142,47 @@ namespace receiver { // r-sensorevents.ts
 
     let onSpurEventHandler: (links_hell: boolean, rechts_hell: boolean, abstand_Stop: boolean) => void
 
-    //% group="Spur Sensor Ereignis" subcategory="Sensoren"
-    //% block="wenn Spur Sensor Ereignis" weight=4
+    //% group="Spur Sensor" subcategory="Sensoren"
+    //% block="wenn Spur Sensor Ereignis" weight=2
     //% draggableParameters=reporter
     export function onSpurEvent(cb: (links_hell: boolean, rechts_hell: boolean, abstand_Stop: boolean) => void) {
         onSpurEventHandler = cb
     }
 
 
-    export enum eDH { hell = 1, dunkel = 0 }
 
-    //% group="Spur Sensor" subcategory="Sensoren"
-    //% block="Spursensor links %l" weight=6
-    export function getSpurLinks(l: eDH) {
-        return (l == eDH.hell) ? n_SpurLinksHell : !n_SpurLinksHell
+
+
+    // ========== group="Ultraschall (vom gewählten Modell)" subcategory="Sensoren"
+
+    //% group="Ultraschall Sensor" subcategory="Sensoren"
+    //% block="Abstand Sensor angeschlossen" weight=7
+    export function selectAbstandSensorConnected() {
+        if (n_Hardware == eHardware.v3)
+            return n_QwiicUltrasonicConnected
+        else if (n_Hardware == eHardware.car4)
+            return true
+        else
+            return false
     }
 
-    //% group="Spur Sensor" subcategory="Sensoren"
-    //% block="Spursensor rechts %r" weight=5
-    export function getSpurRechts(r: eDH) {
-        return (r == eDH.hell) ? n_SpurRechtsHell : !n_SpurRechtsHell
+    //% group="Ultraschall Sensor" subcategory="Sensoren"
+    //% block="Abstand cm • einlesen %read" weight=6
+    //% read.shadow=toggleYesNo
+    export function selectAbstand(read: boolean) {
+        if (n_Hardware == eHardware.v3)
+            return getQwiicUltrasonic(read) // in r-qwiic.ts i2c einlesen
+        else if (n_Hardware == eHardware.car4)
+            return pinGroveUltraschall_cm() // in r-advanced.ts
+        else
+            return 0
     }
 
-    //% group="Spur Sensor" subcategory="Sensoren"
-    //% block="Spursensoren links %l und rechts %r" weight=3
-    export function getSpursensor(l: eDH, r: eDH) {
-        return getSpurLinks(l) && getSpurRechts(r)
+    //% blockId=receiver_getAbstand blockHidden=true
+    //% block="%buffer Abstand in cm" weight=5
+    //% buffer.shadow="btf_receivedBuffer19"
+    export function receiver_getAbstand(buffer: Buffer) {
+        return btf.getAbstand(buffer)
     }
 
 
@@ -156,7 +196,7 @@ namespace receiver { // r-sensorevents.ts
     let n_AbstandSensor = false // Sensor aktiviert (im Buffer bzw. Knopf A)
 
     //% group="Ultraschall Sensor" subcategory="Sensoren"
-    //% block="Abstand Sensor Ereignis auslösen %on • Stop %stop_cm cm • Start %start_cm cm || • Pause %ms ms" weight=6
+    //% block="Abstand Sensor Ereignis auslösen %on • Stop %stop_cm cm • Start %start_cm cm || • Pause %ms ms" weight=3
     //% on.shadow=toggleOnOff
     //% stop_cm.defl=30
     //% start_cm.defl=35
@@ -198,7 +238,7 @@ namespace receiver { // r-sensorevents.ts
     let onAbstandEventHandler: (abstand_Sensor: boolean, abstand_Stop: boolean, cm: number) => void
 
     //% group="Ultraschall Sensor" subcategory="Sensoren"
-    //% block="wenn Abstand Sensor Ereignis" weight=4
+    //% block="wenn Abstand Sensor Ereignis" weight=2
     //% draggableParameters=reporter
     export function onAbstandEvent(cb: (abstand_Sensor: boolean, abstand_Stop: boolean, cm: number) => void) {
         onAbstandEventHandler = cb
