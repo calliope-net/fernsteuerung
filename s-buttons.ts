@@ -56,16 +56,17 @@ namespace sender { // s-buttons.ts
             btf.zeigeFunkgruppe()
         }
 
-        // cb2e||mkcs // von 'fernstarten Spurfolger' auf 'fernstarten Abstand' umschalten
+        // cb2e||mkcs // von 'fernstarten Spur folgen' auf 'fernstarten Abstand ausweichen' umschalten
         else if ((isModell(eModell.cb2e) || isModell(eModell.mkcs)) && !getStatusButtonB() && isFunktion(eFunktion.f10fernstartenSpurfolger)) {
-            // wenn B aus ist, wechselt A zwischen Spurfolger und Abstand
+            // wenn B aus ist, startet A 'Abstand ausweichen' (reagiert nicht auf getStatusButton)
             setStatusFunktion(eFunktion.f10fernstartenAbstand)
         }
         // cb2e||mkcs // von 'fernstarten Abstand' auf 'fernstarten Spurfolger' umschalten
-        else if ((isModell(eModell.cb2e) || isModell(eModell.mkcs)) && !getStatusButtonB() && isFunktion(eFunktion.f10fernstartenAbstand)) {
-            // wenn B aus ist, wechselt A zwischen Spurfolger und Abstand
+        else if ((isModell(eModell.cb2e) || isModell(eModell.mkcs)) && isFunktion(eFunktion.f10fernstartenAbstand)) {
+            // wenn 'Abstand ausweichen', schaltet A zurück auf 'Spur folgen' (wird mit getStatusButtonB noch gestartet)
+            setStatusButtonB(false)
             setStatusFunktion(eFunktion.f10fernstartenSpurfolger)
-        } // wenn B an ist, Standardwerte (A wechseln true-false)
+        } 
 
         // Maker Kit Car && Gabelstapler (lenken mit Tasten)
         else if (isModell(eModell.mkcg) && isFunktion(eFunktion.m0_m1_s0)) {
