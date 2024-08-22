@@ -1,54 +1,6 @@
 
 namespace sender { // s-fernsteuerung.ts
-
-    /* 
-        // ========== group="00 Fernsteuerung Motoren" subcategory="Fernsteuerung"
-    
-        // group="00 Fernsteuerung Motoren" subcategory="Fernsteuerung"
-        // block="00 %buffer M0 Fahren und Lenken" weight=5 deprecated=1
-        // buffer.shadow=btf_sendBuffer19
-        export function send00M0(buffer: Buffer) {
-            btf.setBetriebsart(buffer, btf.e0Betriebsart.p0Fahren)
-            btf.setByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor, joystickValue(eJoystickValue.xmotor))
-            btf.setByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo, joystickValue(eJoystickValue.servo16))
-            btf.setaktiviert(buffer, btf.e3aktiviert.m0, true)
-        }
-    
-        // group="00 Fernsteuerung Motoren" subcategory="Fernsteuerung"
-        // block="00 %buffer M0 Fahren M1 Gabelstapler || * %prozent \\%" weight=4 deprecated=1
-        // buffer.shadow="btf_sendBuffer19"
-        // prozent.min=10 prozent.max=100 prozent.defl=100
-        export function send00M01(buffer: Buffer, prozent = 100) {
-            btf.setBetriebsart(buffer, btf.e0Betriebsart.p0Fahren)
-            btf.setByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor, btf.btf_motorProzent(joystickValue(eJoystickValue.xmotor), prozent))
-            btf.setByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo, getStatusButtonCounter())// n_ButtonAB_Counter
-            btf.setByte(buffer, btf.eBufferPointer.m1, btf.eBufferOffset.b0_Motor, joystickValue(eJoystickValue.ymotor))
-            btf.setaktiviert(buffer, btf.e3aktiviert.m0, true)
-            btf.setaktiviert(buffer, btf.e3aktiviert.m1, true)
-        }
-    
-        // group="00 Fernsteuerung Motoren" subcategory="Fernsteuerung"
-        // block="00 %buffer MA Seilrolle MB Drehkranz" weight=3 deprecated=1
-        // buffer.shadow="btf_sendBuffer19"
-        export function send00MAB(buffer: Buffer) {
-            btf.setBetriebsart(buffer, btf.e0Betriebsart.p0Fahren)
-            btf.setByte(buffer, btf.eBufferPointer.ma, btf.eBufferOffset.b0_Motor, joystickValue(eJoystickValue.xmotor))
-            btf.setByte(buffer, btf.eBufferPointer.mb, btf.eBufferOffset.b0_Motor, joystickValue(eJoystickValue.ymotor))
-            btf.setaktiviert(buffer, btf.e3aktiviert.ma, true)
-            btf.setaktiviert(buffer, btf.e3aktiviert.mb, true)
-        }
-    
-        // group="00 Fernsteuerung Motoren" subcategory="Fernsteuerung"
-        // block="00 %buffer MC Zahnstange MB Drehkranz" weight=2 deprecated=1
-        // buffer.shadow="btf_sendBuffer19"
-        export function send00MCB(buffer: Buffer) {
-            btf.setBetriebsart(buffer, btf.e0Betriebsart.p0Fahren)
-            btf.setByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b0_Motor, joystickValue(eJoystickValue.xmotor))
-            btf.setByte(buffer, btf.eBufferPointer.mb, btf.eBufferOffset.b0_Motor, joystickValue(eJoystickValue.ymotor))
-            btf.setaktiviert(buffer, btf.e3aktiviert.mc, true)
-            btf.setaktiviert(buffer, btf.e3aktiviert.mb, true)
-        }
-     */
+  
 
     // ========== group="00 fahren und lenken mit Joystick" subcategory="Fernsteuerung"
 
@@ -135,7 +87,7 @@ namespace sender { // s-fernsteuerung.ts
     // ========== group="10 Programm fernstarten" subcategory="Fernsteuerung"
 
     //% group="10 Programm fernstarten" subcategory="Fernsteuerung"
-    //% block="10 Spurfolger %buffer Fahren (1↓128↑255) %motor128 langsam Fahren %langsamfahren Lenken (1↖16↗31) %servo16 lenkender Motor \\% %lenkenProzent Abstanssensor %stop bei Abstand < %abstand Pause ⅒s %pause_zs" weight=6
+    //% block="10 Spur folgen %buffer Fahren (1↓128↑255) %motor128 langsam Fahren %langsamfahren Lenken (1↖16↗31) %servo16 lenkender Motor \\% %lenkenProzent Abstand Sensor %stop bei Abstand < %abstand Pause ⅒s %pause_zs" weight=6
     //% buffer.shadow="btf_sendBuffer19"
     //% motor128.min=1 motor128.max=255 motor128.defl=192
     //% langsamfahren.min=1 langsamfahren.max=255 langsamfahren.defl=160

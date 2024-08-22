@@ -128,6 +128,9 @@ namespace btf { // b-fernsteuerung.ts
 
     // ========== Bluetooth Event radio.onReceivedBuffer behandeln ==========
 
+    let a_receivedPacketSerialNumber = 0
+    let a_receivedBuffer19: Buffer
+
     // deklariert die Variable mit dem Delegat-Typ '(receivedBuffer: Buffer) => void'
     // ein Delegat ist die Signatur einer function mit den selben Parametern
     // es wird kein Wert zurück gegeben (void)
@@ -141,9 +144,10 @@ namespace btf { // b-fernsteuerung.ts
     // als Parabeter 'cb' übergeben wird die function 'function (receivedBuffer) {}'
     // was in den Klammern {} steht, wird bei dem Ereignis 'radio.onReceivedBuffer' abgearbeitet (callback = Rückruf)
     radio.onReceivedBuffer(function (receivedBuffer: Buffer) {
+      
+        if (n_start && receivedBuffer.length == 19 && (a_receivedPacketSerialNumber == 0 || a_receivedPacketSerialNumber == radio.receivedPacket(RadioPacketProperty.SerialNumber))) { // beim ersten Mal warten bis Motor bereit
 
-        if (n_start && receivedBuffer.length == 19) { // beim ersten Mal warten bis Motor bereit
-
+            a_receivedPacketSerialNumber = radio.receivedPacket(RadioPacketProperty.SerialNumber)
             a_receivedBuffer19 = receivedBuffer // lokal speichern
 
             if ((receivedBuffer[0] & 0x80) == 0x80) // Bit 7 reset
@@ -174,9 +178,6 @@ namespace btf { // b-fernsteuerung.ts
 
 
     // ========== group="Bluetooth empfangen" subcategory="Buffer"
-
-    let a_receivedBuffer19: Buffer
-
 
     // sichtbarer Event-Block
 
