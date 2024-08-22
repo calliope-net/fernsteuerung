@@ -8,8 +8,8 @@ namespace receiver { // r-sensorevents.ts
     export let n_SpurRechtsHell = false
     const c_pulseDuration = 60000 // µs 50 ms
 
-    //% group="Spursensor (beim Start)" subcategory="Sensoren"
-    //% block="Spursensor Pin Ereignisse registrieren (beim Start)" weight=8
+    //% group="Spur Sensor (beim Start)" subcategory="Sensoren"
+    //% block="Spur Sensor Pin Ereignisse registrieren (beim Start)" weight=8
     export function spursensorRegisterEvents() {
         if (!n_SpursensorEventsRegistered) {
             // n_Spursensor = (pins.digitalReadPin(a_PinSpurlinks[n_Hardware]) << 1) | pins.digitalReadPin(a_PinSpurrechts[n_Hardware])
@@ -81,7 +81,7 @@ namespace receiver { // r-sensorevents.ts
     let n_SpurTimer = input.runningTime()
     let n_Spur = 0 // letzter Status
 
-    //% group="Spur Sensor" subcategory="Sensoren"
+    //% group="Spur Sensor Ereignis" subcategory="Sensoren"
     //% block="Spur Sensor Ereignis auslösen %on || • Pause %ms ms" weight=6
     //% on.shadow=toggleOnOff
     //% ms.defl=25
@@ -117,7 +117,7 @@ namespace receiver { // r-sensorevents.ts
 
     let onSpurEventHandler: (links_hell: boolean, rechts_hell: boolean, abstand_Stop: boolean) => void
 
-    //% group="Spur Sensor" subcategory="Sensoren"
+    //% group="Spur Sensor Ereignis" subcategory="Sensoren"
     //% block="wenn Spur Sensor Ereignis" weight=4
     //% draggableParameters=reporter
     export function onSpurEvent(cb: (links_hell: boolean, rechts_hell: boolean, abstand_Stop: boolean) => void) {
@@ -127,28 +127,19 @@ namespace receiver { // r-sensorevents.ts
 
     export enum eDH { hell = 1, dunkel = 0 }
 
-    //% group="Spursensor (vom gewählten Modell)" subcategory="Sensoren"
+    //% group="Spur Sensor" subcategory="Sensoren"
     //% block="Spursensor links %l" weight=6
     export function getSpurLinks(l: eDH) {
         return (l == eDH.hell) ? n_SpurLinksHell : !n_SpurLinksHell
     }
 
-    //% group="Spursensor (vom gewählten Modell)" subcategory="Sensoren"
+    //% group="Spur Sensor" subcategory="Sensoren"
     //% block="Spursensor rechts %r" weight=5
     export function getSpurRechts(r: eDH) {
         return (r == eDH.hell) ? n_SpurRechtsHell : !n_SpurRechtsHell
     }
 
-    //% group="Spursensor (vom gewählten Modell)" subcategory="Sensoren"
-    //% block="Spursensor links %rechts rechts • dunkel %hell hell" weight=4
-    //% rechts.shadow=toggleYesNo
-    //% hell.shadow=toggleYesNo
-    /* export function getSpursensor(rechts: boolean, hell: boolean) {
-        let bm = rechts ? 0b01 : 0b10
-        return (n_Spursensor & bm) == (hell ? bm : 0)
-    } */
-
-    //% group="Spursensor (vom gewählten Modell)" subcategory="Sensoren"
+    //% group="Spur Sensor" subcategory="Sensoren"
     //% block="Spursensoren links %l und rechts %r" weight=3
     export function getSpursensor(l: eDH, r: eDH) {
         return getSpurLinks(l) && getSpurRechts(r)
