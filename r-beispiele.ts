@@ -76,7 +76,8 @@ namespace receiver { // r-beispiele.ts
 
     let a_eventSpurfolger_gestartet: boolean[] = [false, false] // index 0=block, 1=buffer in c-fernsteuerung.ts
 
-
+    let m_lenken: number
+    let m_inSpur = false
 
     //% group="Spur Sensor Ereignis" subcategory=Beispiele
     //% block="Spur folgen | gestartet %spur_folgen <links_hell> %links_hell <rechts_hell> %rechts_hell Fahren (1↓128↑255) %motor128 langsam Fahren %motorLenken Lenken (1↖16↗31) %servo16 <abstand_Stop> %abstand_Stop Pause ⅒s %pause_zs" weight=6
@@ -147,20 +148,46 @@ namespace receiver { // r-beispiele.ts
 
 
 
+    export function fernProgrammierung(buffer: Buffer, abstand: boolean, links_hell: boolean, rechts_hell: boolean) {
+        if (btf.getaktiviert(buffer, btf.e3aktiviert.ue) && abstand) { // 2
+            selectMotor(btf.getByte(buffer, btf.eBufferPointer.ue, btf.eBufferOffset.b0_Motor)) // 4
+            pinServo16(btf.getByte(buffer, btf.eBufferPointer.ue, btf.eBufferOffset.b1_Servo)) // 5
+        }
+        else if (btf.getaktiviert(buffer, btf.e3aktiviert.s00) && !links_hell && !rechts_hell) { // 4
+            selectMotor(btf.getByte(buffer, btf.eBufferPointer.s00, btf.eBufferOffset.b0_Motor)) // 7
+            pinServo16(btf.getByte(buffer, btf.eBufferPointer.s00, btf.eBufferOffset.b1_Servo)) // 8
+        }
+        else if (btf.getaktiviert(buffer, btf.e3aktiviert.s01) && !links_hell && rechts_hell) { // 8
+            selectMotor(btf.getByte(buffer, btf.eBufferPointer.s01, btf.eBufferOffset.b0_Motor)) // 10
+            pinServo16(btf.getByte(buffer, btf.eBufferPointer.s01, btf.eBufferOffset.b1_Servo)) // 11
+        }
+        else if (btf.getaktiviert(buffer, btf.e3aktiviert.s10) && links_hell && !rechts_hell) { // 16
+            selectMotor(btf.getByte(buffer, btf.eBufferPointer.s10, btf.eBufferOffset.b0_Motor)) // 13
+            pinServo16(btf.getByte(buffer, btf.eBufferPointer.s10, btf.eBufferOffset.b1_Servo)) // 14
+        }
+        else if (btf.getaktiviert(buffer, btf.e3aktiviert.s11) && links_hell && rechts_hell) { // 32
+            selectMotor(btf.getByte(buffer, btf.eBufferPointer.s11, btf.eBufferOffset.b0_Motor)) // 16
+            pinServo16(btf.getByte(buffer, btf.eBufferPointer.s11, btf.eBufferOffset.b1_Servo)) // 17
+        }
+        else if (btf.getaktiviert(buffer, btf.e3aktiviert.m0)) { // 1
+            selectMotor(btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor)) // 1
+            pinServo16(btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo)) // 2
+        }
+
+    }
+
+
 
     // ========== group="1 Spurfolger (1 ↓ 128 ↑ 255) (1 ↖ 16 ↗ 31)" subcategory=Beispiele
 
-    let m_lenken: number
-    let m_inSpur = false
-
-    //% group="1 Spurfolger (1 ↓ 128 ↑ 255) (1 ↖ 16 ↗ 31)" subcategory=Beispiele
-    //% block="Spurfolger | fahren (1↓128↑255) %motor128 langsam fahren %langsamfahren lenken (1↖16↗31) %servo16 Wiederholung %repeat Stop %stop bei Abstand < (cm) %abstand" weight=6
-    //% motor128.min=1 motor128.max=255 motor128.defl=192
-    //% servo16.min=1 servo16.max=31 servo16.defl=31
-    //% langsamfahren.min=1 langsamfahren.max=255 langsamfahren.defl=160
-    //% repeat.shadow="toggleYesNo" repeat.defl=1
-    //% stop.shadow="toggleYesNo"
-    //% abstand.min=10 abstand.max=50 abstand.defl=20
+    // group="1 Spurfolger (1 ↓ 128 ↑ 255) (1 ↖ 16 ↗ 31)" subcategory=Beispiele
+    // block="Spurfolger | fahren (1↓128↑255) %motor128 langsam fahren %langsamfahren lenken (1↖16↗31) %servo16 Wiederholung %repeat Stop %stop bei Abstand < (cm) %abstand" weight=6
+    // motor128.min=1 motor128.max=255 motor128.defl=192
+    // servo16.min=1 servo16.max=31 servo16.defl=31
+    // langsamfahren.min=1 langsamfahren.max=255 langsamfahren.defl=160
+    // repeat.shadow="toggleYesNo" repeat.defl=1
+    // stop.shadow="toggleYesNo"
+    // abstand.min=10 abstand.max=50 abstand.defl=20
     // inlineInputMode=inline
   /*   export function beispielSpurfolger16(motor128: number, langsamfahren: number, servo16: number, repeat: boolean, stop: boolean, abstand: number) {
         // repeat ist false beim ersten Durchlauf der Schleife, true bei Wiederholungen
@@ -223,13 +250,13 @@ namespace receiver { // r-beispiele.ts
     } */
 
 
-    //% group="1 Spurfolger (1 ↓ 128 ↑ 255) (1 ↖ 16 ↗ 31)" subcategory=Beispiele
-    //% block="Spurfolger (Pin-Events) | links hell %links_hell rechts hell %rechts_hell Abstandssensor %stop fahren (1↓128↑255) %motor128 langsam fahren %langsamfahren lenken (1↖16↗31) %servo16 Wiederholung %repeat" weight=2
-    //% stop.shadow="toggleYesNo"
-    //% motor128.min=1 motor128.max=255 motor128.defl=192
-    //% langsamfahren.min=1 langsamfahren.max=255 langsamfahren.defl=160
-    //% servo16.min=1 servo16.max=31 servo16.defl=31
-    //% repeat.shadow="toggleYesNo" repeat.defl=1
+    // group="1 Spurfolger (1 ↓ 128 ↑ 255) (1 ↖ 16 ↗ 31)" subcategory=Beispiele
+    // block="Spurfolger (Pin-Events) | links hell %links_hell rechts hell %rechts_hell Abstandssensor %stop fahren (1↓128↑255) %motor128 langsam fahren %langsamfahren lenken (1↖16↗31) %servo16 Wiederholung %repeat" weight=2
+    // stop.shadow="toggleYesNo"
+    // motor128.min=1 motor128.max=255 motor128.defl=192
+    // langsamfahren.min=1 langsamfahren.max=255 langsamfahren.defl=160
+    // servo16.min=1 servo16.max=31 servo16.defl=31
+    // repeat.shadow="toggleYesNo" repeat.defl=1
     // abstand.min=10 abstand.max=50 abstand.defl=20
     // inlineInputMode=inline
   /*   export function eventSpurfolger(links_hell: boolean, rechts_hell: boolean, stop: boolean, motor128: number, langsamfahren: number, servo16: number, repeat: boolean) {
@@ -280,35 +307,6 @@ namespace receiver { // r-beispiele.ts
         }
     } */
 
-
-
-    export function fernProgrammierung(buffer: Buffer, abstand: boolean, links_hell: boolean, rechts_hell: boolean) {
-        if (btf.getaktiviert(buffer, btf.e3aktiviert.ue) && abstand) { // 2
-            selectMotor(btf.getByte(buffer, btf.eBufferPointer.ue, btf.eBufferOffset.b0_Motor)) // 4
-            pinServo16(btf.getByte(buffer, btf.eBufferPointer.ue, btf.eBufferOffset.b1_Servo)) // 5
-        }
-        else if (btf.getaktiviert(buffer, btf.e3aktiviert.s00) && !links_hell && !rechts_hell) { // 4
-            selectMotor(btf.getByte(buffer, btf.eBufferPointer.s00, btf.eBufferOffset.b0_Motor)) // 7
-            pinServo16(btf.getByte(buffer, btf.eBufferPointer.s00, btf.eBufferOffset.b1_Servo)) // 8
-        }
-        else if (btf.getaktiviert(buffer, btf.e3aktiviert.s01) && !links_hell && rechts_hell) { // 8
-            selectMotor(btf.getByte(buffer, btf.eBufferPointer.s01, btf.eBufferOffset.b0_Motor)) // 10
-            pinServo16(btf.getByte(buffer, btf.eBufferPointer.s01, btf.eBufferOffset.b1_Servo)) // 11
-        }
-        else if (btf.getaktiviert(buffer, btf.e3aktiviert.s10) && links_hell && !rechts_hell) { // 16
-            selectMotor(btf.getByte(buffer, btf.eBufferPointer.s10, btf.eBufferOffset.b0_Motor)) // 13
-            pinServo16(btf.getByte(buffer, btf.eBufferPointer.s10, btf.eBufferOffset.b1_Servo)) // 14
-        }
-        else if (btf.getaktiviert(buffer, btf.e3aktiviert.s11) && links_hell && rechts_hell) { // 32
-            selectMotor(btf.getByte(buffer, btf.eBufferPointer.s11, btf.eBufferOffset.b0_Motor)) // 16
-            pinServo16(btf.getByte(buffer, btf.eBufferPointer.s11, btf.eBufferOffset.b1_Servo)) // 17
-        }
-        else if (btf.getaktiviert(buffer, btf.e3aktiviert.m0)) { // 1
-            selectMotor(btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor)) // 1
-            pinServo16(btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo)) // 2
-        }
-
-    }
 
 
 } // r-beispiele.ts

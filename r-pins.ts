@@ -4,13 +4,12 @@ namespace receiver { // r-pins.ts
     // PINs sind in r-receiver.ts definiert
 
 
+    // ========== group="Spur Sensor Pins (vom gewählten Modell)" subcategory="Pins"
 
-    // ========== group="Spursensor" subcategory="Pins"
+    // export enum eDH { dunkel = 0, hell = 1 } // 0 ist schwarz
 
-    //   export enum eDH { dunkel = 0, hell = 1 } // 0 ist schwarz
-
-    //% group="Spursensor Pins (vom gewählten Modell)" subcategory="Pins"
-    //% block="Spursensor Pin links %hell" weight=6
+    //% group="Spur Sensor Pins (vom gewählten Modell)" subcategory="Pins"
+    //% block="Spur Sensor Pin links %hell" weight=6
     export function pinSpurlinks(hell: eDH) {
         if (a_PinSpurlinks.length > n_Hardware)
             return pins.digitalReadPin(a_PinSpurlinks[n_Hardware]) == hell // 0 ist schwarz
@@ -18,8 +17,8 @@ namespace receiver { // r-pins.ts
             return false
     }
 
-    //% group="Spursensor Pins (vom gewählten Modell)" subcategory="Pins"
-    //% block="Spursensor Pin rechts %hell" weight=5
+    //% group="Spur Sensor Pins (vom gewählten Modell)" subcategory="Pins"
+    //% block="Spur Sensor Pin rechts %hell" weight=5
     export function pinSpurrechts(hell: eDH) {
         if (a_PinSpurrechts.length > n_Hardware)
             return pins.digitalReadPin(a_PinSpurrechts[n_Hardware]) == hell // 0 ist schwarz
@@ -27,9 +26,8 @@ namespace receiver { // r-pins.ts
             return false
     }
 
-
-    //% group="Spursensor Pins (vom gewählten Modell)" subcategory="Pins"
-    //% block="Spursensor Pin links %l und rechts %r" weight=4
+    //% group="Spur Sensor Pins (vom gewählten Modell)" subcategory="Pins"
+    //% block="Spur Sensor Pin links %l und rechts %r" weight=4
     export function readSpursensor(l: eDH, r: eDH) {
         return pinSpurlinks(l) && pinSpurrechts(r)
     }
@@ -37,20 +35,13 @@ namespace receiver { // r-pins.ts
 
     // ========== EVENT HANDLER === sichtbarer Event-Block
     export let onSpurPinEventHandler: (links: boolean, rechts: boolean) => void
-    //  let onSpurStopEventHandler: (links: boolean, rechts: boolean, abstand_Stop: boolean) => void
 
-    //% group="Spursensor Pins (vom gewählten Modell)" subcategory="Pins"
+    //% group="Spur Sensor Pins (vom gewählten Modell)" subcategory="Pins"
     //% block="wenn Spur Sensor Pin Ereignis" weight=2
     //% draggableParameters=reporter
     export function onSpurPinEvent(cb: (links_hell: boolean, rechts_hell: boolean) => void) {
         onSpurPinEventHandler = cb
     }
-
-
-
-
-
-
 
 
 
@@ -133,7 +124,5 @@ namespace receiver { // r-pins.ts
 
         return Math.round(pins.pulseIn(c_PinUltraschall, PulseValue.High, 50000) * 0.0263793)
     }
-
-
 
 }

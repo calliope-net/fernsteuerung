@@ -79,19 +79,19 @@ namespace receiver { // r-sensorevents.ts
     export enum eDH { hell = 1, dunkel = 0 }
 
     //% group="Spur Sensor" subcategory="Sensoren"
-    //% block="Spursensor links %l" weight=7
+    //% block="Spur Sensor links %l" weight=7
     export function getSpurLinks(l: eDH) {
         return (l == eDH.hell) ? n_SpurLinksHell : !n_SpurLinksHell
     }
 
     //% group="Spur Sensor" subcategory="Sensoren"
-    //% block="Spursensor rechts %r" weight=6
+    //% block="Spur Sensor rechts %r" weight=6
     export function getSpurRechts(r: eDH) {
         return (r == eDH.hell) ? n_SpurRechtsHell : !n_SpurRechtsHell
     }
 
     //% group="Spur Sensor" subcategory="Sensoren"
-    //% block="Spursensoren links %l und rechts %r" weight=5
+    //% block="Spur Sensoren links %l und rechts %r" weight=5
     export function getSpursensor(l: eDH, r: eDH) {
         return getSpurLinks(l) && getSpurRechts(r)
     }
