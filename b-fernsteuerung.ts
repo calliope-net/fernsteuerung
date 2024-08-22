@@ -14,13 +14,13 @@ namespace btf { // b-fernsteuerung.ts
     export let n_sendReset = false // true sendet zurücksetzen zum Empfänger wenn connected
 
     // nur Empfänger
-    let n_start = false // nur bei true wird Ereignis 'wenn Datenpaket empfangen' ausgelöst
+    let n_startReceivedBuffer = false // nur bei true wird Ereignis 'wenn Datenpaket empfangen' ausgelöst
 
     // onReceivedBuffer
     let n_timeoutDisbled = false // autonomes fahren nach Programm, kein Bluetooth timeout
     export let n_lastConnectedTime = input.runningTime()  // ms seit Start
-    let n_lastBetriebsart: e0Betriebsart
-    let n_last6Motoren: number
+    let n_lastBetriebsart: e0Betriebsart // für DataChanged Erkennung
+    let n_last6Motoren: number // für DataChanged Erkennung
 
     //% group="calliope-net.github.io/fernsteuerung"
     //% block="beim Start || Funkgruppe %modellFunkgruppe" weight=9
@@ -32,7 +32,6 @@ namespace btf { // b-fernsteuerung.ts
     export enum eNamespace { btf, sender, receiver, cb2 }
     export let m_Namespace: eNamespace
 
-
     export function beimStartintern(e: eNamespace, callbackStorageChanged?: (pStorageChange: eStorageBuffer, buttonB: boolean) => void) {
         m_Namespace = e
         onStorageChanged = callbackStorageChanged
@@ -40,7 +39,8 @@ namespace btf { // b-fernsteuerung.ts
         radio.setTransmitPower(7)
         radio.setTransmitSerialNumber(true)
 
-        n_start = true // nur beim Empfänger relevant
+        if (m_Namespace == eNamespace.receiver || m_Namespace == eNamespace.cb2)
+            n_startReceivedBuffer = true // nur beim Empfänger relevant
     }
 
     //% group="calliope-net.github.io/fernsteuerung"
@@ -144,8 +144,8 @@ namespace btf { // b-fernsteuerung.ts
     // als Parabeter 'cb' übergeben wird die function 'function (receivedBuffer) {}'
     // was in den Klammern {} steht, wird bei dem Ereignis 'radio.onReceivedBuffer' abgearbeitet (callback = Rückruf)
     radio.onReceivedBuffer(function (receivedBuffer: Buffer) {
-      
-        if (n_start && receivedBuffer.length == 19 && (a_receivedPacketSerialNumber == 0 || a_receivedPacketSerialNumber == radio.receivedPacket(RadioPacketProperty.SerialNumber))) { // beim ersten Mal warten bis Motor bereit
+
+        if (n_startReceivedBuffer && receivedBuffer.length == 19 && (a_receivedPacketSerialNumber == 0 || a_receivedPacketSerialNumber == radio.receivedPacket(RadioPacketProperty.SerialNumber))) { // beim ersten Mal warten bis Motor bereit
 
             a_receivedPacketSerialNumber = radio.receivedPacket(RadioPacketProperty.SerialNumber)
             a_receivedBuffer19 = receivedBuffer // lokal speichern
