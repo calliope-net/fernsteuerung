@@ -29,6 +29,7 @@
         "r-receiver.ts",
         "r-pins.ts",
         "r-spursensor.ts",
+        "r-sensorevents.ts",
         "r-qwiicmotor.ts",
         "r-qwiic.ts",
         "r-strecken.ts",
@@ -42,8 +43,7 @@
         "c-strecken.ts",
         "c-zweimotoren.ts",
         "c-fernsteuerung.ts",
-        "c-beispiele.ts",
-        "r-sensorevents.ts"
+        "c-beispiele.ts"
     ],
     "testFiles": [
         "test.ts"
