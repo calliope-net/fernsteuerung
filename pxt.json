@@ -28,7 +28,6 @@
         "s-advanced.ts",
         "r-receiver.ts",
         "r-pins.ts",
-        "r-spursensor.ts",
         "r-sensorevents.ts",
         "r-qwiicmotor.ts",
         "r-qwiic.ts",
