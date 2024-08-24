@@ -124,7 +124,7 @@ namespace receiver { // r-strecken.ts
     let n_EncoderCounter: number = 0 // Impuls Zähler
     let n_EncoderStrecke_impulse: number = 0
     let n_EncoderAutoStop = false // true während der Fahrt, false bei Stop nach Ende der Strecke
-    let n_radDurchmesser_mm = 65
+    let n_radDurchmesser_mm = 65 // radDmm: Rad Durchmesser in Millimeter
     export let n_EncoderEventRegistered = false
 
     // aufgerufen von receiver.beimStart 
@@ -133,13 +133,12 @@ namespace receiver { // r-strecken.ts
         n_radDurchmesser_mm = radDmm
     }
 
-    function encoderRegisterEvent() { // radDmm: Rad Durchmesser in Millimeter
+    //% group="Encoder" subcategory="Strecken"
+    //% block="Encoder Pin Ereignisse registrieren" weight=8
+    export function encoderRegisterEvent() {
         if (n_hasEncoder && !n_EncoderEventRegistered && !n_SpurSensorEventsRegistered) {
 
-            //spurSensorUnRegisterEvents() // wenn Encoder Events, dann keine Spur Events
-          
             n_EncoderFaktor = 63.9 * (26 / 14) / (n_radDurchmesser_mm / 10 * Math.PI)
-
 
             // ========== Event Handler registrieren
             pins.onPulsed(a_PinEncoder[n_Hardware], PulseValue.Low, function () {
@@ -172,17 +171,8 @@ namespace receiver { // r-strecken.ts
         return n_EncoderEventRegistered
     }
 
-    /* export function encoderUnRegisterEvent() {
-        if (n_EncoderEventRegistered) {
-            pins.onPulsed(a_PinEncoder[n_Hardware], PulseValue.Low, undefined)
-            n_EncoderEventRegistered = false
-        }
-    } */
-
-
-
     //% group="Encoder" subcategory="Strecken"
-    //% block="Encoder starten • AutoStop %autostop bei (cm) %strecke || Impulse %impulse" weight=8
+    //% block="Encoder starten • AutoStop %autostop bei (cm) %strecke || Impulse %impulse" weight=6
     //% autostop.shadow="toggleYesNo" autostop.defl=1
     //% strecke.min=1 strecke.max=255 strecke.defl=20
     //% impulse.shadow=toggleYesNo

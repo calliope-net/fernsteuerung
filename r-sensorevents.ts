@@ -210,7 +210,7 @@ namespace receiver { // r-sensorevents.ts
     //% inlineInputMode=inline
     export function raiseAbstandEvent(on: boolean, stop_cm: number, start_cm: number, ms = 25, abstand_Sensor?: boolean, index = 0) {
         n_AbstandSensor = (abstand_Sensor == undefined) ? on : abstand_Sensor
-        if (on) {
+        if (on && selectAbstandSensorConnected()) {
             let t = input.runningTime() - n_AbstandTimer // ms seit letztem raiseAbstandEvent
             if (t < ms)
                 basic.pause(t) // restliche Zeit-Differenz warten
