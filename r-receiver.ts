@@ -74,9 +74,7 @@ namespace receiver { // r-receiver.ts
         qwiicMotorReset() // dauert länger als 2 Sekunden
 
         if (encoder)
-            n_radDurchmesser_mm = radDmm
-        //encoderRegisterEvent(radDmm)
-
+            encoderOn(radDmm)
 
         btf.beimStartintern(btf.eNamespace.receiver,
             function (pStorageChange: btf.eStorageBuffer, buttonB: boolean) { // wird bei Button hold aufgerufen von b-fernsteuerung.ts

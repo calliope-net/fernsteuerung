@@ -124,16 +124,21 @@ namespace receiver { // r-strecken.ts
     let n_EncoderCounter: number = 0 // Impuls Zähler
     let n_EncoderStrecke_impulse: number = 0
     let n_EncoderAutoStop = false // true während der Fahrt, false bei Stop nach Ende der Strecke
-    export let n_radDurchmesser_mm = 65
+    let n_radDurchmesser_mm = 65
     let n_EncoderEventRegistered = false
 
-    // aufgerufen von receiver.beimStart
+    // aufgerufen von receiver.beimStart 
+    export function encoderOn(radDmm: number) {
+        n_hasEncoder = true
+        n_radDurchmesser_mm = radDmm
+    }
+
     function encoderRegisterEvent() { // radDmm: Rad Durchmesser in Millimeter
-        if (!n_EncoderEventRegistered) {
+        if (n_hasEncoder && !n_EncoderEventRegistered) {
 
             spurSensorUnRegisterEvents() // wenn Encoder Events, dann keine Spur Events
 
-            n_hasEncoder = true
+            //n_hasEncoder = true
             n_EncoderFaktor = 63.9 * (26 / 14) / (n_radDurchmesser_mm / 10 * Math.PI)
 
 
