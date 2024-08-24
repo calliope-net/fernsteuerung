@@ -24,18 +24,18 @@ namespace receiver { // r-fernsteuerung.ts
 
                 // nur LEDs schalten und Abstandssensor lesen
                 if (bAbstand) {
-                    setLedColors(eRGBled.b, Colors.Yellow, bAbstand) // nicht blinken, bringt I²C Sensor durcheinender
-                    setLedColors(eRGBled.c, Colors.White, bSpur)
+                    btf.setLedColors(btf.eRgbLed.b, Colors.Yellow, bAbstand) // nicht blinken, bringt I²C Sensor durcheinender
+                    btf.setLedColors(btf.eRgbLed.c, Colors.White, bSpur)
                     bRichtung_vor = btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor) > c_MotorStop // Fahrtrichtung vorwärts
                     cmAbstandSensor = selectAbstand(true) // immer messen, auch bei Stop, damit der kleiner werdende Wert erkannt wird
                 }
                 else if (bSpur) { // nur einmalig
-                    setLedColors(eRGBled.b, Colors.White, getSpurLinks(eDH.hell)) // pinSpurlinks(eDH.hell)
-                    setLedColors(eRGBled.c, Colors.White, getSpurRechts(eDH.hell)) // pinSpurrechts(eDH.hell)
+                    btf.setLedColors(btf.eRgbLed.b, Colors.White, getSpurLinks(eDH.hell)) // pinSpurlinks(eDH.hell)
+                    btf.setLedColors(btf.eRgbLed.c, Colors.White, getSpurRechts(eDH.hell)) // pinSpurrechts(eDH.hell)
                 }
                 else { // Spur auch anzeigen, wenn Sensor nicht aktiv (dunkelweiß)
-                    setLedColors(eRGBled.b, 0x404040, getSpurLinks(eDH.hell)) // pinSpurlinks(eDH.hell)
-                    setLedColors(eRGBled.c, 0x404040, getSpurRechts(eDH.hell)) //pinSpurrechts(eDH.hell)
+                    btf.setLedColors(btf.eRgbLed.b, 0x404040, getSpurLinks(eDH.hell)) // pinSpurlinks(eDH.hell)
+                    btf.setLedColors(btf.eRgbLed.c, 0x404040, getSpurRechts(eDH.hell)) //pinSpurrechts(eDH.hell)
                 }
 
                 // Abstandssensor auswerten

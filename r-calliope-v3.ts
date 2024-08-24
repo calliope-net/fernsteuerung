@@ -56,7 +56,7 @@ So kann getestet werden, ob das Ereignis einen Handler hat:
     })
 
 
-
+/* 
 
     let a_RgbLeds = [0, 0, 0, 0] // speichert 3 LEDs, wenn nur eine geändert wird
     let n_RgbLedTimer = input.runningTime() // ms seit Start, zwischen zwei Aufrufen ist eine Pause erforderlich
@@ -100,6 +100,6 @@ So kann getestet werden, ob das Ereignis einen Handler hat:
             basic.setLedColors(a_RgbLeds[0], a_RgbLeds[1], a_RgbLeds[2], brightness) // gibt es nur bei v3, sonst any
         }
     })
-
+ */
 
 } // r-calliope-v3.ts

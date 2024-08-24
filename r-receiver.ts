@@ -234,7 +234,7 @@ namespace receiver { // r-receiver.ts
     export function pinServoGeradeaus() {
         pinServo90(c_Servo90_geradeaus)
     }
-
+/* 
 
     // ========== group="RGB LEDs (v3)" subcategory="Aktoren"
 
@@ -306,6 +306,6 @@ namespace receiver { // r-receiver.ts
         else
             basic.setLedColor(0) // v1 v2
     }
-
+ */
 
 } // r-receiver.ts
