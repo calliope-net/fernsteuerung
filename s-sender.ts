@@ -22,7 +22,7 @@ namespace sender { // s-sender.ts
                 btf.zeigeFunkgruppe()
             }
 
-            btf.beimStartintern(btf.eNamespace.sender, // setzt auch n_start true, startet Bluetooth Empfang
+            btf.beimStartSender(btf.eNamespace.sender, // setzt auch n_start true, startet Bluetooth Empfang
                 function (pStorageChange: btf.eStorageBuffer, buttonB: boolean) {
                     // nur nach Funkgruppe ändern mit buttonAhold oder buttonBhold
                     if (pStorageChange == btf.eStorageBuffer.funkgruppe) {

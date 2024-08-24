@@ -14,7 +14,7 @@ namespace btf { // b-fernsteuerung.ts
     export let n_sendReset = false // true sendet zurücksetzen zum Empfänger wenn connected
 
     // nur Empfänger
-    let n_startReceivedBuffer = false // nur bei true wird Ereignis 'wenn Datenpaket empfangen' ausgelöst
+    //let n_startReceivedBuffer = false // nur bei true wird Ereignis 'wenn Datenpaket empfangen' ausgelöst
 
     // onReceivedBuffer
     let n_timeoutDisbled = false // autonomes fahren nach Programm, kein Bluetooth timeout
@@ -24,23 +24,23 @@ namespace btf { // b-fernsteuerung.ts
 
     //% group="calliope-net.github.io/fernsteuerung"
     //% block="beim Start || Funkgruppe %modellFunkgruppe" weight=9
-    export function beimStart(modellFunkgruppe?: number) {
+    /* export function beimStart(modellFunkgruppe?: number) {
         setStorageBuffer(modellFunkgruppe)
         beimStartintern(eNamespace.btf)
-    }
+    } */
 
     export enum eNamespace { btf, sender, receiver, cb2 }
     export let m_Namespace: eNamespace
 
-    export function beimStartintern(e: eNamespace, callbackStorageChanged?: (pStorageChange: eStorageBuffer, buttonB: boolean) => void) {
+    export function beimStartSender(e: eNamespace, callbackStorageChanged?: (pStorageChange: eStorageBuffer, buttonB: boolean) => void) {
         m_Namespace = e
         onStorageChanged = callbackStorageChanged
         radio.setGroup(getStorageFunkgruppe())
         radio.setTransmitPower(7)
         radio.setTransmitSerialNumber(true)
 
-        if (m_Namespace == eNamespace.receiver || m_Namespace == eNamespace.cb2)
-            n_startReceivedBuffer = true // nur beim Empfänger relevant
+        //if (m_Namespace == eNamespace.receiver || m_Namespace == eNamespace.cb2)
+        //    n_startReceivedBuffer = true // nur beim Empfänger relevant
     }
 
     //% group="calliope-net.github.io/fernsteuerung"
@@ -138,44 +138,52 @@ namespace btf { // b-fernsteuerung.ts
     let onReceivedDataHandler: (receivedData: Buffer) => void
     let onReceivedDataChangedHandler: (receivedData: Buffer, changed: boolean) => void
 
-    // Event-Handler (aus radio) wenn Buffer empfangen (Event Block ist dort hidden und soll hiermit wieder sichtbar werden)
-    // die function 'radio.onReceivedBuffer(cb)' hat einen Parameter 'cb' (das heißt callback)
-    // der Parameter 'cb' hat den Typ '(receivedBuffer: Buffer) => void'
-    // als Parabeter 'cb' übergeben wird die function 'function (receivedBuffer) {}'
-    // was in den Klammern {} steht, wird bei dem Ereignis 'radio.onReceivedBuffer' abgearbeitet (callback = Rückruf)
-    radio.onReceivedBuffer(function (receivedBuffer: Buffer) {
+    export function beimStartReceiver(e: eNamespace, callbackStorageChanged?: (pStorageChange: eStorageBuffer, buttonB: boolean) => void) {
+        m_Namespace = e
+        onStorageChanged = callbackStorageChanged
+        radio.setGroup(getStorageFunkgruppe())
+        radio.setTransmitPower(7)
+        radio.setTransmitSerialNumber(true)
+        // n_startReceivedBuffer = true // nur beim Empfänger relevant
 
-        if (n_startReceivedBuffer && receivedBuffer.length == 19 && (a_receivedPacketSerialNumber == 0 || a_receivedPacketSerialNumber == radio.receivedPacket(RadioPacketProperty.SerialNumber))) { // beim ersten Mal warten bis Motor bereit
+        // Event-Handler (aus radio) wenn Buffer empfangen (Event Block ist dort hidden und soll hiermit wieder sichtbar werden)
+        // die function 'radio.onReceivedBuffer(cb)' hat einen Parameter 'cb' (das heißt callback)
+        // der Parameter 'cb' hat den Typ '(receivedBuffer: Buffer) => void'
+        // als Parabeter 'cb' übergeben wird die function 'function (receivedBuffer) {}'
+        // was in den Klammern {} steht, wird bei dem Ereignis 'radio.onReceivedBuffer' abgearbeitet (callback = Rückruf)
+        radio.onReceivedBuffer(function (receivedBuffer: Buffer) {
+            // n_startReceivedBuffer && 
+            if (receivedBuffer.length == 19 && (a_receivedPacketSerialNumber == 0 || a_receivedPacketSerialNumber == radio.receivedPacket(RadioPacketProperty.SerialNumber))) { // beim ersten Mal warten bis Motor bereit
 
-            a_receivedPacketSerialNumber = radio.receivedPacket(RadioPacketProperty.SerialNumber)
-            a_receivedBuffer19 = receivedBuffer // lokal speichern
+                a_receivedPacketSerialNumber = radio.receivedPacket(RadioPacketProperty.SerialNumber)
+                a_receivedBuffer19 = receivedBuffer // lokal speichern
 
-            if ((receivedBuffer[0] & 0x80) == 0x80) // Bit 7 reset
-                control.reset() // Soft-Reset, Calliope zurücksetzen
+                if ((receivedBuffer[0] & 0x80) == 0x80) // Bit 7 reset
+                    control.reset() // Soft-Reset, Calliope zurücksetzen
 
-            n_timeoutDisbled =
-                ((receivedBuffer[0] & 0x20) == 0x20) // Bit 5 Programm=1 / Betriebsart ..10.... oder ..11....
-                ||
-                (((receivedBuffer[0] & 0x30) == 0x10) && ((receivedBuffer[3] & 0x01) == 0x00)) // Betriebsart 01 und Joystick nicht aktiv ([3]Bit 0=0) M0 Power
+                n_timeoutDisbled =
+                    ((receivedBuffer[0] & 0x20) == 0x20) // Bit 5 Programm=1 / Betriebsart ..10.... oder ..11....
+                    ||
+                    (((receivedBuffer[0] & 0x30) == 0x10) && ((receivedBuffer[3] & 0x01) == 0x00)) // Betriebsart 01 und Joystick nicht aktiv ([3]Bit 0=0) M0 Power
 
-            n_lastConnectedTime = input.runningTime() // Connection-Timeout Zähler zurück setzen
+                n_lastConnectedTime = input.runningTime() // Connection-Timeout Zähler zurück setzen
 
-            // die Variable 'onReceivedDataHandler' ist normalerweise undefined, dann passiert nichts
-            // die Variable erhält einen Wert, wenn der folgende Ereignis Block 'onReceivedData' einmal im Code vorkommt
-            // der Wert der Variable 'onReceivedDataHandler' ist die function, die bei true zurück gerufen wird
-            // die function ruft mit dem Parameter vom Typ Buffer die Blöcke auf, die im Ereignis-Block stehen
-            if (onReceivedDataHandler)
-                onReceivedDataHandler(receivedBuffer) // Ereignis Block auslösen, nur wenn benutzt
+                // die Variable 'onReceivedDataHandler' ist normalerweise undefined, dann passiert nichts
+                // die Variable erhält einen Wert, wenn der folgende Ereignis Block 'onReceivedData' einmal im Code vorkommt
+                // der Wert der Variable 'onReceivedDataHandler' ist die function, die bei true zurück gerufen wird
+                // die function ruft mit dem Parameter vom Typ Buffer die Blöcke auf, die im Ereignis-Block stehen
+                if (onReceivedDataHandler)
+                    onReceivedDataHandler(receivedBuffer) // Ereignis Block auslösen, nur wenn benutzt
 
-            if (onReceivedDataChangedHandler) // Änderung Betriebsart[0] ODER aktivierte Motoren[3]
-                onReceivedDataChangedHandler(receivedBuffer, n_lastBetriebsart != (receivedBuffer[0] & 0b00110000) || n_last6Motoren != (receivedBuffer[3] & 0b00111111))
+                if (onReceivedDataChangedHandler) // Änderung Betriebsart[0] ODER aktivierte Motoren[3]
+                    onReceivedDataChangedHandler(receivedBuffer, n_lastBetriebsart != (receivedBuffer[0] & 0b00110000) || n_last6Motoren != (receivedBuffer[3] & 0b00111111))
 
-            n_lastBetriebsart = receivedBuffer[0] & 0b00110000 // getBetriebsart(receivedBuffer)
-            n_last6Motoren = receivedBuffer[3] & 0b00111111
-        }
-    })
+                n_lastBetriebsart = receivedBuffer[0] & 0b00110000 // getBetriebsart(receivedBuffer)
+                n_last6Motoren = receivedBuffer[3] & 0b00111111
+            }
+        })
 
-
+    }
 
     // ========== group="Bluetooth empfangen" subcategory="Buffer"
 

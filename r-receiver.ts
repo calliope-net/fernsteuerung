@@ -76,7 +76,7 @@ namespace receiver { // r-receiver.ts
         if (encoder)
             encoderOn(radDmm)
 
-        btf.beimStartintern(btf.eNamespace.receiver,
+        btf.beimStartReceiver (btf.eNamespace.receiver,
             function (pStorageChange: btf.eStorageBuffer, buttonB: boolean) { // wird bei Button hold aufgerufen von b-fernsteuerung.ts
                 if (pStorageChange == btf.eStorageBuffer.servoKorrektur) {
                     let sK = btf.getStorageServoKorrektur() + (buttonB ? 1 : -1)
