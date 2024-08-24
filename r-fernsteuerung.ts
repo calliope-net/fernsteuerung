@@ -29,6 +29,7 @@ namespace receiver { // r-fernsteuerung.ts
                     cmAbstandSensor = selectAbstand(true) // immer messen, auch bei Stop, damit der kleiner werdende Wert erkannt wird
                 }
                 else if (bSpur) {
+                    spurSensorRegisterEvents() // nur einmalig
                     setLedColors(eRGBled.b, Colors.White, getSpurLinks(eDH.hell)) // pinSpurlinks(eDH.hell)
                     setLedColors(eRGBled.c, Colors.White, getSpurRechts(eDH.hell)) // pinSpurrechts(eDH.hell)
                 }

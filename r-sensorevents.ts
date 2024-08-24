@@ -9,10 +9,13 @@ namespace receiver { // r-sensorevents.ts
     let n_SpursensorEventsRegistered = false
     const c_pulseDuration = 60000 // µs 50 ms
 
-    //% group="Spur Sensor (beim Start)" subcategory="Sensoren"
-    //% block="Spur Sensor Pin Ereignisse registrieren (beim Start)" weight=8
-    export function spursensorRegisterEvents() {
+    //% group="Spur Sensor" subcategory="Sensoren"
+    //% block="Spur Sensor Pin Ereignisse registrieren" weight=8
+    export function spurSensorRegisterEvents() {
         if (!n_SpursensorEventsRegistered) {
+
+            encoderUnRegisterEvent() // wenn Spur Events, dann keine Encoder Events
+
             // n_Spursensor = (pins.digitalReadPin(a_PinSpurlinks[n_Hardware]) << 1) | pins.digitalReadPin(a_PinSpurrechts[n_Hardware])
             n_SpurLinksHell = pins.digitalReadPin(a_PinSpurlinks[n_Hardware]) == 1
             n_SpurRechtsHell = pins.digitalReadPin(a_PinSpurrechts[n_Hardware]) == 1
@@ -25,23 +28,16 @@ namespace receiver { // r-sensorevents.ts
                 // links hell
                 if (pins.pulseDuration() > c_pulseDuration) { // 10ms
                     n_SpurLinksHell = true
-                    // raiseSpurEvent()
                     if (onSpurPinEventHandler)
                         onSpurPinEventHandler(n_SpurLinksHell, n_SpurRechtsHell)
-                    // if (onSpurStopEventHandler)
-                    //     onSpurStopEventHandler(n_SpurLinksHell, n_SpurRechtsHell, n_AbstandStop)
-
                 }
             })
             pins.onPulsed(a_PinSpurlinks[n_Hardware], PulseValue.High, function () {
                 // links dunkel
                 if (pins.pulseDuration() > c_pulseDuration) { // 10ms
                     n_SpurLinksHell = false
-                    // raiseSpurEvent()
                     if (onSpurPinEventHandler)
                         onSpurPinEventHandler(n_SpurLinksHell, n_SpurRechtsHell)
-                    // if (onSpurStopEventHandler)
-                    //     onSpurStopEventHandler(n_SpurLinksHell, n_SpurRechtsHell, n_AbstandStop)
                 }
             })
 
@@ -49,24 +45,20 @@ namespace receiver { // r-sensorevents.ts
                 // rechts hell
                 if (pins.pulseDuration() > c_pulseDuration) { // 10ms
                     n_SpurRechtsHell = true
-                    // raiseSpurEvent()
                     if (onSpurPinEventHandler)
                         onSpurPinEventHandler(n_SpurLinksHell, n_SpurRechtsHell)
-                    // if (onSpurStopEventHandler)
-                    //     onSpurStopEventHandler(n_SpurLinksHell, n_SpurRechtsHell, n_AbstandStop)
                 }
             })
             pins.onPulsed(a_PinSpurrechts[n_Hardware], PulseValue.High, function () {
                 // rechts dunkel
                 if (pins.pulseDuration() > c_pulseDuration) { // 10ms
                     n_SpurRechtsHell = false
-                    // raiseSpurEvent()
                     if (onSpurPinEventHandler)
                         onSpurPinEventHandler(n_SpurLinksHell, n_SpurRechtsHell)
-                    // if (onSpurStopEventHandler)
-                    //     onSpurStopEventHandler(n_SpurLinksHell, n_SpurRechtsHell, n_AbstandStop)
                 }
             })
+
+            //  pins.onPulsed(a_PinSpurrechts[n_Hardware], PulseValue.High, undefined)
 
             // danach darf kein pins.digitalReadPin() stehen, das deaktiviert die Ereignisse wieder, davor ist möglich
             //n_inEvent = 0
@@ -74,7 +66,17 @@ namespace receiver { // r-sensorevents.ts
         }
     }
 
+    export function spurSensorUnRegisterEvents() { // erforderlich, wenn Encoder Pin Ereignisse gezählt werden
+        if (n_SpursensorEventsRegistered) {
 
+            pins.onPulsed(a_PinSpurlinks[n_Hardware], PulseValue.Low, undefined)
+            pins.onPulsed(a_PinSpurlinks[n_Hardware], PulseValue.High, undefined)
+            pins.onPulsed(a_PinSpurrechts[n_Hardware], PulseValue.Low, undefined)
+            pins.onPulsed(a_PinSpurrechts[n_Hardware], PulseValue.High, undefined)
+
+            n_SpursensorEventsRegistered = false
+        }
+    }
 
     export enum eDH { hell = 1, dunkel = 0 }
 
@@ -113,6 +115,9 @@ namespace receiver { // r-sensorevents.ts
     //% inlineInputMode=inline
     export function raiseSpurEvent(on: boolean, ms = 25, index = 0) {
         if (on) {
+            if (!a_raiseSpurEvent_gestartet[index])
+                spurSensorRegisterEvents() // nur einmalig
+
             let t = input.runningTime() - n_SpurTimer // ms seit letztem raiseAbstandEvent
             if (t < ms)
                 basic.pause(t) // restliche Zeit-Differenz warten

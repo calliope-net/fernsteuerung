@@ -74,7 +74,8 @@ namespace receiver { // r-receiver.ts
         qwiicMotorReset() // dauert länger als 2 Sekunden
 
         if (encoder)
-            encoderRegisterEvent(radDmm)
+            n_radDurchmesser_mm = radDmm
+        //encoderRegisterEvent(radDmm)
 
 
         btf.beimStartintern(btf.eNamespace.receiver,
@@ -131,7 +132,7 @@ namespace receiver { // r-receiver.ts
     }
 
 
-    let onDualMotorPowerHandler: (motor: number, duty_percent: number) => void
+    export let onDualMotorPowerHandler: (motor: number, duty_percent: number) => void
 
     export function onDualMotorPower(cb: (motor: number, duty_percent: number) => void) {
         onDualMotorPowerHandler = cb
