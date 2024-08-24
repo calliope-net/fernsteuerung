@@ -2,10 +2,10 @@
 namespace receiver { // r-sensorevents.ts
 
 
- 
+
     let n_SpurLinksHell = false // hell=true
     let n_SpurRechtsHell = false
- 
+
     let n_SpursensorEventsRegistered = false
     const c_pulseDuration = 60000 // µs 50 ms
 
@@ -158,7 +158,7 @@ namespace receiver { // r-sensorevents.ts
     //% group="Ultraschall Sensor" subcategory="Sensoren"
     //% block="Abstand Sensor angeschlossen" weight=7
     export function selectAbstandSensorConnected() {
-        if (n_Hardware == eHardware.v3)
+        if (n_Hardware == eHardware.v3 && n_QwiicUltrasonicConnected != undefined)
             return n_QwiicUltrasonicConnected
         else if (n_Hardware == eHardware.car4)
             return true
