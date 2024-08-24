@@ -6,13 +6,13 @@ namespace receiver { // r-sensorevents.ts
     let n_SpurLinksHell = false // hell=true
     let n_SpurRechtsHell = false
 
-    export let n_SpursensorEventsRegistered = false
+  export   let n_SpurSensorEventsRegistered = false
     const c_pulseDuration = 60000 // µs 50 ms
 
     //% group="Spur Sensor" subcategory="Sensoren"
     //% block="Spur Sensor Pin Ereignisse registrieren" weight=8
     export function spurSensorRegisterEvents() {
-        if (!n_SpursensorEventsRegistered && !n_EncoderEventRegistered) {
+        if (!n_SpurSensorEventsRegistered && !n_EncoderEventRegistered) {
 
             // encoderUnRegisterEvent() // wenn Spur Events, dann keine Encoder Events
 
@@ -62,8 +62,9 @@ namespace receiver { // r-sensorevents.ts
 
             // danach darf kein pins.digitalReadPin() stehen, das deaktiviert die Ereignisse wieder, davor ist möglich
             //n_inEvent = 0
-            n_SpursensorEventsRegistered = true
+            n_SpurSensorEventsRegistered = true
         }
+        return n_SpurSensorEventsRegistered
     }
 
     /* export function spurSensorUnRegisterEvents() { // erforderlich, wenn Encoder Pin Ereignisse gezählt werden
@@ -114,9 +115,9 @@ namespace receiver { // r-sensorevents.ts
     //% ms.defl=25
     //% inlineInputMode=inline
     export function raiseSpurEvent(on: boolean, ms = 25, index = 0) {
-        if (on) {
-            if (!a_raiseSpurEvent_gestartet[index])
-                spurSensorRegisterEvents() // nur einmalig
+        if (on && spurSensorRegisterEvents()) { // nur einmalig
+            //if (!a_raiseSpurEvent_gestartet[index])
+            //    spurSensorRegisterEvents() 
 
             let t = input.runningTime() - n_SpurTimer // ms seit letztem raiseAbstandEvent
             if (t < ms)

@@ -19,7 +19,8 @@ namespace receiver { // r-fernsteuerung.ts
                 let bAbstand = btf.getSensor(buffer, btf.eBufferPointer.m0, btf.eSensor.b6Abstand) && selectAbstandSensorConnected()
                 let bRichtung_vor = false
                 let cmAbstandSensor = 0
-                let bSpur = btf.getSensor(buffer, btf.eBufferPointer.m0, btf.eSensor.b5Spur)
+                // zuerst Test ob Sensor aktiv, erst danach Events registrieren
+                let bSpur = btf.getSensor(buffer, btf.eBufferPointer.m0, btf.eSensor.b5Spur) && spurSensorRegisterEvents()
 
                 // nur LEDs schalten und Abstandssensor lesen
                 if (bAbstand) {
@@ -28,8 +29,7 @@ namespace receiver { // r-fernsteuerung.ts
                     bRichtung_vor = btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor) > c_MotorStop // Fahrtrichtung vorwärts
                     cmAbstandSensor = selectAbstand(true) // immer messen, auch bei Stop, damit der kleiner werdende Wert erkannt wird
                 }
-                else if (bSpur) {
-                    spurSensorRegisterEvents() // nur einmalig
+                else if (bSpur) { // nur einmalig
                     setLedColors(eRGBled.b, Colors.White, getSpurLinks(eDH.hell)) // pinSpurlinks(eDH.hell)
                     setLedColors(eRGBled.c, Colors.White, getSpurRechts(eDH.hell)) // pinSpurrechts(eDH.hell)
                 }
@@ -182,33 +182,33 @@ namespace receiver { // r-fernsteuerung.ts
     //% buffer.shadow=btf_receivedBuffer19
     //% startBit.defl=btf.e3aktiviert.mc
     //% blockSetVariable=dauerhaft_Spurfolger
-  //  export function set_dauerhaft_Spurfolger(buffer: Buffer, startBit: btf.e3aktiviert) {
-   //     return btf.isBetriebsart(buffer, btf.e0Betriebsart.p1Lokal) && btf.getaktiviert(buffer, startBit)
-  //  }
+    //  export function set_dauerhaft_Spurfolger(buffer: Buffer, startBit: btf.e3aktiviert) {
+    //     return btf.isBetriebsart(buffer, btf.e0Betriebsart.p1Lokal) && btf.getaktiviert(buffer, startBit)
+    //  }
 
-  //  let n_spurfolgerBuffer_repeat = false
+    //  let n_spurfolgerBuffer_repeat = false
 
     //% group="10 Fernstarten Spurfolger" subcategory="Fernsteuerung"
     //% block="10 dauerhaft Spurfolger: %dauerhaft_Spurfolger (MS:CD) aus %buffer" weight=7
     //% dauerhaft_Spurfolger.shadow="toggleYesNo"
     //% buffer.shadow=btf_receivedBuffer19
-  /*   export function dauerhaft_SpurfolgerBuffer(dauerhaft_Spurfolger: boolean, buffer: Buffer) {
-        if (dauerhaft_Spurfolger) {
-            beispielSpurfolger16(
-                btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b0_Motor),
-                btf.getByte(buffer, btf.eBufferPointer.md, btf.eBufferOffset.b0_Motor),
-                btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b1_Servo),
-                n_spurfolgerBuffer_repeat,
-                btf.getSensor(buffer, btf.eBufferPointer.mc, btf.eSensor.b6Abstand),
-                btf.getAbstand(buffer)
-            )
-            n_spurfolgerBuffer_repeat = true
-        }
-        else if (n_spurfolgerBuffer_repeat) {
-            n_spurfolgerBuffer_repeat = false
-            selectMotor(c_MotorStop)
-        }
-    } */
+    /*   export function dauerhaft_SpurfolgerBuffer(dauerhaft_Spurfolger: boolean, buffer: Buffer) {
+          if (dauerhaft_Spurfolger) {
+              beispielSpurfolger16(
+                  btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b0_Motor),
+                  btf.getByte(buffer, btf.eBufferPointer.md, btf.eBufferOffset.b0_Motor),
+                  btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b1_Servo),
+                  n_spurfolgerBuffer_repeat,
+                  btf.getSensor(buffer, btf.eBufferPointer.mc, btf.eSensor.b6Abstand),
+                  btf.getAbstand(buffer)
+              )
+              n_spurfolgerBuffer_repeat = true
+          }
+          else if (n_spurfolgerBuffer_repeat) {
+              n_spurfolgerBuffer_repeat = false
+              selectMotor(c_MotorStop)
+          }
+      } */
 
 
 

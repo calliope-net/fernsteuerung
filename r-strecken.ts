@@ -43,7 +43,7 @@ namespace receiver { // r-strecken.ts
 
             btf.resetTimer()
 
-            if (checkEncoder && n_hasEncoder) {
+            if (checkEncoder && encoderRegisterEvent()) {
                 let timeout_Encoder = 100 // 20 s Timeout wenn Encoder nicht zählt
 
                 encoderStartStrecke(true, strecke, impulse)
@@ -134,11 +134,10 @@ namespace receiver { // r-strecken.ts
     }
 
     function encoderRegisterEvent() { // radDmm: Rad Durchmesser in Millimeter
-        if (n_hasEncoder && !n_EncoderEventRegistered && !n_SpursensorEventsRegistered) {
+        if (n_hasEncoder && !n_EncoderEventRegistered && !n_SpurSensorEventsRegistered) {
 
             //spurSensorUnRegisterEvents() // wenn Encoder Events, dann keine Spur Events
-
-            //n_hasEncoder = true
+          
             n_EncoderFaktor = 63.9 * (26 / 14) / (n_radDurchmesser_mm / 10 * Math.PI)
 
 
@@ -170,6 +169,7 @@ namespace receiver { // r-strecken.ts
 
             n_EncoderEventRegistered = true
         }
+        return n_EncoderEventRegistered
     }
 
     /* export function encoderUnRegisterEvent() {
@@ -187,18 +187,22 @@ namespace receiver { // r-strecken.ts
     //% strecke.min=1 strecke.max=255 strecke.defl=20
     //% impulse.shadow=toggleYesNo
     export function encoderStartStrecke(autostop: boolean, strecke: number, impulse = false) {
-        encoderRegisterEvent()
-        n_EncoderCounter = 0 // Impuls Zähler zurück setzen
+        if (encoderRegisterEvent()) {
+            n_EncoderCounter = 0 // Impuls Zähler zurück setzen
 
-        if (strecke > 0) {
-            n_EncoderStrecke_impulse = impulse ? strecke : Math.round(strecke * n_EncoderFaktor)
-            n_EncoderAutoStop = autostop
+            if (strecke > 0) {
+                n_EncoderStrecke_impulse = impulse ? strecke : Math.round(strecke * n_EncoderFaktor)
+                n_EncoderAutoStop = autostop
 
-            // btf.n_lastConnectedTime = input.runningTime() // Connection-Timeout Zähler zurück setzen um Abschaltung zu verhindern
+                // btf.n_lastConnectedTime = input.runningTime() // Connection-Timeout Zähler zurück setzen um Abschaltung zu verhindern
+            }
+            else {
+                n_EncoderStrecke_impulse = 0
+            }
+            return true
         }
-        else {
-            n_EncoderStrecke_impulse = 0
-        }
+        else
+            return false
     }
 
 
