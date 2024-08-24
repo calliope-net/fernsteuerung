@@ -1,12 +1,12 @@
 
-namespace btf { // b-rgbleds.ts
+namespace btf { // b-rgbleds.ts color=#54C9C9
 
     // ========== group="RGB LEDs (v3)" subcategory="Aktoren"
 
     export enum eRgbLed { a, b, c } // Index im Array
     let n_RgbLed = 0 // aktueller Wert v1 v2
 
-    //% blockId=btf_RgbLed block="%led" color=#54C9C9 blockHidden=true
+    //% blockId=btf_RgbLed block="%led" blockHidden=true
     export function btf_RgbLed(led: eRgbLed): number {
         return led
     }
@@ -45,10 +45,10 @@ namespace btf { // b-rgbleds.ts
 
     // ========== group="RGB LEDs (Calliope v1 v2 v3)" subcategory="LEDs, Display" color=#54C9C9
 
-    //% group="RGB LEDs (Calliope v1 v2 nur LED a)" subcategory="LEDs, Display" color=#54C9C9
+    //% group="RGB LEDs (Calliope v1 v2 nur LED a)" subcategory="LEDs, Display"
     //% block="RGB LED %led %color || %on blinken %blinken Helligkeit %helligkeit \\%" weight=5
     //% led.shadow=btf_RgbLed
-    //% color.shadow="colorNumberPicker"
+    //% color.shadow="colorNumberPicker" color.defl=Colors.Off
     //% on.shadow=toggleOnOff on.defl=1
     //% blinken.shadow=toggleYesNo
     //% helligkeit.min=5 helligkeit.max=100 helligkeit.defl=20
@@ -69,11 +69,11 @@ namespace btf { // b-rgbleds.ts
     }
 
 
-    //% group="RGB LEDs (Calliope v1 v2 nur LED a)" subcategory="LEDs, Display" color=#54C9C9
+    //% group="RGB LEDs (Calliope v1 v2 nur LED a)" subcategory="LEDs, Display"
     //% block="RGB LEDs a %color1 b %color2 c %color3 || Helligkeit %helligkeit \\%" weight=4
-    //% color1.shadow="colorNumberPicker"  
-    //% color2.shadow="colorNumberPicker"  
-    //% color3.shadow="colorNumberPicker"  
+    //% color1.shadow="colorNumberPicker" color1.defl=Colors.Off
+    //% color2.shadow="colorNumberPicker" color2.defl=Colors.Off
+    //% color3.shadow="colorNumberPicker" color3.defl=Colors.Off
     //% brightness.min=5 brightness.max=100 brightness.defl=20
     //% inlineInputMode=inline
     export function setLedColors3(color1: number, color2: number, color3: number, brightness = 20) {
@@ -83,7 +83,7 @@ namespace btf { // b-rgbleds.ts
             basic.setLedColor(color1) // v1 v2
     }
 
-    //% group="RGB LEDs (Calliope v1 v2 nur LED a)" subcategory="LEDs, Display" color=#54C9C9
+    //% group="RGB LEDs (Calliope v1 v2 nur LED a)" subcategory="LEDs, Display"
     //% block="RGB LEDs aus" weight=3
     export function setLedColorsOff() {
         setLedColors3(0, 0, 0)

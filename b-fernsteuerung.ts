@@ -22,8 +22,8 @@ namespace btf { // b-fernsteuerung.ts
     let n_lastBetriebsart: e0Betriebsart // für DataChanged Erkennung
     let n_last6Motoren: number // für DataChanged Erkennung
 
-    //% group="calliope-net.github.io/fernsteuerung"
-    //% block="beim Start || Funkgruppe %modellFunkgruppe" weight=9
+    // group="calliope-net.github.io/fernsteuerung"
+    // block="beim Start || Funkgruppe %modellFunkgruppe" weight=9
     /* export function beimStart(modellFunkgruppe?: number) {
         setStorageBuffer(modellFunkgruppe)
         beimStartintern(eNamespace.btf)
