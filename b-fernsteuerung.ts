@@ -18,7 +18,7 @@ namespace btf { // b-fernsteuerung.ts
 
     // onReceivedBuffer
     let n_timeoutDisbled = false // autonomes fahren nach Programm, kein Bluetooth timeout
-    export let n_lastConnectedTime = input.runningTime()  // ms seit Start
+    let n_lastConnectedTime = input.runningTime()  // ms seit Start
     let n_lastBetriebsart: e0Betriebsart // für DataChanged Erkennung
     let n_last6Motoren: number // für DataChanged Erkennung
 
@@ -32,16 +32,6 @@ namespace btf { // b-fernsteuerung.ts
     export enum eNamespace { btf, sender, receiver, cb2 }
     export let m_Namespace: eNamespace
 
-    export function beimStartSender(e: eNamespace, callbackStorageChanged?: (pStorageChange: eStorageBuffer, buttonB: boolean) => void) {
-        m_Namespace = e
-        onStorageChanged = callbackStorageChanged
-        radio.setGroup(getStorageFunkgruppe())
-        radio.setTransmitPower(7)
-        radio.setTransmitSerialNumber(true)
-
-        //if (m_Namespace == eNamespace.receiver || m_Namespace == eNamespace.cb2)
-        //    n_startReceivedBuffer = true // nur beim Empfänger relevant
-    }
 
     //% group="calliope-net.github.io/fernsteuerung"
     //% block="Knopf A halten, Funkgruppe -1 und anzeigen" weight=6
@@ -51,7 +41,6 @@ namespace btf { // b-fernsteuerung.ts
             if (n_StorageChange == eStorageBuffer.funkgruppe) {
                 if (a_StorageBuffer[eStorageBuffer.funkgruppe] > c_funkgruppe_min) {
                     radio.setGroup(--a_StorageBuffer[eStorageBuffer.funkgruppe]) // erst -1, dann zurück lesen
-                    //storage.putBuffer(a_StorageBuffer) // im Flash speichern
                 }
                 setClearScreen()
                 zeigeFunkgruppe()
@@ -73,7 +62,6 @@ namespace btf { // b-fernsteuerung.ts
             if (n_StorageChange == eStorageBuffer.funkgruppe) {
                 if (a_StorageBuffer[eStorageBuffer.funkgruppe] < c_funkgruppe_max) {
                     radio.setGroup(++a_StorageBuffer[eStorageBuffer.funkgruppe]) // erst +1, dann zurück lesen
-                    //storage.putBuffer(a_StorageBuffer) // im Flash speichern
                 }
                 setClearScreen()
                 zeigeFunkgruppe()
@@ -97,6 +85,17 @@ namespace btf { // b-fernsteuerung.ts
 
 
     // ========== group="Bluetooth senden" subcategory="Bluetooth"
+
+    export function beimStartSender(e: eNamespace, callbackStorageChanged?: (pStorageChange: eStorageBuffer, buttonB: boolean) => void) {
+        m_Namespace = e
+        onStorageChanged = callbackStorageChanged
+        radio.setGroup(getStorageFunkgruppe())
+        radio.setTransmitPower(7)
+        radio.setTransmitSerialNumber(true)
+
+        //if (m_Namespace == eNamespace.receiver || m_Namespace == eNamespace.cb2)
+        //    n_startReceivedBuffer = true // nur beim Empfänger relevant
+    }
 
     let a_sendBuffer19 = Buffer.create(19) // wird gesendet mit radio.sendBuffer
 
