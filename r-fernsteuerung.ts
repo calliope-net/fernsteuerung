@@ -92,8 +92,8 @@ namespace receiver { // r-fernsteuerung.ts
 
 
 
-    //% group="10 Programm fernstarten" subcategory="Fernsteuerung"
-    //% block="Sensor Ereignisse auslösen %buffer || • Start+ %start_cm cm • Pause %ms ms" weight=8
+    //% group="10 Programm fernstarten" subcategory="Fernsteuerung" deprecated=1
+    //% block="Sensor Ereignisse auslösen %buffer || • Start+ %start_cm cm • Pause %ms ms" weight=9
     //% buffer.shadow=btf_receivedBuffer19
     //% start_cm.defl=5
     //% ms.defl=25
@@ -119,6 +119,55 @@ namespace receiver { // r-fernsteuerung.ts
         }
     }
 
+
+    //% group="10 Programm fernstarten" subcategory="Fernsteuerung"
+    //% block="Abstand Sensor Ereignis auslösen %buffer || • Start+ %start_cm cm • Pause %ms ms" weight=8
+    //% buffer.shadow=btf_receivedBuffer19
+    //% start_cm.defl=5
+    //% ms.defl=25
+    // inlineInputMode=inline 
+    //expandableArgumentMode="toggle"
+    export function buffer_raiseAbstandEvent(buffer: Buffer, start_cm = 5, ms = 25) {
+        if (buffer) {
+
+            // Events müssen auch mit on=false aufgerufen werden, damit das Programm beendet wird (Motor Stop)
+            raiseAbstandEvent( // MD-5 Hindernis ausweichen ODER // MC-4 Spur folgen und Abstand Sensor aktiviert
+                hindernis_ausweichen(buffer) || (spur_folgen(buffer) && btf.getSensor(buffer, btf.eBufferPointer.mc, btf.eSensor.b6Abstand)),
+                btf.getAbstand(buffer),
+                btf.getAbstand(buffer) + start_cm,
+                ms,
+                btf.getSensor(buffer, btf.eBufferPointer.mc, btf.eSensor.b6Abstand),
+                1
+            )
+
+
+        }
+    }
+
+
+    //% group="10 Programm fernstarten" subcategory="Fernsteuerung"
+    //% block="Spur Sensor Ereignis auslösen %buffer || • Pause %ms ms" weight=7
+    //% buffer.shadow=btf_receivedBuffer19
+    //% start_cm.defl=5
+    //% ms.defl=25
+    // inlineInputMode=inline 
+    //expandableArgumentMode="toggle"
+    export function buffer_raiseSpurEvent(buffer: Buffer, ms = 25) {
+        if (buffer) {
+
+            // Events müssen auch mit on=false aufgerufen werden, damit das Programm beendet wird (Motor Stop)
+            raiseSpurEvent( // MC-4 Spur folgen
+                spur_folgen(buffer),
+                ms,
+                1
+            )
+        }
+    }
+
+
+
+
+
     function spur_folgen(buffer: Buffer) { // if (buffer) muss vor Aufruf erfolgen
         return btf.isBetriebsart(buffer, btf.e0Betriebsart.p1Lokal) // 10 Programm fernstarten + B
             && btf.getaktiviert(buffer, btf.e3aktiviert.mc) // MC-4 Spur folgen
@@ -130,26 +179,6 @@ namespace receiver { // r-fernsteuerung.ts
             && btf.getaktiviert(buffer, btf.e3aktiviert.md) // MD-5 Hindernis ausweichen
     }
 
-
-
-    //% group="10 Programm fernstarten" subcategory="Fernsteuerung"
-    //% block="Spur folgen %buffer <links_hell> %links_hell <rechts_hell> %rechts_hell <abstand_Stop> %abstand_Stop" weight=6
-    //% buffer.shadow=btf_receivedBuffer19
-    // links_hell.shadow=toggleYesNo
-    // rechts_hell.shadow=toggleYesNo
-    // abstand_Stop.shadow=toggleYesNo
-    //% inlineInputMode=inline
-    export function buffer_Spur_folgen(buffer: Buffer, links_hell: boolean, rechts_hell: boolean, abstand_Stop: boolean) {
-        if (buffer)
-            event_Spur_folgen(spur_folgen(buffer), links_hell, rechts_hell,
-                btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b0_Motor), // MC vorwärts gerade = 192
-                btf.getByte(buffer, btf.eBufferPointer.md, btf.eBufferOffset.b0_Motor), // MD vorwärts langsam fahren beim lenken = 160
-                btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b1_Servo), // MC lenken = 31
-                abstand_Stop,
-                btf.getByte(buffer, btf.eBufferPointer.md, btf.eBufferOffset.b2_Fahrstrecke), // MD Pause nach abstand_Stop /  Zehntelsekunden 10zs=1000ms
-                1
-            )
-    }
 
     //% group="10 Programm fernstarten" subcategory="Fernsteuerung"
     //% block="Hindernis ausweichen %buffer <abstand_Stop> %abstand_Stop" weight=4
@@ -172,6 +201,26 @@ namespace receiver { // r-fernsteuerung.ts
         }
     }
 
+
+
+    //% group="10 Programm fernstarten" subcategory="Fernsteuerung"
+    //% block="Spur folgen %buffer <links_hell> %links_hell <rechts_hell> %rechts_hell <abstand_Stop> %abstand_Stop" weight=3
+    //% buffer.shadow=btf_receivedBuffer19
+    // links_hell.shadow=toggleYesNo
+    // rechts_hell.shadow=toggleYesNo
+    // abstand_Stop.shadow=toggleYesNo
+    //% inlineInputMode=inline
+    export function buffer_Spur_folgen(buffer: Buffer, links_hell: boolean, rechts_hell: boolean, abstand_Stop: boolean) {
+        if (buffer)
+            event_Spur_folgen(spur_folgen(buffer), links_hell, rechts_hell,
+                btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b0_Motor), // MC vorwärts gerade = 192
+                btf.getByte(buffer, btf.eBufferPointer.md, btf.eBufferOffset.b0_Motor), // MD vorwärts langsam fahren beim lenken = 160
+                btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b1_Servo), // MC lenken = 31
+                abstand_Stop,
+                btf.getByte(buffer, btf.eBufferPointer.md, btf.eBufferOffset.b2_Fahrstrecke), // MD Pause nach abstand_Stop /  Zehntelsekunden 10zs=1000ms
+                1
+            )
+    }
 
 
 
