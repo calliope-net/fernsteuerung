@@ -6,15 +6,15 @@ namespace receiver { // r-sensorevents.ts
     let n_SpurLinksHell = false // hell=true
     let n_SpurRechtsHell = false
 
-    let n_SpursensorEventsRegistered = false
+    export let n_SpursensorEventsRegistered = false
     const c_pulseDuration = 60000 // µs 50 ms
 
     //% group="Spur Sensor" subcategory="Sensoren"
     //% block="Spur Sensor Pin Ereignisse registrieren" weight=8
     export function spurSensorRegisterEvents() {
-        if (!n_SpursensorEventsRegistered) {
+        if (!n_SpursensorEventsRegistered && !n_EncoderEventRegistered) {
 
-            encoderUnRegisterEvent() // wenn Spur Events, dann keine Encoder Events
+            // encoderUnRegisterEvent() // wenn Spur Events, dann keine Encoder Events
 
             // n_Spursensor = (pins.digitalReadPin(a_PinSpurlinks[n_Hardware]) << 1) | pins.digitalReadPin(a_PinSpurrechts[n_Hardware])
             n_SpurLinksHell = pins.digitalReadPin(a_PinSpurlinks[n_Hardware]) == 1
@@ -66,7 +66,7 @@ namespace receiver { // r-sensorevents.ts
         }
     }
 
-    export function spurSensorUnRegisterEvents() { // erforderlich, wenn Encoder Pin Ereignisse gezählt werden
+    /* export function spurSensorUnRegisterEvents() { // erforderlich, wenn Encoder Pin Ereignisse gezählt werden
         if (n_SpursensorEventsRegistered) {
 
             pins.onPulsed(a_PinSpurlinks[n_Hardware], PulseValue.Low, undefined)
@@ -76,7 +76,7 @@ namespace receiver { // r-sensorevents.ts
 
             n_SpursensorEventsRegistered = false
         }
-    }
+    } */
 
     export enum eDH { hell = 1, dunkel = 0 }
 

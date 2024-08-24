@@ -125,7 +125,7 @@ namespace receiver { // r-strecken.ts
     let n_EncoderStrecke_impulse: number = 0
     let n_EncoderAutoStop = false // true während der Fahrt, false bei Stop nach Ende der Strecke
     let n_radDurchmesser_mm = 65
-    let n_EncoderEventRegistered = false
+    export let n_EncoderEventRegistered = false
 
     // aufgerufen von receiver.beimStart 
     export function encoderOn(radDmm: number) {
@@ -134,9 +134,9 @@ namespace receiver { // r-strecken.ts
     }
 
     function encoderRegisterEvent() { // radDmm: Rad Durchmesser in Millimeter
-        if (n_hasEncoder && !n_EncoderEventRegistered) {
+        if (n_hasEncoder && !n_EncoderEventRegistered && !n_SpursensorEventsRegistered) {
 
-            spurSensorUnRegisterEvents() // wenn Encoder Events, dann keine Spur Events
+            //spurSensorUnRegisterEvents() // wenn Encoder Events, dann keine Spur Events
 
             //n_hasEncoder = true
             n_EncoderFaktor = 63.9 * (26 / 14) / (n_radDurchmesser_mm / 10 * Math.PI)
@@ -172,12 +172,12 @@ namespace receiver { // r-strecken.ts
         }
     }
 
-    export function encoderUnRegisterEvent() {
+    /* export function encoderUnRegisterEvent() {
         if (n_EncoderEventRegistered) {
             pins.onPulsed(a_PinEncoder[n_Hardware], PulseValue.Low, undefined)
             n_EncoderEventRegistered = false
         }
-    }
+    } */
 
 
 
