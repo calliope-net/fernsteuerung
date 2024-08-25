@@ -28,6 +28,7 @@
         "s-advanced.ts",
         "r-receiver.ts",
         "r-sensorevents.ts",
+        "r-qwiiclaser.ts",
         "r-pins.ts",
         "r-qwiicmotor.ts",
         "r-qwiic.ts",
