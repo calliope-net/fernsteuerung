@@ -26,116 +26,163 @@ https://github.com/sparkfun/SparkFun_VL53L1X_Arduino_Library/blob/master/example
     let n_QwiicDistanceSensorConnected: boolean
 
 
-
-
-
-    // ========== group="VL53L1X"
+    // ========== group="Laser Distance Sensor" subcategory="Sensoren"
     // https://github.com/sparkfun/SparkFun_VL53L1X_Arduino_Library/blob/master/src/st_src/vl53l1x_class.cpp
 
-    //% group="VL53L1X"
-    //% block="Sensor Init" weight=9
-    export function sensorInit() {
+    // const VL53L1_ERROR_TIME_OUT = -7
+
+    //% group="Laser Distance Sensor" subcategory="Sensoren"
+    //% block="Laser Sensor Init" weight=9
+    function laserSensorInit() {
         // This function loads the 135 bytes default values to initialize the sensor.
         // :return:	* 0:success * != 0:failed
-        //for (let index = 0x2D; index <= 0x87; index++) {
-        //    wrByte(index, vL51L1X_DEFAULT_CONFIGURATION()[index - 0x2D]);
-        //}
-        let buffer = Buffer.create(2)
-        buffer.setNumber(NumberFormat.UInt16BE, 0, 0x2D)
-        i2cWriteBuffer(Buffer.concat([buffer, vL51L1X_DEFAULT_CONFIGURATION()]))
+        if (n_QwiicDistanceSensorConnected == undefined) {
+            //for (let index = 0x2D; index <= 0x87; index++) {
+            //    wrByte(index, vL51L1X_DEFAULT_CONFIGURATION()[index - 0x2D]);
+            //}
+            let buffer = Buffer.create(2)
+            buffer.setNumber(NumberFormat.UInt16BE, 0, 0x2D)
+            i2cWriteBuffer(Buffer.concat([buffer, vL51L1X_DEFAULT_CONFIGURATION()]))
 
-        startRanging()
+            startRanging()
 
-        //We need to wait at least the default intermeasurement period of 103ms before dataready will occur
-        //But if a unit has already been powered and polling, it may happen much faster
+            //We need to wait at least the default intermeasurement period of 103ms before dataready will occur
+            //But if a unit has already been powered and polling, it may happen much faster
 
-        let timeout = 0 //, dataReady = 0
+            let timeout = 0 //, dataReady = 0
 
-        while (!checkForDataReady()) {// (dataReady == 0) {
-            // dataReady = checkForDataReady() //  status = VL53L1X_CheckForDataReady(& dataReady);
-            if (timeout++ > 150)
-                return VL53L1_ERROR_TIME_OUT
-            basic.pause(1);
+            while (!checkForDataReady()) {// (dataReady == 0) {
+                // dataReady = checkForDataReady() //  status = VL53L1X_CheckForDataReady(& dataReady);
+                if (timeout++ > 150)
+                    return false// VL53L1_ERROR_TIME_OUT
+                basic.pause(1);
+            }
+            clearInterrupt();
+            stopRanging();
+            wrByte(eRegister.VL53L1_VHV_CONFIG__TIMEOUT_MACROP_LOOP_BOUND, 0x09); // two bounds VHV
+            wrByte(0x0B, 0)	// start VHV from the previous temperature
         }
-        clearInterrupt();
-        stopRanging();
-        wrByte(eRegister.VL53L1_VHV_CONFIG__TIMEOUT_MACROP_LOOP_BOUND, 0x09); // two bounds VHV
-        wrByte(0x0B, 0)	// start VHV from the previous temperature
-
-        return 0 //status;
+        return n_QwiicDistanceSensorConnected //status;
     }
 
-    const VL53L1_ERROR_TIME_OUT = -7
 
-    //% group="VL53L1X"
+    //% group="Laser Distance Sensor" subcategory="Sensoren"
+    //% block="Laser Sensor angeschlossen" weight=8
+    export function laserSensorConnected() {
+        //if (n_QwiicDistanceSensorConnected == undefined)
+        //    sensorInit()
+        //return n_QwiicDistanceSensorConnected
+        return laserSensorInit()
+    }
+
+    //% group="Laser Distance Sensor" subcategory="Sensoren"
+    //% block="Laser Abstand (cm) mit Pause 5ms" weight=7
+    export function laserAbstand5() {
+        startRanging()
+        basic.pause(5)
+        let distance = getDistance()
+        basic.pause(5)
+        stopRanging()
+
+        return distance / 10
+    }
+
+    //% group="Laser Distance Sensor" subcategory="Sensoren"
+    //% block="Laser Abstand (cm) mit checkForDataReady" weight=6
+    export function laserAbstandR() {
+        startRanging()
+        while (!checkForDataReady()) {// (checkForDataReady() == 0) {
+            basic.pause(1) // ms
+        }
+        let distance = getDistance() //Get the result of the measurement from the sensor
+        clearInterrupt()
+        stopRanging()
+
+        return distance / 10
+    }
+
+    //% group="Laser Distance Sensor" subcategory="Sensoren"
+    //% block="Laser Sensor Id" weight=4
+    export function getSensorId() { // 60330 0xEBAA
+        return rdWord(eRegister.VL53L1_IDENTIFICATION__MODEL_ID)
+    }
+
+    //% group="Laser Distance Sensor" subcategory="Sensoren"
+    //% block="Laser GetDistance (mm)" weight=3
+    export function getDistance() {
+        return rdWord(eRegister.VL53L1_RESULT__FINAL_CROSSTALK_CORRECTED_RANGE_MM_SD0)
+    }
+
+
+
+    // ========== private
+
+    // ========== group="VL53L1X" subcategory="Sensoren"
+
+    //% group="VL53L1X" subcategory="Sensoren"
     //% block="ClearInterrupt" weight=8
-    export function clearInterrupt() {
+    function clearInterrupt() {
         wrByte(eRegister.SYSTEM__INTERRUPT_CLEAR, 0x01)
     }
 
-
-
-    //% group="VL53L1X"
+    //% group="VL53L1X" subcategory="Sensoren"
     //% block="GetInterruptPolarity (0 oder 1 active high=default)" weight=6
-    export function getInterruptPolarity() {
+    function getInterruptPolarity() {
         // This function returns the current interrupt polarity
         // * 1 = active high (**default**) * 0 = active low
         return ((rdByte(eRegister.GPIO_HV_MUX__CTRL) & 0x10) == 0x10) ? 0 : 1
     }
 
-
-    //% group="VL53L1X"
+    //% group="VL53L1X" subcategory="Sensoren"
     //% block="StartRanging (ClearInterrupt + Start 0x40)" weight=5
-    export function startRanging() {
+    function startRanging() {
         wrByte(eRegister.SYSTEM__INTERRUPT_CLEAR, 0x01) // clear interrupt trigger
         wrByte(eRegister.SYSTEM__MODE_START, 0x40) // Enable VL53L1X
     }
 
-    //% group="VL53L1X"
+    //% group="VL53L1X" subcategory="Sensoren"
     //% block="StartOneshotRanging (ClearInterrupt + Start 0x10)" weight=4
-    export function startOneshotRanging() {
+    function startOneshotRanging() {
         wrByte(eRegister.SYSTEM__INTERRUPT_CLEAR, 0x01)
         wrByte(eRegister.SYSTEM__MODE_START, 0x10) // Enable VL53L1X one-shot ranging
     }
 
-    //% group="VL53L1X"
+    //% group="VL53L1X" subcategory="Sensoren"
     //% block="StopRanging" weight=3
-    export function stopRanging() {
+    function stopRanging() {
         wrByte(eRegister.SYSTEM__MODE_START, 0x00) // Enable VL53L1X
     }
 
-    //% group="VL53L1X"
+    //% group="VL53L1X" subcategory="Sensoren"
     //% block="CheckForDataReady (0 ist ready)" weight=2
-    export function checkForDataReady() {
+    function checkForDataReady() {
         // This function checks if the new ranging data is available by polling the dedicated register.
         // return isDataReady:	* 0 -> not ready
         // * 1 -> ready
         return (rdByte(eRegister.GPIO__TIO_HV_STATUS) & 1) == getInterruptPolarity()
     }
 
-
-
-    //% group="I²C"
+    //% group="I²C" subcategory="Sensoren"
     //% block="write Byte %register Byte %byte" weight=6
-    export function wrByte(register: eRegister, byte: number) {
+    function wrByte(register: eRegister, byte: number) {
         let buffer = Buffer.create(3)
         buffer.setNumber(NumberFormat.UInt16BE, 0, register)
         buffer.setUint8(2, byte)
         i2cWriteBuffer(buffer)
     }
 
-    //% group="I²C"
+    //% group="I²C" subcategory="Sensoren"
     //% block="read Byte %register" weight=6
-    export function rdByte(register: eRegister) {
+    function rdByte(register: eRegister) {
         let buffer = Buffer.create(2)
         buffer.setNumber(NumberFormat.UInt16BE, 0, register)
         i2cWriteBuffer(buffer)
         return i2cReadBuffer(1).getUint8(0)
     }
 
-    //% group="I²C"
+    //% group="I²C" subcategory="Sensoren"
     //% block="write Word %register UInt16 %data" weight=6
-    export function wrWord(register: eRegister, data: number) {
+    function wrWord(register: eRegister, data: number) {
         let buffer = Buffer.create(4)
         buffer.setNumber(NumberFormat.UInt16BE, 0, register)
         buffer.setNumber(NumberFormat.UInt16BE, 2, data)
@@ -143,9 +190,9 @@ https://github.com/sparkfun/SparkFun_VL53L1X_Arduino_Library/blob/master/example
     }
 
 
-    //% group="I²C"
+    //% group="I²C" subcategory="Sensoren"
     //% block="read Word (UInt16BE) %register" weight=8
-    export function rdWord(register: eRegister) {
+    function rdWord(register: eRegister) {
         let buffer = Buffer.create(2)
         buffer.setNumber(NumberFormat.UInt16BE, 0, register)
         i2cWriteBuffer(buffer, true)
