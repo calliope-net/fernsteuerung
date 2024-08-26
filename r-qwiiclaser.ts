@@ -90,6 +90,8 @@ https://github.com/sparkfun/SparkFun_VL53L1X_Arduino_Library/blob/master/example
     //% read.shadow="toggleYesNo"
     //% checkForDataReady.shadow=toggleYesNo checkForDataReady.defl=1
     export function laserAbstand_cm(read: boolean, checkForDataReady = true) {
+        // 2.3 Ranging flow Seite 7
+        // https://cdn.sparkfun.com/assets/f/a/3/a/0/um2931-a-guide-to-using-the-vl53l4cd-ultra-lite-driver-uld-stmicroelectronics.pdf
         if (read && laserSensorConnected()) {
             if (n_SYSTEM__MODE_START != eSYSTEM__MODE_START.startRanging) { // wenn nicht gestartet
                 laserRanging(eSYSTEM__MODE_START.startOneshotRanging) // einmalige Messung
@@ -98,6 +100,7 @@ https://github.com/sparkfun/SparkFun_VL53L1X_Arduino_Library/blob/master/example
                 basic.pause(1) // ms
             }
             n_QwiicDistanceSensor_mm = rdWord(eRegisterWord.VL53L1_RESULT__FINAL_CROSSTALK_CORRECTED_RANGE_MM_SD0) // mm 
+            clearInterrupt()
         }
         //else
         return n_QwiicDistanceSensor_mm / 10
