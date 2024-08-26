@@ -32,8 +32,8 @@ https://github.com/sparkfun/SparkFun_VL53L1X_Arduino_Library/blob/master/example
 
     // const VL53L1_ERROR_TIME_OUT = -7
 
-    //% group="Laser Distance Sensor" subcategory="Sensoren"
-    //% block="Laser Sensor Init" weight=9
+    // group="Laser Distance Sensor" subcategory="Sensoren"
+    // block="Laser Sensor Init" weight=9
     function laserSensorInit() {
         // This function loads the 135 bytes default values to initialize the sensor.
         // :return:	* 0:success * != 0:failed
@@ -75,14 +75,17 @@ https://github.com/sparkfun/SparkFun_VL53L1X_Arduino_Library/blob/master/example
     }
 
 
+
+    // ========== group="Laser Distance Sensor" subcategory="Sensoren"
+
     //% group="Laser Distance Sensor" subcategory="Sensoren"
-    //% block="Laser Sensor angeschlossen" weight=8
+    //% block="Laser Sensor angeschlossen" weight=9
     export function laserSensorConnected() {
         return laserSensorInit()
     }
 
     //% group="Laser Distance Sensor" subcategory="Sensoren"
-    //% block="Laser Abstand (cm) || checkForDataReady %check" weight=7
+    //% block="Laser Abstand (cm) || CheckForDataReady %check" weight=8
     //% check.shadow=toggleYesNo check.defl=1
     export function laserAbstand(check = true) {
         if (laserSensorConnected()) {
@@ -98,43 +101,7 @@ https://github.com/sparkfun/SparkFun_VL53L1X_Arduino_Library/blob/master/example
             return 0
     }
 
-    //% group="Laser Distance Sensor" subcategory="Sensoren"
-    //% block="Laser Abstand (cm) mit Pause 5ms" weight=7
-    function laserAbstand5() {
-        laserRanging(eSYSTEM__MODE_START.startRanging) //    startRanging()
-        basic.pause(5)
-        let distance = getDistance()
-        basic.pause(5)
-        laserRanging(eSYSTEM__MODE_START.stopRanging) //   stopRanging()
 
-        return distance / 10
-    }
-
-    //% group="Laser Distance Sensor" subcategory="Sensoren"
-    //% block="Laser Abstand (cm) mit checkForDataReady" weight=6
-    function laserAbstandR() {
-        laserRanging(eSYSTEM__MODE_START.startRanging) // startRanging()
-        while (!checkForDataReady()) {// (checkForDataReady() == 0) {
-            basic.pause(1) // ms
-        }
-        let distance = getDistance() //Get the result of the measurement from the sensor
-        clearInterrupt()
-        laserRanging(eSYSTEM__MODE_START.stopRanging) // stopRanging()
-
-        return distance / 10
-    }
-
-    //% group="Laser Distance Sensor" subcategory="Sensoren"
-    //% block="Laser Sensor Id" weight=4
-    function getSensorId() { // 60330 0xEBAA
-        return rdWord(eRegisterWord.VL53L1_IDENTIFICATION__MODEL_ID)
-    }
-
-    //% group="Laser Distance Sensor" subcategory="Sensoren"
-    //% block="Laser GetDistance (mm)" weight=3
-    function getDistance() {
-        return rdWord(eRegisterWord.VL53L1_RESULT__FINAL_CROSSTALK_CORRECTED_RANGE_MM_SD0)
-    }
 
 
 
@@ -160,24 +127,78 @@ https://github.com/sparkfun/SparkFun_VL53L1X_Arduino_Library/blob/master/example
         }
     }
 
-    // ========== private
 
-    // ========== group="VL53L1X" subcategory="Sensoren"
+    //% group="Laser Distance Sensor" subcategory="Sensoren"
+    //% block="CheckForDataReady" weight=4
+    export function checkForDataReady() {
+        // This function checks if the new ranging data is available by polling the dedicated register.
+        // 0 -> not ready = false
+        // 1 -> ready = true isDataReady
+        return (rdByte(eRegisterByte.GPIO__TIO_HV_STATUS) & 1) == n_InterruptPolarity
+        // 0x31=49 GPIO__TIO_HV_STATUS ist 2 und wird bei ready kurz 3 // n_InterruptPolarity ist (immer) 1
+        // Wert 0x02, Register 0x31 : bit 1 = interrupt depending on the polarity, use CheckForDataReady() 
+        // Definition wäre falsch, weil sich bit 0 ändert und ausgewertet wird, nicht bit 1
+    }
 
-    //% group="VL53L1X" subcategory="Sensoren"
-    //% block="ClearInterrupt" weight=8
-    function clearInterrupt() {
+    //% group="Laser Distance Sensor" subcategory="Sensoren"
+    //% block="ClearInterrupt" weight=3
+    export function clearInterrupt() {
         wrByte(eRegisterByte.SYSTEM__INTERRUPT_CLEAR, 0x01)
     }
 
-    //% group="VL53L1X" subcategory="Sensoren"
-    //% block="GetInterruptPolarity (0 oder 1 active high=default)" weight=6
-    function getInterruptPolarity() {
+    //% group="Laser Distance Sensor" subcategory="Sensoren"
+    //% block="GetInterruptPolarity (0 oder 1 active high=default)" weight=2
+    export function getInterruptPolarity() {
         // 0x30=48 : set bit 4 to 0 for active high interrupt and 1 for active low (bits 3:0 must be 0x1), use SetInterruptPolarity()
         // This function returns the current interrupt polarity
         // * 1 = active high (**default**) * 0 = active low
         return ((rdByte(eRegisterByte.GPIO_HV_MUX__CTRL) & 0x10) == 0x10) ? 0 : 1
     }
+
+
+    /* 
+        //% group="Laser Distance Sensor" subcategory="Sensoren"
+        //% block="Laser Abstand (cm) mit Pause 5ms" weight=7
+        function laserAbstand5() {
+            laserRanging(eSYSTEM__MODE_START.startRanging) //    startRanging()
+            basic.pause(5)
+            let distance = getDistance()
+            basic.pause(5)
+            laserRanging(eSYSTEM__MODE_START.stopRanging) //   stopRanging()
+    
+            return distance / 10
+        }
+    
+        //% group="Laser Distance Sensor" subcategory="Sensoren"
+        //% block="Laser Abstand (cm) mit checkForDataReady" weight=6
+        function laserAbstandR() {
+            laserRanging(eSYSTEM__MODE_START.startRanging) // startRanging()
+            while (!checkForDataReady()) {// (checkForDataReady() == 0) {
+                basic.pause(1) // ms
+            }
+            let distance = getDistance() //Get the result of the measurement from the sensor
+            clearInterrupt()
+            laserRanging(eSYSTEM__MODE_START.stopRanging) // stopRanging()
+    
+            return distance / 10
+        }
+    
+        //% group="Laser Distance Sensor" subcategory="Sensoren"
+        //% block="Laser Sensor Id" weight=4
+        function getSensorId() { // 60330 0xEBAA
+            return rdWord(eRegisterWord.VL53L1_IDENTIFICATION__MODEL_ID)
+        }
+    
+        //% group="Laser Distance Sensor" subcategory="Sensoren"
+        //% block="Laser GetDistance (mm)" weight=3
+        function getDistance() {
+            return rdWord(eRegisterWord.VL53L1_RESULT__FINAL_CROSSTALK_CORRECTED_RANGE_MM_SD0)
+        }
+     */
+
+    // ========== private
+
+    // ========== group="VL53L1X" subcategory="Sensoren"
 
 
     /* 
@@ -201,17 +222,7 @@ https://github.com/sparkfun/SparkFun_VL53L1X_Arduino_Library/blob/master/example
             wrByte(eRegister.SYSTEM__MODE_START, 0x00) // Enable VL53L1X
         }
      */
-    //% group="Laser Distance Sensor" subcategory="Sensoren"
-    //% block="CheckForDataReady" weight=2
-    export function checkForDataReady() {
-        // This function checks if the new ranging data is available by polling the dedicated register.
-        // 0 -> not ready = false
-        // 1 -> ready = true isDataReady
-        return (rdByte(eRegisterByte.GPIO__TIO_HV_STATUS) & 1) == n_InterruptPolarity
-        // 0x31=49 GPIO__TIO_HV_STATUS ist 2 und wird bei ready kurz 3 // n_InterruptPolarity ist (immer) 1
-        // Wert 0x02, Register 0x31 : bit 1 = interrupt depending on the polarity, use CheckForDataReady() 
-        // Definition wäre falsch, weil sich bit 0 ändert und ausgewertet wird, nicht bit 1
-    }
+
 
     //% group="Laser I²C Register" subcategory="Sensoren"
     //% block="write Byte %register Byte %byte" weight=6
