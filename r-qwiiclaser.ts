@@ -25,6 +25,7 @@ https://github.com/sparkfun/SparkFun_VL53L1X_Arduino_Library/blob/master/example
     const i2cQwiicDistanceSensor_x29 = 0x29 // default address 0x52 >> 1
     let n_QwiicDistanceSensorConnected: boolean
 
+    let n_InterruptPolarity = 0x01 // * 1 = active high (**default**) * 0 = active low
 
     // ========== group="Laser Distance Sensor" subcategory="Sensoren"
     // https://github.com/sparkfun/SparkFun_VL53L1X_Arduino_Library/blob/master/src/st_src/vl53l1x_class.cpp
@@ -44,25 +45,32 @@ https://github.com/sparkfun/SparkFun_VL53L1X_Arduino_Library/blob/master/example
             buffer.setNumber(NumberFormat.UInt16BE, 0, 0x2D)
             i2cWriteBuffer(Buffer.concat([buffer, vL51L1X_DEFAULT_CONFIGURATION()]))
 
-            startRanging()
+            if (n_QwiicDistanceSensorConnected) { // wird bei i2cWriteBuffer true oder false gesetzt
 
-            //We need to wait at least the default intermeasurement period of 103ms before dataready will occur
-            //But if a unit has already been powered and polling, it may happen much faster
+                n_InterruptPolarity = getInterruptPolarity() // ändert sich nicht
 
-            let timeout = 0 //, dataReady = 0
+                laserRanging(eSYSTEM__MODE_START.startRanging)
 
-            while (!checkForDataReady()) {// (dataReady == 0) {
-                // dataReady = checkForDataReady() //  status = VL53L1X_CheckForDataReady(& dataReady);
-                if (timeout++ > 150)
-                    return false// VL53L1_ERROR_TIME_OUT
-                basic.pause(1);
+                // We need to wait at least the default intermeasurement period of 103ms before dataready will occur
+                // But if a unit has already been powered and polling, it may happen much faster
+
+                let timeout = 0
+
+                while (!checkForDataReady()) {// (dataReady == 0) {
+                    // dataReady = checkForDataReady() //  status = VL53L1X_CheckForDataReady(& dataReady);
+                    if (timeout++ > 150)
+                        return false // VL53L1_ERROR_TIME_OUT = -7
+                    basic.pause(10) // delay(1) ms
+                }
+                clearInterrupt()
+                laserRanging(eSYSTEM__MODE_START.stopRanging)
+                // https://github.com/sparkfun/SparkFun_VL53L1X_Arduino_Library/blob/master/src/st_src/vl53l1x_class.cpp
+                // Zeile 188-189
+                wrByte(eRegisterByte.VL53L1_VHV_CONFIG__TIMEOUT_MACROP_LOOP_BOUND, 0x09); // two bounds VHV
+                wrByte(0x0B, 0)	// start VHV from the previous temperature
             }
-            clearInterrupt();
-            stopRanging();
-            wrByte(eRegister.VL53L1_VHV_CONFIG__TIMEOUT_MACROP_LOOP_BOUND, 0x09); // two bounds VHV
-            wrByte(0x0B, 0)	// start VHV from the previous temperature
         }
-        return n_QwiicDistanceSensorConnected //status;
+        return n_QwiicDistanceSensorConnected
     }
 
 
@@ -78,11 +86,11 @@ https://github.com/sparkfun/SparkFun_VL53L1X_Arduino_Library/blob/master/example
     //% group="Laser Distance Sensor" subcategory="Sensoren"
     //% block="Laser Abstand (cm) mit Pause 5ms" weight=7
     export function laserAbstand5() {
-        startRanging()
+        laserRanging(eSYSTEM__MODE_START.startRanging) //    startRanging()
         basic.pause(5)
         let distance = getDistance()
         basic.pause(5)
-        stopRanging()
+        laserRanging(eSYSTEM__MODE_START.stopRanging) //   stopRanging()
 
         return distance / 10
     }
@@ -90,13 +98,13 @@ https://github.com/sparkfun/SparkFun_VL53L1X_Arduino_Library/blob/master/example
     //% group="Laser Distance Sensor" subcategory="Sensoren"
     //% block="Laser Abstand (cm) mit checkForDataReady" weight=6
     export function laserAbstandR() {
-        startRanging()
+        laserRanging(eSYSTEM__MODE_START.startRanging) // startRanging()
         while (!checkForDataReady()) {// (checkForDataReady() == 0) {
             basic.pause(1) // ms
         }
         let distance = getDistance() //Get the result of the measurement from the sensor
         clearInterrupt()
-        stopRanging()
+        laserRanging(eSYSTEM__MODE_START.stopRanging) // stopRanging()
 
         return distance / 10
     }
@@ -104,16 +112,36 @@ https://github.com/sparkfun/SparkFun_VL53L1X_Arduino_Library/blob/master/example
     //% group="Laser Distance Sensor" subcategory="Sensoren"
     //% block="Laser Sensor Id" weight=4
     export function getSensorId() { // 60330 0xEBAA
-        return rdWord(eRegister.VL53L1_IDENTIFICATION__MODEL_ID)
+        return rdWord(eRegisterWord.VL53L1_IDENTIFICATION__MODEL_ID)
     }
 
     //% group="Laser Distance Sensor" subcategory="Sensoren"
     //% block="Laser GetDistance (mm)" weight=3
     export function getDistance() {
-        return rdWord(eRegister.VL53L1_RESULT__FINAL_CROSSTALK_CORRECTED_RANGE_MM_SD0)
+        return rdWord(eRegisterWord.VL53L1_RESULT__FINAL_CROSSTALK_CORRECTED_RANGE_MM_SD0)
     }
 
 
+
+    export enum eSYSTEM__MODE_START {
+        startOneshotRanging = 0x10, // Enable VL53L1X one-shot ranging
+        startRanging = 0x40, // Enable VL53L1X
+        stopRanging = 0x00
+    }
+
+    let n_SYSTEM__MODE_START = eSYSTEM__MODE_START.stopRanging
+
+    //% group="Laser Distance Sensor" subcategory="Sensoren"
+    //% block="Ranging Mode %mode || ClearInterrupt %clearInterrupt" weight=5
+    //% clearInterrupt.shadow=toggleYesNo
+    export function laserRanging(mode: eSYSTEM__MODE_START, clearInterrupt = false) {
+        if (clearInterrupt)
+            wrByte(eRegisterByte.SYSTEM__INTERRUPT_CLEAR, 0x01)
+        if (n_SYSTEM__MODE_START != mode) {
+            n_SYSTEM__MODE_START = mode
+            wrByte(eRegisterByte.SYSTEM__MODE_START, mode)
+        }
+    }
 
     // ========== private
 
@@ -122,67 +150,73 @@ https://github.com/sparkfun/SparkFun_VL53L1X_Arduino_Library/blob/master/example
     //% group="VL53L1X" subcategory="Sensoren"
     //% block="ClearInterrupt" weight=8
     function clearInterrupt() {
-        wrByte(eRegister.SYSTEM__INTERRUPT_CLEAR, 0x01)
+        wrByte(eRegisterByte.SYSTEM__INTERRUPT_CLEAR, 0x01)
     }
 
     //% group="VL53L1X" subcategory="Sensoren"
     //% block="GetInterruptPolarity (0 oder 1 active high=default)" weight=6
     function getInterruptPolarity() {
+        // 0x30=48 : set bit 4 to 0 for active high interrupt and 1 for active low (bits 3:0 must be 0x1), use SetInterruptPolarity()
         // This function returns the current interrupt polarity
         // * 1 = active high (**default**) * 0 = active low
-        return ((rdByte(eRegister.GPIO_HV_MUX__CTRL) & 0x10) == 0x10) ? 0 : 1
+        return ((rdByte(eRegisterByte.GPIO_HV_MUX__CTRL) & 0x10) == 0x10) ? 0 : 1
     }
 
-    //% group="VL53L1X" subcategory="Sensoren"
-    //% block="StartRanging (ClearInterrupt + Start 0x40)" weight=5
-    function startRanging() {
-        wrByte(eRegister.SYSTEM__INTERRUPT_CLEAR, 0x01) // clear interrupt trigger
-        wrByte(eRegister.SYSTEM__MODE_START, 0x40) // Enable VL53L1X
-    }
 
+    /* 
+        //% group="VL53L1X" subcategory="Sensoren"
+        //% block="StartRanging (ClearInterrupt + Start 0x40)" weight=5
+        function startRanging() {
+            wrByte(eRegister.SYSTEM__INTERRUPT_CLEAR, 0x01) // clear interrupt trigger
+            wrByte(eRegister.SYSTEM__MODE_START, 0x40) // Enable VL53L1X
+        }
+    
+        //% group="VL53L1X" subcategory="Sensoren"
+        //% block="StartOneshotRanging (ClearInterrupt + Start 0x10)" weight=4
+        function startOneshotRanging() {
+            wrByte(eRegister.SYSTEM__INTERRUPT_CLEAR, 0x01)
+            wrByte(eRegister.SYSTEM__MODE_START, 0x10) // Enable VL53L1X one-shot ranging
+        }
+    
+        //% group="VL53L1X" subcategory="Sensoren"
+        //% block="StopRanging" weight=3
+        function stopRanging() {
+            wrByte(eRegister.SYSTEM__MODE_START, 0x00) // Enable VL53L1X
+        }
+     */
     //% group="VL53L1X" subcategory="Sensoren"
-    //% block="StartOneshotRanging (ClearInterrupt + Start 0x10)" weight=4
-    function startOneshotRanging() {
-        wrByte(eRegister.SYSTEM__INTERRUPT_CLEAR, 0x01)
-        wrByte(eRegister.SYSTEM__MODE_START, 0x10) // Enable VL53L1X one-shot ranging
-    }
-
-    //% group="VL53L1X" subcategory="Sensoren"
-    //% block="StopRanging" weight=3
-    function stopRanging() {
-        wrByte(eRegister.SYSTEM__MODE_START, 0x00) // Enable VL53L1X
-    }
-
-    //% group="VL53L1X" subcategory="Sensoren"
-    //% block="CheckForDataReady (0 ist ready)" weight=2
-    function checkForDataReady() {
+    //% block="CheckForDataReady" weight=2
+    export function checkForDataReady() {
         // This function checks if the new ranging data is available by polling the dedicated register.
-        // return isDataReady:	* 0 -> not ready
-        // * 1 -> ready
-        return (rdByte(eRegister.GPIO__TIO_HV_STATUS) & 1) == getInterruptPolarity()
+        // 0 -> not ready = false
+        // 1 -> ready = true isDataReady
+        return (rdByte(eRegisterByte.GPIO__TIO_HV_STATUS) & 1) == n_InterruptPolarity
+        // 0x31=49 GPIO__TIO_HV_STATUS ist 2 und wird bei ready kurz 3 // n_InterruptPolarity ist (immer) 1
+        // Wert 0x02, Register 0x31 : bit 1 = interrupt depending on the polarity, use CheckForDataReady() 
+        // Definition wäre falsch, weil sich bit 0 ändert und ausgewertet wird, nicht bit 1
     }
 
-    //% group="I²C" subcategory="Sensoren"
+    //% group="Laser I²C Register" subcategory="Sensoren"
     //% block="write Byte %register Byte %byte" weight=6
-    function wrByte(register: eRegister, byte: number) {
+    function wrByte(register: eRegisterByte, byte: number) {
         let buffer = Buffer.create(3)
         buffer.setNumber(NumberFormat.UInt16BE, 0, register)
         buffer.setUint8(2, byte)
         i2cWriteBuffer(buffer)
     }
 
-    //% group="I²C" subcategory="Sensoren"
-    //% block="read Byte %register" weight=6
-    function rdByte(register: eRegister) {
+    //% group="Laser I²C Register" subcategory="Sensoren"
+    //% block="Register lesen (Byte) %register" weight=6
+    export function rdByte(register: eRegisterByte) {
         let buffer = Buffer.create(2)
         buffer.setNumber(NumberFormat.UInt16BE, 0, register)
-        i2cWriteBuffer(buffer)
+        i2cWriteBuffer(buffer, true)
         return i2cReadBuffer(1).getUint8(0)
     }
 
-    //% group="I²C" subcategory="Sensoren"
+    //% group="Laser I²C Register" subcategory="Sensoren"
     //% block="write Word %register UInt16 %data" weight=6
-    function wrWord(register: eRegister, data: number) {
+    function wrWord(register: eRegisterWord, data: number) {
         let buffer = Buffer.create(4)
         buffer.setNumber(NumberFormat.UInt16BE, 0, register)
         buffer.setNumber(NumberFormat.UInt16BE, 2, data)
@@ -190,9 +224,9 @@ https://github.com/sparkfun/SparkFun_VL53L1X_Arduino_Library/blob/master/example
     }
 
 
-    //% group="I²C" subcategory="Sensoren"
-    //% block="read Word (UInt16BE) %register" weight=8
-    function rdWord(register: eRegister) {
+    //% group="Laser I²C Register" subcategory="Sensoren"
+    //% block="Registaer lesen (UInt16BE) %register" weight=8
+    export function rdWord(register: eRegisterWord) {
         let buffer = Buffer.create(2)
         buffer.setNumber(NumberFormat.UInt16BE, 0, register)
         i2cWriteBuffer(buffer, true)
@@ -209,21 +243,6 @@ https://github.com/sparkfun/SparkFun_VL53L1X_Arduino_Library/blob/master/example
             return pins.i2cReadBuffer(i2cQwiicDistanceSensor_x29, size)
         else
             return Buffer.create(size)
-    }
-
-    export enum eRegister {
-        VL53L1_VHV_CONFIG__TIMEOUT_MACROP_LOOP_BOUND = 0x0008,
-        // 0x2D
-        GPIO_HV_MUX__CTRL = 0x0030,
-        GPIO__TIO_HV_STATUS = 0x0031,
-        SYSTEM__INTERRUPT_CONFIG_GPIO = 0x0046,
-        SYSTEM__THRESH_HIGH = 0x0072,
-        SYSTEM__THRESH_LOW = 0x0074,
-        SYSTEM__INTERRUPT_CLEAR = 0x0086,
-        SYSTEM__MODE_START = 0x0087,
-        // 0x87
-        VL53L1_RESULT__FINAL_CROSSTALK_CORRECTED_RANGE_MM_SD0 = 0x0096,
-        VL53L1_IDENTIFICATION__MODEL_ID = 0x010F
     }
 
     function vL51L1X_DEFAULT_CONFIGURATION(): Buffer {
@@ -323,6 +342,74 @@ https://github.com/sparkfun/SparkFun_VL53L1X_Arduino_Library/blob/master/example
             0x00  /* 0x87 : start ranging, use StartRanging() or StopRanging(), If you want an automatic start after VL53L1X_init() call, put 0x40 in location 0x87 */
         ])
     }
+
+    export enum eRegisterByte { // Register Nummer 2 Byte, Value 1 Byte UInt8
+        VL53L1_VHV_CONFIG__TIMEOUT_MACROP_LOOP_BOUND = 0x0008,
+        // 0x2D
+        GPIO_HV_MUX__CTRL = 0x0030,     // 0x01, /* 0x30 : set bit 4 to 0 for active high interrupt and 1 for active low (bits 3:0 must be 0x1), use SetInterruptPolarity() */
+        GPIO__TIO_HV_STATUS = 0x0031,   // 0x02, /* 0x31 : bit 1 = interrupt depending on the polarity, use CheckForDataReady() */
+        SYSTEM__INTERRUPT_CONFIG_GPIO = 0x0046,
+        SYSTEM__THRESH_HIGH = 0x0072,
+        SYSTEM__THRESH_LOW = 0x0074,
+        SYSTEM__INTERRUPT_CLEAR = 0x0086,
+        SYSTEM__MODE_START = 0x0087,
+        // 0x87
+    }
+    export enum eRegisterWord { // Register Nummer 2 Byte, Value 2 Byte UInt16BE
+        VL53L1_RESULT__FINAL_CROSSTALK_CORRECTED_RANGE_MM_SD0 = 0x0096,
+        VL53L1_IDENTIFICATION__MODEL_ID = 0x010F
+
+    }
+
+    /*
+
+    #define SOFT_RESET											0x0000
+    #define VL53L1_I2C_SLAVE__DEVICE_ADDRESS					0x0001
+    #define VL53L1_VHV_CONFIG__TIMEOUT_MACROP_LOOP_BOUND        0x0008
+    #define ALGO__CROSSTALK_COMPENSATION_PLANE_OFFSET_KCPS 		0x0016
+    #define ALGO__CROSSTALK_COMPENSATION_X_PLANE_GRADIENT_KCPS 	0x0018
+    #define ALGO__CROSSTALK_COMPENSATION_Y_PLANE_GRADIENT_KCPS 	0x001A
+    #define ALGO__PART_TO_PART_RANGE_OFFSET_MM					0x001E
+    #define MM_CONFIG__INNER_OFFSET_MM							0x0020
+    #define MM_CONFIG__OUTER_OFFSET_MM 							0x0022
+
+    #define GPIO_HV_MUX__CTRL									0x0030
+    #define GPIO__TIO_HV_STATUS       							0x0031
+    #define SYSTEM__INTERRUPT_CONFIG_GPIO 						0x0046
+    #define PHASECAL_CONFIG__TIMEOUT_MACROP     				0x004B
+    #define RANGE_CONFIG__TIMEOUT_MACROP_A_HI   				0x005E
+    #define RANGE_CONFIG__VCSEL_PERIOD_A        				0x0060
+    #define RANGE_CONFIG__VCSEL_PERIOD_B						0x0063
+    #define RANGE_CONFIG__TIMEOUT_MACROP_B_HI  					0x0061
+    #define RANGE_CONFIG__TIMEOUT_MACROP_B_LO  					0x0062
+    #define RANGE_CONFIG__SIGMA_THRESH 							0x0064
+    #define RANGE_CONFIG__MIN_COUNT_RATE_RTN_LIMIT_MCPS			0x0066
+    #define RANGE_CONFIG__VALID_PHASE_HIGH      				0x0069
+    #define VL53L1_SYSTEM__INTERMEASUREMENT_PERIOD				0x006C
+    #define SYSTEM__THRESH_HIGH 								0x0072
+    #define SYSTEM__THRESH_LOW 									0x0074
+    #define SD_CONFIG__WOI_SD0                  				0x0078
+    #define SD_CONFIG__INITIAL_PHASE_SD0        				0x007A
+    #define ROI_CONFIG__USER_ROI_CENTRE_SPAD					0x007F
+    #define ROI_CONFIG__USER_ROI_REQUESTED_GLOBAL_XY_SIZE		0x0080
+    #define SYSTEM__SEQUENCE_CONFIG								0x0081
+    #define VL53L1_SYSTEM__GROUPED_PARAMETER_HOLD 				0x0082
+    #define SYSTEM__INTERRUPT_CLEAR       						0x0086
+    #define SYSTEM__MODE_START                 					0x0087
+
+    #define VL53L1_RESULT__RANGE_STATUS							0x0089
+    #define VL53L1_RESULT__DSS_ACTUAL_EFFECTIVE_SPADS_SD0		0x008C
+    #define RESULT__AMBIENT_COUNT_RATE_MCPS_SD					0x0090
+    #define VL53L1_RESULT__FINAL_CROSSTALK_CORRECTED_RANGE_MM_SD0				0x0096
+    #define VL53L1_RESULT__PEAK_SIGNAL_COUNT_RATE_CROSSTALK_CORRECTED_MCPS_SD0 	0x0098
+    #define VL53L1_RESULT__OSC_CALIBRATE_VAL					0x00DE
+    #define VL53L1_FIRMWARE__SYSTEM_STATUS                      0x00E5
+    #define VL53L1_IDENTIFICATION__MODEL_ID                     0x010F
+    #define VL53L1_ROI_CONFIG__MODE_ROI_CENTRE_SPAD				0x013E
+
+    #define VL53L1X_DEFAULT_DEVICE_ADDRESS						0x52
+
+    */
 
 
 } // r-qwiiclaser.ts
