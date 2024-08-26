@@ -27,7 +27,7 @@ namespace receiver { // r-fernsteuerung.ts
                     btf.setLedColors(btf.eRgbLed.b, Colors.Yellow, bAbstand) // nicht blinken, bringt I²C Sensor durcheinender
                     btf.setLedColors(btf.eRgbLed.c, Colors.White, bSpur)
                     bRichtung_vor = btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor) > c_MotorStop // Fahrtrichtung vorwärts
-                    cmAbstandSensor = selectAbstand(true) // immer messen, auch bei Stop, damit der kleiner werdende Wert erkannt wird
+                    cmAbstandSensor = selectAbstand_cm(true) // immer messen, auch bei Stop, damit der kleiner werdende Wert erkannt wird
                 }
                 else if (bSpur) { // nur einmalig
                     btf.setLedColors(btf.eRgbLed.b, Colors.White, getSpurLinks(eDH.hell)) // pinSpurlinks(eDH.hell)
@@ -98,7 +98,7 @@ namespace receiver { // r-fernsteuerung.ts
     //% start_cm.defl=5
     //% ms.defl=25
     //% inlineInputMode=inline expandableArgumentMode="toggle"
-    export function raiseBufferEvents(buffer: Buffer, start_cm = 5, ms = 25) {
+    /* export function raiseBufferEvents(buffer: Buffer, start_cm = 5, ms = 25) {
         if (buffer) {
 
             // Events müssen auch mit on=false aufgerufen werden, damit das Programm beendet wird (Motor Stop)
@@ -117,7 +117,7 @@ namespace receiver { // r-fernsteuerung.ts
                 1
             )
         }
-    }
+    } */
 
 
     //% group="10 Programm fernstarten" subcategory="Fernsteuerung"

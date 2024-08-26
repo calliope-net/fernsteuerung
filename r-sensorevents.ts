@@ -175,10 +175,20 @@ namespace receiver { // r-sensorevents.ts
             return false
     }
 
+    function selectStartRanging() {
+        if (n_Hardware == eHardware.v3 && laserSensorConnected())
+            laserRanging(eSYSTEM__MODE_START.startRanging)
+    }
+
+    function selectStopRanging() {
+        if (n_Hardware == eHardware.v3 && laserSensorConnected())
+            laserRanging(eSYSTEM__MODE_START.stopRanging)
+    }
+
     //% group="Ultraschall Sensor" subcategory="Sensoren"
     //% block="Abstand cm • einlesen %read" weight=6
     //% read.shadow=toggleYesNo
-    export function selectAbstand(read: boolean) {
+    export function selectAbstand_cm(read: boolean) {
         if (n_Hardware == eHardware.v3 && qwiicUltrasonicConnected())
             return getQwiicUltrasonic(read) // in r-qwiic.ts i2c einlesen
         else if (n_Hardware == eHardware.v3 && laserSensorConnected())
@@ -221,12 +231,16 @@ namespace receiver { // r-sensorevents.ts
         //}
 
         if (on && selectAbstandSensorConnected()) {
+
+            if (!a_raiseAbstandEvent_gestartet[index])
+                selectStartRanging() // nur einmal am Anfang
+
             let t = input.runningTime() - n_AbstandTimer // ms seit letztem raiseAbstandEvent
             if (t < ms)
                 basic.pause(t) // restliche Zeit-Differenz warten
             n_AbstandTimer = input.runningTime()
 
-            let cm = selectAbstand(true)
+            let cm = selectAbstand_cm(true)
 
             if (!n_AbstandStop && cm < stop_cm)
                 abstandEventHandler(true, cm) // Stop Ereignis auslösen
@@ -238,6 +252,7 @@ namespace receiver { // r-sensorevents.ts
             a_raiseAbstandEvent_gestartet[index] = true
         }
         else if (a_raiseAbstandEvent_gestartet[index]) {
+            selectStopRanging()
             a_raiseAbstandEvent_gestartet[index] = false
             abstandEventHandler(false, 0) // kein Stop Ereignis auslösen am Ende
         }

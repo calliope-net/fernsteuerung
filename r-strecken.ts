@@ -57,7 +57,7 @@ namespace receiver { // r-strecken.ts
                         sensor_color = Colors.Red
                         break
                     }
-                    if (abstandsSensor && motor > c_MotorStop && abstand > 0 && selectAbstandSensorConnected() && selectAbstand(true) < abstand) {
+                    if (abstandsSensor && motor > c_MotorStop && abstand > 0 && selectAbstandSensorConnected() && selectAbstand_cm(true) < abstand) {
                         sensor_color = Colors.Yellow
                         break
                     }
