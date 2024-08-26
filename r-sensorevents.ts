@@ -159,15 +159,15 @@ namespace receiver { // r-sensorevents.ts
 
 
 
-    // ========== group="Ultraschall (vom gewählten Modell)" subcategory="Sensoren"
+    // ========== group="Ultraschall Sensor" subcategory="Sensoren"
 
     //% group="Ultraschall Sensor" subcategory="Sensoren"
     //% block="Abstand Sensor angeschlossen" weight=7
     export function selectAbstandSensorConnected() {
         if (n_Hardware == eHardware.v3) {
-            if (n_QwiicUltrasonicConnected == undefined)
-                selectAbstand(true)
-            return n_QwiicUltrasonicConnected
+            //if (n_QwiicUltrasonicConnected == undefined)
+            //    selectAbstand(true)
+            return qwiicUltrasonicConnected() || laserSensorConnected()
         }
         else if (n_Hardware == eHardware.car4)
             return true
@@ -179,8 +179,10 @@ namespace receiver { // r-sensorevents.ts
     //% block="Abstand cm • einlesen %read" weight=6
     //% read.shadow=toggleYesNo
     export function selectAbstand(read: boolean) {
-        if (n_Hardware == eHardware.v3)
+        if (n_Hardware == eHardware.v3 && qwiicUltrasonicConnected())
             return getQwiicUltrasonic(read) // in r-qwiic.ts i2c einlesen
+        else if (n_Hardware == eHardware.v3 && laserSensorConnected())
+            return laserAbstand_cm(read, true)
         else if (n_Hardware == eHardware.car4)
             return pinGroveUltraschall_cm() // in r-advanced.ts
         else
@@ -201,8 +203,8 @@ namespace receiver { // r-sensorevents.ts
 
     let a_raiseAbstandEvent_gestartet = [false, false]
     let n_AbstandTimer = input.runningTime()
-    export   let n_AbstandStop = false // letzter Status
-    export   let n_AbstandSensor = false // Sensor aktiviert (im Buffer bzw. Knopf A)
+    export let n_AbstandStop = false // letzter Status
+    export let n_AbstandSensor = false // Sensor aktiviert (im Buffer bzw. Knopf A)
 
     //% group="Ultraschall Sensor" subcategory="Sensoren"
     //% block="Abstand Sensor Ereignis auslösen %on • Stop %stop_cm cm • Start %start_cm cm || • Pause %ms ms" weight=3
@@ -214,9 +216,9 @@ namespace receiver { // r-sensorevents.ts
     export function raiseAbstandEvent(on: boolean, stop_cm: number, start_cm: number, ms = 25, abstand_Sensor?: boolean, index = 0) {
         n_AbstandSensor = (abstand_Sensor == undefined) ? on : abstand_Sensor
 
-        if (on && n_QwiicUltrasonicConnected == undefined) {
-            selectAbstand(true) // Test ob connected
-        }
+        //if (on && n_QwiicUltrasonicConnected == undefined) {
+        //    selectAbstand(true) // Test ob connected
+        //}
 
         if (on && selectAbstandSensorConnected()) {
             let t = input.runningTime() - n_AbstandTimer // ms seit letztem raiseAbstandEvent
@@ -224,7 +226,7 @@ namespace receiver { // r-sensorevents.ts
                 basic.pause(t) // restliche Zeit-Differenz warten
             n_AbstandTimer = input.runningTime()
 
-            let cm = selectAbstand(true) // readUltraschallAbstand()
+            let cm = selectAbstand(true)
 
             if (!n_AbstandStop && cm < stop_cm)
                 abstandEventHandler(true, cm) // Stop Ereignis auslösen

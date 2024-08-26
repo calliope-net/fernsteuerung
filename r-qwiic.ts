@@ -36,8 +36,17 @@ SparkFun Qwiic Ultrasonic Distance Sensor (HC-SR04)
 
     // ========== group="Ultrasonic Distance Sensor (I²C: 0x00)" subcategory="Qwiic" 
 
-    export let n_QwiicUltrasonicConnected: boolean = undefined // Qwiic Modul ist angesteckt
+     let n_QwiicUltrasonicConnected: boolean = undefined // Qwiic Modul ist angesteckt
     let n_QwiicUltrasonic_mm = 0
+
+
+    //% group="Ultrasonic Distance Sensor (I²C: 0x00)" subcategory="Qwiic" color=#5FA38F
+    //% block="Q Ultraschall Sensor angeschlossen" weight=9
+    export function qwiicUltrasonicConnected() {
+        if (n_QwiicUltrasonicConnected == undefined)
+            readQwiicUltrasonic()
+        return n_QwiicUltrasonicConnected
+    }
 
     //% group="Ultrasonic Distance Sensor (I²C: 0x00)" subcategory="Qwiic" color=#5FA38F
     //% block="Q Ultraschall Sensor • einlesen || i2c %i2c" weight=8
@@ -48,8 +57,8 @@ SparkFun Qwiic Ultrasonic Distance Sensor (HC-SR04)
 
             if (n_QwiicUltrasonicConnected)
                 n_QwiicUltrasonic_mm = pins.i2cReadBuffer(i2c, 2).getNumber(NumberFormat.UInt16BE, 0)
-            else
-                btf.zeigeHexFehler(i2c)
+            //else
+            //    btf.zeigeHexFehler(i2c)
         }
         return n_QwiicUltrasonicConnected
     }
