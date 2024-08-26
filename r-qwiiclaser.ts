@@ -38,6 +38,7 @@ https://github.com/sparkfun/SparkFun_VL53L1X_Arduino_Library/blob/master/example
         // This function loads the 135 bytes default values to initialize the sensor.
         // :return:	* 0:success * != 0:failed
         if (n_QwiicDistanceSensorConnected == undefined) {
+            n_QwiicDistanceSensorConnected = true
             //for (let index = 0x2D; index <= 0x87; index++) {
             //    wrByte(index, vL51L1X_DEFAULT_CONFIGURATION()[index - 0x2D]);
             //}
@@ -77,15 +78,29 @@ https://github.com/sparkfun/SparkFun_VL53L1X_Arduino_Library/blob/master/example
     //% group="Laser Distance Sensor" subcategory="Sensoren"
     //% block="Laser Sensor angeschlossen" weight=8
     export function laserSensorConnected() {
-        //if (n_QwiicDistanceSensorConnected == undefined)
-        //    sensorInit()
-        //return n_QwiicDistanceSensorConnected
         return laserSensorInit()
     }
 
     //% group="Laser Distance Sensor" subcategory="Sensoren"
+    //% block="Laser Abstand (cm) || checkForDataReady %check" weight=7
+    //% check.shadow=toggleYesNo check.defl=1
+    export function laserAbstand(check = true) {
+        if (laserSensorConnected()) {
+            if (n_SYSTEM__MODE_START != eSYSTEM__MODE_START.startRanging) { // wenn nicht gestartet
+                laserRanging(eSYSTEM__MODE_START.startOneshotRanging) // einmalige Messung
+            }
+            while (check && !checkForDataReady()) {
+                basic.pause(1) // ms
+            }
+            return rdWord(eRegisterWord.VL53L1_RESULT__FINAL_CROSSTALK_CORRECTED_RANGE_MM_SD0) / 10 // mm / 10
+        }
+        else
+            return 0
+    }
+
+    //% group="Laser Distance Sensor" subcategory="Sensoren"
     //% block="Laser Abstand (cm) mit Pause 5ms" weight=7
-    export function laserAbstand5() {
+    function laserAbstand5() {
         laserRanging(eSYSTEM__MODE_START.startRanging) //    startRanging()
         basic.pause(5)
         let distance = getDistance()
@@ -97,7 +112,7 @@ https://github.com/sparkfun/SparkFun_VL53L1X_Arduino_Library/blob/master/example
 
     //% group="Laser Distance Sensor" subcategory="Sensoren"
     //% block="Laser Abstand (cm) mit checkForDataReady" weight=6
-    export function laserAbstandR() {
+    function laserAbstandR() {
         laserRanging(eSYSTEM__MODE_START.startRanging) // startRanging()
         while (!checkForDataReady()) {// (checkForDataReady() == 0) {
             basic.pause(1) // ms
@@ -111,22 +126,22 @@ https://github.com/sparkfun/SparkFun_VL53L1X_Arduino_Library/blob/master/example
 
     //% group="Laser Distance Sensor" subcategory="Sensoren"
     //% block="Laser Sensor Id" weight=4
-    export function getSensorId() { // 60330 0xEBAA
+    function getSensorId() { // 60330 0xEBAA
         return rdWord(eRegisterWord.VL53L1_IDENTIFICATION__MODEL_ID)
     }
 
     //% group="Laser Distance Sensor" subcategory="Sensoren"
     //% block="Laser GetDistance (mm)" weight=3
-    export function getDistance() {
+    function getDistance() {
         return rdWord(eRegisterWord.VL53L1_RESULT__FINAL_CROSSTALK_CORRECTED_RANGE_MM_SD0)
     }
 
 
 
     export enum eSYSTEM__MODE_START {
-        startOneshotRanging = 0x10, // Enable VL53L1X one-shot ranging
         startRanging = 0x40, // Enable VL53L1X
-        stopRanging = 0x00
+        stopRanging = 0x00,
+        startOneshotRanging = 0x10 // Enable VL53L1X one-shot ranging
     }
 
     let n_SYSTEM__MODE_START = eSYSTEM__MODE_START.stopRanging
@@ -135,11 +150,13 @@ https://github.com/sparkfun/SparkFun_VL53L1X_Arduino_Library/blob/master/example
     //% block="Ranging Mode %mode || ClearInterrupt %clearInterrupt" weight=5
     //% clearInterrupt.shadow=toggleYesNo
     export function laserRanging(mode: eSYSTEM__MODE_START, clearInterrupt = false) {
-        if (clearInterrupt)
-            wrByte(eRegisterByte.SYSTEM__INTERRUPT_CLEAR, 0x01)
-        if (n_SYSTEM__MODE_START != mode) {
-            n_SYSTEM__MODE_START = mode
-            wrByte(eRegisterByte.SYSTEM__MODE_START, mode)
+        if (laserSensorConnected()) {
+            if (clearInterrupt)
+                wrByte(eRegisterByte.SYSTEM__INTERRUPT_CLEAR, 0x01)
+            if (n_SYSTEM__MODE_START != mode) {
+                n_SYSTEM__MODE_START = mode
+                wrByte(eRegisterByte.SYSTEM__MODE_START, mode)
+            }
         }
     }
 
@@ -184,7 +201,7 @@ https://github.com/sparkfun/SparkFun_VL53L1X_Arduino_Library/blob/master/example
             wrByte(eRegister.SYSTEM__MODE_START, 0x00) // Enable VL53L1X
         }
      */
-    //% group="VL53L1X" subcategory="Sensoren"
+    //% group="Laser Distance Sensor" subcategory="Sensoren"
     //% block="CheckForDataReady" weight=2
     export function checkForDataReady() {
         // This function checks if the new ranging data is available by polling the dedicated register.
@@ -225,7 +242,7 @@ https://github.com/sparkfun/SparkFun_VL53L1X_Arduino_Library/blob/master/example
 
 
     //% group="Laser I²C Register" subcategory="Sensoren"
-    //% block="Registaer lesen (UInt16BE) %register" weight=8
+    //% block="Register lesen (UInt16BE) %register" weight=8
     export function rdWord(register: eRegisterWord) {
         let buffer = Buffer.create(2)
         buffer.setNumber(NumberFormat.UInt16BE, 0, register)
@@ -234,7 +251,9 @@ https://github.com/sparkfun/SparkFun_VL53L1X_Arduino_Library/blob/master/example
     }
 
     function i2cWriteBuffer(buffer: Buffer, repeat = false) {
-        if (n_QwiicDistanceSensorConnected || n_QwiicDistanceSensorConnected == undefined)
+        if (n_QwiicDistanceSensorConnected == undefined)
+            laserSensorInit()
+        else if (n_QwiicDistanceSensorConnected)
             n_QwiicDistanceSensorConnected = pins.i2cWriteBuffer(i2cQwiicDistanceSensor_x29, buffer, repeat) == 0
     }
 
