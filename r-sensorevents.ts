@@ -201,8 +201,8 @@ namespace receiver { // r-sensorevents.ts
 
     let a_raiseAbstandEvent_gestartet = [false, false]
     let n_AbstandTimer = input.runningTime()
-    let n_AbstandStop = false // letzter Status
-    let n_AbstandSensor = false // Sensor aktiviert (im Buffer bzw. Knopf A)
+    export   let n_AbstandStop = false // letzter Status
+    export   let n_AbstandSensor = false // Sensor aktiviert (im Buffer bzw. Knopf A)
 
     //% group="Ultraschall Sensor" subcategory="Sensoren"
     //% block="Abstand Sensor Ereignis auslösen %on • Stop %stop_cm cm • Start %start_cm cm || • Pause %ms ms" weight=3
@@ -241,7 +241,8 @@ namespace receiver { // r-sensorevents.ts
         }
     }
 
-    function abstandEventHandler(abstand_Stop: boolean, cm: number) {
+    // wird auch von Laser aufgerufen
+    export function abstandEventHandler(abstand_Stop: boolean, cm: number) {
         n_AbstandStop = abstand_Stop
         if (onAbstandEventHandler)
             onAbstandEventHandler(n_AbstandSensor, n_AbstandStop, cm)
