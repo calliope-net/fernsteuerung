@@ -55,7 +55,7 @@ SparkFun Qwiic Ultrasonic Distance Sensor (HC-SR04)
     export function readQwiicUltrasonic(i2c = eI2CQwiicUltrasonic.x00) { // SLAVE_BROADCAST_ADDR 0x00  //default address
         const measure_command = 0x01
         if (n_QwiicUltrasonicConnected || n_QwiicUltrasonicConnected == undefined) {
-            n_QwiicUltrasonicConnected = pins.i2cWriteBuffer(i2c, Buffer.fromArray([measure_command]), true) == 0
+            n_QwiicUltrasonicConnected = pins.i2cWriteBuffer(i2c, Buffer.fromArray([measure_command])) == 0
 
             if (n_QwiicUltrasonicConnected)
                 n_QwiicUltrasonic_mm = pins.i2cReadBuffer(i2c, 2).getNumber(NumberFormat.UInt16BE, 0)
