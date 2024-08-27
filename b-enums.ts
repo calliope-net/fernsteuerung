@@ -72,17 +72,17 @@ namespace btf { // b-enums.ts
     }
 
     export enum e3Abstand {
-        //% block="20 cm"
-        u2 = 0x80,
-        //% block="40 cm"
+        //% block="20 cm" // 40
         u0 = 0x00,
-        //% block="35 cm"
+        //% block="30 cm" // 35
         u1 = 0x40,
-        //% block="30 cm"
+        //% block="40 cm" // 20
+        u2 = 0x80,
+        //% block="50 cm" // 30
         u3 = 0xC0
     }
 
-    export let a_Abstand = [40, 35, 20, 30] // auslesen beim Empfänger
+    export let a_Abstand = [20, 30, 40, 50] // auslesen beim Empfänger
 
 
     // ========== Servo Bits 7-6-5
