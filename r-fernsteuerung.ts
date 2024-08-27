@@ -88,39 +88,9 @@ namespace receiver { // r-fernsteuerung.ts
 
 
 
-    // ========== group="10 Programm fernstarten" subcategory="Fernsteuerung"
+    // ========== group="10 Programm fernstarten: Hindernis ausweichen" subcategory="Fernsteuerung"
 
-
-
-    // group="10 Programm fernstarten" subcategory="Fernsteuerung" deprecated=1
-    // block="Sensor Ereignisse auslösen %buffer || • Start+ %start_cm cm • Pause %ms ms" weight=9
-    // buffer.shadow=btf_receivedBuffer19
-    // start_cm.defl=5
-    // ms.defl=25
-    // inlineInputMode=inline expandableArgumentMode="toggle"
-    /* export function raiseBufferEvents(buffer: Buffer, start_cm = 5, ms = 25) {
-        if (buffer) {
-
-            // Events müssen auch mit on=false aufgerufen werden, damit das Programm beendet wird (Motor Stop)
-            raiseAbstandEvent( // MD-5 Hindernis ausweichen ODER // MC-4 Spur folgen und Abstand Sensor aktiviert
-                hindernis_ausweichen(buffer) || (spur_folgen(buffer) && btf.getSensor(buffer, btf.eBufferPointer.mc, btf.eSensor.b6Abstand)),
-                btf.getAbstand(buffer),
-                btf.getAbstand(buffer) + start_cm,
-                ms,
-                btf.getSensor(buffer, btf.eBufferPointer.mc, btf.eSensor.b6Abstand),
-                1
-            )
-
-            raiseSpurEvent( // MC-4 Spur folgen
-                spur_folgen(buffer),
-                ms,
-                1
-            )
-        }
-    } */
-
-
-    //% group="10 Programm fernstarten" subcategory="Fernsteuerung"
+    //% group="10 Programm fernstarten: Hindernis ausweichen" subcategory="Fernsteuerung"
     //% block="Abstand Sensor Ereignis auslösen %buffer || • Start+ %start_cm cm • Pause %ms ms" weight=8
     //% buffer.shadow=btf_receivedBuffer19
     //% start_cm.defl=5
@@ -144,43 +114,13 @@ namespace receiver { // r-fernsteuerung.ts
         }
     }
 
-
-    //% group="10 Programm fernstarten" subcategory="Fernsteuerung"
-    //% block="Spur Sensor Ereignis auslösen %buffer || • Pause %ms ms" weight=7
-    //% buffer.shadow=btf_receivedBuffer19
-    //% start_cm.defl=5
-    //% ms.defl=25
-    // inlineInputMode=inline 
-    //expandableArgumentMode="toggle"
-    export function buffer_raiseSpurEvent(buffer: Buffer, ms = 25) {
-        if (buffer) {
-
-            // Events müssen auch mit on=false aufgerufen werden, damit das Programm beendet wird (Motor Stop)
-            raiseSpurEvent( // MC-4 Spur folgen
-                spur_folgen(buffer),
-                ms,
-                1
-            )
-        }
-    }
-
-
-
-
-
-    function spur_folgen(buffer: Buffer) { // if (buffer) muss vor Aufruf erfolgen
-        return btf.isBetriebsart(buffer, btf.e0Betriebsart.p1Lokal) // 10 Programm fernstarten + B
-            && btf.getaktiviert(buffer, btf.e3aktiviert.mc) // MC-4 Spur folgen
-    }
-
     function hindernis_ausweichen(buffer: Buffer) { // if (buffer) muss vor Aufruf erfolgen
         return btf.isBetriebsart(buffer, btf.e0Betriebsart.p1Lokal) // 10 Programm fernstarten + A
             && !btf.getaktiviert(buffer, btf.e3aktiviert.mc) // NOT ! MC-4 Spur folgen !
             && btf.getaktiviert(buffer, btf.e3aktiviert.md) // MD-5 Hindernis ausweichen
     }
 
-
-    //% group="10 Programm fernstarten" subcategory="Fernsteuerung"
+    //% group="10 Programm fernstarten: Hindernis ausweichen" subcategory="Fernsteuerung"
     //% block="Hindernis ausweichen %buffer <abstand_Stop> %abstand_Stop" weight=4
     //% buffer.shadow=btf_receivedBuffer19
     // abstand_Stop.shadow="toggleYesNo"
@@ -203,7 +143,33 @@ namespace receiver { // r-fernsteuerung.ts
 
 
 
-    //% group="10 Programm fernstarten" subcategory="Fernsteuerung"
+    // ========== group="10 Programm fernstarten: Spur folgen" subcategory="Fernsteuerung"
+
+    //% group="10 Programm fernstarten: Spur folgen" subcategory="Fernsteuerung"
+    //% block="Spur Sensor Ereignis auslösen %buffer || • Pause %ms ms" weight=7
+    //% buffer.shadow=btf_receivedBuffer19
+    //% start_cm.defl=5
+    //% ms.defl=25
+    // inlineInputMode=inline 
+    //expandableArgumentMode="toggle"
+    export function buffer_raiseSpurEvent(buffer: Buffer, ms = 25) {
+        if (buffer) {
+
+            // Events müssen auch mit on=false aufgerufen werden, damit das Programm beendet wird (Motor Stop)
+            raiseSpurEvent( // MC-4 Spur folgen
+                spur_folgen(buffer),
+                ms,
+                1
+            )
+        }
+    }
+
+    function spur_folgen(buffer: Buffer) { // if (buffer) muss vor Aufruf erfolgen
+        return btf.isBetriebsart(buffer, btf.e0Betriebsart.p1Lokal) // 10 Programm fernstarten + B
+            && btf.getaktiviert(buffer, btf.e3aktiviert.mc) // MC-4 Spur folgen
+    }
+
+    //% group="10 Programm fernstarten: Spur folgen" subcategory="Fernsteuerung"
     //% block="Spur folgen %buffer <links_hell> %links_hell <rechts_hell> %rechts_hell <abstand_Stop> %abstand_Stop" weight=3
     //% buffer.shadow=btf_receivedBuffer19
     // links_hell.shadow=toggleYesNo
@@ -221,43 +187,6 @@ namespace receiver { // r-fernsteuerung.ts
                 1
             )
     }
-
-
-
-    // ========== group="10 Fernstarten Spurfolger" subcategory="Fernsteuerung"
-
-    //% group="10 Fernstarten Spurfolger" subcategory="Fernsteuerung"
-    //% block="%buffer 10 fernstarten && Start Bit %startBit" weight=8
-    //% buffer.shadow=btf_receivedBuffer19
-    //% startBit.defl=btf.e3aktiviert.mc
-    //% blockSetVariable=dauerhaft_Spurfolger
-    //  export function set_dauerhaft_Spurfolger(buffer: Buffer, startBit: btf.e3aktiviert) {
-    //     return btf.isBetriebsart(buffer, btf.e0Betriebsart.p1Lokal) && btf.getaktiviert(buffer, startBit)
-    //  }
-
-    //  let n_spurfolgerBuffer_repeat = false
-
-    //% group="10 Fernstarten Spurfolger" subcategory="Fernsteuerung"
-    //% block="10 dauerhaft Spurfolger: %dauerhaft_Spurfolger (MS:CD) aus %buffer" weight=7
-    //% dauerhaft_Spurfolger.shadow="toggleYesNo"
-    //% buffer.shadow=btf_receivedBuffer19
-    /*   export function dauerhaft_SpurfolgerBuffer(dauerhaft_Spurfolger: boolean, buffer: Buffer) {
-          if (dauerhaft_Spurfolger) {
-              beispielSpurfolger16(
-                  btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b0_Motor),
-                  btf.getByte(buffer, btf.eBufferPointer.md, btf.eBufferOffset.b0_Motor),
-                  btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b1_Servo),
-                  n_spurfolgerBuffer_repeat,
-                  btf.getSensor(buffer, btf.eBufferPointer.mc, btf.eSensor.b6Abstand),
-                  btf.getAbstand(buffer)
-              )
-              n_spurfolgerBuffer_repeat = true
-          }
-          else if (n_spurfolgerBuffer_repeat) {
-              n_spurfolgerBuffer_repeat = false
-              selectMotor(c_MotorStop)
-          }
-      } */
 
 
 
