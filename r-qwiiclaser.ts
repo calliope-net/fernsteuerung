@@ -94,7 +94,7 @@ https://github.com/sparkfun/SparkFun_VL53L1X_Arduino_Library/blob/master/example
         // https://cdn.sparkfun.com/assets/f/a/3/a/0/um2931-a-guide-to-using-the-vl53l4cd-ultra-lite-driver-uld-stmicroelectronics.pdf
         if (read && laserSensorConnected()) {
             if (n_SYSTEM__MODE_START != eSYSTEM__MODE_START.startRanging) { // wenn nicht gestartet
-                laserRanging(eSYSTEM__MODE_START.startOneshotRanging) // einmalige Messung
+                laserRanging(eSYSTEM__MODE_START.startRanging) 
             }
             while (checkForDataReady && !laserCheckForDataReady()) {
                 basic.pause(1) // ms
@@ -269,7 +269,7 @@ https://github.com/sparkfun/SparkFun_VL53L1X_Arduino_Library/blob/master/example
     function i2cWriteBuffer(buffer: Buffer, repeat = false) {
         if (n_QwiicDistanceSensorConnected == undefined)
             laserSensorInit()
-        else if (n_QwiicDistanceSensorConnected)
+        if (n_QwiicDistanceSensorConnected)
             n_QwiicDistanceSensorConnected = pins.i2cWriteBuffer(i2cQwiicDistanceSensor_x29, buffer, repeat) == 0
     }
 
@@ -446,59 +446,59 @@ https://github.com/sparkfun/SparkFun_VL53L1X_Arduino_Library/blob/master/example
 
     */
 
-/* 
-
-    // ========== group="Ultraschall Sensor" subcategory="Sensoren"
-
-    let a_raiseLaserEvent_gestartet = [false, false]
-    let n_AbstandTimer = input.runningTime()
-    // let n_AbstandStop = false // letzter Status
-    // let n_AbstandSensor = false // Sensor aktiviert (im Buffer bzw. Knopf A)
-
-    //% group="Laser Distance Sensor" subcategory="Sensoren"
-    //% block="Laser Sensor Ereignis auslösen %on • Stop %stop_cm cm • Start %start_cm cm || • Pause %ms ms" weight=7
-    //% on.shadow=toggleOnOff
-    //% stop_cm.defl=30
-    //% start_cm.defl=35
-    //% ms.defl=25
-    //% inlineInputMode=inline
-    export function raiseLaserEvent(on: boolean, stop_cm: number, start_cm: number, ms = 25, abstand_Sensor?: boolean, index = 0) {
-        n_AbstandSensor = (abstand_Sensor == undefined) ? on : abstand_Sensor
-
-        //if (on && n_QwiicUltrasonicConnected == undefined) {
-        //    selectAbstand(true) // Test ob connected
-        //}
-
-        if (on && laserSensorConnected()) {
-
-            if (n_SYSTEM__MODE_START != eSYSTEM__MODE_START.startRanging) {
-                n_SYSTEM__MODE_START = eSYSTEM__MODE_START.startRanging
-                wrByte(eRegisterByte.SYSTEM__MODE_START, eSYSTEM__MODE_START.startRanging)
+    /* 
+    
+        // ========== group="Ultraschall Sensor" subcategory="Sensoren"
+    
+        let a_raiseLaserEvent_gestartet = [false, false]
+        let n_AbstandTimer = input.runningTime()
+        // let n_AbstandStop = false // letzter Status
+        // let n_AbstandSensor = false // Sensor aktiviert (im Buffer bzw. Knopf A)
+    
+        //% group="Laser Distance Sensor" subcategory="Sensoren"
+        //% block="Laser Sensor Ereignis auslösen %on • Stop %stop_cm cm • Start %start_cm cm || • Pause %ms ms" weight=7
+        //% on.shadow=toggleOnOff
+        //% stop_cm.defl=30
+        //% start_cm.defl=35
+        //% ms.defl=25
+        //% inlineInputMode=inline
+        export function raiseLaserEvent(on: boolean, stop_cm: number, start_cm: number, ms = 25, abstand_Sensor?: boolean, index = 0) {
+            n_AbstandSensor = (abstand_Sensor == undefined) ? on : abstand_Sensor
+    
+            //if (on && n_QwiicUltrasonicConnected == undefined) {
+            //    selectAbstand(true) // Test ob connected
+            //}
+    
+            if (on && laserSensorConnected()) {
+    
+                if (n_SYSTEM__MODE_START != eSYSTEM__MODE_START.startRanging) {
+                    n_SYSTEM__MODE_START = eSYSTEM__MODE_START.startRanging
+                    wrByte(eRegisterByte.SYSTEM__MODE_START, eSYSTEM__MODE_START.startRanging)
+                }
+    
+                let t = input.runningTime() - n_AbstandTimer // ms seit letztem raiseAbstandEvent
+                if (t < ms)
+                    basic.pause(t) // restliche Zeit-Differenz warten
+                n_AbstandTimer = input.runningTime()
+    
+                let cm = laserAbstand_cm(true, true) // selectAbstand(true) 
+    
+                if (!n_AbstandStop && cm < stop_cm)
+                    abstandEventHandler(true, cm) // Stop Ereignis auslösen
+                else if (n_AbstandStop && cm > Math.max(start_cm, stop_cm))
+                    abstandEventHandler(false, cm) // Start Ereignis auslösen
+                else if (!a_raiseLaserEvent_gestartet[index])
+                    abstandEventHandler(false, cm) // Start Ereignis auslösen am Anfang
+    
+                a_raiseLaserEvent_gestartet[index] = true
             }
-
-            let t = input.runningTime() - n_AbstandTimer // ms seit letztem raiseAbstandEvent
-            if (t < ms)
-                basic.pause(t) // restliche Zeit-Differenz warten
-            n_AbstandTimer = input.runningTime()
-
-            let cm = laserAbstand_cm(true, true) // selectAbstand(true) 
-
-            if (!n_AbstandStop && cm < stop_cm)
-                abstandEventHandler(true, cm) // Stop Ereignis auslösen
-            else if (n_AbstandStop && cm > Math.max(start_cm, stop_cm))
-                abstandEventHandler(false, cm) // Start Ereignis auslösen
-            else if (!a_raiseLaserEvent_gestartet[index])
-                abstandEventHandler(false, cm) // Start Ereignis auslösen am Anfang
-
-            a_raiseLaserEvent_gestartet[index] = true
-        }
-        else if (a_raiseLaserEvent_gestartet[index]) {
-            wrByte(eRegisterByte.SYSTEM__MODE_START, eSYSTEM__MODE_START.stopRanging)
-            a_raiseLaserEvent_gestartet[index] = false
-            abstandEventHandler(false, 0) // kein Stop Ereignis auslösen am Ende
-        }
-    } 
-    */
+            else if (a_raiseLaserEvent_gestartet[index]) {
+                wrByte(eRegisterByte.SYSTEM__MODE_START, eSYSTEM__MODE_START.stopRanging)
+                a_raiseLaserEvent_gestartet[index] = false
+                abstandEventHandler(false, 0) // kein Stop Ereignis auslösen am Ende
+            }
+        } 
+        */
 
     /* 
         function abstandEventHandler(abstand_Stop: boolean, cm: number) {
