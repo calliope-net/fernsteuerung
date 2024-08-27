@@ -161,8 +161,8 @@ namespace receiver { // r-sensorevents.ts
 
     // ========== group="Ultraschall Sensor" subcategory="Sensoren"
 
-    //% group="Ultraschall Sensor" subcategory="Sensoren"
-    //% block="Abstand Sensor angeschlossen" weight=7
+    //% group="Ultraschall oder Laser Distance Sensor" subcategory="Sensoren"
+    //% block="Abstand Sensor angeschlossen" weight=8
     export function selectAbstandSensorConnected() {
         if (n_Hardware == eHardware.v3) {
             //if (n_QwiicUltrasonicConnected == undefined)
@@ -175,17 +175,18 @@ namespace receiver { // r-sensorevents.ts
             return false
     }
 
-    function selectStartRanging() {
+    //% group="Ultraschall oder Laser Distance Sensor" subcategory="Sensoren"
+    //% block="Abstand Sensor aktiviert %on" weight=7
+    //% on.shadow=toggleYesNo
+    export function selectRanging(on: boolean) {
         if (n_Hardware == eHardware.v3 && laserSensorConnected())
-            laserRanging(eSYSTEM__MODE_START.startRanging)
+            if (on)
+                laserRanging(eSYSTEM__MODE_START.startRanging)
+            else
+                laserRanging(eSYSTEM__MODE_START.stopRanging)
     }
 
-    function selectStopRanging() {
-        if (n_Hardware == eHardware.v3 && laserSensorConnected())
-            laserRanging(eSYSTEM__MODE_START.stopRanging)
-    }
-
-    //% group="Ultraschall Sensor" subcategory="Sensoren"
+    //% group="Ultraschall oder Laser Distance Sensor" subcategory="Sensoren"
     //% block="Abstand cm • einlesen %read" weight=6
     //% read.shadow=toggleYesNo
     export function selectAbstand_cm(read: boolean) {
@@ -216,7 +217,7 @@ namespace receiver { // r-sensorevents.ts
     export let n_AbstandStop = false // letzter Status
     export let n_AbstandSensor = false // Sensor aktiviert (im Buffer bzw. Knopf A)
 
-    //% group="Ultraschall Sensor" subcategory="Sensoren"
+    //% group="Ultraschall oder Laser Distance Sensor" subcategory="Sensoren"
     //% block="Abstand Sensor Ereignis auslösen %on • Stop %stop_cm cm • Start %start_cm cm || • Pause %ms ms" weight=3
     //% on.shadow=toggleOnOff
     //% stop_cm.defl=30
@@ -233,7 +234,7 @@ namespace receiver { // r-sensorevents.ts
         if (on && selectAbstandSensorConnected()) {
 
             if (!a_raiseAbstandEvent_gestartet[index])
-                selectStartRanging() // nur einmal am Anfang
+                selectRanging(true) // nur einmal am Anfang
 
             let t = input.runningTime() - n_AbstandTimer // ms seit letztem raiseAbstandEvent
             if (t < ms)
@@ -252,7 +253,7 @@ namespace receiver { // r-sensorevents.ts
             a_raiseAbstandEvent_gestartet[index] = true
         }
         else if (a_raiseAbstandEvent_gestartet[index]) {
-            selectStopRanging()
+            selectRanging(false)
             a_raiseAbstandEvent_gestartet[index] = false
             abstandEventHandler(false, 0) // kein Stop Ereignis auslösen am Ende
         }
@@ -269,7 +270,7 @@ namespace receiver { // r-sensorevents.ts
 
     let onAbstandEventHandler: (abstand_Sensor: boolean, abstand_Stop: boolean, cm: number) => void
 
-    //% group="Ultraschall Sensor" subcategory="Sensoren"
+    //% group="Ultraschall oder Laser Distance Sensor" subcategory="Sensoren"
     //% block="wenn Abstand Sensor Ereignis" weight=2
     //% draggableParameters=reporter
     export function onAbstandEvent(cb: (abstand_Sensor: boolean, abstand_Stop: boolean, cm: number) => void) {
