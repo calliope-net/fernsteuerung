@@ -49,7 +49,7 @@ namespace receiver { // r-pins.ts
     // Relais auf der Leiterplatte schaltet 9V Akku für eigene Stromversorgung an VM+
 
     //% group="Digital Pins (vom gewählten Modell)" subcategory="Pins"
-    //% block="Stromversorgung 9V %pON" weight=8
+    //% block="Stromversorgung Relais %pON" weight=8
     //% pON.shadow="toggleOnOff"
     export function pinRelay(pON: boolean) {
         if (a_PinRelay.length > n_Hardware)

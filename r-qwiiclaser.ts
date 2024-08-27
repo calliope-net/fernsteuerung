@@ -77,16 +77,14 @@ https://github.com/sparkfun/SparkFun_VL53L1X_Arduino_Library/blob/master/example
 
 
 
-    // ========== group="Laser Distance Sensor" subcategory="Sensoren"
-
-    //% group="Laser Distance Sensor" subcategory="Sensoren"
-    //% block="Laser Sensor angeschlossen" weight=9
+    // ========== group="Laser Distance Sensor" subcategory="Qwiic" color=#5FA38F
+    //% group="Laser Distance Sensor (I²C: 0x29)" subcategory="Qwiic" color=#5FA38F
+    //% block="Q Laser Sensor angeschlossen" weight=9
     export function laserSensorConnected() {
         return laserSensorInit()
     }
-
-    //% group="Laser Distance Sensor" subcategory="Sensoren"
-    //% block="Laser Abstand (cm) • einlesen %read || • CheckForDataReady %checkForDataReady" weight=8
+    //% group="Laser Distance Sensor (I²C: 0x29)" subcategory="Qwiic" color=#5FA38F
+    //% block="Q Laser Abstand (cm) • einlesen %read || • CheckForDataReady %checkForDataReady" weight=8
     //% read.shadow="toggleYesNo"
     //% checkForDataReady.shadow=toggleYesNo checkForDataReady.defl=1
     export function laserAbstand_cm(read: boolean, checkForDataReady = true) {
@@ -94,15 +92,17 @@ https://github.com/sparkfun/SparkFun_VL53L1X_Arduino_Library/blob/master/example
         // https://cdn.sparkfun.com/assets/f/a/3/a/0/um2931-a-guide-to-using-the-vl53l4cd-ultra-lite-driver-uld-stmicroelectronics.pdf
         if (read && laserSensorConnected()) {
             if (n_SYSTEM__MODE_START != eSYSTEM__MODE_START.startRanging) { // wenn nicht gestartet
-                laserRanging(eSYSTEM__MODE_START.startRanging) 
+                laserRanging(eSYSTEM__MODE_START.startRanging)
             }
+            let timeout = 0
             while (checkForDataReady && !laserCheckForDataReady()) {
-                basic.pause(1) // ms
+                if (timeout++ > 15) // 150
+                    break
+                basic.pause(10) // 1 ms
             }
             n_QwiicDistanceSensor_mm = rdWord(eRegisterWord.VL53L1_RESULT__FINAL_CROSSTALK_CORRECTED_RANGE_MM_SD0) // mm 
             clearInterrupt()
         }
-        //else
         return n_QwiicDistanceSensor_mm / 10
     }
 
@@ -111,20 +111,20 @@ https://github.com/sparkfun/SparkFun_VL53L1X_Arduino_Library/blob/master/example
 
 
     export enum eSYSTEM__MODE_START {
-        startRanging = 0x40, // Enable VL53L1X
         stopRanging = 0x00,
-        startOneshotRanging = 0x10 // Enable VL53L1X one-shot ranging
+        startRanging = 0x40, // Enable VL53L1X
+        startOneshotRanging = 0x10 // Enable VL53L1X one-shot ranging (ist nicht dokumentiert)
     }
 
     let n_SYSTEM__MODE_START = eSYSTEM__MODE_START.stopRanging
 
     //% group="Laser Distance Sensor (I²C: 0x29)" subcategory="Qwiic" color=#5FA38F
-    //% block="Ranging Mode %mode || ClearInterrupt %clearInterrupt" weight=5
-    //% clearInterrupt.shadow=toggleYesNo
-    export function laserRanging(mode: eSYSTEM__MODE_START, clearInterrupt = false) {
+    //% block="Ranging Mode %mode" weight=5
+    // clearInterrupt.shadow=toggleYesNo
+    export function laserRanging(mode: eSYSTEM__MODE_START) {
         if (laserSensorConnected()) {
-            if (clearInterrupt)
-                wrByte(eRegisterByte.SYSTEM__INTERRUPT_CLEAR, 0x01)
+            //if (clearInterrupt)
+            //    wrByte(eRegisterByte.SYSTEM__INTERRUPT_CLEAR, 0x01)
             if (n_SYSTEM__MODE_START != mode) {
                 n_SYSTEM__MODE_START = mode
                 wrByte(eRegisterByte.SYSTEM__MODE_START, mode)

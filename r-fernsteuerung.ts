@@ -92,12 +92,12 @@ namespace receiver { // r-fernsteuerung.ts
 
 
 
-    //% group="10 Programm fernstarten" subcategory="Fernsteuerung" deprecated=1
-    //% block="Sensor Ereignisse auslösen %buffer || • Start+ %start_cm cm • Pause %ms ms" weight=9
-    //% buffer.shadow=btf_receivedBuffer19
-    //% start_cm.defl=5
-    //% ms.defl=25
-    //% inlineInputMode=inline expandableArgumentMode="toggle"
+    // group="10 Programm fernstarten" subcategory="Fernsteuerung" deprecated=1
+    // block="Sensor Ereignisse auslösen %buffer || • Start+ %start_cm cm • Pause %ms ms" weight=9
+    // buffer.shadow=btf_receivedBuffer19
+    // start_cm.defl=5
+    // ms.defl=25
+    // inlineInputMode=inline expandableArgumentMode="toggle"
     /* export function raiseBufferEvents(buffer: Buffer, start_cm = 5, ms = 25) {
         if (buffer) {
 
