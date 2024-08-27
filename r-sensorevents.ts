@@ -14,9 +14,6 @@ namespace receiver { // r-sensorevents.ts
     export function spurSensorRegisterEvents() {
         if (!n_SpurSensorEventsRegistered && !n_EncoderEventRegistered) {
 
-            // encoderUnRegisterEvent() // wenn Spur Events, dann keine Encoder Events
-
-            // n_Spursensor = (pins.digitalReadPin(a_PinSpurlinks[n_Hardware]) << 1) | pins.digitalReadPin(a_PinSpurrechts[n_Hardware])
             n_SpurLinksHell = pins.digitalReadPin(a_PinSpurlinks[n_Hardware]) == 1
             n_SpurRechtsHell = pins.digitalReadPin(a_PinSpurrechts[n_Hardware]) == 1
 
@@ -58,8 +55,6 @@ namespace receiver { // r-sensorevents.ts
                 }
             })
 
-            //  pins.onPulsed(a_PinSpurrechts[n_Hardware], PulseValue.High, undefined)
-
             // danach darf kein pins.digitalReadPin() stehen, das deaktiviert die Ereignisse wieder, davor ist möglich
             //n_inEvent = 0
             n_SpurSensorEventsRegistered = true
@@ -67,30 +62,26 @@ namespace receiver { // r-sensorevents.ts
         return n_SpurSensorEventsRegistered
     }
 
-    /* export function spurSensorUnRegisterEvents() { // erforderlich, wenn Encoder Pin Ereignisse gezählt werden
-        if (n_SpursensorEventsRegistered) {
 
-            pins.onPulsed(a_PinSpurlinks[n_Hardware], PulseValue.Low, undefined)
-            pins.onPulsed(a_PinSpurlinks[n_Hardware], PulseValue.High, undefined)
-            pins.onPulsed(a_PinSpurrechts[n_Hardware], PulseValue.Low, undefined)
-            pins.onPulsed(a_PinSpurrechts[n_Hardware], PulseValue.High, undefined)
-
-            n_SpursensorEventsRegistered = false
-        }
-    } */
 
     export enum eDH { hell = 1, dunkel = 0 }
 
     //% group="Spur Sensor" subcategory="Sensoren"
     //% block="Spur Sensor links %l" weight=7
     export function getSpurLinks(l: eDH) {
-        return (l == eDH.hell) ? n_SpurLinksHell : !n_SpurLinksHell
+        if (n_SpurSensorEventsRegistered)
+            return (l == eDH.hell) ? n_SpurLinksHell : !n_SpurLinksHell
+        else
+            return pinSpurlinks(l) // DigitalPin direkt lesen
     }
 
     //% group="Spur Sensor" subcategory="Sensoren"
     //% block="Spur Sensor rechts %r" weight=6
     export function getSpurRechts(r: eDH) {
-        return (r == eDH.hell) ? n_SpurRechtsHell : !n_SpurRechtsHell
+        if (n_SpurSensorEventsRegistered)
+            return (r == eDH.hell) ? n_SpurRechtsHell : !n_SpurRechtsHell
+        else
+            return pinSpurrechts(r) // DigitalPin direkt lesen
     }
 
     //% group="Spur Sensor" subcategory="Sensoren"
