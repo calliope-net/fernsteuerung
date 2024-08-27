@@ -199,7 +199,7 @@ namespace receiver { // r-strecken.ts
 
 
     //% group="Encoder" subcategory="Strecken"
-    //% block="Encoder Wert (cm) || Impulse %impulse" weight=4
+    //% block="Encoder Wert (±cm) || Impulse %impulse" weight=4
     //% impulse.shadow=toggleYesNo
     export function encoderCounter(impulse = false) {
         if (impulse)

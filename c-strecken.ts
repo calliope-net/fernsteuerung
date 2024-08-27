@@ -136,7 +136,7 @@ namespace cb2 { // c-strecken.ts
     }
 
     //% group="Encoder (Calli:bot 2E)" subcategory="Strecken"
-    //% block="Encoder Werte [l,r] (Int32LE)" weight=2
+    //% block="Encoder Werte (±cm) [l,r] (Int32LE)" weight=2
     export function readEncoderValues() {
         if (n_Callibot2_x22hasEncoder) {
             i2cWriteBuffer(Buffer.fromArray([eRegister.GET_ENCODER_VALUE]))
@@ -146,7 +146,7 @@ namespace cb2 { // c-strecken.ts
     }
 
     //% group="Encoder (Calli:bot 2E)" subcategory="Strecken"
-    //% block="Encoder Mittelwert (abs)" weight=1
+    //% block="Encoder Mittelwert (abs cm)" weight=1
     export function readEncoderMittelwert() {
         let encoderValues = readEncoderValues()
         return Math.idiv(Math.abs(encoderValues[0]) + Math.abs(encoderValues[1]), 2)
