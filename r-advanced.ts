@@ -25,11 +25,11 @@ namespace receiver { // r-advanced.ts
 
     export enum eFunktion {
         //% block="nicht gestartet"
-        ng = 0,     // nicht gestartet
-        //% block="B Spur folgen"
-        spur_folgen,
+        ng = 0,
         //% block="A Hindernis ausweichen"
         hindernis_ausweichen,
+        //% block="B Spur folgen"
+        spur_folgen,
         //% block="A+B Strecken fahren"
         fahrplan
     }
