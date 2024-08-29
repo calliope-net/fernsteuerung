@@ -21,6 +21,34 @@ namespace receiver { // r-advanced.ts
 
 
 
+    // ========== group="lokale Funktion" advanced=true
+
+    export enum eFunktion {
+        //% block="nicht gestartet"
+        ng = 0,     // nicht gestartet
+        //% block="B Spur folgen"
+        spur_folgen,
+        //% block="A Hindernis ausweichen"
+        hindernis_ausweichen,
+        //% block="A+B Strecken fahren"
+        fahrplan
+    }
+    let n_Funktion = eFunktion.ng
+
+    //% group="lokale Funktion" advanced=true
+    //% block="lokale Funktion %pFunktion" weight=4
+    export function setFunktion(pFunktion: eFunktion) {
+        n_Funktion = pFunktion
+    }
+
+    //% group="lokale Funktion" advanced=true
+    //% block="%pFunktion" weight=3
+    export function isFunktion(pFunktion: eFunktion) {
+        return pFunktion == n_Funktion
+    }
+
+
+
     // ========== group="Status zurück senden"
     let n_StatusString = ""
 
