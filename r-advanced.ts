@@ -25,7 +25,7 @@ namespace receiver { // r-advanced.ts
 
     export enum eFunktion {
         //% block="nicht gestartet"
-        ng = 0,
+        ng,
         //% block="A Hindernis ausweichen"
         hindernis_ausweichen,
         //% block="B Spur folgen"
@@ -36,9 +36,15 @@ namespace receiver { // r-advanced.ts
     let n_Funktion = eFunktion.ng
 
     //% group="lokale Funktion" advanced=true
-    //% block="lokale Funktion %pFunktion" weight=4
-    export function setFunktion(pFunktion: eFunktion) {
+    //% block="lokale Funktion %pFunktion || Timeout deaktivieren %timeoutDisbled" weight=4
+    //% timeoutDisbled.shadow="toggleYesNo"
+    export function setFunktion(pFunktion: eFunktion, timeoutDisbled?: boolean) {
         n_Funktion = pFunktion
+        if (timeoutDisbled == undefined) // Automatik
+            btf.set_timeoutDisbled(n_Funktion != eFunktion.ng) // true wenn!=0
+        else
+            btf.set_timeoutDisbled(timeoutDisbled)
+
     }
 
     //% group="lokale Funktion" advanced=true

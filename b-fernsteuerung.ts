@@ -230,8 +230,8 @@ namespace btf { // b-fernsteuerung.ts
     // ========== group="lokales Programm (ohne Fernsteuerung)"
 
     //% group="lokales Programm (ohne Fernsteuerung)"
-    //% block="Timeout deaktivieren %localProgram" weight=3
-    //% localProgram.shadow="toggleYesNo"
+    //% block="Timeout deaktivieren %timeoutDisbled" weight=3
+    //% timeoutDisbled.shadow="toggleYesNo"
     export function set_timeoutDisbled(timeoutDisbled: boolean) {
         n_timeoutDisbled = timeoutDisbled
         n_lastConnectedTime = input.runningTime()  // startet das lange timeout (abschalten) neu
