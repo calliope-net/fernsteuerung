@@ -23,17 +23,17 @@ namespace sender { // s-buttons.ts
         m0_s0,      // Joystick steuert M0 und Servo (Fahren und Lenken)
         //% block="0 Gabelstapler"
         m0_m1_s0,   // M0 und M1, Servo über Tasten A- B+ (Gabelstapler)
-        //% block="0 Seilrolle und Drehkranz"
+        //% block="0 Kran Seilrolle und Drehkranz"
         ma_mb,      // MA und MB (Seilrolle und Drehkranz)
-        //% block="0 Zahnstange und Drehkranz"
+        //% block="0 Kran Zahnstange und Drehkranz"
         mc_mb,      // MC und MB (Zahnstange und Drehkranz)
 
         // _10fernstarten,
-        //% block="1 Spurfolger fernstarten"
+        //% block="1 Programm 'Spur folgen'"
         f10fernstartenSpurfolger,
-        //% block="1 Abstand fernstarten"
+        //% block="1 Programm 'Abstand ausweichen'"
         f10fernstartenAbstand,
-        //% block="2 Fahrplan senden"
+        //% block="2 Fahrplan '5 Strecken senden'"
         f20fahrplan,
 
         // _20fahrplan,
