@@ -56,16 +56,19 @@ namespace sender { // s-buttons.ts
             btf.zeigeFunkgruppe()
         }
 
-        // cb2e||mkcs // von 'fernstarten Spur folgen' auf 'fernstarten Abstand ausweichen' umschalten
-        else if ((isModell(eModell.cb2e) || isModell(eModell.mkcs)) && !getStatusButtonB() && isFunktion(eFunktion.f10fernstartenSpurfolger)) {
-            // wenn B aus ist, startet A 'Abstand ausweichen' (reagiert nicht auf getStatusButton)
+        // cb2e||mkcs // von 'Spur folgen' auf 'Abstand ausweichen' umschalten
+        // nach A+B ist 'Spur folgen' eingestellt, müsste mit B noch gestartet werden Startbit MC-4
+        else if ((isModell(eModell.cb2e) || isModell(eModell.mkcs)) && !getStatusButtonB() && isFunktion(eFunktion.f10fernstartenSpurfolger)) { // 'Spur folgen' und B false ist die Ruhestellung
+            // wenn B aus ist, startet A 'Abstand ausweichen' (reagiert nicht auf getStatusButtonA oder B)
+            setStatusButtonA(true) // Abstand Sensor
             setStatusFunktion(eFunktion.f10fernstartenAbstand)
         }
-        // cb2e||mkcs // von 'fernstarten Abstand' auf 'fernstarten Spurfolger' umschalten
+        // cb2e||mkcs // von 'Abstand ausweichen' auf 'Spur folgen' umschalten
         else if ((isModell(eModell.cb2e) || isModell(eModell.mkcs)) && isFunktion(eFunktion.f10fernstartenAbstand)) {
             // wenn 'Abstand ausweichen', schaltet A zurück auf 'Spur folgen' (wird mit getStatusButtonB noch gestartet)
+            setStatusButtonA(false) // Abstand Sensor
             setStatusButtonB(false)
-            setStatusFunktion(eFunktion.f10fernstartenSpurfolger)
+            setStatusFunktion(eFunktion.f10fernstartenSpurfolger) // 'Spur folgen' und B false ist die Ruhestellung
         }
 
         // mkcg Maker Kit Car Gabelstapler (lenken mit Tasten)
@@ -111,7 +114,7 @@ namespace sender { // s-buttons.ts
             setStatusModell(getStatusModell() + 1, true, 1500) // setStatusModell() schreibt auch in Flash
             btf.zeigeFunkgruppe()
         }
-        // Maker Kit Car && Gabelstapler (lenken mit Tasten)
+        // Maker Kit Car && Gabelstapler 'Fahren und Lenken'
         else if (isModell(eModell.mkcg) && isFunktion(eFunktion.m0_m1_s0)) {
             addStatusButtonCounter(1, 1, 31) // M0 und M1, Servo über Tasten A- B+ (Gabelstapler)
         }
@@ -135,17 +138,20 @@ namespace sender { // s-buttons.ts
 
         // cb2e||mkcs // von 'Fahren und Lenken' auf 'fernstarten Spurfolger' umschalten
         else if ((isModell(eModell.cb2e) || isModell(eModell.mkcs)) && isFunktion(eFunktion.m0_s0)) {
-            setStatusFunktion(eFunktion.f10fernstartenSpurfolger)
+            setStatusFunktion(eFunktion.f10fernstartenSpurfolger) // 'Spur folgen' und B false ist die Ruhestellung
             setStatusButtonA(false) // Ultraschall Sensor
             setStatusButtonB(false) // 'fernstarten Spurfolger' noch nicht aktiv; B muss MC-4 aktivieren
             // oder A muss 'fernstarten Abstand ausweichen' und MD-5 aktivieren
         }
         // cb2e||mkcs // von 'fernstarten Spurfolger' auf 'Fahrplan' umschalten
-        else if ((isModell(eModell.cb2e) || isModell(eModell.mkcs)) && isFunktion(eFunktion.f10fernstartenSpurfolger)) {
+        else if ((isModell(eModell.cb2e) || isModell(eModell.mkcs)) && !getStatusButtonB() && isFunktion(eFunktion.f10fernstartenSpurfolger)) { // 'Spur folgen' und B false ist die Ruhestellung
             setStatusFunktion(eFunktion.f20fahrplan)
-            setStatusButtonA(false) // beide aus schalten
-            setStatusButtonB(false)
+            setStatusButtonA(false)
+            setStatusButtonB(false) // war schon false
         }
+
+
+
 
         // mkcs Maker Kit Car Sensoren // von Joystick auf Fahrplan umschalten
         //else if (isModell(eModell.mkcs) && isFunktion(eFunktion.m0_s0)) {

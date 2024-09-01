@@ -109,8 +109,6 @@ namespace receiver { // r-fernsteuerung.ts
                 btf.getSensor(buffer, btf.eBufferPointer.mc, btf.eSensor.b6Abstand),
                 1
             )
-
-
         }
     }
 
