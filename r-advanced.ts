@@ -40,10 +40,13 @@ namespace receiver { // r-advanced.ts
     //% timeoutDisbled.shadow="toggleYesNo"
     export function setFunktion(pFunktion: eFunktion, timeoutDisbled?: boolean) {
         n_Funktion = pFunktion
-        if (timeoutDisbled == undefined) // Automatik
-            btf.set_timeoutDisbled(n_Funktion != eFunktion.ng) // true wenn!=0
-        else
+        if (timeoutDisbled != undefined)
             btf.set_timeoutDisbled(timeoutDisbled)
+
+        //if (timeoutDisbled == undefined) // Automatik
+        //    btf.set_timeoutDisbled(n_Funktion != eFunktion.ng) // true wenn!=0
+        //else
+        //    btf.set_timeoutDisbled(timeoutDisbled)
 
     }
 
