@@ -23,6 +23,13 @@ namespace receiver { // r-advanced.ts
 
     // ========== group="lokale Funktion" advanced=true
 
+    export enum eTimeoutDisable {
+        //% block="automatisch"
+        automatisch,
+        //% block="nicht ändern"
+        nicht
+    }
+
     export enum eFunktion {
         //% block="nicht gestartet"
         ng,
@@ -36,11 +43,11 @@ namespace receiver { // r-advanced.ts
     let n_Funktion = eFunktion.ng
 
     //% group="lokale Funktion" advanced=true
-    //% block="lokale Funktion %pFunktion || Timeout nicht ändern %timeoutAutomatik Automatik" weight=4
-    //% timeoutAutomatik.shadow=toggleOnOff timeoutAutomatik.defl=1
-    export function setFunktion(pFunktion: eFunktion, timeoutAutomatik = true) {
+    //% block="lokale Funktion %pFunktion || Timeout %timeoutAutomatik" weight=4
+    // timeoutAutomatik.shadow=toggleOnOff timeoutAutomatik.defl=1
+    export function setFunktion(pFunktion: eFunktion, timeoutAutomatik = eTimeoutDisable.automatisch) {
         n_Funktion = pFunktion
-        if (timeoutAutomatik)
+        if (timeoutAutomatik == eTimeoutDisable.automatisch)
             //    btf.set_timeoutDisbled(timeoutAutomatik)
 
             //if (timeoutDisbled == undefined) // Automatik
