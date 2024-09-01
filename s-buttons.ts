@@ -60,13 +60,13 @@ namespace sender { // s-buttons.ts
         // nach A+B ist 'Spur folgen' eingestellt, müsste mit B noch gestartet werden Startbit MC-4
         else if ((isModell(eModell.cb2e) || isModell(eModell.mkcs)) && !getStatusButtonB() && isFunktion(eFunktion.f10fernstartenSpurfolger)) { // 'Spur folgen' und B false ist die Ruhestellung
             // wenn B aus ist, startet A 'Abstand ausweichen' (reagiert nicht auf getStatusButtonA oder B)
-            setStatusButtonA(true) // Abstand Sensor
+            //setStatusButtonA(true) // Abstand Sensor
             setStatusFunktion(eFunktion.f10fernstartenAbstand)
         }
         // cb2e||mkcs // von 'Abstand ausweichen' auf 'Spur folgen' umschalten
         else if ((isModell(eModell.cb2e) || isModell(eModell.mkcs)) && isFunktion(eFunktion.f10fernstartenAbstand)) {
             // wenn 'Abstand ausweichen', schaltet A zurück auf 'Spur folgen' (wird mit getStatusButtonB noch gestartet)
-            setStatusButtonA(false) // Abstand Sensor
+            //setStatusButtonA(false) // Abstand Sensor
             setStatusButtonB(false)
             setStatusFunktion(eFunktion.f10fernstartenSpurfolger) // 'Spur folgen' und B false ist die Ruhestellung
         }
