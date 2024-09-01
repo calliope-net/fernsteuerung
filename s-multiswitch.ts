@@ -34,10 +34,10 @@ namespace sender { // s-multiswitch.ts
                         setStatusFunktion(eFunktion.mc_mb) // MC und MB (Zahnstange und Drehkranz)
                     }
                     else if (bu[eMultiswitchPostion.links] == 0) { // 2 nach links
-                        setStatusButtonA(false) // Magnet = false
+                        setStatusButtonB(false) // Magnet = false
                     }
                     else if (bu[eMultiswitchPostion.rechts] == 0) { // 4 nach rechts
-                        setStatusButtonA(true) // Magnet = true
+                        setStatusButtonB(true) // Magnet = true
                     }
                 }
             }
