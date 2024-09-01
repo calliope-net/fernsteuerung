@@ -171,7 +171,7 @@ namespace sender { // s-buttons.ts
         // mkck Maker Kit Car Kran // von (Seilrolle und Drehkranz) oder (Zahnstange und Drehkranz) ...
         else if (isModell(eModell.mkck)) { // NOT && !isFunktion(eFunktion.m0_s0)
             setStatusFunktion(eFunktion.m0_s0) // auf Standardwert Fahren und Lenken umschalten
-            // ohne A B zu ändern
+            // ohne A B zu ändern / A Motoren B Elektromagnet
         }
 
         // Standardwert immer Fahren und Lenken
