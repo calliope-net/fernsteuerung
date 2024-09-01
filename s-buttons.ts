@@ -19,25 +19,25 @@ namespace sender { // s-buttons.ts
     export enum eFunktion {
         //% block="gestartet"
         ng = 0,     // nicht gestartet
-        //% block="00 Fahren und Lenken"
+        //% block="0 Fahren und Lenken"
         m0_s0,      // Joystick steuert M0 und Servo (Fahren und Lenken)
-        //% block="00 Gabelstapler"
+        //% block="0 Gabelstapler"
         m0_m1_s0,   // M0 und M1, Servo über Tasten A- B+ (Gabelstapler)
-        //% block="00 Seilrolle und Drehkranz"
+        //% block="0 Seilrolle und Drehkranz"
         ma_mb,      // MA und MB (Seilrolle und Drehkranz)
-        //% block="00 Zahnstange und Drehkranz"
+        //% block="0 Zahnstange und Drehkranz"
         mc_mb,      // MC und MB (Zahnstange und Drehkranz)
-       
-       // _10fernstarten,
-        //% block="10 Spurfolger fernstarten"
+
+        // _10fernstarten,
+        //% block="1 Spurfolger fernstarten"
         f10fernstartenSpurfolger,
-        //% block="10 Abstand fernstarten"
+        //% block="1 Abstand fernstarten"
         f10fernstartenAbstand,
-        //% block="20 Fahrplan senden"
+        //% block="2 Fahrplan senden"
         f20fahrplan,
 
-       // _20fahrplan,
-        //% block="30 Sensoren fernprogrammieren"
+        // _20fahrplan,
+        //% block="3 Sensoren fernprogrammieren"
         f30sensoren
     }
 
@@ -66,15 +66,34 @@ namespace sender { // s-buttons.ts
             // wenn 'Abstand ausweichen', schaltet A zurück auf 'Spur folgen' (wird mit getStatusButtonB noch gestartet)
             setStatusButtonB(false)
             setStatusFunktion(eFunktion.f10fernstartenSpurfolger)
-        } 
+        }
 
-        // Maker Kit Car && Gabelstapler (lenken mit Tasten)
+        // mkcg Maker Kit Car Gabelstapler (lenken mit Tasten)
         else if (isModell(eModell.mkcg) && isFunktion(eFunktion.m0_m1_s0)) {
             addStatusButtonCounter(-1, 1, 31)
         }
+
+        // mkck Maker Kit Car Kran // Fahren und Lenken
+        else if (isModell(eModell.mkck) && isFunktion(eFunktion.m0_s0)) {
+            // setStatusButtonA soll nicht geändert werden
+        }
+        // mkck Maker Kit Car Kran // von (Seilrolle und Drehkranz) oder (Zahnstange und Drehkranz) ...
+        else if (isModell(eModell.mkck)) { // NOT  && !isFunktion(eFunktion.m0_s0)
+            setStatusButtonA(!getStatusButtonA())  // A immer wechseln true-false
+            if (getStatusButtonA())
+                setStatusFunktion(eFunktion.ma_mb) // auf (Seilrolle und Drehkranz) umschalten
+            else
+                setStatusFunktion(eFunktion.mc_mb) // auf (Zahnstange und Drehkranz) umschalten       
+        }
+        // mkck Maker Kit Car Kran // von (Zahnstange und Drehkranz) auf (Seilrolle und Drehkranz) umschalten
+        //else if (isModell(eModell.mkck) && isFunktion(eFunktion.mc_mb)) {
+        //    setStatusFunktion(eFunktion.ma_mb)
+        //}
+
+
         // Standardwerte    
         else {
-            setStatusButtonA(!getStatusButtonA()) // immer wechseln true-false
+            setStatusButtonA(!getStatusButtonA()) // A immer wechseln true-false
         }
     }
 
@@ -114,11 +133,12 @@ namespace sender { // s-buttons.ts
             setStatusButtonB(false)
         }
 
-        // cb2e||mkcs // von 'Joystick' auf 'fernstarten Spurfolger' umschalten
+        // cb2e||mkcs // von 'Fahren und Lenken' auf 'fernstarten Spurfolger' umschalten
         else if ((isModell(eModell.cb2e) || isModell(eModell.mkcs)) && isFunktion(eFunktion.m0_s0)) {
             setStatusFunktion(eFunktion.f10fernstartenSpurfolger)
-            setStatusButtonA(false) // Ultraschall Sensor aktiv bei false
-            setStatusButtonB(false) // Beispiel noch nicht aktiv senden; erst nach B geklickt
+            setStatusButtonA(false) // Ultraschall Sensor
+            setStatusButtonB(false) // 'fernstarten Spurfolger' noch nicht aktiv; B muss MC-4 aktivieren
+            // oder A muss 'fernstarten Abstand ausweichen' und MD-5 aktivieren
         }
         // cb2e||mkcs // von 'fernstarten Spurfolger' auf 'Fahrplan' umschalten
         else if ((isModell(eModell.cb2e) || isModell(eModell.mkcs)) && isFunktion(eFunktion.f10fernstartenSpurfolger)) {
@@ -139,21 +159,19 @@ namespace sender { // s-buttons.ts
             setStatusFunktion(eFunktion.m0_m1_s0)
             setStatusButtonCounter(16) // Gabelstapler mit A- B+ lenken
         }
-        // mkcg Maker Kit Car mit Gabelstapler // von Gabelstapler auf Fahrplan umschalten
-        //else if (isModell(eModell.mkcg) && isFunktion(eFunktion.m0_m1_s0)) {
-        //    setStatusFunktion(eFunktion._20fahrplan)
-        //    setStatusButtonA(false) // beide aus schalten
-        //    setStatusButtonB(false)
-        //}
 
 
-        // mkck Maker Kit Car mit Kran // von Joystick auf (Seilrolle und Drehkranz) umschalten
+        // mkck Maker Kit Car Kran // von 'Fahren und Lenken' auf ...
         else if (isModell(eModell.mkck) && isFunktion(eFunktion.m0_s0)) {
-            setStatusFunktion(eFunktion.ma_mb)
+            if (getStatusButtonA())
+                setStatusFunktion(eFunktion.ma_mb) // auf (Seilrolle und Drehkranz) umschalten
+            else
+                setStatusFunktion(eFunktion.mc_mb) // auf (Zahnstange und Drehkranz) umschalten
         }
-        // mkck Maker Kit Car mit Kran // von (Seilrolle und Drehkranz) auf (Zahnstange und Drehkranz) umschalten
-        else if (isModell(eModell.mkck) && isFunktion(eFunktion.ma_mb)) {
-            setStatusFunktion(eFunktion.mc_mb)
+        // mkck Maker Kit Car Kran // von (Seilrolle und Drehkranz) oder (Zahnstange und Drehkranz) ...
+        else if (isModell(eModell.mkck)) { // NOT && !isFunktion(eFunktion.m0_s0)
+            setStatusFunktion(eFunktion.m0_s0) // auf Standardwert Fahren und Lenken umschalten
+            // ohne A B zu ändern
         }
 
         // Standardwert immer Fahren und Lenken
