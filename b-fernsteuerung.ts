@@ -134,7 +134,7 @@ namespace btf { // b-fernsteuerung.ts
     // ein Delegat ist die Signatur einer function mit den selben Parametern
     // es wird kein Wert zurück gegeben (void)
     // die Variable ist noch undefined, also keiner konkreten Funktion zugeordnet
-    let onReceivedDataHandler: (receivedData: Buffer) => void
+    //let onReceivedDataHandler: (receivedData: Buffer) => void
     let onReceivedDataChangedHandler: (receivedData: Buffer, changed: boolean) => void
 
     export function beimStartReceiver(e: eNamespace, callbackStorageChanged?: (pStorageChange: eStorageBuffer, buttonB: boolean) => void) {
@@ -171,8 +171,8 @@ namespace btf { // b-fernsteuerung.ts
                 // die Variable erhält einen Wert, wenn der folgende Ereignis Block 'onReceivedData' einmal im Code vorkommt
                 // der Wert der Variable 'onReceivedDataHandler' ist die function, die bei true zurück gerufen wird
                 // die function ruft mit dem Parameter vom Typ Buffer die Blöcke auf, die im Ereignis-Block stehen
-                if (onReceivedDataHandler)
-                    onReceivedDataHandler(receivedBuffer) // Ereignis Block auslösen, nur wenn benutzt
+                //if (onReceivedDataHandler)
+                //    onReceivedDataHandler(receivedBuffer) // Ereignis Block auslösen, nur wenn benutzt
 
                 if (onReceivedDataChangedHandler) // Änderung Betriebsart[0] ODER aktivierte Motoren[3]
                     onReceivedDataChangedHandler(receivedBuffer, n_lastBetriebsart != (receivedBuffer[0] & 0b00110000) || n_last6Motoren != (receivedBuffer[3] & 0b00111111))
@@ -191,20 +191,25 @@ namespace btf { // b-fernsteuerung.ts
     //% group="Bluetooth empfangen (19 Byte)"
     //% block="wenn Datenpaket empfangen" weight=9 deprecated=1
     //% draggableParameters=reporter
-    export function onReceivedData(cb: (receivedData: Buffer) => void) {
+    //export function onReceivedData(cb: (receivedData: Buffer) => void) {
         // das ist der sichtbare Ereignis Block 'wenn Buffer empfangen (receivedData)'
         // hier wird nur der Delegat-Variable eine konkrete callback function zugewiesen
         // dieser Block speichert in der Variable, dass er beim Ereignis zurückgerufen werden soll
-        onReceivedDataHandler = cb
+    //    onReceivedDataHandler = cb
         // aufgerufen wird beim Ereignis 'radio.onReceivedBuffer' die der Variable 'onReceivedDataHandler' zugewiesene function
         // das sind die Blöcke, die später im Ereignis Block 'wenn Buffer empfangen (receivedData)' enthalten sind
-    }
+    //}
 
     //% group="Bluetooth empfangen (19 Byte)"
     //% block="wenn Datenpaket empfangen" weight=8
     //% draggableParameters=reporter
     export function onReceivedDataChanged(cb: (receivedData: Buffer, changed: boolean) => void) {
+        // das ist der sichtbare Ereignis Block 'wenn Buffer empfangen (receivedData)'
+        // hier wird nur der Delegat-Variable eine konkrete callback function zugewiesen
+        // dieser Block speichert in der Variable, dass er beim Ereignis zurückgerufen werden soll
         onReceivedDataChangedHandler = cb
+        // aufgerufen wird beim Ereignis 'radio.onReceivedBuffer' die der Variable 'onReceivedDataChangedHandler' zugewiesene function
+        // das sind die Blöcke, die später im Ereignis Block 'wenn Buffer empfangen (receivedData, changed)' enthalten sind
     }
 
 
