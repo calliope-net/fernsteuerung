@@ -13,7 +13,8 @@ namespace btf { // b-dispaly5x5.ts
         n5x5_setClearScreen = true
     }
 
-    let n5x5_x01y0 = 0 // Bit 5-4 Betriebsart in x=0-1 y=0
+    //let n5x5_x01y0 = 0 // Bit 5-4 Betriebsart in x=0-1 y=0
+    let a5x5_x01y0 = [false, false]
     let a5x5_xBuffer = Buffer.create(5)
 
     // ↕↕...
@@ -26,16 +27,33 @@ namespace btf { // b-dispaly5x5.ts
         zeigeBIN(int, ePlot.hex, 1) // 5x5 x=0-1 y=1-2-3-4 (y=0 ist bei hex immer aus)
     }
 
+
+    //% group="BIN" subcategory="LEDs, Display"
+    //% block="zeige ↑↑... x0 %x0y0 x1 %x1y0" weight=9
+    //% x0y0.shadow=toggleOnOff
+    //% x1y0.shadow=toggleOnOff
+    export function zeige5x5Betriebsart(x0y0: boolean, x1y0: boolean) {
+        if (a5x5_x01y0[0] !== x0y0 || a5x5_x01y0[1] !== x1y0) {
+            a5x5_x01y0[0] = x0y0
+            a5x5_x01y0[1] = x1y0
+
+            if (a5x5_x01y0[0]) { led.plot(0, 0) } else { led.unplot(0, 0) }
+            if (a5x5_x01y0[1]) { led.plot(1, 0) } else { led.unplot(1, 0) }
+        }
+    }
+
+
     //% group="BIN" subcategory="LEDs, Display"
     //% block="zeige ↑↑↕.. aktive Motoren %buffer" weight=8
     //% buffer.shadow="btf_sendBuffer19"
     export function zeige5x5Buffer(buffer: Buffer) {
         // 2 Bit oben links Betriebsart, die sind bei Funkgruppe frei
-        if (n5x5_x01y0 != (buffer[0] & 0x30)) {
-            n5x5_x01y0 = (buffer[0] & 0x30) // Betriebsart 00 01 10 11 (x=0-1 y=0)
-            if ((n5x5_x01y0 & 0x20) == 0x20) { led.plot(0, 0) } else { led.unplot(0, 0) }
-            if ((n5x5_x01y0 & 0x10) == 0x10) { led.plot(1, 0) } else { led.unplot(1, 0) }
-        }
+        //if (n5x5_x01y0 != (buffer[0] & 0x30)) {
+        //    n5x5_x01y0 = (buffer[0] & 0x30) // Betriebsart 00 01 10 11 (x=0-1 y=0)
+        //    if ((n5x5_x01y0 & 0x20) == 0x20) { led.plot(0, 0) } else { led.unplot(0, 0) }
+        //    if ((n5x5_x01y0 & 0x10) == 0x10) { led.plot(1, 0) } else { led.unplot(1, 0) }
+        //}
+        zeige5x5Betriebsart((buffer[0] & 0x20) == 0x20, (buffer[0] & 0x10) == 0x10)
 
         let xLed = 2 // 5x5 x=2 Motor Power außer m0
         if (m_Namespace == eNamespace.cb2 && isBetriebsart(buffer, e0Betriebsart.p2Fahrplan)) {
@@ -180,7 +198,7 @@ namespace btf { // b-dispaly5x5.ts
                 }
                 // basic.clearScreen()     // löschen und Funkgruppe in 01 ↕↕... wieder anzeigen
                 zeigeFunkgruppe()       // !ruft zeigeBIN rekursiv auf!
-                n5x5_x01y0 = 0 // Betriebsart auch neu anzeigen nach clearScreen
+                a5x5_x01y0 = [false, false] // n5x5_x01y0 = 0 // Betriebsart auch neu anzeigen nach clearScreen
             }
             // nur bei Änderung
             if (a5x5_xBuffer[xLed] != int) {

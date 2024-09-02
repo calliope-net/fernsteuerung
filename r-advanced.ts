@@ -54,7 +54,12 @@ namespace receiver { // r-advanced.ts
             btf.set_timeoutDisbled(n_Funktion != eFunktion.ng) // true wenn!=0
         //else
         //    btf.set_timeoutDisbled(timeoutDisbled)
-
+        if (pFunktion == eFunktion.hindernis_ausweichen)
+            btf.zeige5x5Betriebsart(true, false) // A
+        else if (pFunktion == eFunktion.spur_folgen)
+            btf.zeige5x5Betriebsart(false, true) // B
+        else if (pFunktion == eFunktion.fahrplan)
+            btf.zeige5x5Betriebsart(true, true)  // A+B
     }
 
     //% group="lokale Funktion" advanced=true
