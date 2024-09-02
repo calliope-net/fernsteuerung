@@ -180,7 +180,7 @@ namespace cb2 { // c-zweimotoren.ts
 
             writeMotoren128(motorA, motorB) // Start
 
-            while (motorA != c_MotorStop || motorB != c_MotorStop) {
+            while ((motorA != c_MotorStop || motorB != c_MotorStop) && n_Callibot2_x22Connected) {
 
                 aEncoderWerte = readEncoderValues() // rückwärts sind die Werte negativ
 
@@ -215,7 +215,7 @@ namespace cb2 { // c-zweimotoren.ts
                 // oder langsamer fahren wenn Rest strecke kleiner wird
                 // l=255 r=1: 800 Impulse (25*32) 1.4s = 1.75ms pro Impuls
 
-                basic.pause(2) // 2 ms müsste jeden Impuls erfassen
+                basic.pause(20) // 2 ms müsste jeden Impuls erfassen
 
             } // while
             writeMotorenStop()
