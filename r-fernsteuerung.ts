@@ -1,13 +1,13 @@
 
 namespace receiver { // r-fernsteuerung.ts
 
-    // ========== group="00 Fernsteuerung mit Joystick (reagiert auf Sensoren)" subcategory="Fernsteuerung"
+    // ========== group="0 Fernsteuerung mit Joystick (reagiert auf Sensoren)" subcategory="Fernsteuerung"
 
     let n_AbstandStop = false
     let n_SpurStop = false
 
-    //% group="00 Fernsteuerung mit Joystick (reagiert auf Sensoren)" subcategory="Fernsteuerung"
-    //% block="00 Fahren und Lenken mit Joystick (M:01ABCD S:0) aus %buffer " weight=5
+    //% group="0 Fernsteuerung mit Joystick (reagiert auf Sensoren)" subcategory="Fernsteuerung"
+    //% block="0 Fahren und Lenken mit Joystick (M:01ABCD S:0) aus %buffer " weight=5
     //% buffer.shadow="btf_receivedBuffer19"
     export function fahreJoystick(buffer: Buffer) {
 
@@ -90,8 +90,8 @@ namespace receiver { // r-fernsteuerung.ts
 
     // ========== group="10 Programm fernstarten: Hindernis ausweichen" subcategory="Fernsteuerung"
 
-    //% group="10 Programm fernstarten: Hindernis ausweichen" subcategory="Fernsteuerung"
-    //% block="Abstand Sensor Ereignis auslösen %buffer || • Start+ %start_cm cm • Pause %ms ms" weight=8
+    //% group="1 Programm fernstarten: Hindernis ausweichen" subcategory="Fernsteuerung"
+    //% block="1 Abstand Sensor Ereignis auslösen %buffer || • Start+ %start_cm cm • Pause %ms ms" weight=8
     //% buffer.shadow=btf_receivedBuffer19
     //% start_cm.defl=5
     //% ms.defl=25
@@ -118,8 +118,8 @@ namespace receiver { // r-fernsteuerung.ts
             && btf.getaktiviert(buffer, btf.e3aktiviert.md) // MD-5 Hindernis ausweichen
     }
 
-    //% group="10 Programm fernstarten: Hindernis ausweichen" subcategory="Fernsteuerung"
-    //% block="Hindernis ausweichen %buffer <abstand_Stop> %abstand_Stop" weight=4
+    //% group="1 Programm fernstarten: Hindernis ausweichen" subcategory="Fernsteuerung"
+    //% block="1 Hindernis ausweichen %buffer <abstand_Stop> %abstand_Stop" weight=4
     //% buffer.shadow=btf_receivedBuffer19
     // abstand_Stop.shadow="toggleYesNo"
     export function buffer_Hindernis_ausweichen(buffer: Buffer, abstand_Stop: boolean) {
@@ -143,8 +143,8 @@ namespace receiver { // r-fernsteuerung.ts
 
     // ========== group="10 Programm fernstarten: Spur folgen" subcategory="Fernsteuerung"
 
-    //% group="10 Programm fernstarten: Spur folgen" subcategory="Fernsteuerung"
-    //% block="Spur Sensor Ereignis auslösen %buffer || • Pause %ms ms" weight=7
+    //% group="1 Programm fernstarten: Spur folgen" subcategory="Fernsteuerung"
+    //% block="1 Spur Sensor Ereignis auslösen %buffer || • Pause %ms ms" weight=7
     //% buffer.shadow=btf_receivedBuffer19
     //% start_cm.defl=5
     //% ms.defl=25
@@ -167,8 +167,8 @@ namespace receiver { // r-fernsteuerung.ts
             && btf.getaktiviert(buffer, btf.e3aktiviert.mc) // MC-4 Spur folgen
     }
 
-    //% group="10 Programm fernstarten: Spur folgen" subcategory="Fernsteuerung"
-    //% block="Spur folgen %buffer <links_hell> %links_hell <rechts_hell> %rechts_hell <abstand_Stop> %abstand_Stop" weight=3
+    //% group="1 Programm fernstarten: Spur folgen" subcategory="Fernsteuerung"
+    //% block="1 Spur folgen %buffer <links_hell> %links_hell <rechts_hell> %rechts_hell <abstand_Stop> %abstand_Stop" weight=3
     //% buffer.shadow=btf_receivedBuffer19
     // links_hell.shadow=toggleYesNo
     // rechts_hell.shadow=toggleYesNo
@@ -192,8 +192,8 @@ namespace receiver { // r-fernsteuerung.ts
 
     let n_fahrplanBuffer5Strecken_gestartet = false
 
-    //% group="20 Fahrplan (5 Teilstrecken) empfangen" subcategory="Fernsteuerung"
-    //% block="20 Fahren Strecke 1-5 (MS:1ABCD) aus %buffer • Start Bit %startBit" weight=4
+    //% group="2 Fahrplan (5 Teilstrecken) empfangen" subcategory="Fernsteuerung"
+    //% block="2 Fahren Strecke 1-5 (MS:1ABCD) aus %buffer • Start Bit %startBit" weight=4
     //% buffer.shadow=btf_receivedBuffer19
     //% startBit.defl=btf.e3aktiviert.m1
     export function fahrplanBuffer5Strecken(buffer: Buffer, startBit: btf.e3aktiviert) {

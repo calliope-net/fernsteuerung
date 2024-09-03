@@ -2,10 +2,10 @@
 namespace sender { // s-fernsteuerung.ts
   
 
-    // ========== group="00 fahren und lenken mit Joystick" subcategory="Fernsteuerung"
+    // ========== group="0 fahren und lenken mit Joystick" subcategory="Fernsteuerung"
 
-    //% group="00 fahren und lenken mit Joystick" subcategory="Fernsteuerung"
-    //% block="00 Joystick %buffer fahren %motor0 lenken %servo0 Stop %stop bei Abstand < %abstand" weight=5
+    //% group="0 fahren und lenken mit Joystick" subcategory="Fernsteuerung"
+    //% block="0 Joystick %buffer fahren %motor0 lenken %servo0 Stop %stop bei Abstand < %abstand" weight=5
     //% buffer.shadow=btf_sendBuffer19
     //% motor0.shadow=sender_xmotor 
     //% servo0.shadow=sender_servo16
@@ -21,10 +21,10 @@ namespace sender { // s-fernsteuerung.ts
     }
 
 
-    // ========== group="00 Fernsteuerung Gabelstapler" subcategory="Fernsteuerung"
+    // ========== group="0 Fernsteuerung Gabelstapler" subcategory="Fernsteuerung"
 
-    //% group="00 Fernsteuerung Gabelstapler" subcategory="Fernsteuerung"
-    //% block="00 Gabelstapler %buffer fahren %motor0 lenken %servo0 Gabelstapler ↕ %motor1" weight=4
+    //% group="0 Fernsteuerung Gabelstapler" subcategory="Fernsteuerung"
+    //% block="0 Gabelstapler %buffer fahren %motor0 lenken %servo0 Gabelstapler ↕ %motor1" weight=4
     //% buffer.shadow=btf_sendBuffer19
     //% motor0.shadow=sender_motorProzent
     //% servo0.shadow=sender_ButtonAB_Counter
@@ -44,7 +44,7 @@ namespace sender { // s-fernsteuerung.ts
 
 
     //% blockId=sender_motorProzent
-    //% group="00 Fernsteuerung Gabelstapler" subcategory="Fernsteuerung"
+    //% group="0 Fernsteuerung Gabelstapler" subcategory="Fernsteuerung"
     //% block="%motor0 * %prozent \\%" weight=3
     //% motor0.shadow=sender_xmotor 
     //% prozent.min=10 prozent.max=100 prozent.defl=50
@@ -54,10 +54,10 @@ namespace sender { // s-fernsteuerung.ts
 
 
 
-    // ========== group="00 Fernsteuerung Kran" subcategory="Fernsteuerung"
+    // ========== group="0 Fernsteuerung Kran" subcategory="Fernsteuerung"
 
-    //% group="00 Fernsteuerung Kran" subcategory="Fernsteuerung"
-    //% block="00 Kran %buffer MA Seilrolle %motor0 MB Drehkranz %motor1" weight=5
+    //% group="0 Fernsteuerung Kran" subcategory="Fernsteuerung"
+    //% block="0 Kran %buffer MA Seilrolle %motor0 MB Drehkranz %motor1" weight=5
     //% buffer.shadow=btf_sendBuffer19
     //% motor0.shadow=sender_xmotor 
     //% motor1.shadow=sender_ymotor 
@@ -69,8 +69,8 @@ namespace sender { // s-fernsteuerung.ts
         btf.setaktiviert(buffer, btf.e3aktiviert.mb, true)
     }
 
-    //% group="00 Fernsteuerung Kran" subcategory="Fernsteuerung"
-    //% block="00 Kran %buffer MC Zahnstange %motor0 MB Drehkranz %motor1" weight=4
+    //% group="0 Fernsteuerung Kran" subcategory="Fernsteuerung"
+    //% block="0 Kran %buffer MC Zahnstange %motor0 MB Drehkranz %motor1" weight=4
     //% buffer.shadow=btf_sendBuffer19
     //% motor0.shadow=sender_xmotor 
     //% motor1.shadow=sender_ymotor 
@@ -84,10 +84,10 @@ namespace sender { // s-fernsteuerung.ts
 
 
 
-    // ========== group="10 Programm fernstarten" subcategory="Fernsteuerung"
+    // ========== group="1 Programm fernstarten" subcategory="Fernsteuerung"
 
-    //% group="10 Programm fernstarten" subcategory="Fernsteuerung"
-    //% block="10 Spur folgen %buffer Fahren (1↓128↑255) %motor128 langsam Fahren %langsamfahren Lenken (1↖16↗31) %servo16 lenkender Motor \\% %lenkenProzent Abstand Sensor %stop bei Abstand < %abstand Pause ⅒s %pause_zs" weight=6
+    //% group="1 Programm fernstarten" subcategory="Fernsteuerung"
+    //% block="1 Spur folgen %buffer Fahren (1↓128↑255) %motor128 langsam Fahren %langsamfahren Lenken (1↖16↗31) %servo16 lenkender Motor \\% %lenkenProzent Abstand Sensor %stop bei Abstand < %abstand Pause ⅒s %pause_zs" weight=6
     //% buffer.shadow="btf_sendBuffer19"
     //% motor128.min=1 motor128.max=255 motor128.defl=192
     //% langsamfahren.min=1 langsamfahren.max=255 langsamfahren.defl=160
@@ -112,8 +112,8 @@ namespace sender { // s-fernsteuerung.ts
 
 
 
-    //% group="10 Programm fernstarten" subcategory="Fernsteuerung"
-    //% block="10 Abstand ausweichen %buffer Fahren (1↓128↑255) %vMotor Lenken (1↖16↗31) %vServo rückwärts Fahren %rMotor rückwärts Lenken %rServo Pause ⅒s %pause_zs Abstand < %abstand" weight=4
+    //% group="1 Programm fernstarten" subcategory="Fernsteuerung"
+    //% block="1 Hindernis ausweichen %buffer Fahren (1↓128↑255) %vMotor Lenken (1↖16↗31) %vServo rückwärts Fahren %rMotor rückwärts Lenken %rServo Pause ⅒s %pause_zs Abstand < %abstand" weight=4
     //% buffer.shadow="btf_sendBuffer19"
     //% vMotor.min=1 vMotor.max=255 vMotor.defl=255
     //% vServo.min=1 vServo.max=31 vServo.defl=16
