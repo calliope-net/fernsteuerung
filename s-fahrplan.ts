@@ -2,10 +2,10 @@
 namespace sender { // s-fahrplan.ts
 
 
-    // ========== group="20 Fahrplan (5 Teilstrecken) senden" subcategory="Fahrplan"
+    // ========== group="2 Fahrplan (5 Teilstrecken) senden" subcategory="Fahrplan"
 
-    //% group="20 Fahrplan (5 Teilstrecken) senden" subcategory="Fahrplan"
-    //% block="20 Fahrplan senden • Fahren und Lenken %buffer Strecke 1 %p1 Strecke 2 %p2 Strecke 3 %p3 Strecke 4 %p4 Strecke 5 %p5 Anzahl Durchläufe %count" weight=8
+    //% group="2 Fahrplan (5 Teilstrecken) senden" subcategory="Fahrplan"
+    //% block="2 Fahrplan senden • Fahren und Lenken %buffer Strecke 1 %p1 Strecke 2 %p2 Strecke 3 %p3 Strecke 4 %p4 Strecke 5 %p5 Anzahl Durchläufe %count" weight=8
     //% buffer.shadow="btf_sendBuffer19"
     //% p1.shadow=sender_StreckePicker
     //% p2.shadow=sender_StreckePicker
@@ -27,7 +27,7 @@ namespace sender { // s-fahrplan.ts
 
 
     //% blockId=sender_zehntelsekunden
-    //% group="20 Fahrplan (5 Teilstrecken) senden" subcategory="Fahrplan"
+    //% group="2 Fahrplan (5 Teilstrecken) senden" subcategory="Fahrplan"
     //% block="%pause" weight=4
     export function sender_zehntelsekunden(pause: btf.ePause): number {
         return pause
@@ -84,10 +84,10 @@ namespace sender { // s-fahrplan.ts
 
 
 
-    // ========== group="20 Fahrplan (2 Teilstrecken • 2 Motoren) senden" subcategory="Fahrplan"
+    // ========== group="2 Fahrplan (2 Teilstrecken • 2 Motoren) senden" subcategory="Fahrplan"
 
-    //% group="20 Fahrplan (2 Teilstrecken • 2 Motoren) senden" subcategory="Fahrplan"
-    //% block="20 Fahrplan senden • 2 Motoren %buffer Strecke 1 %p1 Strecke 2 %p2 Anzahl Durchläufe %count" weight=8
+    //% group="2 Fahrplan (2 Teilstrecken • 2 Motoren) senden" subcategory="Fahrplan"
+    //% block="2 Fahrplan senden • 2 Motoren %buffer Strecke 1 %p1 Strecke 2 %p2 Anzahl Durchläufe %count" weight=8
     //% buffer.shadow="btf_sendBuffer19"
     //% p1.shadow=sender_2MotorenZeitPicker
     //% p2.shadow=sender_2MotorenZeitPicker
