@@ -31,7 +31,7 @@ namespace sender { // s-buttons.ts
         // _10fernstarten,
         //% block="1 Programm 'Spur folgen'"
         f10fernstartenSpurfolger,
-        //% block="1 Programm 'Abstand ausweichen'"
+        //% block="1 Programm 'Hindernis ausweichen'"
         f10fernstartenAbstand,
         //% block="2 Fahrplan '5 Strecken senden'"
         f20fahrplan,

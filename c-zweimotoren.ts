@@ -187,7 +187,7 @@ namespace cb2 { // c-zweimotoren.ts
                 if (timeoutEncoder-- <= 0) { // alle 1s
 
                     if (letzteEncoderWerte[0] == aEncoderWerte[0] && letzteEncoderWerte[1] == aEncoderWerte[1]) {
-                        // in 500 * pause 2 (unten) = 1 s Timeout hat sich kein Wert geändert
+                        // timeoutEncoder*basic.pause = 1 s Timeout hat sich kein Wert geändert
                         writeMotorenStop()
                         writecb2RgbLeds(Colors.Red, true)
                         // basic.pause(1000)
@@ -197,7 +197,8 @@ namespace cb2 { // c-zweimotoren.ts
                     else { // mindestens ein Wert geändert - weiter fahren
                         letzteEncoderWerte[0] = aEncoderWerte[0]
                         letzteEncoderWerte[1] = aEncoderWerte[1]
-                        timeoutEncoder = 500 // 500 * pause 2 (unten) = 1 s Timeout, wenn Encoder nicht zählt
+                        timeoutEncoder = 50 // 500 * pause 2 (unten) = 1 s Timeout, wenn Encoder nicht zählt
+                        // 50 * pause 20 (unten) = 1s
                     }
                 }
 
@@ -215,7 +216,7 @@ namespace cb2 { // c-zweimotoren.ts
                 // oder langsamer fahren wenn Rest strecke kleiner wird
                 // l=255 r=1: 800 Impulse (25*32) 1.4s = 1.75ms pro Impuls
 
-                basic.pause(20) // 2 ms müsste jeden Impuls erfassen
+                basic.pause(20) // 2 ms müsste jeden Impuls erfassen, verlängert auf 20 um I²C Polling zu entlasten
 
             } // while
             writeMotorenStop()
@@ -224,10 +225,10 @@ namespace cb2 { // c-zweimotoren.ts
 
 
 
-    // ========== group="Fernsteuerung 2 Motoren (reagiert auf Sensoren)" subcategory="2 Motoren"
+    // ========== group="0 Fernsteuerung 2 Motoren (reagiert auf Sensoren)" subcategory="2 Motoren"
 
-    //% group="00 Fernsteuerung 2 Motoren (reagiert auf Sensoren)" subcategory="2 Motoren"
-    //% block="00 Fahren 2 Motoren (M:AB) aus %buffer" weight=8
+    //% group="0 Fernsteuerung 2 Motoren (reagiert auf Sensoren)" subcategory="2 Motoren"
+    //% block="Fahren 2 Motoren (M:AB) aus %buffer" weight=8
     //% buffer.shadow=btf_receivedBuffer19
     export function fahre2Motoren(buffer: Buffer) {
 
@@ -275,12 +276,12 @@ namespace cb2 { // c-zweimotoren.ts
 
 
 
-    // ========== group="20 Fahrplan (2 Teilstrecken • 2 Motoren) empfangen" subcategory="2 Motoren"
+    // ========== group="2 Fahrplan (2 Teilstrecken • 2 Motoren) empfangen" subcategory="2 Motoren"
 
     let n_fahrplanBuffer2x2Motoren_gestartet = false
 
-    //% group="20 Fahrplan (2 Teilstrecken • 2 Motoren) empfangen" subcategory="2 Motoren"
-    //% block="20 Fahren 2 Strecken mit 2 Motoren (MS:AB CD) aus %buffer • Start Bit %startBit || • Encoder %checkEncoder" weight=4
+    //% group="2 Fahrplan (2 Teilstrecken • 2 Motoren) empfangen" subcategory="2 Motoren"
+    //% block="Fahren 2 Strecken mit 2 Motoren (MS:AB CD) aus %buffer • Start Bit %startBit || • Encoder %checkEncoder" weight=4
     //% buffer.shadow=btf_receivedBuffer19
     //% startBit.defl=btf.e3aktiviert.ma
     //% checkEncoder.shadow=toggleYesNo checkEncoder.defl=1
