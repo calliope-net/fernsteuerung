@@ -146,15 +146,15 @@ namespace cb2 { // c-zweimotoren.ts
 
     // ========== nur ENCODER, ohne Sensoren
 
-    // ========== group="2 Motoren (1 ↓ 128 ↑ 255) mit 2 Encodern steuern (Calli:bot 2E)" subcategory="2 Motoren"
+    // ========== group="2 Motoren mit 2 Encodern steuern ¼ Drehung (Calli:bot 2E)" subcategory="2 Motoren"
 
-    //% group="Strecke mit 2 Motoren (1 ↓ 128 ↑ 255) und 2 Encodern fahren (Calli:bot 2E)" subcategory="2 Motoren"
+    //% group="Strecke mit 2 Motoren und 2 Encodern fahren ¼ Drehung (Calli:bot 2E)" subcategory="2 Motoren"
     //% block="2 Motoren (1↓128↑255) | links %motorA rechts %motorB 2 Encoder (cm\\|Impulse) ≤ 255 | links %encoderA rechts %encoderB Impulse %impulse"
-    //% motorA.min=1 motorA.max=255 motorA.defl=192
-    //% motorB.min=1 motorB.max=255 motorB.defl=64
-    //% encoderA.min=10 encoderA.max=255 encoderA.defl=25
-    //% encoderB.min=10 encoderB.max=255 encoderB.defl=25
-    //% impulse.shadow=toggleYesNo
+    //% motorA.min=1 motorA.max=255 motorA.defl=160
+    //% motorB.min=1 motorB.max=255 motorB.defl=96
+    //% encoderA.min=10 encoderA.max=255 encoderA.defl=198
+    //% encoderB.min=10 encoderB.max=255 encoderB.defl=198
+    //% impulse.shadow=toggleYesNo impulse.defl=1
     // inlineInputMode=inline
     export function fahre2MotorenEncoder(motorA: number, motorB: number, encoderA: number, encoderB: number, impulse = false) {
         writeMotorenStop()

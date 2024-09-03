@@ -46,26 +46,28 @@ namespace receiver { // r-advanced.ts
     //% block="lokale Funktion %pFunktion || Timeout %timeoutAutomatik" weight=4
     // timeoutAutomatik.shadow=toggleOnOff timeoutAutomatik.defl=1
     export function setFunktion(pFunktion: eFunktion, timeoutAutomatik = eTimeoutDisable.automatisch) {
-        n_Funktion = pFunktion
-        if (timeoutAutomatik == eTimeoutDisable.automatisch)
-            //    btf.set_timeoutDisbled(timeoutAutomatik)
+        if (n_Funktion != pFunktion) {
+            n_Funktion = pFunktion
+            if (timeoutAutomatik == eTimeoutDisable.automatisch)
+                //    btf.set_timeoutDisbled(timeoutAutomatik)
 
-            //if (timeoutDisbled == undefined) // Automatik
-            btf.set_timeoutDisbled(n_Funktion != eFunktion.ng) // true wenn!=0
-        //else
-        //    btf.set_timeoutDisbled(timeoutDisbled)
+                //if (timeoutDisbled == undefined) // Automatik
+                btf.set_timeoutDisbled(n_Funktion != eFunktion.ng) // true wenn!=0
+            //else
+            //    btf.set_timeoutDisbled(timeoutDisbled)
 
-        btf.zeige5x5Betriebsart((pFunktion & 1) == 1, (pFunktion & 2) == 2)
+            btf.zeige5x5Betriebsart((pFunktion & 1) == 1, (pFunktion & 2) == 2)
 
-        /* if (pFunktion == eFunktion.hindernis_ausweichen)
-            btf.zeige5x5Betriebsart(true, false) // A
-        else if (pFunktion == eFunktion.spur_folgen)
-            btf.zeige5x5Betriebsart(false, true) // B
-        else if (pFunktion == eFunktion.fahrplan)
-            btf.zeige5x5Betriebsart(true, true)  // A+B
-        else
-            btf.zeige5x5Betriebsart(false, false)
-         */    
+            /* if (pFunktion == eFunktion.hindernis_ausweichen)
+                btf.zeige5x5Betriebsart(true, false) // A
+            else if (pFunktion == eFunktion.spur_folgen)
+                btf.zeige5x5Betriebsart(false, true) // B
+            else if (pFunktion == eFunktion.fahrplan)
+                btf.zeige5x5Betriebsart(true, true)  // A+B
+            else
+                btf.zeige5x5Betriebsart(false, false)
+             */
+        }
     }
 
     //% group="lokale Funktion" advanced=true
