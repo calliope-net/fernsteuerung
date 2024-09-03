@@ -139,7 +139,7 @@ namespace sender { // s-buttons.ts
         // cb2e||mkcs // von 'Fahren und Lenken' auf 'fernstarten Spurfolger' umschalten
         else if ((isModell(eModell.cb2e) || isModell(eModell.mkcs)) && isFunktion(eFunktion.m0_s0)) {
             setStatusFunktion(eFunktion.f10fernstartenSpurfolger) // 'Spur folgen' und B false ist die Ruhestellung
-            setStatusButtonA(false) // Ultraschall Sensor
+            setStatusButtonA(isModell(eModell.cb2e)) // Ultraschall Sensor bei Calli:bot an
             setStatusButtonB(false) // 'fernstarten Spurfolger' noch nicht aktiv; B muss MC-4 aktivieren
             // oder A muss 'fernstarten Abstand ausweichen' und MD-5 aktivieren
         }
