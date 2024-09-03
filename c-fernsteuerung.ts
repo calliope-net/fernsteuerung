@@ -5,7 +5,7 @@ namespace cb2 { // c-fernsteuerung.ts
     // ========== group="Fernsteuerung mit Joystick (reagiert auf Sensoren)" subcategory="Fernsteuerung"
 
     //% group="0 Fernsteuerung mit Joystick (reagiert auf Sensoren)" subcategory="Fernsteuerung"
-    //% block="Fahren und Lenken mit Joystick aus %buffer • lenken %lenkenProzent \\%" weight=8
+    //% block="0 Fahren und Lenken mit Joystick aus %buffer • lenken %lenkenProzent \\%" weight=8
     //% buffer.shadow=btf_receivedBuffer19
     //% lenkenProzent.min=10 lenkenProzent.max=90 lenkenProzent.defl=50
     export function fahreJoystick(buffer: Buffer, lenkenProzent = 50) {
@@ -53,7 +53,7 @@ namespace cb2 { // c-fernsteuerung.ts
     // ========== group="1 Programm fernstarten: Hindernis ausweichen" subcategory="Fernsteuerung"
 
     //% group="1 Programm fernstarten: Hindernis ausweichen" subcategory="Fernsteuerung"
-    //% block="Abstand Sensor Ereignis auslösen %buffer || • Start+ %start_cm cm • Pause %ms ms" weight=8
+    //% block="1 Abstand Sensor Ereignis auslösen %buffer || • Start+ %start_cm cm • Pause %ms ms" weight=8
     //% buffer.shadow=btf_receivedBuffer19
     //% start_cm.defl=5
     //% ms.defl=25
@@ -81,7 +81,7 @@ namespace cb2 { // c-fernsteuerung.ts
     }
 
     //% group="1 Programm fernstarten: Hindernis ausweichen" subcategory="Fernsteuerung"
-    //% block="Hindernis ausweichen %buffer <abstand_Stop> %abstand_Stop" weight=4
+    //% block="1 Hindernis ausweichen %buffer <abstand_Stop> %abstand_Stop" weight=4
     //% buffer.shadow=btf_receivedBuffer19
     // abstand_Stop.shadow="toggleYesNo"
     export function buffer_Hindernis_ausweichen(buffer: Buffer, abstand_Stop: boolean) {
@@ -106,7 +106,7 @@ namespace cb2 { // c-fernsteuerung.ts
     // ========== group="1 Programm fernstarten: Spur folgen" subcategory="Fernsteuerung"
 
     //% group="1 Programm fernstarten: Spur folgen" subcategory="Fernsteuerung"
-    //% block="Spur Sensor Ereignis auslösen %buffer || • Pause %ms ms • I²C %i2c" weight=7
+    //% block="1 Spur Sensor Ereignis auslösen %buffer || • Pause %ms ms • I²C %i2c" weight=7
     //% buffer.shadow=btf_receivedBuffer19
     //% start_cm.defl=5
     //% ms.defl=25
@@ -141,7 +141,7 @@ namespace cb2 { // c-fernsteuerung.ts
 
 
     //% group="1 Programm fernstarten: Spur folgen" subcategory="Fernsteuerung"
-    //% block="Spur folgen %buffer <links_hell> %links_hell <rechts_hell> %rechts_hell <abstand_Stop> %abstand_Stop" weight=3
+    //% block="1 Spur folgen %buffer <links_hell> %links_hell <rechts_hell> %rechts_hell <abstand_Stop> %abstand_Stop" weight=3
     //% buffer.shadow=btf_receivedBuffer19
     // links_hell.shadow=toggleYesNo
     // rechts_hell.shadow=toggleYesNo
@@ -167,7 +167,7 @@ namespace cb2 { // c-fernsteuerung.ts
     let n_fahrplanBuffer5Strecken_gestartet = false
 
     //% group="2 Fahrplan (5 Teilstrecken) empfangen" subcategory="Fernsteuerung"
-    //% block="Fahren Strecke 1-5 (MS:1ABCD) aus %buffer • Start Bit %startBit" weight=4
+    //% block="2 Fahren Strecke 1-5 (MS:1ABCD) aus %buffer • Start Bit %startBit" weight=4
     //% buffer.shadow=btf_receivedBuffer19
     //% startBit.defl=btf.e3aktiviert.m1
     export function fahrplanBuffer5Strecken(buffer: Buffer, startBit: btf.e3aktiviert) {

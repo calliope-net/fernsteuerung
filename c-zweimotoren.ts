@@ -228,7 +228,7 @@ namespace cb2 { // c-zweimotoren.ts
     // ========== group="0 Fernsteuerung 2 Motoren (reagiert auf Sensoren)" subcategory="2 Motoren"
 
     //% group="0 Fernsteuerung 2 Motoren (reagiert auf Sensoren)" subcategory="2 Motoren"
-    //% block="Fahren 2 Motoren (M:AB) aus %buffer" weight=8
+    //% block="0 Fahren 2 Motoren (M:AB) aus %buffer" weight=8
     //% buffer.shadow=btf_receivedBuffer19
     export function fahre2Motoren(buffer: Buffer) {
 
@@ -281,7 +281,7 @@ namespace cb2 { // c-zweimotoren.ts
     let n_fahrplanBuffer2x2Motoren_gestartet = false
 
     //% group="2 Fahrplan (2 Teilstrecken • 2 Motoren) empfangen" subcategory="2 Motoren"
-    //% block="Fahren 2 Strecken mit 2 Motoren (MS:AB CD) aus %buffer • Start Bit %startBit || • Encoder %checkEncoder" weight=4
+    //% block="2 Fahren 2 Strecken mit 2 Motoren (MS:AB CD) aus %buffer • Start Bit %startBit || • Encoder %checkEncoder" weight=4
     //% buffer.shadow=btf_receivedBuffer19
     //% startBit.defl=btf.e3aktiviert.ma
     //% checkEncoder.shadow=toggleYesNo checkEncoder.defl=1
