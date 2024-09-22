@@ -207,10 +207,10 @@ namespace cb2 { // c-zweimotoren.ts
                     motorA = c_MotorStop
                     writeMotoren128(c_MotorStop, 0) // 0: keine Änderung bei dem Motor
                 }
-                if (motorB != c_MotorStop && Math.abs(aEncoderWerte[1]) > encoderImpulseB) {
+                /* if (motorB != c_MotorStop && Math.abs(aEncoderWerte[1]) > encoderImpulseB) {
                     motorB = c_MotorStop
                     writeMotoren128(0, c_MotorStop)
-                }
+                } */
 
                 // Pause eventuell bei hoher Geschwindigkeit motor verringern
                 // oder langsamer fahren wenn Rest strecke kleiner wird

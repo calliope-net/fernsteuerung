@@ -97,7 +97,7 @@ namespace sender { // s-fahrplan.ts
         btf.setBetriebsart(buffer, btf.e0Betriebsart.p2Fahrplan)
         btf.setByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo, count) // m0-Servo Anzahl Durchläufe
 
-        if (p1 && p1.length == 6) buffer.write(btf.eBufferPointer.ma, p1) // 7-8-9-0-11-12
+        if (p1 && p1.length == 6) buffer.write(btf.eBufferPointer.ma, p1) // 7-8-9-10-11-12
         if (p2 && p2.length == 6) buffer.write(btf.eBufferPointer.mc, p2) // 13-14-15-16-17-18
     }
 
