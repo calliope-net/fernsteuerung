@@ -80,7 +80,7 @@ namespace cb2 { // c-zweimotoren.ts
     // ========== group="2 Motoren (-100 ↓ 0 ↑ +100) nach Zeit (1.0 - 25.5 s) steuern" subcategory="2 Motoren"
 
     //% group="Strecke mit 2 Motoren nach Zeit (1.0 - 25.5 s) fahren" subcategory="2 Motoren"
-    //% block="2 Motoren (Picker) links %motorA \\% • rechts %motorB \\% Zeit %zehntelsekunden ⅒s || Stop %abstandsSensor bei Abstand < (cm) %abstand Spursensor %spurSensor" weight=6
+    //% block="2 Motoren (Picker) links %motorA \\% • rechts %motorB \\% Zeit %zehntelsekunden ⅒s || Stop %abstandsSensor bei Abstand < (cm) %abstand Spur Sensor %spurSensor" weight=6
     //% motorA.shadow=speedPicker motorA.defl=50
     //% motorB.shadow=speedPicker motorB.defl=-50
     //% zehntelsekunden.shadow=cb2_zehntelsekunden
@@ -97,7 +97,7 @@ namespace cb2 { // c-zweimotoren.ts
     // ========== group="2 Motoren (1 ↓ 128 ↑ 255) nach Zeit (1.0 - 25.5 s) steuern" subcategory="2 Motoren"
 
     //% group="Strecke mit 2 Motoren nach Zeit (1.0 - 25.5 s) fahren" subcategory="2 Motoren"
-    //% block="2 Motoren (1↓128↑255) links %motorA rechts %motorB Zeit %zehntelsekunden ⅒s || Stop %abstandsSensor bei Abstand < (cm) %abstand Spursensor %spurSensor" weight=5
+    //% block="2 Motoren (1↓128↑255) links %motorA rechts %motorB Zeit %zehntelsekunden ⅒s || Stop %abstandsSensor bei Abstand < (cm) %abstand Spur Sensor %spurSensor" weight=5
     //% motorA.min=1 motorA.max=255 motorA.defl=192
     //% motorB.min=1 motorB.max=255 motorB.defl=64
     //% zehntelsekunden.min=10 zehntelsekunden.max=255 zehntelsekunden.defl=25
