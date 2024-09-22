@@ -44,16 +44,17 @@ namespace receiver { // r-strecken.ts
             btf.resetTimer()
 
             if (checkEncoder && encoderRegisterEvent()) {
-                let timeout_Encoder = 100 // 20 s Timeout wenn Encoder nicht zählt
+                let timeout_Encoder = 10 // 2 s Timeout wenn Encoder nicht zählt
+                // let timeout_EncoderCounter = n_EncoderCounter // zum Test ob sich der Wet ändert
 
-                encoderStartStrecke(true, strecke, impulse)
+                encoderStartStrecke(true, strecke, impulse) // stellt n_EncoderCounter auf 0
                 pinServo16(servo)
                 selectMotor(motor)
 
                 while (n_EncoderAutoStop) //
                 {
-                    if (timeout_Encoder-- <= 0) {
-                        n_hasEncoder = false // bei ersten 20s timeout false, nächster Aufruf zählt dann nach Zeit
+                    if (timeout_Encoder-- <= 0 && n_EncoderCounter < 10) { // kein Impuls nach 2s: kein Encoder vorhanden
+                        n_hasEncoder = false // bei ersten 2s timeout false, nächster Aufruf zählt dann nach Zeit
                         sensor_color = Colors.Red
                         break
                     }
@@ -168,7 +169,7 @@ namespace receiver { // r-strecken.ts
 
             n_EncoderEventRegistered = true
         }
-        return n_EncoderEventRegistered
+        return n_EncoderEventRegistered && n_hasEncoder
     }
 
     //% group="Encoder" subcategory="Strecken"
