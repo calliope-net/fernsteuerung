@@ -1,6 +1,6 @@
 
 namespace sender { // s-fernsteuerung.ts
-  
+
 
     // ========== group="0 fahren und lenken mit Joystick" subcategory="Fernsteuerung"
 
@@ -83,6 +83,21 @@ namespace sender { // s-fernsteuerung.ts
     }
 
 
+    //% group="0 Fernsteuerung Kran" subcategory="Fernsteuerung"
+    //% block="0 Kran %buffer MD Elektromagnet %magnetOn %magnet_128" weight=3
+    //% buffer.shadow=btf_sendBuffer19
+    //% magnetOn.shadow=toggleOnOff
+    //% magnet_128.min=1 magnet_128.max=255 magnet_128.defl=128
+    export function send00MDKranMagnet(buffer: Buffer, magnetOn: boolean, magnet_128: number) {
+        btf.setBetriebsart(buffer, btf.e0Betriebsart.p0Fahren)
+        if (magnetOn)
+            btf.setByte(buffer, btf.eBufferPointer.md, btf.eBufferOffset.b0_Motor, magnet_128)
+        else
+            btf.setByte(buffer, btf.eBufferPointer.md, btf.eBufferOffset.b0_Motor, 128)
+        btf.setaktiviert(buffer, btf.e3aktiviert.md, magnetOn)
+    }
+
+
 
     // ========== group="1 Programm fernstarten" subcategory="Fernsteuerung"
 
@@ -129,7 +144,7 @@ namespace sender { // s-fernsteuerung.ts
         btf.setByte(buffer, btf.eBufferPointer.md, btf.eBufferOffset.b1_Servo, rServo)
         btf.setByte(buffer, btf.eBufferPointer.md, btf.eBufferOffset.b2_Fahrstrecke, pause_zs)
 
-       // btf.setSensor(buffer, btf.eBufferPointer.mc, btf.eSensor.b6Abstand, stop)
+        // btf.setSensor(buffer, btf.eBufferPointer.mc, btf.eSensor.b6Abstand, stop)
         btf.setAbstand(buffer, abstand)
     }
 
