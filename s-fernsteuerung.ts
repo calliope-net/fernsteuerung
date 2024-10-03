@@ -84,7 +84,7 @@ namespace sender { // s-fernsteuerung.ts
 
 
     //% group="0 Fernsteuerung Kran" subcategory="Fernsteuerung"
-    //% block="0 Kran %buffer MD Elektromagnet %magnetOn %magnet_128" weight=3
+    //% block="0 Kran %buffer MD Elektromagnet %magnetOn 128..255 %magnet_128" weight=3
     //% buffer.shadow=btf_sendBuffer19
     //% magnetOn.shadow=toggleOnOff
     //% magnet_128.min=1 magnet_128.max=255 magnet_128.defl=128
