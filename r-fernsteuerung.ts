@@ -74,6 +74,8 @@ namespace receiver { // r-fernsteuerung.ts
                 receiver.qwiicMotorChipPower(receiver.eQwiicMotorChip.ab, true)
                 receiver.qwiicMotor128(receiver.eQwiicMotor.mb, btf.getByte(buffer, btf.eBufferPointer.mb, btf.eBufferOffset.b0_Motor))
             }
+
+            
             // Qwiic Motor C D
             if (btf.getaktiviert(buffer, btf.e3aktiviert.mc)) {
                 receiver.qwiicMotorChipPower(receiver.eQwiicMotorChip.cd, true)
@@ -81,6 +83,9 @@ namespace receiver { // r-fernsteuerung.ts
             }
             if (btf.getaktiviert(buffer, btf.e3aktiviert.md)) {
                 receiver.qwiicMotorChipPower(receiver.eQwiicMotorChip.cd, true)
+                // receiver.qwiicMotor128(receiver.eQwiicMotor.md, btf.getByte(buffer, btf.eBufferPointer.md, btf.eBufferOffset.b0_Motor))
+            }
+            if (a_QwiicMotorChipPower[receiver.eQwiicMotorChip.cd]) {
                 receiver.qwiicMotor128(receiver.eQwiicMotor.md, btf.getByte(buffer, btf.eBufferPointer.md, btf.eBufferOffset.b0_Motor))
             }
         }

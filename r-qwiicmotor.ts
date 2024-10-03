@@ -7,7 +7,7 @@ namespace receiver { // r-qwiicmotor.ts
     // speichert die aktuellen Werte mit Index
     let a_QwiicMotorChipConnected = [false, false] // Index eQwiicMotorChip
     let a_QwiicMotorChipReady = [false, false] // Index eQwiicMotorChip
-    let a_QwiicMotorChipPower = [false, false] // Index eQwiicMotorChip
+    export let a_QwiicMotorChipPower = [false, false] // Index eQwiicMotorChip
     export let a_QwiicMotorSpeed = [c_MotorStop, c_MotorStop, c_MotorStop, c_MotorStop] // Index eQwiicMotor
 
 
