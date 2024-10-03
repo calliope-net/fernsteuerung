@@ -87,7 +87,7 @@ namespace sender { // s-fernsteuerung.ts
     //% block="0 Kran %buffer MD Elektromagnet %magnetOn 128..255 %magnet_128_255" weight=3
     //% buffer.shadow=btf_sendBuffer19
     //% magnetOn.shadow=toggleOnOff
-    //% magnet_128_255.min=128 magnet_128_255.max=255 magnet_128_255.defl=128
+    //% magnet_128_255.min=128 magnet_128_255.max=255 magnet_128_255.defl=240
     export function send00MDKranMagnet(buffer: Buffer, magnetOn: boolean, magnet_128_255: number) {
         btf.setBetriebsart(buffer, btf.e0Betriebsart.p0Fahren)
         if (magnetOn)
