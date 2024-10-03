@@ -94,7 +94,7 @@ namespace sender { // s-fernsteuerung.ts
             btf.setByte(buffer, btf.eBufferPointer.md, btf.eBufferOffset.b0_Motor, magnet_128_255)
         else
             btf.setByte(buffer, btf.eBufferPointer.md, btf.eBufferOffset.b0_Motor, 128)
-        btf.setaktiviert(buffer, btf.e3aktiviert.md, true) // muss immer true sein, damit auch 128 an MotorChip gesendet wird
+        btf.setaktiviert(buffer, btf.e3aktiviert.md, magnetOn) // muss immer true sein, damit auch 128 an MotorChip gesendet wird
     }
 
 
