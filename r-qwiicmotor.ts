@@ -10,7 +10,7 @@ namespace receiver { // r-qwiicmotor.ts
     let a_QwiicMotorChipPower = [false, false] // Index eQwiicMotorChip
     export let a_QwiicMotorSpeed = [c_MotorStop, c_MotorStop, c_MotorStop, c_MotorStop] // Index eQwiicMotor
 
-    export function qwiicMotorChipPowerOn(pMotorChip: eQwiicMotorChip) {
+    export function qwiicMotorChipPowerOn(pMotorChip: eQwiicMotorChip) { // r-fernsteuerung.ts
         return a_QwiicMotorChipPower[pMotorChip]
     }
 
@@ -150,7 +150,24 @@ namespace receiver { // r-qwiicmotor.ts
     //% block="Q Motor %pMotorChip Power %pON" weight=3
     //% pON.shadow="toggleOnOff"
     export function qwiicMotorChipPower(pMotorChip: eQwiicMotorChip, pON: boolean) {
-        if (qwiicMotorChipReady(pMotorChip) && pON !== a_QwiicMotorChipPower[pMotorChip]) {
+        if (qwiicMotorChipReady(pMotorChip)) {
+            // true Motor ON blau, OFF Violet
+            let qcolor: eQwiicMotorRGBColor = a_QwiicMotorChipPower[pMotorChip] ? eQwiicMotorRGBColor.poweron_blue : eQwiicMotorRGBColor.poweroff_violet
+            // qwiicMotorRGBLEDs(pMotorChip, a_QwiicMotorChipPower[pMotorChip] ? eQwiicMotorRGBColor.poweron_blue : eQwiicMotorRGBColor.poweroff_violet)
+
+            if (a_QwiicMotorChipPower[pMotorChip] !== pON) { // XOR
+                a_QwiicMotorChipPower[pMotorChip] = pON
+                if (!i2cWriteBuffer(pMotorChip, [eQwiicMotorI2CRegister.DRIVER_ENABLE, a_QwiicMotorChipPower[pMotorChip] ? 0x01 : 0x00])) {
+                    // false
+                    qcolor = eQwiicMotorRGBColor.notready_orange
+                    // qwiicMotorRGBLEDs(pMotorChip, eQwiicMotorRGBColor.notready_orange)
+                }
+            }
+            qwiicMotorRGBLEDs(pMotorChip, qcolor)
+        }
+
+
+        /* if (qwiicMotorChipReady(pMotorChip) && pON !== a_QwiicMotorChipPower[pMotorChip]) {
             a_QwiicMotorChipPower[pMotorChip] = pON
             if (i2cWriteBuffer(pMotorChip, [eQwiicMotorI2CRegister.DRIVER_ENABLE, a_QwiicMotorChipPower[pMotorChip] ? 0x01 : 0x00])) {
                 // true Motor ON blau, OFF Violet
@@ -159,14 +176,13 @@ namespace receiver { // r-qwiicmotor.ts
                 // false
                 qwiicMotorRGBLEDs(pMotorChip, eQwiicMotorRGBColor.notready_orange)
             }
-        }
+        } */
     }
 
     //% group="Motor A B C D (I²C: 0x5D, 0x5E)" subcategory="Qwiic" color=#5FA38F
     //% block="Q Motor %pMotor (1 ↓ 128 ↑ 255) %speed (128 ist STOP)" weight=2
     //% speed.min=0 speed.max=255 speed.defl=128
     export function qwiicMotor128(pMotor: eQwiicMotor, speed: number) {
-        let e = false
         if (btf.between(speed, 1, 255)) {
             if (speed != a_QwiicMotorSpeed[pMotor]) { // sendet nur, wenn der Wert sich ändert
                 a_QwiicMotorSpeed[pMotor] = speed
@@ -174,6 +190,7 @@ namespace receiver { // r-qwiicmotor.ts
                 let chip: eQwiicMotorChip = (pMotor == eQwiicMotor.mc || pMotor == eQwiicMotor.md) ? eQwiicMotorChip.cd : eQwiicMotorChip.ab
 
                 if (qwiicMotorChipReady(chip) && a_QwiicMotorChipPower[chip]) {
+                    let e = false
 
                     if (pMotor == eQwiicMotor.ma || pMotor == eQwiicMotor.mc)
                         e = i2cWriteBuffer(chip, [eQwiicMotorI2CRegister.MA_DRIVE, speed])
