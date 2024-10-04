@@ -10,8 +10,12 @@ namespace receiver { // r-qwiicmotor.ts
     let a_QwiicMotorChipPower = [false, false] // Index eQwiicMotorChip
     export let a_QwiicMotorSpeed = [c_MotorStop, c_MotorStop, c_MotorStop, c_MotorStop] // Index eQwiicMotor
 
-    export function qwiicMotorChipPowerOn(pMotorChip: eQwiicMotorChip) { // r-fernsteuerung.ts
+    /* export function qwiicMotorChipPowerOn(pMotorChip: eQwiicMotorChip) { // r-fernsteuerung.ts
         return a_QwiicMotorChipPower[pMotorChip]
+    } */
+
+    export function qwiicMotorChipConnected(pMotorChip: eQwiicMotorChip) { // r-fernsteuerung.ts
+        return a_QwiicMotorChipConnected[pMotorChip]
     }
 
     // I²C Register Motor Chip
