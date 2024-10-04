@@ -110,7 +110,7 @@ namespace receiver { // r-sensorevents.ts
             //if (!a_raiseSpurEvent_gestartet[index])
             //    spurSensorRegisterEvents() 
 
-            let t = input.runningTime() - n_SpurTimer // ms seit letztem raiseAbstandEvent
+            let t = input.runningTime() - n_SpurTimer // ms seit letztem raiseSpurEvent
             if (t < ms)
                 basic.pause(t) // restliche Zeit-Differenz warten
             n_SpurTimer = input.runningTime()
@@ -215,7 +215,7 @@ namespace receiver { // r-sensorevents.ts
     //% start_cm.defl=35
     //% ms.defl=25
     //% inlineInputMode=inline
-    export function raiseAbstandEvent(on: boolean, stop_cm: number, start_cm: number, ms = 25, abstand_Sensor?: boolean, index = 0) {
+    export function raiseAbstandEvent(on: boolean, stop_cm: number, start_cm: number, ms = 25, abstand_Sensor?: boolean, index = 0) { // bei Aufruf mit buffer ist index=1 (r-fernsteuerung.ts)
         n_AbstandSensor = (abstand_Sensor == undefined) ? on : abstand_Sensor
 
         //if (on && n_QwiicUltrasonicConnected == undefined) {
@@ -225,7 +225,7 @@ namespace receiver { // r-sensorevents.ts
         if (on && selectAbstandSensorConnected()) {
 
             if (!a_raiseAbstandEvent_gestartet[index])
-                selectRanging(true) // nur einmal am Anfang
+                selectRanging(true) // nur Laser Sensor StartRanging einmal am Anfang
 
             let t = input.runningTime() - n_AbstandTimer // ms seit letztem raiseAbstandEvent
             if (t < ms)
@@ -244,7 +244,7 @@ namespace receiver { // r-sensorevents.ts
             a_raiseAbstandEvent_gestartet[index] = true
         }
         else if (a_raiseAbstandEvent_gestartet[index]) {
-            selectRanging(false)
+            selectRanging(false) // nur Laser Sensor StopRanging
             a_raiseAbstandEvent_gestartet[index] = false
             abstandEventHandler(false, 0) // kein Stop Ereignis auslösen am Ende
         }
