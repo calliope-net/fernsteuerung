@@ -43,7 +43,7 @@ namespace receiver { // r-fernsteuerung.ts
                 let bRichtung_vor = false
                 let cmAbstandSensor = 0
                 // zuerst Test ob Sensor aktiv, erst danach Events registrieren
-                let bSpur = btf.getSensor(buffer, btf.eBufferPointer.m0, btf.eSensor.b5Spur) && spurSensorRegisterEvents()
+                let bSpur = btf.getSensor(buffer, btf.eBufferPointer.m0, btf.eSensor.b5Spur) // hier keine Spur-Events && spurSensorRegisterEvents()
 
                 // nur LEDs schalten und Abstandssensor lesen
                 if (bAbstand) {
