@@ -53,13 +53,15 @@ namespace receiver { // r-fernsteuerung.ts
                     cmAbstandSensor = selectAbstand_cm(true) // immer messen, auch bei Stop, damit der kleiner werdende Wert erkannt wird
                 }
                 else if (bSpur) { // nur einmalig
-                    btf.setLedColors(btf.eRgbLed.b, Colors.White, getSpurLinks(eDH.hell)) // pinSpurlinks(eDH.hell)
-                    btf.setLedColors(btf.eRgbLed.c, Colors.White, getSpurRechts(eDH.hell)) // pinSpurrechts(eDH.hell)
+                    btf.setLedColors(btf.eRgbLed.b, getSpurLinks(eDH.hell) ? Colors.White : 0x404040)
+                    btf.setLedColors(btf.eRgbLed.c, getSpurRechts(eDH.hell) ? Colors.White : 0x404040)
+                    // btf.setLedColors(btf.eRgbLed.b, Colors.White, getSpurLinks(eDH.hell)) // pinSpurlinks(eDH.hell)
+                    // btf.setLedColors(btf.eRgbLed.c, Colors.White, getSpurRechts(eDH.hell)) // pinSpurrechts(eDH.hell)
                 }
-                else { // Spur auch anzeigen, wenn Sensor nicht aktiv (dunkelweiß)
+                /* else { // Spur auch anzeigen, wenn Sensor nicht aktiv (dunkelweiß)
                     btf.setLedColors(btf.eRgbLed.b, 0x404040, getSpurLinks(eDH.hell)) // pinSpurlinks(eDH.hell)
                     btf.setLedColors(btf.eRgbLed.c, 0x404040, getSpurRechts(eDH.hell)) //pinSpurrechts(eDH.hell)
-                }
+                } */
 
                 // Abstandssensor auswerten
                 if (bAbstand && bRichtung_vor && (cmAbstandSensor <= btf.getAbstand(buffer)))
