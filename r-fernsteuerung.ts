@@ -3,7 +3,30 @@ namespace receiver { // r-fernsteuerung.ts
 
     // ========== group="0 Fernsteuerung mit Joystick (reagiert auf Sensoren)" subcategory="Fernsteuerung"
 
-    let n_AbstandStop = false
+    //% group="0 Fernsteuerung mit Joystick (reagiert auf Sensoren)" subcategory="Fernsteuerung"
+    //% block="0 Abstand Motor Stop auslösen %buffer || • Pause %ms ms" weight=8
+    //% buffer.shadow=btf_receivedBuffer19
+    //% ms.defl=25
+    export function buffer_raiseAbstandMotorStop(buffer: Buffer, ms = 25) {
+        if (buffer) {
+            let on: boolean
+            let stop_cm: number
+
+            on = btf.isBetriebsart(buffer, btf.e0Betriebsart.p0Fahren)          // Betriebsart 00 mit Joystick fernsteuern
+                && btf.getaktiviert(buffer, btf.e3aktiviert.m0)                 // Motor M0+Servo M1 (Fahren und Lenken)
+                && btf.getSensor(buffer, btf.eBufferPointer.m0, btf.eSensor.b6Abstand) // Abstand Sensor aktiviert
+                && btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor) > c_MotorStop // Fahrtrichtung vorwärts
+
+            stop_cm = btf.getAbstand(buffer)
+
+            if (raiseAbstandMotorStop(on, stop_cm, ms))
+                n_AbstandStop = true
+        }
+    }
+
+
+
+    let n_AbstandStop = false // außerhalb der function, damit der Wert gespeichert bleibt
     let n_SpurStop = false
 
     //% group="0 Fernsteuerung mit Joystick (reagiert auf Sensoren)" subcategory="Fernsteuerung"
@@ -144,7 +167,7 @@ namespace receiver { // r-fernsteuerung.ts
                 btf.getAbstand(buffer),
                 btf.getAbstand(buffer) + start_cm,
                 ms,
-                undefined, // btf.getSensor(buffer, btf.eBufferPointer.mc, btf.eSensor.b6Abstand),
+                // undefined, // btf.getSensor(buffer, btf.eBufferPointer.mc, btf.eSensor.b6Abstand),
                 1
             )
         }

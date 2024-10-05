@@ -150,7 +150,7 @@ namespace receiver { // r-sensorevents.ts
 
 
 
-    // ========== group="Ultraschall Sensor" subcategory="Sensoren"
+    // ========== group="Ultraschall oder Laser Distance Sensor" subcategory="Sensoren"
 
     //% group="Ultraschall oder Laser Distance Sensor" subcategory="Sensoren"
     //% block="Abstand Sensor angeschlossen" weight=8
@@ -199,14 +199,31 @@ namespace receiver { // r-sensorevents.ts
     }
 
 
+    // aufgerufen von r-fernsteuerung.ts
+    export function raiseAbstandMotorStop(on: boolean, stop_cm: number, ms = 25) {
+        if (on && selectAbstandSensorConnected()) {
 
+            let t = input.runningTime() - n_AbstandTimer // ms seit letztem raiseAbstandMotorStop
+            if (t < ms)
+                basic.pause(t) // restliche Zeit-Differenz warten
+            n_AbstandTimer = input.runningTime()
 
-    // ========== group="Ultraschall Sensor" subcategory="Sensoren"
+            let cm = selectAbstand_cm(true)
+
+            if (cm < stop_cm) {
+                selectMotor(c_MotorStop)
+                return true
+            } else
+                return false
+        } else
+            return false
+    }
+
 
     let a_raiseAbstandEvent_gestartet = [false, false]
     let n_AbstandTimer = input.runningTime()
-    export let n_AbstandStop = false // letzter Status
-    export let n_AbstandSensor = false // Sensor aktiviert (im Buffer bzw. Knopf A)
+    let n_AbstandStop = false // letzter Status
+    let n_AbstandSensor = false // Sensor aktiviert (im Buffer bzw. Knopf A)
 
     //% group="Ultraschall oder Laser Distance Sensor" subcategory="Sensoren"
     //% block="Abstand Sensor Ereignis auslösen %on • Stop %stop_cm cm • Start %start_cm cm || • Pause %ms ms" weight=3
@@ -215,8 +232,9 @@ namespace receiver { // r-sensorevents.ts
     //% start_cm.defl=35
     //% ms.defl=25
     //% inlineInputMode=inline
-    export function raiseAbstandEvent(on: boolean, stop_cm: number, start_cm: number, ms = 25, abstand_Sensor?: boolean, index = 0) { // bei Aufruf mit buffer ist index=1 (r-fernsteuerung.ts)
-        n_AbstandSensor = (abstand_Sensor == undefined) ? on : abstand_Sensor
+    export function raiseAbstandEvent(on: boolean, stop_cm: number, start_cm: number, ms = 25, index = 0) { //abstand_Sensor?: boolean, bei Aufruf mit buffer ist index=1 (r-fernsteuerung.ts)
+        // n_AbstandSensor = (abstand_Sensor == undefined) ? on : abstand_Sensor
+        n_AbstandSensor = on
 
         //if (on && n_QwiicUltrasonicConnected == undefined) {
         //    selectAbstand(true) // Test ob connected
