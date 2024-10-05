@@ -85,6 +85,8 @@ namespace receiver { // r-fernsteuerung.ts
                 }
                 else {
                     selectMotor(c_MotorStop)
+                    if (n_AbstandStop)
+                        btf.setLedColors(btf.eRgbLed.b, Colors.Red)
                 }
             }
 
