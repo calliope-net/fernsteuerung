@@ -113,7 +113,7 @@ namespace btf { // b-enums.ts
     export enum e0Schalter {
         //% block="0 Hupe"
         b0 = 0x01,
-        //% block="1 Magnet"
+        //% block="1 Relais"
         b1 = 0x02,
         //% block="2 Licht"
         b2 = 0x04,
