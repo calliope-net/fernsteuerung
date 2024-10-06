@@ -25,7 +25,7 @@ namespace receiver { // r-strecken.ts
 
     //% group="Geschwindigkeit (1 ↓ 128 ↑ 255), Winkel (1 ↖ 16 ↗ 31)" subcategory="Strecken"
     //% block="Fahren (1↓128↑255) %motor Lenken (1↖16↗31) %servo Länge %strecke cm\\|⅒s || Stop %abstandsSensor bei Abstand < (cm) %abstand Impulse %impulse Encoder %checkEncoder" weight=5
-    //% motor.min=1 motor.max=255 motor.defl=220
+    //% motor.min=1 motor.max=255 motor.defl=153
     //% servo.min=1 servo.max=31 servo.defl=29
     //% strecke.min=10 strecke.max=255 strecke.defl=153
     //% abstandsSensor.shadow=toggleOnOff
@@ -43,7 +43,7 @@ namespace receiver { // r-strecken.ts
 
             btf.resetTimer()
 
-            if (checkEncoder && encoderRegisterEvent()) {
+            if (checkEncoder && encoderRegisterEvent()) { // n_EncoderEventRegistered && n_hasEncoder
                 let timeout_Encoder = 10 // 2 s Timeout wenn Encoder nicht zählt
                 // let timeout_EncoderCounter = n_EncoderCounter // zum Test ob sich der Wet ändert
 
