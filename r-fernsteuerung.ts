@@ -93,15 +93,17 @@ namespace receiver { // r-fernsteuerung.ts
 
                 if (bSpur && getSpurLinks(eDH.dunkel)) {
                     n_SpurStop = true
-                    ledb = Colors.White
+                    ledb = Colors.White // dunkel
+                    ledc = getSpurRechts(eDH.dunkel) ? Colors.White : 0x404040
                 } else if (bSpur && getSpurRechts(eDH.dunkel)) {
                     n_SpurStop = true
-                    ledc = Colors.White
+                    ledb = 0x404040 // hell
+                    ledc = Colors.White // dunkel
                 } else if (bSpur) { // hell hell
                     ledb = 0x404040
                     ledc = 0x404040
                 } else              // !bSpur
-                    n_SpurStop = false
+                    n_SpurStop = false // erst wieder fahren, nachdem bSpur aus geschaltet wurde
 
 
                 if (n_AbstandStop) { // aus dem Ereignis
@@ -116,11 +118,8 @@ namespace receiver { // r-fernsteuerung.ts
                     // Motor M0+Servo M1 (Fahren und Lenken)
                     selectMotor(btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor))
                     pinServo16(btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo))
-                }
-                else {
+                } else {
                     selectMotor(c_MotorStop)
-                    //if (n_AbstandStop)
-                    //    btf.setLedColors(btf.eRgbLed.b, Colors.Red)
                 }
                 btf.setLedColors(btf.eRgbLed.b, ledb)
                 btf.setLedColors(btf.eRgbLed.c, ledc)
