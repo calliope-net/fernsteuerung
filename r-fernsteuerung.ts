@@ -51,7 +51,7 @@ namespace receiver { // r-fernsteuerung.ts
                 let bSpur = btf.getSensor(buffer, btf.eBufferPointer.m0, btf.eSensor.b5Spur) // hier keine Spur-Events && spurSensorRegisterEvents()
 
                 // nur LEDs schalten und Abstandssensor lesen
-                if (bAbstand) {
+                /* if (bAbstand) {
                     // btf.setLedColors(btf.eRgbLed.b, 0x808000, bAbstand) // nicht blinken, bringt I²C Sensor durcheinender
                     // btf.setLedColors(btf.eRgbLed.c, 0x404040, bSpur)
                     //bRichtung_vor = btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor) > c_MotorStop // Fahrtrichtung vorwärts
@@ -67,7 +67,7 @@ namespace receiver { // r-fernsteuerung.ts
                     // btf.setLedColors(btf.eRgbLed.c, Colors.White, getSpurRechts(eDH.hell)) // pinSpurrechts(eDH.hell)
                     ledb = getSpurLinks(eDH.hell) ? 0x404040 : Colors.White
                     ledc = getSpurRechts(eDH.hell) ? 0x404040 : Colors.White
-                }
+                } */
                 /* else {
                     btf.setLedColors(btf.eRgbLed.b, Colors.Off, false)
                     btf.setLedColors(btf.eRgbLed.c, Colors.Off, false)
@@ -83,12 +83,34 @@ namespace receiver { // r-fernsteuerung.ts
                 } else if (!bAbstand || !bRichtung_vor)
                     n_AbstandStop = false */
 
+
                 // Spursensor auswerten
-                if (bSpur && (getSpurLinks(eDH.dunkel) || getSpurRechts(eDH.dunkel))) { //  if (bSpur && (pinSpurlinks(eDH.dunkel) || pinSpurrechts(eDH.dunkel)))
+                /* if (bSpur && (getSpurLinks(eDH.dunkel) || getSpurRechts(eDH.dunkel))) { //  if (bSpur && (pinSpurlinks(eDH.dunkel) || pinSpurrechts(eDH.dunkel)))
                     n_SpurStop = true
                     ledc = Colors.White
                 } else if (!bSpur)
+                    n_SpurStop = false */
+
+                if (bSpur && getSpurLinks(eDH.dunkel)) {
+                    n_SpurStop = true
+                    ledb = Colors.White
+                } else if (bSpur && getSpurRechts(eDH.dunkel)) {
+                    n_SpurStop = true
+                    ledc = Colors.White
+                } else if (bSpur) { // hell hell
+                    ledb = 0x404040
+                    ledc = 0x404040
+                } else              // !bSpur
                     n_SpurStop = false
+
+
+                if (n_AbstandStop) { // aus dem Ereignis
+                    ledb = Colors.Red
+                } else if (bAbstand) {
+                    ledb = 0x808000
+                }
+
+
 
                 if (!n_AbstandStop && !n_SpurStop) {
                     // Motor M0+Servo M1 (Fahren und Lenken)
