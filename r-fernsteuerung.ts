@@ -4,7 +4,7 @@ namespace receiver { // r-fernsteuerung.ts
     // ========== group="0 Fernsteuerung mit Joystick (reagiert auf Sensoren)" subcategory="Fernsteuerung"
 
     //% group="0 Fernsteuerung mit Joystick (reagiert auf Sensoren)" subcategory="Fernsteuerung"
-    //% block="0 Abstand Motor Stop auslösen %buffer || • Pause %ms ms" weight=8
+    //% block="0 Abstand Sensor Stop auslösen %buffer || • Pause %ms ms" weight=8
     //% buffer.shadow=btf_receivedBuffer19
     //% ms.defl=25
     export function buffer_raiseAbstandMotorStop(buffer: Buffer, ms = 25) {
@@ -290,8 +290,9 @@ namespace receiver { // r-fernsteuerung.ts
                             btf.getByte(buffer, iBufferPointer, btf.eBufferOffset.b2_Fahrstrecke),
                             btf.getSensor(buffer, iBufferPointer, btf.eSensor.b6Abstand),
                             btf.getAbstand(buffer),
-                            btf.getSensor(buffer, iBufferPointer, btf.eSensor.b5Spur),
-                            btf.getSensor(buffer, iBufferPointer, btf.eSensor.b7Impulse)
+                            //btf.getSensor(buffer, iBufferPointer, btf.eSensor.b5Spur),
+                            btf.getSensor(buffer, iBufferPointer, btf.eSensor.b7Impulse),
+                            true
                         )
                     } // for iBufferPointer
                 }

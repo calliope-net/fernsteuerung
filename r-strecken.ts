@@ -5,18 +5,18 @@ namespace receiver { // r-strecken.ts
     // ========== group="Geschwindigkeit (-100 ↓ 0 ↑ +100), Winkel (0° ↖ 90° ↗ 180°)" subcategory="Strecken"
 
     //% group="Geschwindigkeit (-100 ↓ 0 ↑ +100), Winkel (0° ↖ 90° ↗ 180°)" subcategory="Strecken"
-    //% block="Fahren %motor \\% Lenken %servo ° Länge %strecke cm\\|⅒s || Stop %abstandsSensor bei Abstand < (cm) %abstand Spursensor %spurSensor Impulse %impulse Encoder %checkEncoder" weight=7
+    //% block="Fahren %motor \\% Lenken %servo ° Länge %strecke cm\\|⅒s || Stop %abstandsSensor bei Abstand < (cm) %abstand Impulse %impulse Encoder %checkEncoder" weight=7
     //% motor.shadow=speedPicker motor.defl=50
     //% servo.shadow=protractorPicker servo.defl=90
     //% strecke.min=10 strecke.max=255 strecke.defl=20
     //% abstandsSensor.shadow=toggleOnOff
     //% abstand.min=10 abstand.max=50 abstand.defl=20
-    //% spurSensor.shadow=toggleOnOff
+    // spurSensor.shadow=toggleOnOff
     //% impulse.shadow=toggleOnOff
     //% checkEncoder.shadow=toggleYesNo checkEncoder.defl=1
     //% inlineInputMode=inline
-    export function fahreStreckePicker(motor: number, servo: number, strecke: number, abstandsSensor = true, abstand = 20, spurSensor = false, impulse = false, checkEncoder = true) {
-        fahreStrecke(btf.speedPicker(motor), btf.protractorPicker(servo), strecke, abstandsSensor, abstand, spurSensor, impulse, checkEncoder)
+    export function fahreStreckePicker(motor: number, servo: number, strecke: number, abstandsSensor = true, abstand = 20, impulse = false, checkEncoder = true) {
+        fahreStrecke(btf.speedPicker(motor), btf.protractorPicker(servo), strecke, abstandsSensor, abstand,  impulse, checkEncoder)
     }
 
 
@@ -24,17 +24,17 @@ namespace receiver { // r-strecken.ts
     // ========== group="Geschwindigkeit (1 ↓ 128 ↑ 255), Winkel (1 ↖ 16 ↗ 31)" subcategory="Strecken"
 
     //% group="Geschwindigkeit (1 ↓ 128 ↑ 255), Winkel (1 ↖ 16 ↗ 31)" subcategory="Strecken"
-    //% block="Fahren (1↓128↑255) %motor Lenken (1↖16↗31) %servo Länge %strecke cm\\|⅒s || Stop %abstandsSensor bei Abstand < (cm) %abstand Spursensor %spurSensor Impulse %impulse Encoder %checkEncoder" weight=5
+    //% block="Fahren (1↓128↑255) %motor Lenken (1↖16↗31) %servo Länge %strecke cm\\|⅒s || Stop %abstandsSensor bei Abstand < (cm) %abstand Impulse %impulse Encoder %checkEncoder" weight=5
     //% motor.min=1 motor.max=255 motor.defl=220
     //% servo.min=1 servo.max=31 servo.defl=29
     //% strecke.min=10 strecke.max=255 strecke.defl=153
     //% abstandsSensor.shadow=toggleOnOff
     //% abstand.min=10 abstand.max=50 abstand.defl=20
-    //% spurSensor.shadow=toggleOnOff
+    // spurSensor.shadow=toggleOnOff
     //% impulse.shadow=toggleOnOff
     //% checkEncoder.shadow=toggleYesNo checkEncoder.defl=1
     //% inlineInputMode=inline
-    export function fahreStrecke(motor: number, servo: number, strecke: number, abstandsSensor = false, abstand = 20, spurSensor = false, impulse = false, checkEncoder = true) {
+    export function fahreStrecke(motor: number, servo: number, strecke: number, abstandsSensor = false, abstand = 20, impulse = false, checkEncoder = true) {
 
         // selectMotor(c_MotorStop)
 
