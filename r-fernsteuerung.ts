@@ -39,6 +39,9 @@ namespace receiver { // r-fernsteuerung.ts
             // Motor M0+Servo M1 (Fahren und Lenken)
             if (btf.getaktiviert(buffer, btf.e3aktiviert.m0)) {
 
+                let ledb = Colors.Off
+                let ledc = Colors.Off
+
                 let bAbstand = btf.getSensor(buffer, btf.eBufferPointer.m0, btf.eSensor.b6Abstand) && selectAbstandSensorConnected()
                 let bRichtung_vor = false
                 let cmAbstandSensor = 0
@@ -47,35 +50,42 @@ namespace receiver { // r-fernsteuerung.ts
 
                 // nur LEDs schalten und Abstandssensor lesen
                 if (bAbstand) {
-                    btf.setLedColors(btf.eRgbLed.b, 0x808000, bAbstand) // nicht blinken, bringt I²C Sensor durcheinender
-                    btf.setLedColors(btf.eRgbLed.c, 0x404040, bSpur)
+                    // btf.setLedColors(btf.eRgbLed.b, 0x808000, bAbstand) // nicht blinken, bringt I²C Sensor durcheinender
+                    // btf.setLedColors(btf.eRgbLed.c, 0x404040, bSpur)
                     bRichtung_vor = btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor) > c_MotorStop // Fahrtrichtung vorwärts
                     cmAbstandSensor = selectAbstand_cm(true) // immer messen, auch bei Stop, damit der kleiner werdende Wert erkannt wird
+                    ledb = 0x808000
+                    if (bSpur)
+                        ledc = 0x404040
                 }
                 else if (bSpur) {
-                    btf.setLedColors(btf.eRgbLed.b, getSpurLinks(eDH.hell) ? 0x404040 : Colors.White)
-                    btf.setLedColors(btf.eRgbLed.c, getSpurRechts(eDH.hell) ? 0x404040 : Colors.White)
+                    // btf.setLedColors(btf.eRgbLed.b, getSpurLinks(eDH.hell) ? 0x404040 : Colors.White)
+                    // btf.setLedColors(btf.eRgbLed.c, getSpurRechts(eDH.hell) ? 0x404040 : Colors.White)
                     // btf.setLedColors(btf.eRgbLed.b, Colors.White, getSpurLinks(eDH.hell)) // pinSpurlinks(eDH.hell)
                     // btf.setLedColors(btf.eRgbLed.c, Colors.White, getSpurRechts(eDH.hell)) // pinSpurrechts(eDH.hell)
+                    ledb = getSpurLinks(eDH.hell) ? 0x404040 : Colors.White
+                    ledc = getSpurRechts(eDH.hell) ? 0x404040 : Colors.White
                 }
-                else {
+                /* else {
                     btf.setLedColors(btf.eRgbLed.b, Colors.Off, false)
                     btf.setLedColors(btf.eRgbLed.c, Colors.Off, false)
                     // Spur auch anzeigen, wenn Sensor nicht aktiv (dunkelweiß)
                     // btf.setLedColors(btf.eRgbLed.b, 0x404040, getSpurLinks(eDH.hell)) // pinSpurlinks(eDH.hell)
                     // btf.setLedColors(btf.eRgbLed.c, 0x404040, getSpurRechts(eDH.hell)) //pinSpurrechts(eDH.hell)
-                }
+                } */
 
                 // Abstandssensor auswerten
-                if (bAbstand && bRichtung_vor && (cmAbstandSensor <= btf.getAbstand(buffer)))
+                if (bAbstand && bRichtung_vor && (cmAbstandSensor <= btf.getAbstand(buffer))) {
                     n_AbstandStop = true
-                else if (!bAbstand || !bRichtung_vor)
+                    ledb = Colors.Red
+                } else if (!bAbstand || !bRichtung_vor)
                     n_AbstandStop = false
 
                 // Spursensor auswerten
-                if (bSpur && (getSpurLinks(eDH.dunkel) || getSpurRechts(eDH.dunkel))) //  if (bSpur && (pinSpurlinks(eDH.dunkel) || pinSpurrechts(eDH.dunkel)))
+                if (bSpur && (getSpurLinks(eDH.dunkel) || getSpurRechts(eDH.dunkel))) { //  if (bSpur && (pinSpurlinks(eDH.dunkel) || pinSpurrechts(eDH.dunkel)))
                     n_SpurStop = true
-                else if (!bSpur)
+                    ledc = Colors.White
+                } else if (!bSpur)
                     n_SpurStop = false
 
                 if (!n_AbstandStop && !n_SpurStop) {
@@ -85,9 +95,11 @@ namespace receiver { // r-fernsteuerung.ts
                 }
                 else {
                     selectMotor(c_MotorStop)
-                    if (n_AbstandStop)
-                        btf.setLedColors(btf.eRgbLed.b, Colors.Red)
+                    //if (n_AbstandStop)
+                    //    btf.setLedColors(btf.eRgbLed.b, Colors.Red)
                 }
+                btf.setLedColors(btf.eRgbLed.b, ledb)
+                btf.setLedColors(btf.eRgbLed.c, ledc)
             }
 
 
