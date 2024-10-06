@@ -20,7 +20,9 @@ namespace receiver { // r-fernsteuerung.ts
             stop_cm = btf.getAbstand(buffer)
 
             if (raiseAbstandMotorStop(on, stop_cm, ms))
-                n_AbstandStop = true
+                n_AbstandStop = true // bei true wurde Motor bereits gestoppt
+            else
+                n_AbstandStop = false
         }
     }
 
@@ -43,8 +45,8 @@ namespace receiver { // r-fernsteuerung.ts
                 let ledc = Colors.Off
 
                 let bAbstand = btf.getSensor(buffer, btf.eBufferPointer.m0, btf.eSensor.b6Abstand) && selectAbstandSensorConnected()
-                let bRichtung_vor = false
-                let cmAbstandSensor = 0
+                //let bRichtung_vor = false
+                //let cmAbstandSensor = 0
                 // zuerst Test ob Sensor aktiv, erst danach Events registrieren
                 let bSpur = btf.getSensor(buffer, btf.eBufferPointer.m0, btf.eSensor.b5Spur) // hier keine Spur-Events && spurSensorRegisterEvents()
 
@@ -52,8 +54,8 @@ namespace receiver { // r-fernsteuerung.ts
                 if (bAbstand) {
                     // btf.setLedColors(btf.eRgbLed.b, 0x808000, bAbstand) // nicht blinken, bringt I²C Sensor durcheinender
                     // btf.setLedColors(btf.eRgbLed.c, 0x404040, bSpur)
-                    bRichtung_vor = btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor) > c_MotorStop // Fahrtrichtung vorwärts
-                    cmAbstandSensor = selectAbstand_cm(true) // immer messen, auch bei Stop, damit der kleiner werdende Wert erkannt wird
+                    //bRichtung_vor = btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor) > c_MotorStop // Fahrtrichtung vorwärts
+                    //cmAbstandSensor = selectAbstand_cm(true) // immer messen, auch bei Stop, damit der kleiner werdende Wert erkannt wird
                     ledb = 0x808000
                     if (bSpur)
                         ledc = 0x404040
@@ -75,11 +77,11 @@ namespace receiver { // r-fernsteuerung.ts
                 } */
 
                 // Abstandssensor auswerten
-                if (bAbstand && bRichtung_vor && (cmAbstandSensor <= btf.getAbstand(buffer))) {
+                /* if (bAbstand && bRichtung_vor && (cmAbstandSensor <= btf.getAbstand(buffer))) {
                     n_AbstandStop = true
                     ledb = Colors.Red
                 } else if (!bAbstand || !bRichtung_vor)
-                    n_AbstandStop = false
+                    n_AbstandStop = false */
 
                 // Spursensor auswerten
                 if (bSpur && (getSpurLinks(eDH.dunkel) || getSpurRechts(eDH.dunkel))) { //  if (bSpur && (pinSpurlinks(eDH.dunkel) || pinSpurrechts(eDH.dunkel)))
