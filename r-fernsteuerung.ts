@@ -8,10 +8,12 @@ namespace receiver { // r-fernsteuerung.ts
     export let n_AbstandSensorAktiviert = eAbstandSensorAktiviert.aus // für rgbLed
 
     //% group="0 Fernsteuerung oder 2 Fahrplan (in dauerhaft Schleife Motor Stop auslösen)" subcategory="Fernsteuerung"
-    //% block="0 2 Abstand Sensor Stop auslösen %buffer || • 0 Joystick %on0Fahren • 2 Fahrplan %on2Fahrplan • Pause %ms ms" weight=8
+    //% block="0 2 Abstand Sensor Stop auslösen %buffer || • 0 Joystick %p0Fahren • 2 Fahrplan %p2Fahrplan lokal %plFahrplan • Stop %stop_cm cm • Pause %ms ms" weight=8
     //% buffer.shadow=btf_receivedBuffer19
-    //% on0Fahren.shadow=toggleOnOff on0Fahren.defl=1
-    //% on2Fahrplan.shadow=toggleOnOff on2Fahrplan.defl=1
+    //% p0Fahren.shadow=toggleOnOff p0Fahren.defl=1
+    //% p2Fahrplan.shadow=toggleOnOff p2Fahrplan.defl=1
+    //% plFahrplan.shadow=toggleOnOff
+    //% stop_cm.defl=30
     //% ms.defl=25
     //% inlineInputMode=inline 
     export function buffer_raiseAbstandMotorStop(buffer: Buffer, p0Fahren = true, p2Fahrplan = true, plFahrplan = false, stop_cm = 30, ms = 25) {
