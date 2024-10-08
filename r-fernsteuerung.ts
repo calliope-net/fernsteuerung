@@ -8,7 +8,7 @@ namespace receiver { // r-fernsteuerung.ts
     export let n_AbstandSensorAktiviert = eAbstandSensorAktiviert.aus // für rgbLed
 
     //% group="0 Fernsteuerung oder 2 Fahrplan (in dauerhaft Schleife Motor Stop auslösen)" subcategory="Fernsteuerung"
-    //% block="0 2 Abstand Sensor Stop auslösen %buffer || • 0 Joystick %p0Fahren • 2 Fahrplan %p2Fahrplan lokal %plFahrplan • Stop %stop_cm cm • Pause %ms ms" weight=8
+    //% block="0 2 Abstand Sensor Stop auslösen %buffer || • 0 Joystick %p0Fahren • 2 Fahrplan %p2Fahrplan lokal %plFahrplan • Stop (cm) %stop_cm • Pause %ms ms" weight=8
     //% buffer.shadow=btf_receivedBuffer19
     //% p0Fahren.shadow=toggleOnOff p0Fahren.defl=1
     //% p2Fahrplan.shadow=toggleOnOff p2Fahrplan.defl=1
@@ -17,13 +17,16 @@ namespace receiver { // r-fernsteuerung.ts
     //% ms.defl=25
     //% inlineInputMode=inline 
     export function buffer_raiseAbstandMotorStop(buffer: Buffer, p0Fahren = true, p2Fahrplan = true, plFahrplan = false, stop_cm = 30, ms = 25) {
-        let motorRichtungVor = true // true Fahrtrichtung vorwärts oder Stop (128)
+        // let motorRichtungVor = true // true Fahrtrichtung vorwärts oder Stop (128)
         // let stop_cm = 0
 
-        if (plFahrplan && selectAbstandSensorConnected()) {
+        if (plFahrplan && selectAbstandSensorConnected()) { // lokale Funktion, kein Buffer beteiligt
             n_AbstandSensorAktiviert = eAbstandSensorAktiviert.plFahrplan
             n_AbstandStop = false
-            n_StreckeStop = raiseAbstandMotorStop(stop_cm, ms) // r-strecken.ts r-sensorevents.ts
+            if (n_StreckeRichtungVor) // Fahrtrichtung vorwärts
+                n_StreckeStop = raiseAbstandMotorStop(stop_cm, ms) // r-strecken.ts r-sensorevents.ts
+            else
+                n_StreckeStop = false
         }
         // else if (buffer && (p0Fahren || p2Fahrplan) && selectAbstandSensorConnected()) {
 
@@ -35,10 +38,10 @@ namespace receiver { // r-fernsteuerung.ts
             && btf.getSensor(buffer, btf.eBufferPointer.m0, btf.eSensor.b6Abstand)  // Abstand Sensor aktiviert
         ) {
             n_AbstandSensorAktiviert = eAbstandSensorAktiviert.p0Fahren
-            motorRichtungVor = btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor) >= c_MotorStop // Fahrtrichtung vorwärts
+            // motorRichtungVor = btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor) >= c_MotorStop // Fahrtrichtung vorwärts
             // stop_cm = btf.getAbstand(buffer)
 
-            if (motorRichtungVor)
+            if (btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor) >= c_MotorStop) // Fahrtrichtung vorwärts
                 n_AbstandStop = raiseAbstandMotorStop(btf.getAbstand(buffer), ms) // r-sensorevents.ts
             else
                 n_AbstandStop = false
@@ -197,8 +200,8 @@ namespace receiver { // r-fernsteuerung.ts
                 } else {
                     selectMotor(c_MotorStop)
                 }
-               // if (ledb != Colors.Off)
-                    btf.setLedColors(btf.eRgbLed.b, ledb)
+                // if (ledb != Colors.Off)
+                btf.setLedColors(btf.eRgbLed.b, ledb)
 
                 btf.setLedColors(btf.eRgbLed.c, ledc)
             }
