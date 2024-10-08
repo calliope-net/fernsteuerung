@@ -40,7 +40,8 @@ namespace receiver { // r-strecken.ts
     export function fahreStrecke(motor: number, servo: number, strecke: number, abstandsSensor = false, abstand = 20, impulse = false, checkEncoder = true) {
 
         // selectMotor(c_MotorStop)
-        let ledb_abstand: Colors = (n_AbstandSensorAktiviert == eAbstandSensorAktiviert.p2Fahrplan || n_AbstandSensorAktiviert == eAbstandSensorAktiviert.plFahrplan) ? 0x808000 : Colors.Off
+       // let ledb_abstand: Colors = (n_AbstandSensorAktiviert == eAbstandSensorAktiviert.p2Fahrplan || n_AbstandSensorAktiviert == eAbstandSensorAktiviert.plFahrplan) ? 0x808000 : Colors.Off
+        let ledb_abstand: Colors = abstandsSensor ? 0x808000 : Colors.Off
         let ledc_encoder = Colors.Off
 
         if (motor != 0 && motor != c_MotorStop && servo != 0 && strecke != 0) {
@@ -85,7 +86,7 @@ namespace receiver { // r-strecken.ts
             }
             else { // kein Encoder
                 ledc_encoder = 0x400000 // Colors.Red
-                let zehntelsekunden = strecke // Zehntelsekunden
+                let zehntelsekunden = strecke * 4 // Zehntelsekunden
                 if (impulse)
                     zehntelsekunden /= n_EncoderFaktor
 
@@ -94,20 +95,20 @@ namespace receiver { // r-strecken.ts
 
                 while (zehntelsekunden-- > 0) //
                 {
-                    if (n_StreckeStop) {
+                    /* if (n_StreckeStop) {
                         ledb_abstand = Colors.Red
                         break
-                    }
-                    /* if (abstandsSensor && motor > c_MotorStop && abstand > 0 && selectAbstandSensorConnected() && selectAbstand_cm(true) < abstand) {
+                    } */
+                    if (abstandsSensor && motor > c_MotorStop && abstand > 0 && selectAbstandSensorConnected() && selectAbstand_cm(true) < abstand) {
                         ledb_abstand = Colors.Orange
                         break
-                    } */
+                    }
                     //if (spurSensor && !getSpursensor(eDH.hell, eDH.hell)) { // Spursensor aktiviert und schwarze Linie erkannt
                     //    sensor_color = Colors.White
                     //    break
                     //}
 
-                    basic.pause(100) // 1 Zehntelsekunde
+                    basic.pause(25) // 1 Zehntelsekunde / 4
                 }
                 selectMotor(c_MotorStop)
             }
