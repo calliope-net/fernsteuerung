@@ -202,7 +202,7 @@ namespace receiver { // r-sensorevents.ts
     // aufgerufen von r-fernsteuerung.ts
     export function raiseAbstandMotorStop(stop_cm: number, ms = 25) {
         //if (on && selectAbstandSensorConnected()) {
-        if (selectMotorSpeed() > c_MotorStop) { // nur vorwärts
+        if (selectMotorSpeed() >= c_MotorStop) { // nur vorwärts oder Stop
 
             let t = input.runningTime() - n_AbstandTimer // ms seit letztem raiseAbstandMotorStop
             if (t < ms)
