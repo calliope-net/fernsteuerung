@@ -17,6 +17,9 @@ namespace receiver { // r-fernsteuerung.ts
     //% ms.defl=25
     //% inlineInputMode=inline 
     export function buffer_raiseAbstandMotorStop(buffer: Buffer, p0Fahren = true, p2Fahrplan = true, plFahrplan = false, stop_cm = 30, ms = 25) {
+        let motorRichtungVor = true // true Fahrtrichtung vorwärts oder Stop (128)
+        // let stop_cm = 0
+
         if (plFahrplan && selectAbstandSensorConnected()) {
             n_AbstandSensorAktiviert = eAbstandSensorAktiviert.plFahrplan
             n_AbstandStop = false
@@ -24,8 +27,7 @@ namespace receiver { // r-fernsteuerung.ts
         }
         // else if (buffer && (p0Fahren || p2Fahrplan) && selectAbstandSensorConnected()) {
 
-        // let motorRichtungVor = true // true Fahrtrichtung vorwärts oder Stop (128)
-        // let stop_cm = 0
+
 
         else if (p0Fahren && buffer && selectAbstandSensorConnected()
             && btf.isBetriebsart(buffer, btf.e0Betriebsart.p0Fahren)                // Betriebsart 00 mit Joystick fernsteuern
@@ -33,10 +35,13 @@ namespace receiver { // r-fernsteuerung.ts
             && btf.getSensor(buffer, btf.eBufferPointer.m0, btf.eSensor.b6Abstand)  // Abstand Sensor aktiviert
         ) {
             n_AbstandSensorAktiviert = eAbstandSensorAktiviert.p0Fahren
-            // motorRichtungVor = btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor) >= c_MotorStop // Fahrtrichtung vorwärts
+            motorRichtungVor = btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor) >= c_MotorStop // Fahrtrichtung vorwärts
             // stop_cm = btf.getAbstand(buffer)
-            if (raiseAbstandMotorStop(btf.getAbstand(buffer), ms)) // r-sensorevents.ts
-                n_AbstandStop = true
+
+            n_AbstandStop = motorRichtungVor && raiseAbstandMotorStop(btf.getAbstand(buffer), ms)
+
+            //if (raiseAbstandMotorStop(btf.getAbstand(buffer), ms)) // r-sensorevents.ts
+            //    n_AbstandStop = true
             n_StreckeStop = false //r-strecken.ts 
         }
         else if (p2Fahrplan && buffer && selectAbstandSensorConnected()

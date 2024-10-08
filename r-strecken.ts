@@ -24,6 +24,7 @@ namespace receiver { // r-strecken.ts
     // ========== group="Geschwindigkeit (1 ↓ 128 ↑ 255), Winkel (1 ↖ 16 ↗ 31)" subcategory="Strecken"
 
     export let n_StreckeStop = false
+    export let n_motorRichtungVor = false
 
     //% group="Geschwindigkeit (1 ↓ 128 ↑ 255), Winkel (1 ↖ 16 ↗ 31)" subcategory="Strecken"
     //% block="Fahren (1↓128↑255) %motor Lenken (1↖16↗31) %servo Länge %strecke cm\\|⅒s || Stop %abstandsSensor bei Abstand < (cm) %abstand Impulse %impulse Encoder %checkEncoder" weight=5
@@ -50,6 +51,8 @@ namespace receiver { // r-strecken.ts
                 ledc_encoder = 0x004000 // grün
                 let timeout_Encoder = 10 // 2 s Timeout wenn Encoder nicht zählt
                 // let timeout_EncoderCounter = n_EncoderCounter // zum Test ob sich der Wet ändert
+
+                n_motorRichtungVor = motor >= c_MotorStop
 
                 encoderStartStrecke(true, strecke, impulse) // stellt n_EncoderCounter auf 0
                 pinServo16(servo)
