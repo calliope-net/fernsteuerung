@@ -44,9 +44,9 @@ namespace receiver { // r-strecken.ts
         // let ledb_abstand: Colors = abstandsSensor ? 0x808000 : Colors.Off
         // let ledc_encoder = Colors.Off
 
-        abstandsSensor = abstandsSensor && abstand > 0 && selectAbstandSensorConnected()
+        abstandsSensor = abstandsSensor && abstand > 0 && motor > c_MotorStop && selectAbstandSensorConnected()
 
-        btf.setLedColors(btf.eRgbLed.b, 0x808000, abstandsSensor)
+        btf.setLedColors(btf.eRgbLed.b, Colors.Yellow, abstandsSensor)
 
         if (motor != 0 && motor != c_MotorStop && servo != 0 && strecke != 0) {
 
@@ -77,7 +77,7 @@ namespace receiver { // r-strecken.ts
                          btf.setLedColors(btf.eRgbLed.b,Colors.Red)
                          break
                      } */
-                    if (abstandsSensor && motor > c_MotorStop && selectAbstand_cm(true) < abstand) { // && abstand > 0 && selectAbstandSensorConnected() 
+                    if (abstandsSensor && selectAbstand_cm(true) < abstand) { // && motor > c_MotorStop && abstand > 0 && selectAbstandSensorConnected() 
                         btf.setLedColors(btf.eRgbLed.b, Colors.Red)
                         // ledb_abstand = Colors.Red
                         break
@@ -110,7 +110,7 @@ namespace receiver { // r-strecken.ts
                         ledb_abstand = Colors.Red
                         break
                     } */
-                    if (abstandsSensor && motor > c_MotorStop && selectAbstand_cm(true) < abstand) { // && abstand > 0 && selectAbstandSensorConnected() 
+                    if (abstandsSensor && selectAbstand_cm(true) < abstand) { // && motor > c_MotorStop && abstand > 0 && selectAbstandSensorConnected() 
                         btf.setLedColors(btf.eRgbLed.b, Colors.Red)
                         // ledb_abstand = Colors.Red
                         break
