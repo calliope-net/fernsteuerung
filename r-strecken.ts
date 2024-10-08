@@ -55,7 +55,7 @@ namespace receiver { // r-strecken.ts
             if (checkEncoder && encoderRegisterEvent()) { // n_EncoderEventRegistered && n_hasEncoder
                 btf.setLedColors(btf.eRgbLed.c, Colors.Green)
                 // ledc_encoder = 0x004000 // grün
-                let timeout_Encoder = 10 // 2 s Timeout wenn Encoder nicht zählt
+                let timeout_Encoder = abstandsSensor ? 80 : 10 // 2 s Timeout wenn Encoder nicht zählt
                 // let timeout_EncoderCounter = n_EncoderCounter // zum Test ob sich der Wet ändert
 
                 n_StreckeRichtungVor = motor >= c_MotorStop // Wert eintragen für Stop Event
