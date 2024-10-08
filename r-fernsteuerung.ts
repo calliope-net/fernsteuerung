@@ -38,7 +38,10 @@ namespace receiver { // r-fernsteuerung.ts
             motorRichtungVor = btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor) >= c_MotorStop // Fahrtrichtung vorwärts
             // stop_cm = btf.getAbstand(buffer)
 
-            n_AbstandStop = motorRichtungVor && raiseAbstandMotorStop(btf.getAbstand(buffer), ms)
+            if (motorRichtungVor)
+                n_AbstandStop = raiseAbstandMotorStop(btf.getAbstand(buffer), ms) // r-sensorevents.ts
+            else
+                n_AbstandStop = false
 
             //if (raiseAbstandMotorStop(btf.getAbstand(buffer), ms)) // r-sensorevents.ts
             //    n_AbstandStop = true
@@ -194,8 +197,8 @@ namespace receiver { // r-fernsteuerung.ts
                 } else {
                     selectMotor(c_MotorStop)
                 }
-                //if (ledb != Colors.Off)
-                btf.setLedColors(btf.eRgbLed.b, ledb)
+                if (ledb != Colors.Off)
+                    btf.setLedColors(btf.eRgbLed.b, ledb)
 
                 btf.setLedColors(btf.eRgbLed.c, ledc)
             }
