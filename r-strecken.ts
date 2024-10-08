@@ -16,12 +16,14 @@ namespace receiver { // r-strecken.ts
     //% checkEncoder.shadow=toggleYesNo checkEncoder.defl=1
     //% inlineInputMode=inline
     export function fahreStreckePicker(motor: number, servo: number, strecke: number, abstandsSensor = true, abstand = 20, impulse = false, checkEncoder = true) {
-        fahreStrecke(btf.speedPicker(motor), btf.protractorPicker(servo), strecke, abstandsSensor, abstand,  impulse, checkEncoder)
+        fahreStrecke(btf.speedPicker(motor), btf.protractorPicker(servo), strecke, abstandsSensor, abstand, impulse, checkEncoder)
     }
 
 
 
     // ========== group="Geschwindigkeit (1 ↓ 128 ↑ 255), Winkel (1 ↖ 16 ↗ 31)" subcategory="Strecken"
+
+    export let n_StreckeStop = false
 
     //% group="Geschwindigkeit (1 ↓ 128 ↑ 255), Winkel (1 ↖ 16 ↗ 31)" subcategory="Strecken"
     //% block="Fahren (1↓128↑255) %motor Lenken (1↖16↗31) %servo Länge %strecke cm\\|⅒s || Stop %abstandsSensor bei Abstand < (cm) %abstand Impulse %impulse Encoder %checkEncoder" weight=5
