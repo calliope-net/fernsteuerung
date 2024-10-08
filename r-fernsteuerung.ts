@@ -49,9 +49,11 @@ namespace receiver { // r-fernsteuerung.ts
                 n_AbstandStop = false
                 n_StreckeStop = raiseAbstandMotorStop(btf.getAbstand(buffer), ms) // r-strecken.ts r-sensorevents.ts
             }
-            /* else {
+            else {
                 n_AbstandSensorAktiviert = eAbstandSensorAktiviert.aus
-            } */
+                n_AbstandStop = false
+                n_StreckeStop = false // r-strecken.ts
+            }
 
 
             /*   let onFahren = btf.isBetriebsart(buffer, btf.e0Betriebsart.p0Fahren)          // Betriebsart 00 mit Joystick fernsteuern
