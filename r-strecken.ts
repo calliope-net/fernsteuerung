@@ -39,13 +39,15 @@ namespace receiver { // r-strecken.ts
     export function fahreStrecke(motor: number, servo: number, strecke: number, abstandsSensor = false, abstand = 20, impulse = false, checkEncoder = true) {
 
         // selectMotor(c_MotorStop)
+        let ledb_abstand: Colors = (n_AbstandSensorAktiviert == eAbstandSensorAktiviert.p2Fahrplan || n_AbstandSensorAktiviert == eAbstandSensorAktiviert.plFahrplan) ? 0x808000 : Colors.Off
+        let ledc_encoder = Colors.Off
 
         if (motor != 0 && motor != c_MotorStop && servo != 0 && strecke != 0) {
-            let sensor_color = Colors.Off
 
             btf.resetTimer()
 
             if (checkEncoder && encoderRegisterEvent()) { // n_EncoderEventRegistered && n_hasEncoder
+                ledc_encoder = 0x004000 // grün
                 let timeout_Encoder = 10 // 2 s Timeout wenn Encoder nicht zählt
                 // let timeout_EncoderCounter = n_EncoderCounter // zum Test ob sich der Wet ändert
 
@@ -57,13 +59,17 @@ namespace receiver { // r-strecken.ts
                 {
                     if (timeout_Encoder-- <= 0 && n_EncoderCounter < 10) { // kein Impuls nach 2s: kein Encoder vorhanden
                         n_hasEncoder = false // bei ersten 2s timeout false, nächster Aufruf zählt dann nach Zeit
-                        sensor_color = Colors.Red
+                        ledc_encoder = Colors.Red
                         break
                     }
-                    if (abstandsSensor && motor > c_MotorStop && abstand > 0 && selectAbstandSensorConnected() && selectAbstand_cm(true) < abstand) {
-                        sensor_color = Colors.Yellow
+                    if (n_StreckeStop) {
+                        ledb_abstand = Colors.Red
                         break
                     }
+                    /* if (abstandsSensor && motor > c_MotorStop && abstand > 0 && selectAbstandSensorConnected() && selectAbstand_cm(true) < abstand) {
+                        ledb_abstand = Colors.Red
+                        break
+                    } */
                     //if (spurSensor && !getSpursensor(eDH.hell, eDH.hell)) { // Spursensor aktiviert und schwarze Linie erkannt
                     //    sensor_color = Colors.White
                     //    break
@@ -75,7 +81,7 @@ namespace receiver { // r-strecken.ts
 
             }
             else { // kein Encoder
-                sensor_color = Colors.Red
+                ledc_encoder = 0x400000 // Colors.Red
                 let zehntelsekunden = strecke // Zehntelsekunden
                 if (impulse)
                     zehntelsekunden /= n_EncoderFaktor
@@ -85,10 +91,14 @@ namespace receiver { // r-strecken.ts
 
                 while (zehntelsekunden-- > 0) //
                 {
-                    if (abstandsSensor && motor > c_MotorStop && abstand > 0 && selectAbstandSensorConnected() && selectAbstand_cm(true) < abstand) {
-                        sensor_color = Colors.Orange
+                    if (n_StreckeStop) {
+                        ledb_abstand = Colors.Red
                         break
                     }
+                    /* if (abstandsSensor && motor > c_MotorStop && abstand > 0 && selectAbstandSensorConnected() && selectAbstand_cm(true) < abstand) {
+                        ledb_abstand = Colors.Orange
+                        break
+                    } */
                     //if (spurSensor && !getSpursensor(eDH.hell, eDH.hell)) { // Spursensor aktiviert und schwarze Linie erkannt
                     //    sensor_color = Colors.White
                     //    break
@@ -99,12 +109,14 @@ namespace receiver { // r-strecken.ts
                 selectMotor(c_MotorStop)
             }
 
-            if (sensor_color != Colors.Off) {
-                btf.setLedColors(btf.eRgbLed.b, sensor_color, true)
-                //basic.pause(1000)
-                //setLedColors(btf.eRgbLed.b, sensor_color, false) // writeRgbLeds(sensor_color, false)
-            }
+
+
         }
+        // if (ledb_abstand != Colors.Off)
+        btf.setLedColors(btf.eRgbLed.b, ledb_abstand)
+
+        // if (ledc_encoder != Colors.Off)
+        btf.setLedColors(btf.eRgbLed.c, ledc_encoder)
     }
 
 
