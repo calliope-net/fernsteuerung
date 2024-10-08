@@ -194,29 +194,29 @@ namespace receiver { // r-sensorevents.ts
     //% blockId=receiver_getAbstand blockHidden=true
     //% block="%buffer Abstand in cm" weight=5
     //% buffer.shadow="btf_receivedBuffer19"
-    export function receiver_getAbstand(buffer: Buffer) {
+    export function receiver_getAbstand(buffer: Buffer) { // blockHidden
         return btf.getAbstand(buffer)
     }
 
 
     // aufgerufen von r-fernsteuerung.ts
-    export function raiseAbstandMotorStop(on: boolean, stop_cm: number, ms = 25) {
-        if (on && selectAbstandSensorConnected()) {
+    export function raiseAbstandMotorStop(stop_cm: number, ms = 25) {
+        //if (on && selectAbstandSensorConnected()) {
 
-            let t = input.runningTime() - n_AbstandTimer // ms seit letztem raiseAbstandMotorStop
-            if (t < ms)
-                basic.pause(t) // restliche Zeit-Differenz warten
-            n_AbstandTimer = input.runningTime()
+        let t = input.runningTime() - n_AbstandTimer // ms seit letztem raiseAbstandMotorStop
+        if (t < ms)
+            basic.pause(t) // restliche Zeit-Differenz warten
+        n_AbstandTimer = input.runningTime()
 
-            let cm = selectAbstand_cm(true)
+        let cm = selectAbstand_cm(true)
 
-            if (cm < stop_cm) {
-                selectMotor(c_MotorStop)
-                return true
-            } else
-                return false
+        if (cm < stop_cm) {
+            selectMotor(c_MotorStop)
+            return true
         } else
             return false
+        //} else
+        //    return false
     }
 
 
