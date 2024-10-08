@@ -168,15 +168,15 @@ namespace receiver { // r-fernsteuerung.ts
                     n_SpurStop = false // erst wieder fahren, nachdem bSpur aus geschaltet wurde
 
 
-                if (n_AbstandSensorAktiviert == eAbstandSensorAktiviert.p0Fahren)
-                    if (n_AbstandStop) { // aus dem Ereignis
-                        ledb = Colors.Red
-                    } else /* if (bAbstand) */ {
-                        ledb = 0x808000
-                    }
-                else {
-                    // ledb bleibt aus oder zeigt Spur an
+                //if (n_AbstandSensorAktiviert == eAbstandSensorAktiviert.p0Fahren)
+                if (n_AbstandStop) { // aus dem Ereignis
+                    ledb = Colors.Red
+                } else if (n_AbstandSensorAktiviert == eAbstandSensorAktiviert.p0Fahren) {
+                    ledb = 0x808000
                 }
+                //else {
+                // ledb bleibt aus oder zeigt Spur an
+                //}
 
 
                 if (!n_AbstandStop && !n_SpurStop) {
