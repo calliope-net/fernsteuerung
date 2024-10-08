@@ -7,7 +7,7 @@ namespace receiver { // r-fernsteuerung.ts
 
     let n_AbstandSensorAktiviert = eAbstandSensorAktiviert.aus // für 0 Fernsteuerung oder 2 Fahrplan
 
-    //% group="0 Fernsteuerung oder 2 Fahrplan (Abstand Sensor Motor Stop auslösen)" subcategory="Fernsteuerung"
+    //% group="0 Fernsteuerung oder 2 Fahrplan (in dauerhaft Schleife Motor Stop auslösen)" subcategory="Fernsteuerung"
     //% block="0 2 Abstand Sensor Stop auslösen %buffer || • 0 Joystick %on0Fahren • 2 Fahrplan %on2Fahrplan • Pause %ms ms" weight=8
     //% buffer.shadow=btf_receivedBuffer19
     //% on0Fahren.shadow=toggleOnOff on0Fahren.defl=1
@@ -79,7 +79,7 @@ namespace receiver { // r-fernsteuerung.ts
     let n_AbstandStop = false // außerhalb der function, damit der Wert gespeichert bleibt
     let n_SpurStop = false
 
-    //% group="0 Fernsteuerung mit Joystick (reagiert auf Sensoren)" subcategory="Fernsteuerung"
+    //% group="0 Fernsteuerung mit Joystick (Abstand Sensor mit Stop Block oben)" subcategory="Fernsteuerung"
     //% block="0 Fahren und Lenken mit Joystick (M:01ABCD S:0) aus %buffer " weight=5
     //% buffer.shadow="btf_receivedBuffer19"
     export function fahreJoystick(buffer: Buffer) {
@@ -348,7 +348,7 @@ namespace receiver { // r-fernsteuerung.ts
     let n_fahrplanStartBit: btf.e3aktiviert
     let n_fahrplanBufferPointer: btf.eBufferPointer // wird in dauerhaft Schleife im anderen Thread ausgewertet
 
-    //% group="2 Fahrplan (5 Teilstrecken) empfangen" subcategory="Fernsteuerung"
+    //% group="2 Fahrplan (5 Teilstrecken) empfangen (Abstand Sensor mit Stop Block oben)" subcategory="Fernsteuerung"
     //% block="2 Fahren Strecke 1-5 (MS:1ABCD) aus %buffer • Start Bit %startBit" weight=4
     //% buffer.shadow=btf_receivedBuffer19
     //% startBit.defl=btf.e3aktiviert.m1
