@@ -197,7 +197,7 @@ namespace receiver { // r-fernsteuerung.ts
                 } else {
                     selectMotor(c_MotorStop)
                 }
-                if (ledb != Colors.Off)
+               // if (ledb != Colors.Off)
                     btf.setLedColors(btf.eRgbLed.b, ledb)
 
                 btf.setLedColors(btf.eRgbLed.c, ledc)
