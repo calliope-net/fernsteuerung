@@ -22,70 +22,70 @@ namespace receiver { // r-fernsteuerung.ts
             n_AbstandStop = false
             n_StreckeStop = raiseAbstandMotorStop(stop_cm, ms) // r-strecken.ts r-sensorevents.ts
         }
-        else if (buffer && (p0Fahren || p2Fahrplan) && selectAbstandSensorConnected()) {
+        // else if (buffer && (p0Fahren || p2Fahrplan) && selectAbstandSensorConnected()) {
 
-            // let motorRichtungVor = true // true Fahrtrichtung vorwärts oder Stop (128)
-            // let stop_cm = 0
+        // let motorRichtungVor = true // true Fahrtrichtung vorwärts oder Stop (128)
+        // let stop_cm = 0
 
-            if (p0Fahren
-                && btf.isBetriebsart(buffer, btf.e0Betriebsart.p0Fahren)                // Betriebsart 00 mit Joystick fernsteuern
-                && btf.getaktiviert(buffer, btf.e3aktiviert.m0)                         // Motor M0+Servo M1 (Fahren und Lenken)
-                && btf.getSensor(buffer, btf.eBufferPointer.m0, btf.eSensor.b6Abstand)  // Abstand Sensor aktiviert
-            ) {
-                n_AbstandSensorAktiviert = eAbstandSensorAktiviert.p0Fahren
-                // motorRichtungVor = btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor) >= c_MotorStop // Fahrtrichtung vorwärts
-                // stop_cm = btf.getAbstand(buffer)
-                n_AbstandStop = raiseAbstandMotorStop(btf.getAbstand(buffer), ms) // r-sensorevents.ts
-                n_StreckeStop = false //r-strecken.ts 
-            }
-            else if (p2Fahrplan
-                && btf.isBetriebsart(buffer, btf.e0Betriebsart.p2Fahrplan)              // Betriebsart 02 Fahrplan
-                && btf.getaktiviert(buffer, n_fahrplanStartBit)                         // Motor aktiviert n_fahrplanStartBit
-                && btf.getSensor(buffer, n_fahrplanBufferPointer, btf.eSensor.b6Abstand)// n_fahrplanBufferPointer Abstand Sensor aktiviert
-            ) {
-                n_AbstandSensorAktiviert = eAbstandSensorAktiviert.p2Fahrplan
-                //  motorRichtungVor = btf.getByte(buffer, n_fahrplanBufferPointer, btf.eBufferOffset.b0_Motor) >= c_MotorStop // Fahrtrichtung vorwärts
-                // stop_cm = btf.getAbstand(buffer)
-                n_AbstandStop = false
-                n_StreckeStop = raiseAbstandMotorStop(btf.getAbstand(buffer), ms) // r-strecken.ts r-sensorevents.ts
-            }
-            else {
-                n_AbstandSensorAktiviert = eAbstandSensorAktiviert.aus
-                n_AbstandStop = false
-                n_StreckeStop = false // r-strecken.ts
-            }
-
-
-            /*   let onFahren = btf.isBetriebsart(buffer, btf.e0Betriebsart.p0Fahren)          // Betriebsart 00 mit Joystick fernsteuern
-                  && btf.getaktiviert(buffer, btf.e3aktiviert.m0)                 // Motor M0+Servo M1 (Fahren und Lenken)
-                  && btf.getSensor(buffer, btf.eBufferPointer.m0, btf.eSensor.b6Abstand) // Abstand Sensor aktiviert
-                  && btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor) >= c_MotorStop // Fahrtrichtung vorwärts
-  
-              let onFahrplan = btf.isBetriebsart(buffer, btf.e0Betriebsart.p2Fahrplan)          // Betriebsart 00 mit Joystick fernsteuern
-                  && btf.getaktiviert(buffer, n_fahrplanStartBit)                 // Motor M0+Servo M1 (Fahren und Lenken)
-                  && btf.getSensor(buffer, n_fahrplanBufferPointer, btf.eSensor.b6Abstand) // Abstand Sensor aktiviert
-                  && btf.getByte(buffer, n_fahrplanBufferPointer, btf.eBufferOffset.b0_Motor) >= c_MotorStop // Fahrtrichtung vorwärts
-   */
-
-            //  stop_cm = btf.getAbstand(buffer)
-
-
-
-            /* if (n_AbstandSensorAktiviert != eAbstandSensorAktiviert.aus) // && motorRichtungVor
-                n_AbstandStop = raiseAbstandMotorStop(stop_cm, ms) // r-sensorevents.ts
-            else
-                n_AbstandStop = false */
-
-            /*  if (raiseAbstandMotorStop(stop_cm, ms))
-                 n_AbstandStop = true // bei true wurde Motor bereits gestoppt
-             else
-                 n_AbstandStop = false */
+        else if (p0Fahren && buffer && selectAbstandSensorConnected()
+            && btf.isBetriebsart(buffer, btf.e0Betriebsart.p0Fahren)                // Betriebsart 00 mit Joystick fernsteuern
+            && btf.getaktiviert(buffer, btf.e3aktiviert.m0)                         // Motor M0+Servo M1 (Fahren und Lenken)
+            && btf.getSensor(buffer, btf.eBufferPointer.m0, btf.eSensor.b6Abstand)  // Abstand Sensor aktiviert
+        ) {
+            n_AbstandSensorAktiviert = eAbstandSensorAktiviert.p0Fahren
+            // motorRichtungVor = btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor) >= c_MotorStop // Fahrtrichtung vorwärts
+            // stop_cm = btf.getAbstand(buffer)
+            n_AbstandStop = raiseAbstandMotorStop(btf.getAbstand(buffer), ms) // r-sensorevents.ts
+            n_StreckeStop = false //r-strecken.ts 
+        }
+        else if (p2Fahrplan && buffer && selectAbstandSensorConnected()
+            && btf.isBetriebsart(buffer, btf.e0Betriebsart.p2Fahrplan)              // Betriebsart 02 Fahrplan
+            && btf.getaktiviert(buffer, n_fahrplanStartBit)                         // Motor aktiviert n_fahrplanStartBit
+            && btf.getSensor(buffer, n_fahrplanBufferPointer, btf.eSensor.b6Abstand)// n_fahrplanBufferPointer Abstand Sensor aktiviert
+        ) {
+            n_AbstandSensorAktiviert = eAbstandSensorAktiviert.p2Fahrplan
+            //  motorRichtungVor = btf.getByte(buffer, n_fahrplanBufferPointer, btf.eBufferOffset.b0_Motor) >= c_MotorStop // Fahrtrichtung vorwärts
+            // stop_cm = btf.getAbstand(buffer)
+            n_AbstandStop = false
+            n_StreckeStop = raiseAbstandMotorStop(btf.getAbstand(buffer), ms) // r-strecken.ts r-sensorevents.ts
         }
         else {
             n_AbstandSensorAktiviert = eAbstandSensorAktiviert.aus
             n_AbstandStop = false
             n_StreckeStop = false // r-strecken.ts
         }
+
+
+        /*   let onFahren = btf.isBetriebsart(buffer, btf.e0Betriebsart.p0Fahren)          // Betriebsart 00 mit Joystick fernsteuern
+              && btf.getaktiviert(buffer, btf.e3aktiviert.m0)                 // Motor M0+Servo M1 (Fahren und Lenken)
+              && btf.getSensor(buffer, btf.eBufferPointer.m0, btf.eSensor.b6Abstand) // Abstand Sensor aktiviert
+              && btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor) >= c_MotorStop // Fahrtrichtung vorwärts
+ 
+          let onFahrplan = btf.isBetriebsart(buffer, btf.e0Betriebsart.p2Fahrplan)          // Betriebsart 00 mit Joystick fernsteuern
+              && btf.getaktiviert(buffer, n_fahrplanStartBit)                 // Motor M0+Servo M1 (Fahren und Lenken)
+              && btf.getSensor(buffer, n_fahrplanBufferPointer, btf.eSensor.b6Abstand) // Abstand Sensor aktiviert
+              && btf.getByte(buffer, n_fahrplanBufferPointer, btf.eBufferOffset.b0_Motor) >= c_MotorStop // Fahrtrichtung vorwärts
+*/
+
+        //  stop_cm = btf.getAbstand(buffer)
+
+
+
+        /* if (n_AbstandSensorAktiviert != eAbstandSensorAktiviert.aus) // && motorRichtungVor
+            n_AbstandStop = raiseAbstandMotorStop(stop_cm, ms) // r-sensorevents.ts
+        else
+            n_AbstandStop = false */
+
+        /*  if (raiseAbstandMotorStop(stop_cm, ms))
+             n_AbstandStop = true // bei true wurde Motor bereits gestoppt
+         else
+             n_AbstandStop = false */
+        /*  }
+         else {
+             n_AbstandSensorAktiviert = eAbstandSensorAktiviert.aus
+             n_AbstandStop = false
+             n_StreckeStop = false // r-strecken.ts
+         } */
     }
 
 
@@ -188,7 +188,9 @@ namespace receiver { // r-fernsteuerung.ts
                 } else {
                     selectMotor(c_MotorStop)
                 }
-                btf.setLedColors(btf.eRgbLed.b, ledb)
+                if (ledb != Colors.Off)
+                    btf.setLedColors(btf.eRgbLed.b, ledb)
+
                 btf.setLedColors(btf.eRgbLed.c, ledc)
             }
 
