@@ -38,45 +38,26 @@ namespace receiver { // r-strecken.ts
     //% checkEncoder.shadow=toggleYesNo checkEncoder.defl=1
     //% inlineInputMode=inline
     export function fahreStrecke(motor: number, servo: number, strecke: number, abstandsSensor = false, abstand = 20, impulse = false, checkEncoder = true) {
-
-        // selectMotor(c_MotorStop)
-        // let ledb_abstand: Colors = (n_AbstandSensorAktiviert == eAbstandSensorAktiviert.p2Fahrplan || n_AbstandSensorAktiviert == eAbstandSensorAktiviert.plFahrplan) ? 0x808000 : Colors.Off
-        // let ledb_abstand: Colors = abstandsSensor ? 0x808000 : Colors.Off
-        // let ledc_encoder = Colors.Off
-
-        btf.zeigeBIN(0, btf.ePlot.bin, 2) // Anzeige löschen
-        btf.zeigeBIN(0, btf.ePlot.bin, 3)
-        btf.zeigeBIN(0, btf.ePlot.bin, 4)
+        // btf.zeigeBIN(0, btf.ePlot.bin, 2) // Anzeige löschen
+        // btf.zeigeBIN(0, btf.ePlot.bin, 3)
+        // btf.zeigeBIN(0, btf.ePlot.bin, 4)
 
         abstandsSensor = abstandsSensor && abstand > 0 && motor > c_MotorStop && selectAbstandSensorConnected()
-        // selectAbstand_cm(true)
-
-        /*   if (abstandsSensor) {
-              selectAbstand_cm(true)
-               if (selectAbstand_cm(true) < abstand) {
-                   btf.setLedColors(btf.eRgbLed.b, Colors.Orange)
-                   motor = 0
-               }
-               else
-              btf.setLedColors(btf.eRgbLed.b, Colors.Yellow)
-          } */
 
         btf.setLedColors(btf.eRgbLed.b, Colors.Yellow, abstandsSensor)
 
 
         if (motor != 0 && motor != c_MotorStop && servo != 0 && strecke != 0) {
+            let ret = true
+            let x = 0 // erste 100ms Messungen selectAbstand_cm(true) ignorieren
 
             btf.resetTimer() // langes Timeout 30s, Abschaltung verhindern
-            let x = 0 // erste 100ms Messungen selectAbstand_cm(true) ignorieren
 
             if (checkEncoder && encoderRegisterEvent()) { // n_EncoderEventRegistered && n_hasEncoder
                 btf.setLedColors(btf.eRgbLed.c, Colors.Green)
-                // ledc_encoder = 0x004000 // grün
+              
                 let timeout_Encoder = abstandsSensor ? 80 : 10 // 2 s Timeout wenn Encoder nicht zählt
-                // let timeout_EncoderCounter = n_EncoderCounter // zum Test ob sich der Wet ändert
-
-                // n_StreckeRichtungVor = motor >= c_MotorStop // Wert eintragen für Stop Event
-
+              
                 encoderStartStrecke(true, strecke, impulse) // stellt n_EncoderCounter auf 0
                 pinServo16(servo)
                 selectMotor(motor)
@@ -86,14 +67,14 @@ namespace receiver { // r-strecken.ts
                     if (timeout_Encoder-- <= 0 && n_EncoderCounter < 10) { // kein Impuls nach 2s: kein Encoder vorhanden
                         n_hasEncoder = false // bei ersten 2s timeout false, nächster Aufruf zählt dann nach Zeit
                         btf.setLedColors(btf.eRgbLed.c, Colors.Red)
-                        // ledc_encoder = Colors.Red
+                        ret = false
                         break
                     }
 
                     x++
                     if (abstandsSensor && (selectAbstand_cm(true) < abstand) && x > 4) { // && motor > c_MotorStop && abstand > 0 && selectAbstandSensorConnected()
                         btf.setLedColors(btf.eRgbLed.b, Colors.Red)
-                        // ledb_abstand = Colors.Red
+                        ret = false
                         break
                     }
                     //if (spurSensor && !getSpursensor(eDH.hell, eDH.hell)) { // Spursensor aktiviert und schwarze Linie erkannt
@@ -110,7 +91,7 @@ namespace receiver { // r-strecken.ts
             }
             else { // kein Encoder
                 btf.setLedColors(btf.eRgbLed.c, Colors.Yellow)
-                // ledc_encoder = 0x400000 // Colors.Red
+              
                 let zehntelsekunden = strecke * 4 // Zehntelsekunde = 4*25 ms
                 if (impulse)
                     zehntelsekunden /= n_EncoderFaktor
@@ -128,6 +109,7 @@ namespace receiver { // r-strecken.ts
                         btf.zeigeBIN(x, btf.ePlot.bcd, 4)
 
                         btf.setLedColors(btf.eRgbLed.b, Colors.Red)
+                        ret = false
                         break
                         //}
                     }
@@ -140,15 +122,10 @@ namespace receiver { // r-strecken.ts
                 }
                 selectMotor(c_MotorStop)
             }
-
-
-
+            return ret
         }
-        // if (ledb_abstand != Colors.Off)
-        // btf.setLedColors(btf.eRgbLed.b, ledb_abstand)
-
-        // if (ledc_encoder != Colors.Off)
-        // btf.setLedColors(btf.eRgbLed.c, ledc_encoder)
+        else
+            return false
     }
 
 
