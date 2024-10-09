@@ -126,7 +126,8 @@ namespace receiver { // r-strecken.ts
                         ledb_abstand = Colors.Red
                         break
                     } */
-                    if (abstandsSensor && (selectAbstand_cm(true) < abstand) && ++x > 4) { // && motor > c_MotorStop && abstand > 0 && selectAbstandSensorConnected() 
+                    x++
+                    if (abstandsSensor && (selectAbstand_cm(true) < abstand) && x > 4) { // && motor > c_MotorStop && abstand > 0 && selectAbstandSensorConnected() 
                         //x++
                         //let cm = selectAbstand_cm(true)
                         //if (x > 4 && cm < abstand) {
