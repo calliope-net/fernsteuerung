@@ -44,6 +44,10 @@ namespace receiver { // r-strecken.ts
         // let ledb_abstand: Colors = abstandsSensor ? 0x808000 : Colors.Off
         // let ledc_encoder = Colors.Off
 
+        btf.zeigeBIN(0, btf.ePlot.bin, 2) // Anzeige löschen
+        btf.zeigeBIN(0, btf.ePlot.bin, 3)
+        btf.zeigeBIN(0, btf.ePlot.bin, 4)
+
         abstandsSensor = abstandsSensor && abstand > 0 && motor > c_MotorStop && selectAbstandSensorConnected()
         // selectAbstand_cm(true)
 
@@ -109,7 +113,7 @@ namespace receiver { // r-strecken.ts
             else { // kein Encoder
                 btf.setLedColors(btf.eRgbLed.c, Colors.Yellow)
                 // ledc_encoder = 0x400000 // Colors.Red
-                let zehntelsekunden = strecke * 4 // Zehntelsekunden
+                let zehntelsekunden = strecke * 4 // Zehntelsekunde = 4*25 ms
                 if (impulse)
                     zehntelsekunden /= n_EncoderFaktor
 
@@ -125,7 +129,7 @@ namespace receiver { // r-strecken.ts
                     if (abstandsSensor /* && (selectAbstand_cm(true) < abstand) */) { // && motor > c_MotorStop && abstand > 0 && selectAbstandSensorConnected() 
                         x++
                         let cm = selectAbstand_cm(true)
-                        if (x > 5 && cm < abstand) {
+                        if (x > 4 && cm < abstand) {
                             btf.zeigeBIN(x, btf.ePlot.bcd, 4)
                             btf.setLedColors(btf.eRgbLed.b, Colors.Red)
                             // ledb_abstand = Colors.Red
