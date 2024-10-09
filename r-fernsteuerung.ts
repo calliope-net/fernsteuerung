@@ -20,19 +20,19 @@ namespace receiver { // r-fernsteuerung.ts
         // let motorRichtungVor = true // true Fahrtrichtung vorwärts oder Stop (128)
         // let stop_cm = 0
 
-       /*  if (plFahrplan && selectAbstandSensorConnected()) { // lokale Funktion, kein Buffer beteiligt
-            n_AbstandSensorAktiviert = eAbstandSensorAktiviert.plFahrplan
-            n_AbstandStop = false
-            if (n_StreckeRichtungVor) // Fahrtrichtung vorwärts
-                n_StreckeStop = raiseAbstandMotorStop(stop_cm, ms) // r-strecken.ts r-sensorevents.ts
-            else
-                n_StreckeStop = false
-        }
-        // else if (buffer && (p0Fahren || p2Fahrplan) && selectAbstandSensorConnected()) {
- */
+        /*  if (plFahrplan && selectAbstandSensorConnected()) { // lokale Funktion, kein Buffer beteiligt
+             n_AbstandSensorAktiviert = eAbstandSensorAktiviert.plFahrplan
+             n_AbstandStop = false
+             if (n_StreckeRichtungVor) // Fahrtrichtung vorwärts
+                 n_StreckeStop = raiseAbstandMotorStop(stop_cm, ms) // r-strecken.ts r-sensorevents.ts
+             else
+                 n_StreckeStop = false
+         }
+         // else if (buffer && (p0Fahren || p2Fahrplan) && selectAbstandSensorConnected()) {
+  */
 
 
-         if (p0Fahren && buffer && selectAbstandSensorConnected()
+        if (p0Fahren && buffer && selectAbstandSensorConnected()
             && btf.isBetriebsart(buffer, btf.e0Betriebsart.p0Fahren)                // Betriebsart 00 mit Joystick fernsteuern
             && btf.getaktiviert(buffer, btf.e3aktiviert.m0)                         // Motor M0+Servo M1 (Fahren und Lenken)
             && btf.getSensor(buffer, btf.eBufferPointer.m0, btf.eSensor.b6Abstand)  // Abstand Sensor aktiviert
@@ -48,25 +48,25 @@ namespace receiver { // r-fernsteuerung.ts
 
             //if (raiseAbstandMotorStop(btf.getAbstand(buffer), ms)) // r-sensorevents.ts
             //    n_AbstandStop = true
-           // n_StreckeStop = false //r-strecken.ts 
+            // n_StreckeStop = false //r-strecken.ts 
         }
-      /*   else if (p2Fahrplan && buffer && selectAbstandSensorConnected()
-            && btf.isBetriebsart(buffer, btf.e0Betriebsart.p2Fahrplan)              // Betriebsart 02 Fahrplan
-            && btf.getaktiviert(buffer, n_fahrplanStartBit)                         // Motor aktiviert n_fahrplanStartBit
-            && btf.getSensor(buffer, n_fahrplanBufferPointer, btf.eSensor.b6Abstand)// n_fahrplanBufferPointer Abstand Sensor aktiviert
-        ) {
-            n_AbstandSensorAktiviert = eAbstandSensorAktiviert.p2Fahrplan
-            //  motorRichtungVor = btf.getByte(buffer, n_fahrplanBufferPointer, btf.eBufferOffset.b0_Motor) >= c_MotorStop // Fahrtrichtung vorwärts
-            // stop_cm = btf.getAbstand(buffer)
-            n_AbstandStop = false
-            n_StreckeStop = raiseAbstandMotorStop(btf.getAbstand(buffer), ms) // r-strecken.ts r-sensorevents.ts
-        }
-        else {
-            n_AbstandSensorAktiviert = eAbstandSensorAktiviert.aus
-            n_AbstandStop = false
-            n_StreckeStop = false // r-strecken.ts
-        }
- */
+        /*   else if (p2Fahrplan && buffer && selectAbstandSensorConnected()
+              && btf.isBetriebsart(buffer, btf.e0Betriebsart.p2Fahrplan)              // Betriebsart 02 Fahrplan
+              && btf.getaktiviert(buffer, n_fahrplanStartBit)                         // Motor aktiviert n_fahrplanStartBit
+              && btf.getSensor(buffer, n_fahrplanBufferPointer, btf.eSensor.b6Abstand)// n_fahrplanBufferPointer Abstand Sensor aktiviert
+          ) {
+              n_AbstandSensorAktiviert = eAbstandSensorAktiviert.p2Fahrplan
+              //  motorRichtungVor = btf.getByte(buffer, n_fahrplanBufferPointer, btf.eBufferOffset.b0_Motor) >= c_MotorStop // Fahrtrichtung vorwärts
+              // stop_cm = btf.getAbstand(buffer)
+              n_AbstandStop = false
+              n_StreckeStop = raiseAbstandMotorStop(btf.getAbstand(buffer), ms) // r-strecken.ts r-sensorevents.ts
+          }
+          else {
+              n_AbstandSensorAktiviert = eAbstandSensorAktiviert.aus
+              n_AbstandStop = false
+              n_StreckeStop = false // r-strecken.ts
+          }
+   */
 
         /*   let onFahren = btf.isBetriebsart(buffer, btf.e0Betriebsart.p0Fahren)          // Betriebsart 00 mit Joystick fernsteuern
               && btf.getaktiviert(buffer, btf.e3aktiviert.m0)                 // Motor M0+Servo M1 (Fahren und Lenken)
@@ -375,8 +375,8 @@ namespace receiver { // r-fernsteuerung.ts
     // ========== group="20 Fahrplan (5 Teilstrecken) empfangen" subcategory="Fernsteuerung"
 
     let n_fahrplanBuffer5Strecken_gestartet = false
-    let n_fahrplanStartBit: btf.e3aktiviert
-    let n_fahrplanBufferPointer: btf.eBufferPointer // wird in dauerhaft Schleife im anderen Thread ausgewertet
+    // let n_fahrplanStartBit: btf.e3aktiviert
+    // let iBufferPointer: btf.eBufferPointer // wird in dauerhaft Schleife im anderen Thread ausgewertet
 
     //% group="2 Fahrplan (5 Teilstrecken) empfangen (Abstand Sensor mit Stop Block oben)" subcategory="Fernsteuerung"
     //% block="2 Fahren Strecke 1-5 (MS:1ABCD) aus %buffer • Start Bit %startBit" weight=4
@@ -388,8 +388,8 @@ namespace receiver { // r-fernsteuerung.ts
 
             if (!n_fahrplanBuffer5Strecken_gestartet && btf.getaktiviert(buffer, startBit)) { // m1 true
                 n_fahrplanBuffer5Strecken_gestartet = true
-                n_fahrplanStartBit = startBit
-                btf.zeigeBIN(0, btf.ePlot.bin, 2)
+                //  n_fahrplanStartBit = startBit
+                btf.zeigeBIN(0, btf.ePlot.bin, 2) // mittlere LED Reihe x=2 löschen
 
                 let i = btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo) // Anzahl Durchläufe gesamt in m0-Servo
                 if (i == 0) // 0 wie 1 behandeln = 1 Durchlauf
@@ -397,25 +397,27 @@ namespace receiver { // r-fernsteuerung.ts
 
                 for (i; i > 0; i--) {
 
-                    for (n_fahrplanBufferPointer = btf.eBufferPointer.m1; n_fahrplanBufferPointer < 19; n_fahrplanBufferPointer += 3) { // 4, 7, 10, 13, 16
+                    for (let iBufferPointer = btf.eBufferPointer.m1; iBufferPointer < 19; iBufferPointer += 3) { // 4, 7, 10, 13, 16
+                        let rStrecke = false
+                        if (btf.getByte(buffer, iBufferPointer, btf.eBufferOffset.b0_Motor) != 0) { // nur Strecken mit Daten
 
-                        if (btf.getByte(buffer, n_fahrplanBufferPointer, btf.eBufferOffset.b0_Motor) != 0) { // nur Strecken mit Daten
-
-                          //  btf.zeigeBINx234Fahrplan5Strecken(buffer, n_fahrplanBufferPointer) // anzeigen im 5x5 Display
+                            btf.zeigeBINx34Fahrplan5Strecken(buffer, iBufferPointer) // anzeigen im 5x5 Display
 
                             // fahreStrecke testet Gültigkeit der Parameter
                             // fahreStrecke wertet auch Encoder, Abstand- und Spur- Sensoren aus
-                            fahreStrecke( // r-strecken.ts
-                                btf.getByte(buffer, n_fahrplanBufferPointer, btf.eBufferOffset.b0_Motor),
-                                btf.getByte(buffer, n_fahrplanBufferPointer, btf.eBufferOffset.b1_Servo),
-                                btf.getByte(buffer, n_fahrplanBufferPointer, btf.eBufferOffset.b2_Fahrstrecke),
-                                btf.getSensor(buffer, n_fahrplanBufferPointer, btf.eSensor.b6Abstand),
+                            rStrecke = fahreStrecke( // r-strecken.ts
+                                btf.getByte(buffer, iBufferPointer, btf.eBufferOffset.b0_Motor),
+                                btf.getByte(buffer, iBufferPointer, btf.eBufferOffset.b1_Servo),
+                                btf.getByte(buffer, iBufferPointer, btf.eBufferOffset.b2_Fahrstrecke),
+                                btf.getSensor(buffer, iBufferPointer, btf.eSensor.b6Abstand),
                                 btf.getAbstand(buffer),
                                 //btf.getSensor(buffer, iBufferPointer, btf.eSensor.b5Spur),
-                                btf.getSensor(buffer, n_fahrplanBufferPointer, btf.eSensor.b7Impulse),
+                                btf.getSensor(buffer, iBufferPointer, btf.eSensor.b7Impulse),
                                 true
                             )
                         } // if motor!=0
+                        if (rStrecke) // LED nur bei Erfolg anschalten
+                            btf.zeigeBIN_BufferPointer(iBufferPointer, 2)
                     } // for iBufferPointer
                 } // for i
             }

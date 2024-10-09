@@ -132,7 +132,7 @@ namespace btf { // b-dispaly5x5.ts
         //}
     }
 
-    function zeigeBIN_BufferPointer(iBufferPointer: btf.eBufferPointer, xLed: number) {
+    export function zeigeBIN_BufferPointer(iBufferPointer: btf.eBufferPointer, xLed: number) {
         let int2 = a5x5_xBuffer[xLed]
         if (iBufferPointer == btf.eBufferPointer.m1) int2 |= 16
         if (iBufferPointer == btf.eBufferPointer.ma) int2 |= 8
@@ -143,18 +143,9 @@ namespace btf { // b-dispaly5x5.ts
         zeigeBIN(int2, ePlot.bin, xLed)
     }
 
-    export function zeigeBINx234Fahrplan5Strecken(buffer: Buffer, iBufferPointer: btf.eBufferPointer) { // 4, 7, 10, 13, 16
-        /*   let xLed = 2
-          let int2 = a5x5_xBuffer[xLed]
-          if (iBufferPointer == btf.eBufferPointer.m1) int2 |= 16 // { led.plot(xLed, 0) } //else { led.unplot(x, 0) }
-          if (iBufferPointer == btf.eBufferPointer.ma) int2 |= 8 // { led.plot(xLed, 1) } //else { led.unplot(x, 1) }
-          if (iBufferPointer == btf.eBufferPointer.mb) int2 |= 4 // { led.plot(xLed, 2) } //else { led.unplot(x, 2) }
-          if (iBufferPointer == btf.eBufferPointer.mc) int2 |= 2 // { led.plot(xLed, 3) } //else { led.unplot(x, 3) }
-          if (iBufferPointer == btf.eBufferPointer.md) int2 |= 1 // { led.plot(xLed, 4) } //else { led.unplot(x, 4) }
-  
-          zeigeBIN(int2, ePlot.bin, xLed) */
+    export function zeigeBINx34Fahrplan5Strecken(buffer: Buffer, iBufferPointer: btf.eBufferPointer) { // 4, 7, 10, 13, 16
 
-        zeigeBIN_BufferPointer(iBufferPointer, 2)
+        // zeigeBIN_BufferPointer(iBufferPointer, 2)
 
         zeigeBIN_map255(getByte(buffer, iBufferPointer, eBufferOffset.b0_Motor), 3) // map reduziert 8 Bit auf 5 Bit, damit es ins Display passt
         zeigeBIN(getByte(buffer, iBufferPointer, eBufferOffset.b1_Servo), ePlot.bin, 4) // Servo hat nur 5 Bit

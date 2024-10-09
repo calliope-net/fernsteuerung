@@ -176,7 +176,7 @@ namespace cb2 { // c-fernsteuerung.ts
 
             if (!n_fahrplanBuffer5Strecken_gestartet && btf.getaktiviert(buffer, startBit)) { // m1 true
                 n_fahrplanBuffer5Strecken_gestartet = true
-                btf.zeigeBIN(0, btf.ePlot.bin, 2)
+                btf.zeigeBIN(0, btf.ePlot.bin, 2) // mittlere LED Reihe x=2 löschen
 
                 let i = btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo) // Anzahl Durchläufe gesamt
                 if (i == 0)
@@ -186,7 +186,7 @@ namespace cb2 { // c-fernsteuerung.ts
 
                     for (let iBufferPointer = btf.eBufferPointer.m1; iBufferPointer < 19; iBufferPointer += 3) { // 4, 7, 10, 13, 16
 
-                        btf.zeigeBINx234Fahrplan5Strecken(buffer, iBufferPointer) // anzeigen im 5x5 Display
+                        btf.zeigeBINx34Fahrplan5Strecken(buffer, iBufferPointer) // anzeigen im 5x5 Display
 
                         // fahreStrecke testet Gültigkeit der Parameter
                         // fahreStrecke wertet auch Encoder, Abstand- und Spur- Sensoren aus
@@ -199,6 +199,7 @@ namespace cb2 { // c-fernsteuerung.ts
                             btf.getSensor(buffer, iBufferPointer, btf.eSensor.b5Spur),
                             btf.getSensor(buffer, iBufferPointer, btf.eSensor.b7Impulse)
                         )
+                        btf.zeigeBIN_BufferPointer(iBufferPointer, 2)
                     } // for iBufferPointer
                 }
             }

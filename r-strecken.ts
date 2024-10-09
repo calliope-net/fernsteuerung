@@ -55,9 +55,9 @@ namespace receiver { // r-strecken.ts
 
             if (checkEncoder && encoderRegisterEvent()) { // n_EncoderEventRegistered && n_hasEncoder
                 btf.setLedColors(btf.eRgbLed.c, Colors.Green)
-              
+
                 let timeout_Encoder = abstandsSensor ? 80 : 10 // 2 s Timeout wenn Encoder nicht zählt
-              
+
                 encoderStartStrecke(true, strecke, impulse) // stellt n_EncoderCounter auf 0
                 pinServo16(servo)
                 selectMotor(motor)
@@ -91,7 +91,7 @@ namespace receiver { // r-strecken.ts
             }
             else { // kein Encoder
                 btf.setLedColors(btf.eRgbLed.c, Colors.Yellow)
-              
+
                 let zehntelsekunden = strecke * 4 // Zehntelsekunde = 4*25 ms
                 if (impulse)
                     zehntelsekunden /= n_EncoderFaktor
@@ -106,7 +106,7 @@ namespace receiver { // r-strecken.ts
                         //x++
                         //let cm = selectAbstand_cm(true)
                         //if (x > 4 && cm < abstand) {
-                        btf.zeigeBIN(x, btf.ePlot.bcd, 4)
+                        // btf.zeigeBIN(x, btf.ePlot.bcd, 4)
 
                         btf.setLedColors(btf.eRgbLed.b, Colors.Red)
                         ret = false
