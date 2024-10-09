@@ -399,28 +399,31 @@ namespace receiver { // r-fernsteuerung.ts
 
                     for (n_fahrplanBufferPointer = btf.eBufferPointer.m1; n_fahrplanBufferPointer < 19; n_fahrplanBufferPointer += 3) { // 4, 7, 10, 13, 16
 
-                        btf.zeigeBINx234Fahrplan5Strecken(buffer, n_fahrplanBufferPointer) // anzeigen im 5x5 Display
+                        if (btf.getByte(buffer, n_fahrplanBufferPointer, btf.eBufferOffset.b0_Motor) != 0) { // nur Strecken mit Daten
 
-                        // fahreStrecke testet Gültigkeit der Parameter
-                        // fahreStrecke wertet auch Encoder, Abstand- und Spur- Sensoren aus
-                        fahreStrecke( // r-strecken.ts
-                            btf.getByte(buffer, n_fahrplanBufferPointer, btf.eBufferOffset.b0_Motor),
-                            btf.getByte(buffer, n_fahrplanBufferPointer, btf.eBufferOffset.b1_Servo),
-                            btf.getByte(buffer, n_fahrplanBufferPointer, btf.eBufferOffset.b2_Fahrstrecke),
-                            btf.getSensor(buffer, n_fahrplanBufferPointer, btf.eSensor.b6Abstand),
-                            btf.getAbstand(buffer),
-                            //btf.getSensor(buffer, iBufferPointer, btf.eSensor.b5Spur),
-                            btf.getSensor(buffer, n_fahrplanBufferPointer, btf.eSensor.b7Impulse),
-                            true
-                        )
+                            btf.zeigeBINx234Fahrplan5Strecken(buffer, n_fahrplanBufferPointer) // anzeigen im 5x5 Display
+
+                            // fahreStrecke testet Gültigkeit der Parameter
+                            // fahreStrecke wertet auch Encoder, Abstand- und Spur- Sensoren aus
+                            fahreStrecke( // r-strecken.ts
+                                btf.getByte(buffer, n_fahrplanBufferPointer, btf.eBufferOffset.b0_Motor),
+                                btf.getByte(buffer, n_fahrplanBufferPointer, btf.eBufferOffset.b1_Servo),
+                                btf.getByte(buffer, n_fahrplanBufferPointer, btf.eBufferOffset.b2_Fahrstrecke),
+                                btf.getSensor(buffer, n_fahrplanBufferPointer, btf.eSensor.b6Abstand),
+                                btf.getAbstand(buffer),
+                                //btf.getSensor(buffer, iBufferPointer, btf.eSensor.b5Spur),
+                                btf.getSensor(buffer, n_fahrplanBufferPointer, btf.eSensor.b7Impulse),
+                                true
+                            )
+                        } // if motor!=0
                     } // for iBufferPointer
-                }
+                } // for i
             }
             else if (n_fahrplanBuffer5Strecken_gestartet && !btf.getaktiviert(buffer, startBit)) { // m1 false
                 n_fahrplanBuffer5Strecken_gestartet = false
-                btf.zeigeBIN(0, btf.ePlot.bin, 2)
-                btf.zeigeBIN(0, btf.ePlot.bin, 3)
-                btf.zeigeBIN(0, btf.ePlot.bin, 4)
+                // btf.zeigeBIN(0, btf.ePlot.bin, 2) letzte Strecke bleibt im Display
+                // btf.zeigeBIN(0, btf.ePlot.bin, 3)
+                // btf.zeigeBIN(0, btf.ePlot.bin, 4)
             }
         } // 0x20 Fahrplan
     }

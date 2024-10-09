@@ -50,7 +50,7 @@ namespace receiver { // r-strecken.ts
 
         if (motor != 0 && motor != c_MotorStop && servo != 0 && strecke != 0) {
 
-            btf.resetTimer()
+            btf.resetTimer() // langes Timeout 30s, Abschaltung verhindern
 
             if (checkEncoder && encoderRegisterEvent()) { // n_EncoderEventRegistered && n_hasEncoder
                 btf.setLedColors(btf.eRgbLed.c, Colors.Green)

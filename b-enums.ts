@@ -100,13 +100,13 @@ namespace btf { // b-enums.ts
     // ========== Steuer-Byte 0
 
     export enum e0Betriebsart {
-        //% block="00 mit Joystick fernsteuern"
+        //% block="0 mit Joystick fernsteuern"
         p0Fahren = 0x00,
-        //% block="10 Programm fernstarten"
+        //% block="1 Programm fernstarten"
         p1Lokal = 0x10,
-        //% block="20 Fahrplan senden"
+        //% block="2 Fahrplan senden"
         p2Fahrplan = 0x20,
-        //% block="30 Sensoren fernprogrammieren"
+        //% block="3 Sensoren fernprogrammieren"
         p3Sensoren = 0x30,
     }
 

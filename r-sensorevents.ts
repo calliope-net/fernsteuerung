@@ -167,7 +167,7 @@ namespace receiver { // r-sensorevents.ts
     }
 
     //% group="Ultraschall oder Laser Distance Sensor" subcategory="Sensoren"
-    //% block="Abstand Sensor aktiviert %on" weight=7
+    //% block="Abstand Sensor aktiviert %on (Laser Ranging)" weight=7
     //% on.shadow=toggleYesNo
     export function selectRanging(on: boolean) {
         if (n_Hardware == eHardware.v3 && laserSensorConnected())
