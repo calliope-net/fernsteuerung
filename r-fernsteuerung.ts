@@ -1,22 +1,22 @@
 
 namespace receiver { // r-fernsteuerung.ts
 
-    // ========== group="0 Fernsteuerung oder 2 Fahrplan (Abstand Sensor Motor Stop auslösen)" subcategory="Fernsteuerung"
+    // ========== group="0 Fernsteuerung mit Joystick (Sensor auslösen in dauerhaft Schleife)" subcategory="Fernsteuerung"
 
-    export enum eAbstandSensorAktiviert { aus, p0Fahren/* , p2Fahrplan, plFahrplan */ }
+    enum eAbstandSensorAktiviert { aus, p0Fahren/* , p2Fahrplan, plFahrplan */ } //• 2 Fahrplan %p2Fahrplan lokal %plFahrplan • Stop (cm) %stop_cm 
 
-    export let n_AbstandSensorAktiviert = eAbstandSensorAktiviert.aus // für rgbLed
+    let n_AbstandSensorAktiviert = eAbstandSensorAktiviert.aus // für rgbLed
 
-    //% group="0 Fernsteuerung oder 2 Fahrplan (in dauerhaft Schleife Motor Stop auslösen)" subcategory="Fernsteuerung"
-    //% block="0 2 Abstand Sensor Stop auslösen %buffer || • 0 Joystick %p0Fahren • 2 Fahrplan %p2Fahrplan lokal %plFahrplan • Stop (cm) %stop_cm • Pause %ms ms" weight=8
+    //% group="0 Fernsteuerung mit Joystick (Sensor auslösen in dauerhaft Schleife)" subcategory="Fernsteuerung"
+    //% block="0 Abstand Sensor Stop auslösen %buffer || • Joystick %p0Fahren • Pause %ms ms" weight=8
     //% buffer.shadow=btf_receivedBuffer19
     //% p0Fahren.shadow=toggleOnOff p0Fahren.defl=1
-    //% p2Fahrplan.shadow=toggleOnOff p2Fahrplan.defl=1
-    //% plFahrplan.shadow=toggleOnOff
-    //% stop_cm.defl=30
+    // p2Fahrplan.shadow=toggleOnOff p2Fahrplan.defl=1
+    // plFahrplan.shadow=toggleOnOff
+    // stop_cm.defl=30
     //% ms.defl=25
-    //% inlineInputMode=inline 
-    export function buffer_raiseAbstandMotorStop(buffer: Buffer, p0Fahren = true, p2Fahrplan = true, plFahrplan = false, stop_cm = 30, ms = 25) {
+    // inlineInputMode=inline 
+    export function buffer_raiseAbstandMotorStop(buffer: Buffer, p0Fahren = true/* , p2Fahrplan = true, plFahrplan = false, stop_cm = 30*/, ms = 25) {
         // let motorRichtungVor = true // true Fahrtrichtung vorwärts oder Stop (128)
         // let stop_cm = 0
 
@@ -61,12 +61,13 @@ namespace receiver { // r-fernsteuerung.ts
               n_AbstandStop = false
               n_StreckeStop = raiseAbstandMotorStop(btf.getAbstand(buffer), ms) // r-strecken.ts r-sensorevents.ts
           }
-          else {
-              n_AbstandSensorAktiviert = eAbstandSensorAktiviert.aus
-              n_AbstandStop = false
-              n_StreckeStop = false // r-strecken.ts
-          }
    */
+        else {
+            n_AbstandSensorAktiviert = eAbstandSensorAktiviert.aus
+            n_AbstandStop = false
+            // n_StreckeStop = false // r-strecken.ts
+        }
+
 
         /*   let onFahren = btf.isBetriebsart(buffer, btf.e0Betriebsart.p0Fahren)          // Betriebsart 00 mit Joystick fernsteuern
               && btf.getaktiviert(buffer, btf.e3aktiviert.m0)                 // Motor M0+Servo M1 (Fahren und Lenken)
@@ -102,12 +103,12 @@ namespace receiver { // r-fernsteuerung.ts
 
 
 
-    // ========== group="0 Fernsteuerung mit Joystick (reagiert auf Sensoren)" subcategory="Fernsteuerung"
+    // ========== group="0 Fernsteuerung mit Joystick (Sensor auslösen in dauerhaft Schleife)" subcategory="Fernsteuerung"
 
     let n_AbstandStop = false // außerhalb der function, damit der Wert gespeichert bleibt
     let n_SpurStop = false
 
-    //% group="0 Fernsteuerung mit Joystick (Abstand Sensor mit Stop Block oben)" subcategory="Fernsteuerung"
+    //% group="0 Fernsteuerung mit Joystick (Sensor auslösen in dauerhaft Schleife)" subcategory="Fernsteuerung"
     //% block="0 Fahren und Lenken mit Joystick (M:01ABCD S:0) aus %buffer " weight=5
     //% buffer.shadow="btf_receivedBuffer19"
     export function fahreJoystick(buffer: Buffer) {
@@ -378,7 +379,7 @@ namespace receiver { // r-fernsteuerung.ts
     // let n_fahrplanStartBit: btf.e3aktiviert
     // let iBufferPointer: btf.eBufferPointer // wird in dauerhaft Schleife im anderen Thread ausgewertet
 
-    //% group="2 Fahrplan (5 Teilstrecken) empfangen (Abstand Sensor mit Stop Block oben)" subcategory="Fernsteuerung"
+    //% group="2 Fahrplan (5 Teilstrecken) empfangen" subcategory="Fernsteuerung"
     //% block="2 Fahren Strecke 1-5 (MS:1ABCD) aus %buffer • Start Bit %startBit" weight=4
     //% buffer.shadow=btf_receivedBuffer19
     //% startBit.defl=btf.e3aktiviert.m1
