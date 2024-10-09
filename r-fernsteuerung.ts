@@ -3,7 +3,7 @@ namespace receiver { // r-fernsteuerung.ts
 
     // ========== group="0 Fernsteuerung oder 2 Fahrplan (Abstand Sensor Motor Stop auslösen)" subcategory="Fernsteuerung"
 
-    export enum eAbstandSensorAktiviert { aus, p0Fahren, p2Fahrplan, plFahrplan }
+    export enum eAbstandSensorAktiviert { aus, p0Fahren/* , p2Fahrplan, plFahrplan */ }
 
     export let n_AbstandSensorAktiviert = eAbstandSensorAktiviert.aus // für rgbLed
 
@@ -20,7 +20,7 @@ namespace receiver { // r-fernsteuerung.ts
         // let motorRichtungVor = true // true Fahrtrichtung vorwärts oder Stop (128)
         // let stop_cm = 0
 
-        if (plFahrplan && selectAbstandSensorConnected()) { // lokale Funktion, kein Buffer beteiligt
+       /*  if (plFahrplan && selectAbstandSensorConnected()) { // lokale Funktion, kein Buffer beteiligt
             n_AbstandSensorAktiviert = eAbstandSensorAktiviert.plFahrplan
             n_AbstandStop = false
             if (n_StreckeRichtungVor) // Fahrtrichtung vorwärts
@@ -29,10 +29,10 @@ namespace receiver { // r-fernsteuerung.ts
                 n_StreckeStop = false
         }
         // else if (buffer && (p0Fahren || p2Fahrplan) && selectAbstandSensorConnected()) {
+ */
 
 
-
-        else if (p0Fahren && buffer && selectAbstandSensorConnected()
+         if (p0Fahren && buffer && selectAbstandSensorConnected()
             && btf.isBetriebsart(buffer, btf.e0Betriebsart.p0Fahren)                // Betriebsart 00 mit Joystick fernsteuern
             && btf.getaktiviert(buffer, btf.e3aktiviert.m0)                         // Motor M0+Servo M1 (Fahren und Lenken)
             && btf.getSensor(buffer, btf.eBufferPointer.m0, btf.eSensor.b6Abstand)  // Abstand Sensor aktiviert
@@ -48,9 +48,9 @@ namespace receiver { // r-fernsteuerung.ts
 
             //if (raiseAbstandMotorStop(btf.getAbstand(buffer), ms)) // r-sensorevents.ts
             //    n_AbstandStop = true
-            n_StreckeStop = false //r-strecken.ts 
+           // n_StreckeStop = false //r-strecken.ts 
         }
-        else if (p2Fahrplan && buffer && selectAbstandSensorConnected()
+      /*   else if (p2Fahrplan && buffer && selectAbstandSensorConnected()
             && btf.isBetriebsart(buffer, btf.e0Betriebsart.p2Fahrplan)              // Betriebsart 02 Fahrplan
             && btf.getaktiviert(buffer, n_fahrplanStartBit)                         // Motor aktiviert n_fahrplanStartBit
             && btf.getSensor(buffer, n_fahrplanBufferPointer, btf.eSensor.b6Abstand)// n_fahrplanBufferPointer Abstand Sensor aktiviert
@@ -66,7 +66,7 @@ namespace receiver { // r-fernsteuerung.ts
             n_AbstandStop = false
             n_StreckeStop = false // r-strecken.ts
         }
-
+ */
 
         /*   let onFahren = btf.isBetriebsart(buffer, btf.e0Betriebsart.p0Fahren)          // Betriebsart 00 mit Joystick fernsteuern
               && btf.getaktiviert(buffer, btf.e3aktiviert.m0)                 // Motor M0+Servo M1 (Fahren und Lenken)
