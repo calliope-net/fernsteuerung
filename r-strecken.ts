@@ -126,7 +126,7 @@ namespace receiver { // r-strecken.ts
 
                         let cm = selectAbstand_cm(true)
                         if (cm < abstand) {
-                            btf.zeigeBIN(cm, btf.ePlot.bcd, 4)
+                            btf.zeigeBIN(abstand, btf.ePlot.bcd, 4)
                             btf.setLedColors(btf.eRgbLed.b, Colors.Red)
                             // ledb_abstand = Colors.Red
                             break
