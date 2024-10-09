@@ -185,12 +185,12 @@ namespace cb2 { // c-fernsteuerung.ts
                 for (i; i > 0; i--) {
 
                     for (let iBufferPointer = btf.eBufferPointer.m1; iBufferPointer < 19; iBufferPointer += 3) { // 4, 7, 10, 13, 16
-
+                        let rStrecke = false
                         btf.zeigeBINx34Fahrplan5Strecken(buffer, iBufferPointer) // anzeigen im 5x5 Display
 
                         // fahreStrecke testet Gültigkeit der Parameter
                         // fahreStrecke wertet auch Encoder, Abstand- und Spur- Sensoren aus
-                        fahreStrecke(
+                        rStrecke = fahreStreckeRet(
                             btf.getByte(buffer, iBufferPointer, btf.eBufferOffset.b0_Motor),
                             btf.getByte(buffer, iBufferPointer, btf.eBufferOffset.b1_Servo),
                             btf.getByte(buffer, iBufferPointer, btf.eBufferOffset.b2_Fahrstrecke),
@@ -199,7 +199,8 @@ namespace cb2 { // c-fernsteuerung.ts
                             btf.getSensor(buffer, iBufferPointer, btf.eSensor.b5Spur),
                             btf.getSensor(buffer, iBufferPointer, btf.eSensor.b7Impulse)
                         )
-                        btf.zeigeBIN_BufferPointer(iBufferPointer, 2)
+                        if (rStrecke)
+                            btf.zeigeBIN_BufferPointer(iBufferPointer, 2)
                     } // for iBufferPointer
                 }
             }

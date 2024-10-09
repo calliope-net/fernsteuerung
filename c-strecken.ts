@@ -17,7 +17,7 @@ namespace cb2 { // c-strecken.ts
     //% checkEncoder.shadow=toggleYesNo checkEncoder.defl=1
     //% inlineInputMode=inline
     export function fahreStreckePicker(motor: number, servo: number, strecke: number, abstandsSensor = true, abstand = 20, spurSensor = false, impulse = false, lenkenProzent = 50, checkEncoder = true) {
-        fahreStrecke(btf.speedPicker(motor), btf.protractorPicker(servo), strecke, abstandsSensor, abstand, spurSensor, impulse, lenkenProzent, checkEncoder)
+        fahreStreckeRet(btf.speedPicker(motor), btf.protractorPicker(servo), strecke, abstandsSensor, abstand, spurSensor, impulse, lenkenProzent, checkEncoder)
     }
 
 
@@ -37,10 +37,16 @@ namespace cb2 { // c-strecken.ts
     //% checkEncoder.shadow=toggleYesNo checkEncoder.defl=1
     //% inlineInputMode=inline
     export function fahreStrecke(motor: number, servo: number, strecke: number, abstandsSensor = true, abstand = 20, spurSensor = false, impulse = false, lenkenProzent = 50, checkEncoder = true) {
+        fahreStreckeRet(motor, servo, strecke, abstandsSensor, abstand, spurSensor, impulse, lenkenProzent, checkEncoder)
+    }
+
+    export function fahreStreckeRet(motor: number, servo: number, strecke: number, abstandsSensor = true, abstand = 20, spurSensor = false, impulse = false, lenkenProzent = 50, checkEncoder = true) {
+
 
         writeMotorenStop()
 
         if (motor != 0 && motor != c_MotorStop && servo != 0 && strecke != 0) {
+            let ret = true
             let sensor_color = Colors.Off
             let hasEncoder = false
             if (checkEncoder)
@@ -59,14 +65,17 @@ namespace cb2 { // c-strecken.ts
                 {
                     if (timeout_Encoder-- <= 0) {
                         sensor_color = Colors.Red
+                        ret = false
                         break
                     }
                     if (abstandsSensor && motor > c_MotorStop && abstand > 0 && readUltraschallAbstand() < abstand) {
                         sensor_color = Colors.Yellow
+                        ret = false
                         break
                     }
                     if (spurSensor && !readSpursensor(eDH.hell, eDH.hell, true)) { // Spursensor aktiviert und schwarze Linie erkannt
                         sensor_color = Colors.White
+                        ret = false
                         break
                     }
                     // Pause eventuell bei hoher Geschwindigkeit motor verringern
@@ -83,10 +92,12 @@ namespace cb2 { // c-strecken.ts
                 {
                     if (abstandsSensor && motor > c_MotorStop && abstand > 0 && readUltraschallAbstand() < abstand) {
                         sensor_color = Colors.Orange
+                        ret = false
                         break
                     }
                     if (spurSensor && !readSpursensor(eDH.hell, eDH.hell, true)) { // Spursensor aktiviert und schwarze Linie erkannt
                         sensor_color = Colors.White
+                        ret = false
                         break
                     }
 
@@ -101,8 +112,10 @@ namespace cb2 { // c-strecken.ts
                 basic.pause(1000)
                 writecb2RgbLeds(sensor_color, false)
             }
+            return ret
         }
-
+        else
+            return false
     }
 
 
@@ -122,7 +135,7 @@ namespace cb2 { // c-strecken.ts
 
 
     // ========== group="Encoder (Calli:bot 2E)" subcategory="Strecken"
-    
+
     let n_Callibot2_x22hasEncoder = false // 2:CB2 3:CB2E 4:CB2A=Gymnasium
 
 
