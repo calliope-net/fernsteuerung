@@ -8,10 +8,10 @@ namespace sender { // s-fahrplan.ts
     //% block="2 Fahrplan senden • Fahren und Lenken %buffer Strecke 1 %p1 Strecke 2 %p2 Strecke 3 %p3 Strecke 4 %p4 Strecke 5 %p5 Anzahl Durchläufe %count" weight=8
     //% buffer.shadow="btf_sendBuffer19"
     //% p1.shadow=sender_StreckePicker
-    //% p2.shadow=sender_StreckePicker
-    //% p3.shadow=sender_StreckePicker
-    //% p4.shadow=sender_StreckePicker
-    //% p5.shadow=sender_StreckePicker
+    // p2.shadow=sender_StreckePicker
+    // p3.shadow=sender_StreckePicker
+    // p4.shadow=sender_StreckePicker
+    // p5.shadow=sender_StreckePicker
     //% count.min=1 count.max=8 count.defl=1
     export function send20Strecken(buffer: Buffer, p1: Buffer, p2: Buffer, p3: Buffer, p4: Buffer, p5: Buffer, count = 1) {
 
