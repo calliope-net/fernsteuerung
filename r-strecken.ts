@@ -106,7 +106,7 @@ namespace receiver { // r-strecken.ts
             else { // kein Encoder
                 btf.setLedColors(btf.eRgbLed.c, Colors.Yellow)
                 // ledc_encoder = 0x400000 // Colors.Red
-                let zehntelsekunden = strecke * 4 // Zehntelsekunden
+                let zehntelsekunden = strecke // Zehntelsekunden
                 if (impulse)
                     zehntelsekunden /= n_EncoderFaktor
 
@@ -129,7 +129,7 @@ namespace receiver { // r-strecken.ts
                     //    break
                     //}
 
-                    basic.pause(25) // 1 Zehntelsekunde = 4*25 ms
+                    basic.pause(100) // 1 Zehntelsekunde = 4*25 ms
                 }
                 selectMotor(c_MotorStop)
             }
