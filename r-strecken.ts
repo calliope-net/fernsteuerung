@@ -67,6 +67,7 @@ namespace receiver { // r-strecken.ts
         if (motor != 0 && motor != c_MotorStop && servo != 0 && strecke != 0) {
 
             btf.resetTimer() // langes Timeout 30s, Abschaltung verhindern
+            let x = 0 // erste 100ms Messungen selectAbstand_cm(true) ignorieren
 
             if (checkEncoder && encoderRegisterEvent()) { // n_EncoderEventRegistered && n_hasEncoder
                 btf.setLedColors(btf.eRgbLed.c, Colors.Green)
@@ -88,12 +89,9 @@ namespace receiver { // r-strecken.ts
                         // ledc_encoder = Colors.Red
                         break
                     }
-                    /*  if (n_StreckeStop) {
-                         ledb_abstand = Colors.Red
-                         btf.setLedColors(btf.eRgbLed.b,Colors.Red)
-                         break
-                     } */
-                    if (abstandsSensor && selectAbstand_cm(true) < abstand) { // && motor > c_MotorStop && abstand > 0 && selectAbstandSensorConnected() 
+
+                    x++
+                    if (abstandsSensor && (selectAbstand_cm(true) < abstand) && x > 4) { // && motor > c_MotorStop && abstand > 0 && selectAbstandSensorConnected()
                         btf.setLedColors(btf.eRgbLed.b, Colors.Red)
                         // ledb_abstand = Colors.Red
                         break
@@ -119,13 +117,9 @@ namespace receiver { // r-strecken.ts
 
                 pinServo16(servo)
                 selectMotor(motor)
-                let x = 0
+
                 while (zehntelsekunden-- > 0) //
                 {
-                    /* if (n_StreckeStop) {
-                        ledb_abstand = Colors.Red
-                        break
-                    } */
                     x++
                     if (abstandsSensor && (selectAbstand_cm(true) < abstand) && x > 4) { // && motor > c_MotorStop && abstand > 0 && selectAbstandSensorConnected() 
                         //x++
@@ -136,8 +130,6 @@ namespace receiver { // r-strecken.ts
                         btf.setLedColors(btf.eRgbLed.b, Colors.Red)
                         break
                         //}
-
-
                     }
                     //if (spurSensor && !getSpursensor(eDH.hell, eDH.hell)) { // Spursensor aktiviert und schwarze Linie erkannt
                     //    sensor_color = Colors.White
