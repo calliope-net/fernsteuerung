@@ -47,12 +47,13 @@ namespace receiver { // r-strecken.ts
         abstandsSensor = abstandsSensor && abstand > 0 && motor > c_MotorStop && selectAbstandSensorConnected()
 
         if (abstandsSensor) {
-            if (selectAbstand_cm(true) < abstand) {
-                btf.setLedColors(btf.eRgbLed.b, Colors.Orange)
-                motor = 0
-            }
-            else
-                btf.setLedColors(btf.eRgbLed.b, Colors.Yellow, abstandsSensor)
+            selectAbstand_cm(true)
+            /*  if (selectAbstand_cm(true) < abstand) {
+                 btf.setLedColors(btf.eRgbLed.b, Colors.Orange)
+                 motor = 0
+             }
+             else */
+            btf.setLedColors(btf.eRgbLed.b, Colors.Yellow)
         }
 
 
