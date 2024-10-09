@@ -115,7 +115,7 @@ namespace receiver { // r-strecken.ts
 
                 pinServo16(servo)
                 selectMotor(motor)
-
+                let x = 0
                 while (zehntelsekunden-- > 0) //
                 {
                     /* if (n_StreckeStop) {
@@ -123,10 +123,10 @@ namespace receiver { // r-strecken.ts
                         break
                     } */
                     if (abstandsSensor /* && (selectAbstand_cm(true) < abstand) */) { // && motor > c_MotorStop && abstand > 0 && selectAbstandSensorConnected() 
-
+                        x++
                         let cm = selectAbstand_cm(true)
                         if (cm < abstand) {
-                            btf.zeigeBIN(abstand, btf.ePlot.bcd, 4)
+                            btf.zeigeBIN(x, btf.ePlot.bcd, 4)
                             btf.setLedColors(btf.eRgbLed.b, Colors.Red)
                             // ledb_abstand = Colors.Red
                             break
