@@ -125,7 +125,7 @@ namespace receiver { // r-strecken.ts
                     if (abstandsSensor /* && (selectAbstand_cm(true) < abstand) */) { // && motor > c_MotorStop && abstand > 0 && selectAbstandSensorConnected() 
                         x++
                         let cm = selectAbstand_cm(true)
-                        if (cm < abstand) {
+                        if (x > 5 && cm < abstand) {
                             btf.zeigeBIN(x, btf.ePlot.bcd, 4)
                             btf.setLedColors(btf.eRgbLed.b, Colors.Red)
                             // ledb_abstand = Colors.Red
