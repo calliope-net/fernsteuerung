@@ -45,16 +45,19 @@ namespace receiver { // r-strecken.ts
         // let ledc_encoder = Colors.Off
 
         abstandsSensor = abstandsSensor && abstand > 0 && motor > c_MotorStop && selectAbstandSensorConnected()
+        // selectAbstand_cm(true)
 
-        if (abstandsSensor) {
-            selectAbstand_cm(true)
-            /*  if (selectAbstand_cm(true) < abstand) {
-                 btf.setLedColors(btf.eRgbLed.b, Colors.Orange)
-                 motor = 0
-             }
-             else */
-            btf.setLedColors(btf.eRgbLed.b, Colors.Yellow)
-        }
+        /*   if (abstandsSensor) {
+              selectAbstand_cm(true)
+               if (selectAbstand_cm(true) < abstand) {
+                   btf.setLedColors(btf.eRgbLed.b, Colors.Orange)
+                   motor = 0
+               }
+               else
+              btf.setLedColors(btf.eRgbLed.b, Colors.Yellow)
+          } */
+
+        btf.setLedColors(btf.eRgbLed.b, Colors.Yellow, abstandsSensor)
 
 
         if (motor != 0 && motor != c_MotorStop && servo != 0 && strecke != 0) {
@@ -119,10 +122,17 @@ namespace receiver { // r-strecken.ts
                         ledb_abstand = Colors.Red
                         break
                     } */
-                    if (abstandsSensor && selectAbstand_cm(true) < abstand) { // && motor > c_MotorStop && abstand > 0 && selectAbstandSensorConnected() 
-                        btf.setLedColors(btf.eRgbLed.b, Colors.Red)
-                        // ledb_abstand = Colors.Red
-                        break
+                    if (abstandsSensor /* && (selectAbstand_cm(true) < abstand) */) { // && motor > c_MotorStop && abstand > 0 && selectAbstandSensorConnected() 
+
+                        let cm = selectAbstand_cm(true)
+                        if (cm < abstand) {
+                            btf.zeigeBIN(cm, btf.ePlot.bcd, 4)
+                            btf.setLedColors(btf.eRgbLed.b, Colors.Red)
+                            // ledb_abstand = Colors.Red
+                            break
+                        }
+
+
                     }
                     //if (spurSensor && !getSpursensor(eDH.hell, eDH.hell)) { // Spursensor aktiviert und schwarze Linie erkannt
                     //    sensor_color = Colors.White

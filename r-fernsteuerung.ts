@@ -401,7 +401,7 @@ namespace receiver { // r-fernsteuerung.ts
 
                         if (btf.getByte(buffer, n_fahrplanBufferPointer, btf.eBufferOffset.b0_Motor) != 0) { // nur Strecken mit Daten
 
-                            btf.zeigeBINx234Fahrplan5Strecken(buffer, n_fahrplanBufferPointer) // anzeigen im 5x5 Display
+                          //  btf.zeigeBINx234Fahrplan5Strecken(buffer, n_fahrplanBufferPointer) // anzeigen im 5x5 Display
 
                             // fahreStrecke testet Gültigkeit der Parameter
                             // fahreStrecke wertet auch Encoder, Abstand- und Spur- Sensoren aus
