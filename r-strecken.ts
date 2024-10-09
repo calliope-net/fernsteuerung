@@ -23,8 +23,8 @@ namespace receiver { // r-strecken.ts
 
     // ========== group="Geschwindigkeit (1 ↓ 128 ↑ 255), Winkel (1 ↖ 16 ↗ 31)" subcategory="Strecken"
 
-   // export let n_StreckeStop = false
-   // export let n_StreckeRichtungVor = true
+    // export let n_StreckeStop = false
+    // export let n_StreckeRichtungVor = true
 
     //% group="Geschwindigkeit (1 ↓ 128 ↑ 255), Winkel (1 ↖ 16 ↗ 31)" subcategory="Strecken"
     //% block="Fahren (1↓128↑255) %motor Lenken (1↖16↗31) %servo Länge %strecke cm\\|⅒s || Stop %abstandsSensor bei Abstand < (cm) %abstand Impulse %impulse Encoder %checkEncoder" weight=5
@@ -46,7 +46,15 @@ namespace receiver { // r-strecken.ts
 
         abstandsSensor = abstandsSensor && abstand > 0 && motor > c_MotorStop && selectAbstandSensorConnected()
 
-        btf.setLedColors(btf.eRgbLed.b, Colors.Yellow, abstandsSensor)
+        if (abstandsSensor) {
+            if (selectAbstand_cm(true) < abstand) {
+                btf.setLedColors(btf.eRgbLed.b, Colors.Orange)
+                motor = 0
+            }
+            else
+                btf.setLedColors(btf.eRgbLed.b, Colors.Yellow, abstandsSensor)
+        }
+
 
         if (motor != 0 && motor != c_MotorStop && servo != 0 && strecke != 0) {
 
@@ -58,7 +66,7 @@ namespace receiver { // r-strecken.ts
                 let timeout_Encoder = abstandsSensor ? 80 : 10 // 2 s Timeout wenn Encoder nicht zählt
                 // let timeout_EncoderCounter = n_EncoderCounter // zum Test ob sich der Wet ändert
 
-               // n_StreckeRichtungVor = motor >= c_MotorStop // Wert eintragen für Stop Event
+                // n_StreckeRichtungVor = motor >= c_MotorStop // Wert eintragen für Stop Event
 
                 encoderStartStrecke(true, strecke, impulse) // stellt n_EncoderCounter auf 0
                 pinServo16(servo)
