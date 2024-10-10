@@ -64,7 +64,7 @@ namespace receiver { // r-strecken.ts
 
                 while (n_EncoderAutoStop) //
                 {
-                    if (timeout_Encoder-- <= 0 && n_EncoderCounter < 10) { // kein Impuls nach 2s: kein Encoder vorhanden
+                    if (timeout_Encoder-- <= 0 && Math.abs(n_EncoderCounter) < 10) { // kein Impuls nach 2s: kein Encoder vorhanden
                         n_hasEncoder = false // bei ersten 2s timeout false, nächster Aufruf zählt dann nach Zeit
                         btf.setLedColors(btf.eRgbLed.c, Colors.Red)
                         ret = false
@@ -145,7 +145,7 @@ namespace receiver { // r-strecken.ts
 
     let n_hasEncoder = false
     let n_EncoderFaktor = 63.9 * (26 / 14) / (8 * Math.PI) // 63.9 Motorwelle * (26/14) Zahnräder / (8cm * PI) Rad Umfang = 4.6774502 cm
-    let n_EncoderCounter: number = 0 // Impuls Zähler
+    let n_EncoderCounter: number = 0 // Impuls Zähler negativ wenn rückwärts
     let n_EncoderStrecke_impulse: number = 0
     let n_EncoderAutoStop = false // true während der Fahrt, false bei Stop nach Ende der Strecke
     let n_radDurchmesser_mm = 65 // radDmm: Rad Durchmesser in Millimeter
