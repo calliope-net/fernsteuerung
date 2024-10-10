@@ -5,7 +5,7 @@ namespace receiver { // r-advanced.ts
     // ========== group="aktuelle Werte (vom gewählten Modell)" advanced=true
 
     //% group="aktuelle Werte (vom gewählten Modell)" advanced=true
-    //% block="Motor Speed (1 ↓ 128 ↑ 255)" weight=3
+    //% block="Motor Speed (1 ↓ 128 ↑ 255)" weight=7
     export function selectMotorSpeed() {
         if (n_Hardware == eHardware.car4) // Fahrmotor am Qwiic Modul
             return a_QwiicMotorSpeed[eQwiicMotor.ma]
@@ -14,9 +14,15 @@ namespace receiver { // r-advanced.ts
     }
 
     //% group="aktuelle Werte (vom gewählten Modell)" advanced=true
-    //% block="Servo Winkel (1 ↖ 16 ↗ 31)" weight=2
+    //% block="Servo Winkel (1 ↖ 16 ↗ 31)" weight=5
     export function pinServoWinkel() {
         return Math.idiv(n_Servo90Winkel, 3) - 14
+    }
+
+    //% group="aktuelle Werte (vom gewählten Modell)" advanced=true
+    //% block="Encoder angeschlossen" weight=3
+    export function encoderConnected() {
+        return n_hasEncoder
     }
 
 

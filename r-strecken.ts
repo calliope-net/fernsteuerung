@@ -143,7 +143,7 @@ namespace receiver { // r-strecken.ts
 
     // ========== group="Encoder" subcategory="Strecken"
 
-    let n_hasEncoder = false
+    export let n_hasEncoder = false
     let n_EncoderFaktor = 63.9 * (26 / 14) / (8 * Math.PI) // 63.9 Motorwelle * (26/14) Zahnräder / (8cm * PI) Rad Umfang = 4.6774502 cm
     let n_EncoderCounter: number = 0 // Impuls Zähler negativ wenn rückwärts
     let n_EncoderStrecke_impulse: number = 0
