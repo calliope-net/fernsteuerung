@@ -8,7 +8,7 @@ namespace sender { // s-fahrplan.ts
     //% block="2 Fahrplan senden • Fahren und Lenken %buffer Strecke 1 %p1 Strecke 2 %p2 Strecke 3 %p3 Strecke 4 %p4 Strecke 5 %p5 Anzahl Durchläufe %count M1-1 aktiviert %aktiviert Abstand Sensor %abstandSensor bei Abstand < %abstand" weight=8
     //% buffer.shadow="btf_sendBuffer19"
     //% aktiviert.shadow=toggleOnOff aktiviert.defl=1
-    //% p1.shadow=sender_StreckePicker
+    //% p1.shadow=sender_1MotorPicker
     // p2.shadow=sender_StreckePicker
     // p3.shadow=sender_StreckePicker
     // p4.shadow=sender_StreckePicker
@@ -46,7 +46,7 @@ namespace sender { // s-fahrplan.ts
     }
 
 
-    //% group="Fahrplan (5 Teilstrecken) senden" subcategory="Fahrplan"
+    //% group="Fahrplan (5 Teilstrecken) senden" subcategory="Fahrplan" deprecated=1
     //% block="2 Fahrplan senden • Fahren und Lenken %buffer Strecke 1 %p1 Strecke 2 %p2 Strecke 3 %p3 Strecke 4 %p4 Strecke 5 %p5 Anzahl Durchläufe %count" weight=6
     //% buffer.shadow="btf_sendBuffer19"
     //% p1.shadow=sender_StreckePicker
@@ -79,7 +79,21 @@ namespace sender { // s-fahrplan.ts
 
     // ========== group="Geschwindigkeit (-100 ↓ 0 ↑ +100), Winkel (0° ↖ 90° ↗ 180°)" subcategory="Fahrplan"
 
-    //% blockId=sender_StreckePicker
+    //% blockId=sender_1MotorPicker
+    //% group="Geschwindigkeit (-100 ↓ 0 ↑ +100) • Winkel (0° ↖ 90° ↗ 180°)" subcategory="Fahrplan"
+    //% block="Fahren %motor Lenken %servo Länge %strecke cm\\|⅒s || • Impulse %impulse" weight=7
+    //% motor.shadow=speedPicker motor.defl=50
+    //% servo.shadow=protractorPicker servo.defl=90
+    //% strecke.min=10 strecke.max=255 strecke.defl=20
+    // abstandsSensor.shadow=toggleOnOff abstandsSensor.defl=1
+    // spurSensor.shadow=toggleOnOff
+    //% impulse.shadow=toggleYesNo
+    //% inlineInputMode=inline
+    export function sender_1MotorPicker(motor: number, servo: number, strecke: number, impulse = false) {
+        return sender_1Motor(btf.speedPicker(motor), btf.protractorPicker(servo), strecke, impulse)
+    }
+
+    //% blockId=sender_StreckePicker blockHidden=true
     //% group="Geschwindigkeit (-100 ↓ 0 ↑ +100) • Winkel (0° ↖ 90° ↗ 180°)" subcategory="Fahrplan"
     //% block="Fahren %motor Lenken %servo Länge %strecke cm\\|⅒s || • Abstand Sensor %abstandsSensor • Spur Sensor %spurSensor • Impulse %impulse" weight=7
     //% motor.shadow=speedPicker motor.defl=50
@@ -97,7 +111,31 @@ namespace sender { // s-fahrplan.ts
 
     // ========== group="Geschwindigkeit (1 ↓ 128 ↑ 255), Winkel (1 ↖ 16 ↗ 31)" subcategory="Fahrplan"
 
-    //% blockId=sender_Strecke
+
+
+    //% blockId=sender_1Motor
+    //% group="Geschwindigkeit (1 ↓ 128 ↑ 255) • Winkel (1 ↖ 16 ↗ 31)" subcategory="Fahrplan"
+    //% block="Fahren (1↓128↑255) %motor Lenken (1↖16↗31) %servo Länge %strecke cm\\|⅒s || • Impulse %impulse" weight=6
+    //% motor.min=1 motor.max=255 motor.defl=230
+    //% servo.min=1 servo.max=31 servo.defl=26
+    //% strecke.min=10 strecke.max=255 strecke.defl=250
+    // abstandsSensor.shadow=toggleOnOff abstandsSensor.defl=1
+    // spurSensor.shadow=toggleOnOff
+    //% impulse.shadow=toggleYesNo
+    //% inlineInputMode=inline
+    export function sender_1Motor(motor: number, servo: number, strecke: number, impulse = false) {
+        let buffer3 = Buffer.create(3)
+        buffer3[0] = motor //  (1 ↓ 128 ↑ 255)
+        buffer3[1] = servo & 0x1F // (1 ↖ 16 ↗ 31)
+        buffer3[2] = strecke
+
+        if (impulse)
+            buffer3[1] |= btf.eSensor.b7Impulse // Bit 7 setzen
+
+        return buffer3
+    }
+
+    //% blockId=sender_Strecke blockHidden=true
     //% group="Geschwindigkeit (1 ↓ 128 ↑ 255) • Winkel (1 ↖ 16 ↗ 31)" subcategory="Fahrplan"
     //% block="Fahren (1↓128↑255) %motor Lenken (1↖16↗31) %servo Länge %strecke cm\\|⅒s || • Abstand Sensor %abstandsSensor • Spur Sensor %spurSensor • Impulse %impulse" weight=5
     //% motor.min=1 motor.max=255 motor.defl=230
