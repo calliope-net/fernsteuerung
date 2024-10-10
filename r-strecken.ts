@@ -5,18 +5,18 @@ namespace receiver { // r-strecken.ts
     // ========== group="Geschwindigkeit (-100 ↓ 0 ↑ +100), Winkel (0° ↖ 90° ↗ 180°)" subcategory="Strecken"
 
     //% group="Geschwindigkeit (-100 ↓ 0 ↑ +100), Winkel (0° ↖ 90° ↗ 180°)" subcategory="Strecken"
-    //% block="Fahren %motor \\% Lenken %servo ° Länge %strecke cm\\|⅒s || Stop %abstandsSensor bei Abstand < (cm) %abstand Impulse %impulse Encoder %checkEncoder" weight=7
+    //% block="Fahren %motor \\% Lenken %servo ° Länge %strecke cm\\|⅒s || Stop %abstandSensor bei Abstand < (cm) %abstand Impulse %impulse Encoder %checkEncoder" weight=7
     //% motor.shadow=speedPicker motor.defl=50
     //% servo.shadow=protractorPicker servo.defl=90
     //% strecke.min=10 strecke.max=255 strecke.defl=20
-    //% abstandsSensor.shadow=toggleOnOff
+    //% abstandSensor.shadow=toggleOnOff
     //% abstand.min=10 abstand.max=50 abstand.defl=20
     // spurSensor.shadow=toggleOnOff
     //% impulse.shadow=toggleOnOff
     //% checkEncoder.shadow=toggleYesNo checkEncoder.defl=1
     //% inlineInputMode=inline
-    export function fahreStreckePicker(motor: number, servo: number, strecke: number, abstandsSensor = true, abstand = 20, impulse = false, checkEncoder = true) {
-        fahreStrecke(btf.speedPicker(motor), btf.protractorPicker(servo), strecke, abstandsSensor, abstand, impulse, checkEncoder)
+    export function fahreStreckePicker(motor: number, servo: number, strecke: number, abstandSensor = false, abstand = 20, impulse = false, checkEncoder = true) {
+        fahreStrecke(btf.speedPicker(motor), btf.protractorPicker(servo), strecke, abstandSensor, abstand, impulse, checkEncoder)
     }
 
 
@@ -27,24 +27,24 @@ namespace receiver { // r-strecken.ts
     // export let n_StreckeRichtungVor = true
 
     //% group="Geschwindigkeit (1 ↓ 128 ↑ 255), Winkel (1 ↖ 16 ↗ 31)" subcategory="Strecken"
-    //% block="Fahren (1↓128↑255) %motor Lenken (1↖16↗31) %servo Länge %strecke cm\\|⅒s || Stop %abstandsSensor bei Abstand < (cm) %abstand Impulse %impulse Encoder %checkEncoder" weight=5
-    //% motor.min=1 motor.max=255 motor.defl=153
+    //% block="Fahren (1↓128↑255) %motor Lenken (1↖16↗31) %servo Länge %strecke cm\\|⅒s || Stop %abstandSensor bei Abstand < (cm) %abstand Impulse %impulse Encoder %checkEncoder" weight=5
+    //% motor.min=1 motor.max=255 motor.defl=224
     //% servo.min=1 servo.max=31 servo.defl=29
-    //% strecke.min=10 strecke.max=255 strecke.defl=153
-    //% abstandsSensor.shadow=toggleOnOff abstandsSensor.defl=1
+    //% strecke.min=10 strecke.max=255 strecke.defl=160
+    //% abstandSensor.shadow=toggleOnOff
     //% abstand.min=10 abstand.max=50 abstand.defl=30
     // spurSensor.shadow=toggleOnOff
     //% impulse.shadow=toggleOnOff
     //% checkEncoder.shadow=toggleYesNo checkEncoder.defl=1
     //% inlineInputMode=inline
-    export function fahreStrecke(motor: number, servo: number, strecke: number, abstandsSensor = false, abstand = 20, impulse = false, checkEncoder = true) {
+    export function fahreStrecke(motor: number, servo: number, strecke: number, abstandSensor = false, abstand = 20, impulse = false, checkEncoder = true) {
         // btf.zeigeBIN(0, btf.ePlot.bin, 2) // Anzeige löschen
         // btf.zeigeBIN(0, btf.ePlot.bin, 3)
         // btf.zeigeBIN(0, btf.ePlot.bin, 4)
 
-        abstandsSensor = abstandsSensor && abstand > 0 && motor > c_MotorStop && selectAbstandSensorConnected()
+        abstandSensor = abstandSensor && abstand > 0 && motor > c_MotorStop && selectAbstandSensorConnected()
 
-        btf.setLedColors(btf.eRgbLed.b, Colors.Yellow, abstandsSensor)
+        btf.setLedColors(btf.eRgbLed.b, Colors.Yellow, abstandSensor)
 
 
         if (motor != 0 && motor != c_MotorStop && servo != 0 && strecke != 0) {
@@ -56,7 +56,7 @@ namespace receiver { // r-strecken.ts
             if (checkEncoder && encoderRegisterEvent()) { // n_EncoderEventRegistered && n_hasEncoder
                 btf.setLedColors(btf.eRgbLed.c, Colors.Green)
 
-                let timeout_Encoder = abstandsSensor ? 80 : 10 // 2 s Timeout wenn Encoder nicht zählt
+                let timeout_Encoder = abstandSensor ? 80 : 10 // 2 s Timeout wenn Encoder nicht zählt
 
                 encoderStartStrecke(true, strecke, impulse) // stellt n_EncoderCounter auf 0
                 pinServo16(servo)
@@ -72,7 +72,7 @@ namespace receiver { // r-strecken.ts
                     }
 
                     x++
-                    if (abstandsSensor && (selectAbstand_cm(true) < abstand) && x > 4) { // && motor > c_MotorStop && abstand > 0 && selectAbstandSensorConnected()
+                    if (abstandSensor && (selectAbstand_cm(true) < abstand) && x > 4) { // && motor > c_MotorStop && abstand > 0 && selectAbstandSensorConnected()
                         btf.setLedColors(btf.eRgbLed.b, Colors.Red)
                         ret = false
                         break
@@ -81,7 +81,7 @@ namespace receiver { // r-strecken.ts
                     //    sensor_color = Colors.White
                     //    break
                     //}
-                    if (abstandsSensor)
+                    if (abstandSensor)
                         basic.pause(25) // kurze Pause, um bei Hindernis anhalten zu können
                     else
                         basic.pause(200) // Pause kann größer sein, weil Stop schon im Encoder Event erfolgt ist
@@ -102,7 +102,7 @@ namespace receiver { // r-strecken.ts
                 while (zehntelsekunden-- > 0) //
                 {
                     x++
-                    if (abstandsSensor && (selectAbstand_cm(true) < abstand) && x > 4) { // && motor > c_MotorStop && abstand > 0 && selectAbstandSensorConnected() 
+                    if (abstandSensor && (selectAbstand_cm(true) < abstand) && x > 4) { // && motor > c_MotorStop && abstand > 0 && selectAbstandSensorConnected() 
                         //x++
                         //let cm = selectAbstand_cm(true)
                         //if (x > 4 && cm < abstand) {
