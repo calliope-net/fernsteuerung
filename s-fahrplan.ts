@@ -167,7 +167,7 @@ namespace sender { // s-fahrplan.ts
     // ========== group="2 Fahrplan (2 Teilstrecken • 2 Motoren) senden" subcategory="Fahrplan"
 
     //% group="Fahrplan 2 Motoren (2 Teilstrecken) senden" subcategory="Fahrplan"
-    //% block="2 Fahrplan senden • 2 Motoren %buffer Strecke 1 %p1 Strecke 2 %p2 Anzahl Durchläufe %count || MA-2 aktiviert %aktiviert Abstand Sensor %abstandSensor bei Abstand < %abstand" weight=8
+    //% block="2 Fahrplan senden • 2 Motoren %buffer Strecke 1 %p1 Strecke 2 %p2 Anzahl Durchläufe %count MA-2 aktiviert %aktiviert Abstand Sensor %abstandSensor bei Abstand < %abstand" weight=8
     //% buffer.shadow="btf_sendBuffer19"
     //% p1.shadow=sender_2MotorenPicker
     // p2.shadow=sender_2MotorenPicker
@@ -176,7 +176,7 @@ namespace sender { // s-fahrplan.ts
     //% abstandSensor.shadow=toggleOnOff abstandSensor.defl=1
     //% abstand.defl=btf.e3Abstand.u1
     // inlineInputMode=inline
-    export function send2x2Motoren(buffer: Buffer, p1: Buffer, p2: Buffer, count = 1, aktiviert?: boolean, abstandSensor?: boolean, abstand?: btf.e3Abstand) {
+    export function send2x2Motoren(buffer: Buffer, p1: Buffer, p2: Buffer, count = 1, aktiviert: boolean, abstandSensor: boolean, abstand: btf.e3Abstand) {
         btf.setBetriebsart(buffer, btf.e0Betriebsart.p2Fahrplan)
         btf.setByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo, count) // m0-Servo Anzahl Durchläufe
         btf.setaktiviert(btf.btf_sendBuffer19(), btf.e3aktiviert.ma, aktiviert)
