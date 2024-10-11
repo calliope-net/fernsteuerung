@@ -385,7 +385,7 @@ namespace receiver { // r-fernsteuerung.ts
     //% startBit.defl=btf.e3aktiviert.m1
     export function fahrplanBuffer5Strecken(buffer: Buffer, startBit: btf.e3aktiviert) {
 
-        if (btf.isBetriebsart(buffer, btf.e0Betriebsart.p2Fahrplan)) { // Betriebsart 20 Fahrplan senden
+        if (btf.isBetriebsart(buffer, btf.e0Betriebsart.p2Fahrplan)) { // Betriebsart 2 Fahrplan senden
 
             if (!n_fahrplanBuffer5Strecken_gestartet && btf.getaktiviert(buffer, startBit)) { // m1 true
                 n_fahrplanBuffer5Strecken_gestartet = true
@@ -429,6 +429,11 @@ namespace receiver { // r-fernsteuerung.ts
                 // btf.zeigeBIN(0, btf.ePlot.bin, 4)
             }
         } // 0x20 Fahrplan
+        else {
+            n_fahrplanBuffer5Strecken_gestartet = false // immer aus schalten wenn andere Betriebsart 
+            // ! ACHTUNG passiert bei jedem Bluetooth receivedData ! wenn nicht Betriebsart 2 Fahrplan
+            // weil das ständig aufgerufen wird, soll hier kein folgenschwerer Code stehen
+        }
     }
 
 } // r-fernsteuerung.ts
