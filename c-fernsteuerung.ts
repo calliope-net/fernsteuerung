@@ -202,14 +202,19 @@ namespace cb2 { // c-fernsteuerung.ts
                         if (rStrecke)
                             btf.zeigeBIN_BufferPointer(iBufferPointer, 2)
                     } // for iBufferPointer
-                }
+                } // for i
             }
             else if (n_fahrplanBuffer5Strecken_gestartet && !btf.getaktiviert(buffer, startBit)) { // m1 false
                 n_fahrplanBuffer5Strecken_gestartet = false
-                btf.zeigeBIN(0, btf.ePlot.bin, 2)
-                btf.zeigeBIN(0, btf.ePlot.bin, 3)
-                btf.zeigeBIN(0, btf.ePlot.bin, 4)
+                // btf.zeigeBIN(0, btf.ePlot.bin, 2)
+                // btf.zeigeBIN(0, btf.ePlot.bin, 3)
+                // btf.zeigeBIN(0, btf.ePlot.bin, 4)
             }
+        } // 0x20 Fahrplan
+        else {
+            n_fahrplanBuffer5Strecken_gestartet = false // immer aus schalten wenn andere Betriebsart 
+            // ! ACHTUNG passiert bei jedem Bluetooth receivedData ! wenn nicht Betriebsart 2 Fahrplan
+            // weil das ständig aufgerufen wird, soll hier kein folgenschwerer Code stehen
         }
     }
 
