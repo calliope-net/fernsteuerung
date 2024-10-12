@@ -351,6 +351,11 @@ namespace cb2 { // c-zweimotoren.ts
                 btf.zeigeBIN(0, btf.ePlot.bin, 3)
                 btf.zeigeBIN(0, btf.ePlot.bin, 4)
             }
+        } // 0x20 Fahrplan
+        else {
+            n_fahrplanBuffer2x2Motoren_gestartet = false // immer aus schalten wenn andere Betriebsart
+            // ! ACHTUNG passiert bei jedem Bluetooth receivedData ! wenn nicht Betriebsart 2 Fahrplan
+            // weil das ständig aufgerufen wird, soll hier kein folgenschwerer Code stehen
         }
     }
 
