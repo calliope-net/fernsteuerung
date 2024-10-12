@@ -1,6 +1,24 @@
 
 namespace btf { // b-enums.ts
 
+    export enum eFunkgruppe {
+        //% block="1"
+        b0 = 0xB0, // = c_funkgruppe_min
+        //% block="2"
+        b1,
+        //% block="3"
+        b2,
+        //% block="4"
+        b3,
+        //% block="5"
+        b4,
+        //% block="6"
+        b5,
+        //% block="7"
+        b6,
+        //% block="8"
+        b7
+    }
 
     // ========== Buffer offset
 
@@ -125,12 +143,12 @@ namespace btf { // b-enums.ts
         b7 = 0x80
     }
 
-    export enum eNOT {
+    /* export enum eNOT {
         //% block=" "
         t,
         //% block="nicht"
         f
-    }
+    } */
 
 
     export enum ePause { // Zehntelsekunden

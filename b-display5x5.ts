@@ -16,8 +16,9 @@ namespace btf { // b-dispaly5x5.ts
     //let n5x5_x01y0 = 0 // Bit 5-4 Betriebsart in x=0-1 y=0
     let a5x5_x01y0 = [false, false]
     let a5x5_xBuffer = Buffer.create(5)
-
-    // ↕↕...
+    
+    //% group="BIN" subcategory="LEDs, Display"
+    //% block="zeige ↓↓... Funkgruppe" weight=8
     export function zeigeFunkgruppe() {
         let int = getStorageFunkgruppe()
         if (between(int, c_funkgruppe_min, c_funkgruppe_max)) {
@@ -29,7 +30,7 @@ namespace btf { // b-dispaly5x5.ts
 
 
     //% group="BIN" subcategory="LEDs, Display"
-    //% block="zeige ↑↑... x0 %x0y0 x1 %x1y0" weight=9
+    //% block="zeige ↑↑... x0 %x0y0 x1 %x1y0" weight=7
     //% x0y0.shadow=toggleOnOff
     //% x1y0.shadow=toggleOnOff
     export function zeige5x5Betriebsart(x0y0: boolean, x1y0: boolean) {
@@ -44,7 +45,7 @@ namespace btf { // b-dispaly5x5.ts
 
 
     //% group="BIN" subcategory="LEDs, Display"
-    //% block="zeige ↑↑↕.. aktive Motoren %buffer" weight=8
+    //% block="zeige ↑↑↕.. aktive Motoren %buffer" weight=6
     //% buffer.shadow="btf_sendBuffer19"
     export function zeige5x5Buffer(buffer: Buffer) {
         // 2 Bit oben links Betriebsart, die sind bei Funkgruppe frei
@@ -74,7 +75,7 @@ namespace btf { // b-dispaly5x5.ts
 
 
     //% group="BIN" subcategory="LEDs, Display"
-    //% block="zeige ...↕↕ Joystick %buffer" weight=7
+    //% block="zeige ...↕↕ Joystick %buffer" weight=5
     //% buffer.shadow="btf_sendBuffer19"
     export function zeige5x5Joystick(buffer: Buffer) {
         //if (isBetriebsart(buffer, e0Betriebsart.p0)) {
@@ -172,7 +173,7 @@ namespace btf { // b-dispaly5x5.ts
     }
 
     //% group="BIN" subcategory="LEDs, Display"
-    //% block="zeige ↕↕↕↕↕ %int %format ←x %xLed" weight=3
+    //% block="zeige ↕↕↕↕↕ %int %format ←x %xLed" weight=1
     //% xLed.min=0 xLed.max=4 xLed.defl=4
     export function zeigeBIN(int: number, format: ePlot, xLed: number) {
         int = Math.imul(int, 1) // 32 bit signed integer
