@@ -81,7 +81,7 @@ namespace sender { // s-fahrplan.ts
 
     //% blockId=sender_1MotorPicker
     //% group="Geschwindigkeit (-100 ↓ 0 ↑ +100) • Winkel (0° ↖ 90° ↗ 180°)" subcategory="Fahrplan"
-    //% block="Fahren %motor Lenken %servo Länge %strecke cm\\|⅒s || • Impulse %impulse" weight=7
+    //% block="Fahren %motor \\% Lenken %servo ° Länge %strecke cm\\|⅒s || • Impulse %impulse" weight=7
     //% motor.shadow=speedPicker motor.defl=50
     //% servo.shadow=protractorPicker servo.defl=90
     //% strecke.min=10 strecke.max=255 strecke.defl=20
@@ -212,7 +212,7 @@ namespace sender { // s-fahrplan.ts
 
     //% blockId=sender_2MotorenPicker
     //% group="Geschwindigkeit (-100 ↓ 0 ↑ +100) • 2 Motoren" subcategory="Fahrplan"
-    //% block="2 Motoren links %motorA rechts %motorB Länge %streckeA cm\\|⅒s || ←links rechts→ %streckeB • Impulse %impulse • %count" weight=2
+    //% block="2 Motoren links %motorA \\% rechts %motorB \\% Länge %streckeA cm\\|⅒s || ←links rechts→ %streckeB • Impulse %impulse • %count" weight=2
     //% motorA.shadow=speedPicker motorA.defl=50
     //% motorB.shadow=speedPicker motorB.defl=-50
     //% streckeA.min=10 streckeA.max=255 streckeA.defl=25
