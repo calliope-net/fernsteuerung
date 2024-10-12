@@ -5,7 +5,7 @@ namespace sender { // s-fahrplan.ts
     // ========== group="2 Fahrplan (5 Teilstrecken) senden" subcategory="Fahrplan"
 
     //% group="Fahrplan (5 Teilstrecken) senden" subcategory="Fahrplan"
-    //% block="2 Fahrplan senden • Fahren und Lenken %buffer Strecke 1 %p1 Strecke 2 %p2 Strecke 3 %p3 Strecke 4 %p4 Strecke 5 %p5 Anzahl Durchläufe %count M1-1 aktiviert %aktiviert Abstand Sensor %abstandSensor bei Abstand < %abstand" weight=8
+    //% block="2 Fahrplan senden • Fahren und Lenken %buffer Strecke 1 %p1 Strecke 2 %p2 Strecke 3 %p3 Strecke 4 %p4 Strecke 5 %p5 Anzahl Durchläufe %count M1-1 aktiviert %aktiviert Abstand Sensor %abstandSensor Stop bei Abstand < %abstand" weight=8
     //% buffer.shadow="btf_sendBuffer19"
     //% aktiviert.shadow=toggleOnOff aktiviert.defl=1
     //% p1.shadow=sender_1MotorPicker
@@ -167,7 +167,7 @@ namespace sender { // s-fahrplan.ts
     // ========== group="2 Fahrplan (2 Teilstrecken • 2 Motoren) senden" subcategory="Fahrplan"
 
     //% group="Fahrplan 2 Motoren (2 Teilstrecken) senden" subcategory="Fahrplan"
-    //% block="2 Fahrplan senden • 2 Motoren %buffer Strecke 1 %p1 Strecke 2 %p2 Anzahl Durchläufe %count MA-2 aktiviert %aktiviert Abstand Sensor %abstandSensor bei Abstand < %abstand" weight=8
+    //% block="2 Fahrplan senden • 2 Motoren %buffer Strecke 1 %p1 Strecke 2 %p2 Anzahl Durchläufe %count MA-2 aktiviert %aktiviert Abstand Sensor %abstandSensor Stop bei Abstand < %abstand" weight=8
     //% buffer.shadow="btf_sendBuffer19"
     //% p1.shadow=sender_2MotorenPicker
     // p2.shadow=sender_2MotorenPicker
