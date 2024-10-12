@@ -192,12 +192,12 @@ namespace btf { // b-fernsteuerung.ts
     //% block="wenn Datenpaket empfangen" weight=9 deprecated=1
     //% draggableParameters=reporter
     //export function onReceivedData(cb: (receivedData: Buffer) => void) {
-        // das ist der sichtbare Ereignis Block 'wenn Buffer empfangen (receivedData)'
-        // hier wird nur der Delegat-Variable eine konkrete callback function zugewiesen
-        // dieser Block speichert in der Variable, dass er beim Ereignis zurückgerufen werden soll
+    // das ist der sichtbare Ereignis Block 'wenn Buffer empfangen (receivedData)'
+    // hier wird nur der Delegat-Variable eine konkrete callback function zugewiesen
+    // dieser Block speichert in der Variable, dass er beim Ereignis zurückgerufen werden soll
     //    onReceivedDataHandler = cb
-        // aufgerufen wird beim Ereignis 'radio.onReceivedBuffer' die der Variable 'onReceivedDataHandler' zugewiesene function
-        // das sind die Blöcke, die später im Ereignis Block 'wenn Buffer empfangen (receivedData)' enthalten sind
+    // aufgerufen wird beim Ereignis 'radio.onReceivedBuffer' die der Variable 'onReceivedDataHandler' zugewiesene function
+    // das sind die Blöcke, die später im Ereignis Block 'wenn Buffer empfangen (receivedData)' enthalten sind
     //}
 
     //% group="Bluetooth empfangen (19 Byte)"
@@ -264,9 +264,13 @@ namespace btf { // b-fernsteuerung.ts
 
         a_StorageBuffer = storage.getBuffer()
 
+        if (between(funkgruppe, c_funkgruppe_min, c_funkgruppe_max))
+            a_StorageBuffer[eStorageBuffer.funkgruppe] = funkgruppe
+
         // Funkgruppe (am offset 0) muss c_funkgruppe_min .. c_funkgruppe_max sein
-        if (!between(a_StorageBuffer[eStorageBuffer.funkgruppe], c_funkgruppe_min, c_funkgruppe_max))
-            a_StorageBuffer[eStorageBuffer.funkgruppe] = (funkgruppe) ? funkgruppe : c_funkgruppe_min
+        else if (!between(a_StorageBuffer[eStorageBuffer.funkgruppe], c_funkgruppe_min, c_funkgruppe_max))
+            a_StorageBuffer[eStorageBuffer.funkgruppe] = c_funkgruppe_min
+        // a_StorageBuffer[eStorageBuffer.funkgruppe] = (funkgruppe) ? funkgruppe : c_funkgruppe_min
 
         if (!between(a_StorageBuffer[eStorageBuffer.servoKorrektur], 82, 98))
             a_StorageBuffer[eStorageBuffer.servoKorrektur] = (servoKorrektur) ? servoKorrektur : 90
