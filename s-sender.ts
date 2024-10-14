@@ -6,21 +6,16 @@ namespace sender { // s-sender.ts
 
 
     //% group="calliope-net.github.io/fernsteuerung"
-    //% block="beim Start: Sender || Modell und Funkgruppe anzeigen %zf %funkgruppe" weight=8
+    //% block="beim Start: Sender || • Modell anzeigen %zf • Funkgruppe %funkgruppe" weight=8
     //% zf.shadow="toggleYesNo" zf.defl=1
     export function beimStart(zf = true, funkgruppe?: btf.eFunkgruppe) {
         if (!btf.simulator()) {
             btf.setStorageBuffer(funkgruppe) // prüft und speichert in a_StorageBuffer
 
-            setStatusModell(btf.getStorageModell(), zf, 1500) // setStatusModell() schreibt auch in Flash
+            setStatusModell(btf.getStorageModell(), zf, 1500) // zeigt Modell an und schreibt auch in Flash
 
-            //if (!btf.between(getStatusModell(), 0, c_ModellCount - 1))
-            //    setStatusModell(eModell.cb2e, true) // wenn ungültig, Standardwert setzen, setStatusModell() schreibt auch in Flash
-
-            if (zf) {
-                // zeigeModellImagePause(2500) // Bild anzeigen mit Pause 1500ms
+            if (zf || funkgruppe != undefined)
                 btf.zeigeFunkgruppe()
-            }
 
             btf.beimStartSender(btf.eNamespace.sender, // setzt auch n_start true, startet Bluetooth Empfang
                 function (pStorageChange: btf.eStorageBuffer, buttonB: boolean) {
