@@ -189,18 +189,6 @@ namespace btf { // b-fernsteuerung.ts
     // sichtbarer Event-Block
 
     //% group="Bluetooth empfangen (19 Byte)"
-    //% block="wenn Datenpaket empfangen" weight=9 deprecated=1
-    //% draggableParameters=reporter
-    //export function onReceivedData(cb: (receivedData: Buffer) => void) {
-    // das ist der sichtbare Ereignis Block 'wenn Buffer empfangen (receivedData)'
-    // hier wird nur der Delegat-Variable eine konkrete callback function zugewiesen
-    // dieser Block speichert in der Variable, dass er beim Ereignis zurückgerufen werden soll
-    //    onReceivedDataHandler = cb
-    // aufgerufen wird beim Ereignis 'radio.onReceivedBuffer' die der Variable 'onReceivedDataHandler' zugewiesene function
-    // das sind die Blöcke, die später im Ereignis Block 'wenn Buffer empfangen (receivedData)' enthalten sind
-    //}
-
-    //% group="Bluetooth empfangen (19 Byte)"
     //% block="wenn Datenpaket empfangen" weight=8
     //% draggableParameters=reporter
     export function onReceivedDataChanged(cb: (receivedData: Buffer, changed: boolean) => void) {
