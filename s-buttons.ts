@@ -1,7 +1,7 @@
 
 namespace sender { // s-buttons.ts
 
-    export const c_ModellCount = 5
+    export const c_ModellCount = 6
 
     export enum eModell { // zuletzt gewähltes Modell wird im Flash offset 1 dauerhaft gespeiechert
         //% block="Modell Calli:Bot"
@@ -12,6 +12,8 @@ namespace sender { // s-buttons.ts
         mkcg,
         //% block="Modell Maker Kit Car Kran"
         mkck,
+        //% block="Modell Buggy"
+        buggy,
         //% block="Modell Calliope auf Rädern 4"
         car4
     } // so viele Images müssen im Array sein - Bilder am Ende dieser Datei
@@ -289,6 +291,10 @@ namespace sender { // s-buttons.ts
             }
             case eModell.mkck: {
                 ai = [1, 31, 17, 17, 24] // Kran
+                break
+            }
+            case eModell.buggy: {
+                ai = [14, 8, 8, 8, 14] // Buggy
                 break
             }
             case eModell.car4: {

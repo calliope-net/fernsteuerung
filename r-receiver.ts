@@ -4,9 +4,9 @@ namespace receiver { // r-receiver.ts
     //color=#008272 
 
     export enum eHardware { // === NICHT DIE ZAHLENWERTE ÄNDERN, das ist der Index für die Pins ===
-        //% block="Maker Kit Car (Calliope v3)"
+        //% block="Calliope v3 mit Leiterplatte (Maker Kit Car)"
         v3 = 0,     // Index in Arrays
-        //% block="CaR 4 (Calliope v1)"
+        //% block="Calliope v1 (CaR 4)"
         car4 = 1   // Index in Arrays
     }
 
