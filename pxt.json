@@ -34,6 +34,7 @@
         "r-qwiiclaser.ts",
         "r-strecken.ts",
         "r-fernsteuerung.ts",
+        "r-zweimotoren.ts",
         "r-beispiele.ts",
         "r-advanced.ts",
         "r-calliope-v3.ts",
@@ -43,8 +44,7 @@
         "c-strecken.ts",
         "c-fernsteuerung.ts",
         "c-zweimotoren.ts",
-        "c-beispiele.ts",
-        "r-zweimotoren.ts"
+        "c-beispiele.ts"
     ],
     "testFiles": [
         "test.ts"
