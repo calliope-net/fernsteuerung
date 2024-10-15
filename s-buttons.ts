@@ -294,7 +294,7 @@ namespace sender { // s-buttons.ts
                 break
             }
             case eModell.buggy: {
-                ai = [14, 8, 8, 8, 14] // Buggy
+                ai = [14, 4, 4, 4, 14] // Buggy
                 break
             }
             case eModell.car4: {
