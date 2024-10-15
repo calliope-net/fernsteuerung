@@ -63,8 +63,8 @@ namespace receiver { // r-zweimotoren.ts
                 onDualMotorPowerHandler(eDualMotor.M0_M1, l_percent) // v3 Ereignis Block auslösen, nur wenn benutzt
             }
             else {
-                onDualMotorPowerHandler(eDualMotor.M1, l_percent) // v3 Ereignis Block auslösen, nur wenn benutzt
-                onDualMotorPowerHandler(eDualMotor.M0, r_percent)
+                onDualMotorPowerHandler(eDualMotor.M0, l_percent) // v3 Ereignis Block auslösen, nur wenn benutzt
+                onDualMotorPowerHandler(eDualMotor.M1, r_percent)
             }
         }
     }
