@@ -58,14 +58,37 @@ namespace receiver { // r-zweimotoren.ts
         }
         // return l_percent
 
-        if (l_percent == r_percent) {
-            dualMotorPower(eDualMotor.M0_M1, l_percent)
-        }
-        else {
-            dualMotorPower(eDualMotor.M0, l_percent)
-            dualMotorPower(eDualMotor.M1, r_percent)
+        if (onDualMotorPowerHandler) {
+            if (l_percent == r_percent) {
+                onDualMotorPowerHandler(eDualMotor.M0_M1, l_percent) // v3 Ereignis Block auslösen, nur wenn benutzt
+            }
+            else {
+                onDualMotorPowerHandler(eDualMotor.M0, l_percent) // v3 Ereignis Block auslösen, nur wenn benutzt
+                onDualMotorPowerHandler(eDualMotor.M1, r_percent)
+            }
         }
     }
 
+
+    //% group="0 Fernsteuerung mit Joystick (reagiert auf Sensoren)" subcategory="2 Motoren"
+    //% block="0 Fahren und Lenken mit Joystick aus %buffer • lenken %lenkenProzent \\%" weight=8
+    //% buffer.shadow=btf_receivedBuffer19
+    //% lenkenProzent.min=10 lenkenProzent.max=90 lenkenProzent.defl=50
+    export function dual2MotorenLenkenBuffer(buffer: Buffer, lenkenProzent = 50) {
+
+        if (buffer
+            && btf.isBetriebsart(buffer, btf.e0Betriebsart.p0Fahren)
+            && btf.getaktiviert(buffer, btf.e3aktiviert.m0)) // Betriebsart 00 mit Joystick fernsteuern
+        {
+            let iBufferPointer = btf.eBufferPointer.m0
+
+            dual2MotorenLenken(
+                btf.getByte(buffer, iBufferPointer, btf.eBufferOffset.b0_Motor),
+                btf.getByte(buffer, iBufferPointer, btf.eBufferOffset.b1_Servo),
+                lenkenProzent
+            )
+
+        }
+    }
 
 } // r-zweimotoren.ts
