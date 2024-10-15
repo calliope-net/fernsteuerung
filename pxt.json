@@ -43,7 +43,8 @@
         "c-strecken.ts",
         "c-fernsteuerung.ts",
         "c-zweimotoren.ts",
-        "c-beispiele.ts"
+        "c-beispiele.ts",
+        "r-zweimotoren.ts"
     ],
     "testFiles": [
         "test.ts"
