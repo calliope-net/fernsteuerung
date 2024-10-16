@@ -182,8 +182,8 @@ namespace receiver { // r-receiver.ts
 
         if (btf.between(speed, 1, 255)) {
 
-            let duty_percent = btf.mapInt32(speed, 1, 255, -100, 100)
-            dualMotorPower(motor, duty_percent)
+            // let duty_percent = btf.mapInt32(speed, 1, 255, -100, 100)
+            dualMotorPower_percent(motor, btf.mapInt32(speed, 1, 255, -100, 100))
 
             /* if (motor == eDualMotor.M0 && speed != a_DualMotorSpeed[eDualMotor.M0]) {
                 a_DualMotorSpeed[eDualMotor.M0] = speed
@@ -214,7 +214,7 @@ namespace receiver { // r-receiver.ts
 
     export let a_DualMotor_percent = [0, 0] // aktueller Status
 
-    export function dualMotorPower(motor: eDualMotor, duty_percent: number) {
+    export function dualMotorPower_percent(motor: eDualMotor, duty_percent: number) {
         if (onDualMotorPowerHandler) { // r-calliope-v3.ts
             if (motor == eDualMotor.M0_M1 && (a_DualMotor_percent[0] != duty_percent || a_DualMotor_percent[1] != duty_percent)) {
                 a_DualMotor_percent[0] = duty_percent

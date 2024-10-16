@@ -34,15 +34,15 @@ namespace receiver { // r-zweimotoren.ts
             //  r_percent *= Math.map(servo, 90, 180, 1, lenkenProzent / 100) // 90=nichtlenken=100% // 180=rechtslenken50%
             r_percent *= Math.map(y_1_16_31, 16, 32, 1, lenkenProzent / 100) // 16=nichtlenken=100% // 32=rechtslenken50%
         }
-       
+
         // if (onDualMotorPowerHandler) {
         if (l_percent == r_percent) {
-            dualMotorPower(eDualMotor.M0_M1, l_percent)
+            dualMotorPower_percent(eDualMotor.M0_M1, l_percent)
             // onDualMotorPowerHandler(eDualMotor.M0_M1, l_percent) // v3 Ereignis Block auslösen, nur wenn benutzt
         }
         else {
-            dualMotorPower(eDualMotor.M0, l_percent)
-            dualMotorPower(eDualMotor.M1, r_percent)
+            dualMotorPower_percent(eDualMotor.M0, l_percent)
+            dualMotorPower_percent(eDualMotor.M1, r_percent)
             // onDualMotorPowerHandler(eDualMotor.M0, l_percent) // v3 Ereignis Block auslösen, nur wenn benutzt
             // onDualMotorPowerHandler(eDualMotor.M1, r_percent)
         }
