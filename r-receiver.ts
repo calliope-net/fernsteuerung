@@ -137,7 +137,7 @@ namespace receiver { // r-receiver.ts
     //% motor.shadow=speedPicker motor.defl=50
     //% servo.shadow=protractorPicker servo.defl=90
     //% lenkenProzent.min=10 lenkenProzent.max=90 lenkenProzent.defl=50
-    export function writeMotorServoPicker(motor: number, servo: number, lenkenProzent = 50) {
+    export function selectMotorServoPicker(motor: number, servo: number, lenkenProzent = 50) {
         selectMotor128Servo16(btf.speedPicker(motor), btf.protractorPicker(servo), lenkenProzent)
     }
 
@@ -172,6 +172,18 @@ namespace receiver { // r-receiver.ts
         //    pinServo90(90)
     }
 
+    export function selectMotorRichtungVor() {
+        if (n_Hardware == eHardware.car4) { // Fahrmotor am Qwiic Modul
+            return a_QwiicMotorSpeed[eQwiicMotor.ma] >= c_MotorStop
+        }
+        else if (n_v3_2Motoren) {           // Buggy mit 2 Motoren
+            return a_DualMotor_percent[eDualMotor.M0] >= 0
+        }
+        else {                              // Standard M0 Fahrmotor an Calliope v3 Pins
+            return a_DualMotor_percent[eDualMotor.M0] >= 0
+        }
+
+    }
 
     // ========== group="Motor 0 1 (Calliope v3)"
 

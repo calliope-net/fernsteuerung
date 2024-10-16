@@ -170,7 +170,7 @@ namespace receiver { // r-strecken.ts
             // ========== Event Handler registrieren
             pins.onPulsed(a_PinEncoder[n_Hardware], PulseValue.Low, function () {
 
-                if (a_DualMotor_percent[eDualMotor.M0] > 0) //(selectMotorSpeed() > c_MotorStop)
+                if (selectMotorRichtungVor()) //(selectMotorSpeed() > c_MotorStop)
                     n_EncoderCounter++ // vorwärts
                 else
                     n_EncoderCounter-- // rückwärts
