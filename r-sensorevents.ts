@@ -1,72 +1,72 @@
 
 namespace receiver { // r-sensorevents.ts
 
-
-
-    let n_SpurLinksHell = false // hell=true
-    let n_SpurRechtsHell = false
-
-    export let n_SpurSensorEventsRegistered = false
-    const c_pulseDuration = 60000 // µs 50 ms
-
-    //% group="Spur Sensor" subcategory="Sensoren"
-    //% block="Spur Sensor Pin Ereignisse registrieren" weight=8
-    export function spurSensorRegisterEvents() {
-        if (!n_SpurSensorEventsRegistered && !n_EncoderEventRegistered) {
-
-            n_SpurLinksHell = pins.digitalReadPin(a_PinSpurlinks[n_Hardware]) == 1
-            n_SpurRechtsHell = pins.digitalReadPin(a_PinSpurrechts[n_Hardware]) == 1
-
-            // PulseValue.Low
-            // ↑high, ↓low, Event niedrig bei l->h loslassen
-            // Zeit wie lange es low ↓↑ war in µs
-
-            pins.onPulsed(a_PinSpurlinks[n_Hardware], PulseValue.Low, function () {
-                // links hell
-                if (pins.pulseDuration() > c_pulseDuration) { // 10ms
-                    n_SpurLinksHell = true
-                    if (onSpurPinEventHandler)
-                        onSpurPinEventHandler(n_SpurLinksHell, n_SpurRechtsHell)
-                }
-            })
-            pins.onPulsed(a_PinSpurlinks[n_Hardware], PulseValue.High, function () {
-                // links dunkel
-                if (pins.pulseDuration() > c_pulseDuration) { // 10ms
-                    n_SpurLinksHell = false
-                    if (onSpurPinEventHandler)
-                        onSpurPinEventHandler(n_SpurLinksHell, n_SpurRechtsHell)
-                }
-            })
-
-            pins.onPulsed(a_PinSpurrechts[n_Hardware], PulseValue.Low, function () {
-                // rechts hell
-                if (pins.pulseDuration() > c_pulseDuration) { // 10ms
-                    n_SpurRechtsHell = true
-                    if (onSpurPinEventHandler)
-                        onSpurPinEventHandler(n_SpurLinksHell, n_SpurRechtsHell)
-                }
-            })
-            pins.onPulsed(a_PinSpurrechts[n_Hardware], PulseValue.High, function () {
-                // rechts dunkel
-                if (pins.pulseDuration() > c_pulseDuration) { // 10ms
-                    n_SpurRechtsHell = false
-                    if (onSpurPinEventHandler)
-                        onSpurPinEventHandler(n_SpurLinksHell, n_SpurRechtsHell)
-                }
-            })
-
-            // danach darf kein pins.digitalReadPin() stehen, das deaktiviert die Ereignisse wieder, davor ist möglich
-            //n_inEvent = 0
-            n_SpurSensorEventsRegistered = true
+    /* 
+    
+        let n_SpurLinksHell = false // hell=true
+        let n_SpurRechtsHell = false
+    
+        export let n_SpurSensorEventsRegistered = false
+        const c_pulseDuration = 60000 // µs 50 ms
+    
+        // group="Spur Sensor" subcategory="Sensoren"
+        // block="Spur Sensor Pin Ereignisse registrieren" weight=8
+        export function spurSensorRegisterEvents() {
+            if (!n_SpurSensorEventsRegistered && !n_EncoderEventRegistered) {
+    
+                n_SpurLinksHell = pins.digitalReadPin(a_PinSpurlinks[n_Hardware]) == 1
+                n_SpurRechtsHell = pins.digitalReadPin(a_PinSpurrechts[n_Hardware]) == 1
+    
+                // PulseValue.Low
+                // ↑high, ↓low, Event niedrig bei l->h loslassen
+                // Zeit wie lange es low ↓↑ war in µs
+    
+                pins.onPulsed(a_PinSpurlinks[n_Hardware], PulseValue.Low, function () {
+                    // links hell
+                    if (pins.pulseDuration() > c_pulseDuration) { // 10ms
+                        n_SpurLinksHell = true
+                        if (onSpurPinEventHandler)
+                            onSpurPinEventHandler(n_SpurLinksHell, n_SpurRechtsHell)
+                    }
+                })
+                pins.onPulsed(a_PinSpurlinks[n_Hardware], PulseValue.High, function () {
+                    // links dunkel
+                    if (pins.pulseDuration() > c_pulseDuration) { // 10ms
+                        n_SpurLinksHell = false
+                        if (onSpurPinEventHandler)
+                            onSpurPinEventHandler(n_SpurLinksHell, n_SpurRechtsHell)
+                    }
+                })
+    
+                pins.onPulsed(a_PinSpurrechts[n_Hardware], PulseValue.Low, function () {
+                    // rechts hell
+                    if (pins.pulseDuration() > c_pulseDuration) { // 10ms
+                        n_SpurRechtsHell = true
+                        if (onSpurPinEventHandler)
+                            onSpurPinEventHandler(n_SpurLinksHell, n_SpurRechtsHell)
+                    }
+                })
+                pins.onPulsed(a_PinSpurrechts[n_Hardware], PulseValue.High, function () {
+                    // rechts dunkel
+                    if (pins.pulseDuration() > c_pulseDuration) { // 10ms
+                        n_SpurRechtsHell = false
+                        if (onSpurPinEventHandler)
+                            onSpurPinEventHandler(n_SpurLinksHell, n_SpurRechtsHell)
+                    }
+                })
+    
+                // danach darf kein pins.digitalReadPin() stehen, das deaktiviert die Ereignisse wieder, davor ist möglich
+                //n_inEvent = 0
+                n_SpurSensorEventsRegistered = true
+            }
+            return n_SpurSensorEventsRegistered
         }
-        return n_SpurSensorEventsRegistered
-    }
-
+     */
 
 
     export enum eDH { hell = 1, dunkel = 0 }
 
-    //% group="Spur Sensor" subcategory="Sensoren"
+    //% group="Spur Sensor (Event oder ReadPin)" subcategory="Sensoren"
     //% block="Spur Sensor links %l" weight=7
     export function getSpurLinks(l: eDH) {
         if (n_SpurSensorEventsRegistered)
@@ -75,7 +75,7 @@ namespace receiver { // r-sensorevents.ts
             return pinSpurlinks(l) // DigitalPin direkt lesen
     }
 
-    //% group="Spur Sensor" subcategory="Sensoren"
+    //% group="Spur Sensor (Event oder ReadPin)" subcategory="Sensoren"
     //% block="Spur Sensor rechts %r" weight=6
     export function getSpurRechts(r: eDH) {
         if (n_SpurSensorEventsRegistered)
@@ -84,7 +84,7 @@ namespace receiver { // r-sensorevents.ts
             return pinSpurrechts(r) // DigitalPin direkt lesen
     }
 
-    //% group="Spur Sensor" subcategory="Sensoren"
+    //% group="Spur Sensor (Event oder ReadPin)" subcategory="Sensoren" deprecated=1
     //% block="Spur Sensoren links %l und rechts %r" weight=5
     export function getSpursensor(l: eDH, r: eDH) {
         return getSpurLinks(l) && getSpurRechts(r)
@@ -100,7 +100,7 @@ namespace receiver { // r-sensorevents.ts
     let n_SpurTimer = input.runningTime()
     let n_Spur = 0 // letzter Status
 
-    //% group="Spur Sensor" subcategory="Sensoren"
+    //% group="Spur Sensor (dauerhaft Schleife)" subcategory="Sensoren"
     //% block="Spur Sensor Ereignis auslösen %on || • Pause %ms ms" weight=3
     //% on.shadow=toggleOnOff
     //% ms.defl=25
@@ -139,7 +139,8 @@ namespace receiver { // r-sensorevents.ts
 
     let onSpurEventHandler: (links_hell: boolean, rechts_hell: boolean, abstand_Stop: boolean) => void
 
-    //% group="Spur Sensor" subcategory="Sensoren"
+    // group="Spur Sensor" subcategory="Sensoren"
+    //% group="Spur Sensor (dauerhaft Schleife)" subcategory="Sensoren"
     //% block="wenn Spur Sensor Ereignis" weight=2
     //% draggableParameters=reporter
     export function onSpurEvent(cb: (links_hell: boolean, rechts_hell: boolean, abstand_Stop: boolean) => void) {
@@ -167,8 +168,8 @@ namespace receiver { // r-sensorevents.ts
     }
 
     //% group="Ultraschall oder Laser Distance Sensor" subcategory="Sensoren"
-    //% block="Abstand Sensor aktiviert %on (Laser Ranging)" weight=7
-    //% on.shadow=toggleYesNo
+    //% block="Laser Sensor Ranging %on" weight=7
+    //% on.shadow=toggleOnOff
     export function selectRanging(on: boolean) {
         if (n_Hardware == eHardware.v3 && laserSensorConnected())
             if (on)
@@ -222,12 +223,15 @@ namespace receiver { // r-sensorevents.ts
     }
 
 
+
+    // ========== group="Distance Sensor (dauerhaft Schleife)" subcategory="Sensoren"
+
     let a_raiseAbstandEvent_gestartet = [false, false]
     let n_AbstandTimer = input.runningTime()
     let n_AbstandStop = false // letzter Status
     let n_AbstandSensor = false // Sensor aktiviert (im Buffer bzw. Knopf A)
 
-    //% group="Ultraschall oder Laser Distance Sensor" subcategory="Sensoren"
+    //% group="Distance Sensor (dauerhaft Schleife)" subcategory="Sensoren"
     //% block="Abstand Sensor Ereignis auslösen %on • Stop %stop_cm cm • Start %start_cm cm || • Pause %ms ms" weight=3
     //% on.shadow=toggleOnOff
     //% stop_cm.defl=30
@@ -281,7 +285,7 @@ namespace receiver { // r-sensorevents.ts
 
     let onAbstandEventHandler: (abstand_Sensor: boolean, abstand_Stop: boolean, cm: number) => void
 
-    //% group="Ultraschall oder Laser Distance Sensor" subcategory="Sensoren"
+    //% group="Distance Sensor (dauerhaft Schleife)" subcategory="Sensoren"
     //% block="wenn Abstand Sensor Ereignis" weight=2
     //% draggableParameters=reporter
     export function onAbstandEvent(cb: (abstand_Sensor: boolean, abstand_Stop: boolean, cm: number) => void) {

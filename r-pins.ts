@@ -8,7 +8,7 @@ namespace receiver { // r-pins.ts
 
     // export enum eDH { dunkel = 0, hell = 1 } // 0 ist schwarz
 
-    //% group="Spur Sensor Pins (vom gewählten Modell)" subcategory="Pins"
+    //% group="Spur Sensor pins.digitalReadPin (vom gewählten Modell)" subcategory="Pins"
     //% block="Spur Sensor Pin links %hell" weight=6
     export function pinSpurlinks(hell: eDH) {
         if (a_PinSpurlinks.length > n_Hardware)
@@ -17,7 +17,7 @@ namespace receiver { // r-pins.ts
             return false
     }
 
-    //% group="Spur Sensor Pins (vom gewählten Modell)" subcategory="Pins"
+    //% group="Spur Sensor pins.digitalReadPin (vom gewählten Modell)" subcategory="Pins"
     //% block="Spur Sensor Pin rechts %hell" weight=5
     export function pinSpurrechts(hell: eDH) {
         if (a_PinSpurrechts.length > n_Hardware)
@@ -26,17 +26,80 @@ namespace receiver { // r-pins.ts
             return false
     }
 
-    //% group="Spur Sensor Pins (vom gewählten Modell)" subcategory="Pins"
+    //% group="Spur Sensor pins.digitalReadPin (vom gewählten Modell)" subcategory="Pins" deprecated=1
     //% block="Spur Sensor Pin links %l und rechts %r" weight=4
     export function readSpursensor(l: eDH, r: eDH) {
         return pinSpurlinks(l) && pinSpurrechts(r)
     }
 
 
+
+
+    export let n_SpurLinksHell = false // hell=true
+    export let n_SpurRechtsHell = false
+
+    export let n_SpurSensorEventsRegistered = false
+    const c_pulseDuration = 60000 // µs 50 ms
+
+    // group="Spur Sensor" subcategory="Sensoren"
+    //% group="Spur Sensor pins.onPulsed Events (vom gewählten Modell)" subcategory="Pins"
+    //% block="Spur Sensor Pin Ereignisse registrieren" weight=8
+    export function spurSensorRegisterEvents() {
+        if (!n_SpurSensorEventsRegistered && !n_EncoderEventRegistered) {
+
+            n_SpurLinksHell = pins.digitalReadPin(a_PinSpurlinks[n_Hardware]) == 1
+            n_SpurRechtsHell = pins.digitalReadPin(a_PinSpurrechts[n_Hardware]) == 1
+
+            // PulseValue.Low
+            // ↑high, ↓low, Event niedrig bei l->h loslassen
+            // Zeit wie lange es low ↓↑ war in µs
+
+            pins.onPulsed(a_PinSpurlinks[n_Hardware], PulseValue.Low, function () {
+                // links hell
+                if (pins.pulseDuration() > c_pulseDuration) { // 10ms
+                    n_SpurLinksHell = true
+                    if (onSpurPinEventHandler)
+                        onSpurPinEventHandler(n_SpurLinksHell, n_SpurRechtsHell)
+                }
+            })
+            pins.onPulsed(a_PinSpurlinks[n_Hardware], PulseValue.High, function () {
+                // links dunkel
+                if (pins.pulseDuration() > c_pulseDuration) { // 10ms
+                    n_SpurLinksHell = false
+                    if (onSpurPinEventHandler)
+                        onSpurPinEventHandler(n_SpurLinksHell, n_SpurRechtsHell)
+                }
+            })
+
+            pins.onPulsed(a_PinSpurrechts[n_Hardware], PulseValue.Low, function () {
+                // rechts hell
+                if (pins.pulseDuration() > c_pulseDuration) { // 10ms
+                    n_SpurRechtsHell = true
+                    if (onSpurPinEventHandler)
+                        onSpurPinEventHandler(n_SpurLinksHell, n_SpurRechtsHell)
+                }
+            })
+            pins.onPulsed(a_PinSpurrechts[n_Hardware], PulseValue.High, function () {
+                // rechts dunkel
+                if (pins.pulseDuration() > c_pulseDuration) { // 10ms
+                    n_SpurRechtsHell = false
+                    if (onSpurPinEventHandler)
+                        onSpurPinEventHandler(n_SpurLinksHell, n_SpurRechtsHell)
+                }
+            })
+
+            // danach darf kein pins.digitalReadPin() stehen, das deaktiviert die Ereignisse wieder, davor ist möglich
+            //n_inEvent = 0
+            n_SpurSensorEventsRegistered = true
+        }
+        return n_SpurSensorEventsRegistered
+    }
+
+
     // ========== EVENT HANDLER === sichtbarer Event-Block
     export let onSpurPinEventHandler: (links: boolean, rechts: boolean) => void
 
-    //% group="Spur Sensor Pins (vom gewählten Modell)" subcategory="Pins"
+    //% group="Spur Sensor pins.onPulsed Events (vom gewählten Modell)" subcategory="Pins"
     //% block="wenn Spur Sensor Pin Ereignis" weight=2
     //% draggableParameters=reporter
     export function onSpurPinEvent(cb: (links_hell: boolean, rechts_hell: boolean) => void) {
