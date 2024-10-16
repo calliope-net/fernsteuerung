@@ -16,13 +16,13 @@ namespace cb2 { // c-callibot.ts 005F7F
     // ========== group="calliope-net.github.io/fernsteuerung"
 
     //% group="calliope-net.github.io/fernsteuerung"
-    //% block="beim Start: Calli:bot 2 || Funkgruppe anzeigen %zf %modellFunkgruppe" weight=8
+    //% block="beim Start: Calli:bot 2 || • Funkgruppe anzeigen %zf" weight=8
     //% zf.shadow="toggleYesNo" zf.defl=1
-    export function beimStart(zf = true, modellFunkgruppe?: number) {
+    export function beimStart(zf = true/* , modellFunkgruppe?: number */) { //  %modellFunkgruppe
 
         writeReset() // Reset Motoren, LEDs
 
-        btf.setStorageBuffer(modellFunkgruppe) // prüft und speichert in a_StorageBuffer
+        btf.setStorageBuffer() // prüft und speichert in a_StorageBuffer
 
         if (zf)
             btf.zeigeFunkgruppe()

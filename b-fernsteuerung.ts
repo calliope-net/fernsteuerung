@@ -254,7 +254,7 @@ namespace btf { // b-fernsteuerung.ts
 
     // ========== "Storage (Flash)"
 
-    export function setStorageBuffer(funkgruppe: number, servoKorrektur?: number) {
+    export function setStorageBuffer(funkgruppe?: number, servoKorrektur?: number) {
         // Storage enthält 4 Byte, Funkgruppe und Modell (nur beim Sender), + 2 Byte unbenutzt
         // modellFunkgruppe kann undefined sein, dann Standardwert c_funkgruppe_min nehmen
         // wenn ein gültiger Wert im Flash ist, nicht ändern (Parameter modellFunkgruppe ignorieren)
@@ -265,7 +265,7 @@ namespace btf { // b-fernsteuerung.ts
             a_StorageBuffer[eStorageBuffer.funkgruppe] = funkgruppe
 
         // Funkgruppe (am offset 0) muss c_funkgruppe_min .. c_funkgruppe_max sein
-        else if (!between(a_StorageBuffer[eStorageBuffer.funkgruppe], c_funkgruppe_min, c_funkgruppe_max))
+        if (!between(a_StorageBuffer[eStorageBuffer.funkgruppe], c_funkgruppe_min, c_funkgruppe_max))
             a_StorageBuffer[eStorageBuffer.funkgruppe] = c_funkgruppe_min
         // a_StorageBuffer[eStorageBuffer.funkgruppe] = (funkgruppe) ? funkgruppe : c_funkgruppe_min
 

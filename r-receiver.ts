@@ -60,9 +60,10 @@ namespace receiver { // r-receiver.ts
         n_v3_2Motoren = true
         n_Hardware = eHardware.v3 // !vor pinRelay!
         pinRelay(true) // Relais an schalten (braucht gültiges n_Hardware, um den Pin zu finden)
+        btf.setStorageBuffer()
         if (zf) {
             btf.zeigeFunkgruppe()
-           // btf.zeigeBIN(btf.getStorageServoKorrektur(), btf.ePlot.bcd, 4)
+            // btf.zeigeBIN(btf.getStorageServoKorrektur(), btf.ePlot.bcd, 4)
         }
         qwiicMotorReset() // dauert länger als 2 Sekunden
 
