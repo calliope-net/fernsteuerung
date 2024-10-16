@@ -44,7 +44,7 @@ namespace btf { // b-fernsteuerung.ts
                 }
                 setClearScreen()
                 zeigeFunkgruppe()
-                basic.pause(1500)
+                basic.pause(1000)
             }
 
             if (onStorageChanged)
@@ -65,7 +65,7 @@ namespace btf { // b-fernsteuerung.ts
                 }
                 setClearScreen()
                 zeigeFunkgruppe()
-                basic.pause(1500)
+                basic.pause(1000)
             }
 
             if (onStorageChanged)
@@ -75,6 +75,15 @@ namespace btf { // b-fernsteuerung.ts
         }
     }
 
+    //% group="Bluetooth" advanced=1
+    //% block="setzt Funkgruppe auf %funkgruppe" weight=5
+    export function setFunkgruppe(funkgruppe: eFunkgruppe) {
+        if (between(funkgruppe, c_funkgruppe_min, c_funkgruppe_max)) {
+            a_StorageBuffer[eStorageBuffer.funkgruppe] = funkgruppe
+            radio.setGroup(funkgruppe)
+            storage.putBuffer(a_StorageBuffer) // im Flash speichern
+        }
+    }
 
     //% group="calliope-net.github.io/fernsteuerung"
     //% block="%id" color="#7E84F7" weight=2

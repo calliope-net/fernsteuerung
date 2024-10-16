@@ -49,19 +49,19 @@ namespace receiver { // r-receiver.ts
 
 
     //% group="calliope-net.github.io/fernsteuerung"
-    //% block="beim Start: Empfänger | %modell Servo ↑ ° %servoGeradeaus Encoder %encoder Rad Durchmesser mm %radDmm Funkgruppe || anzeigen %zf Funkgruppe %funkgruppe" weight=8
+    //% block="beim Start: Empfänger | %modell Servo ↑ ° %servoGeradeaus Encoder %encoder Rad Durchmesser mm %radDmm Funkgruppe anzeigen %zf" weight=8
     //% servoGeradeaus.min=81 servoGeradeaus.max=99 servoGeradeaus.defl=90
     //% encoder.shadow="toggleOnOff"
     //% radDmm.min=60 radDmm.max=80 radDmm.defl=65
     //% zf.shadow="toggleYesNo" zf.defl=1
     // funkgruppe.min=160 funkgruppe.max=191
     // inlineInputMode=inline
-    export function beimStart(modell: eHardware, servoGeradeaus: number, encoder: boolean, radDmm: number, zf = true, funkgruppe?: number) {
+    export function beimStart(modell: eHardware, servoGeradeaus: number, encoder: boolean, radDmm: number, zf = true/* , funkgruppe?: number */) { //  Funkgruppe %funkgruppe
         n_Hardware = modell // !vor pinRelay!
 
         pinRelay(true) // Relais an schalten (braucht gültiges n_Hardware, um den Pin zu finden)
 
-        btf.setStorageBuffer(funkgruppe, servoGeradeaus) // prüft und speichert in a_StorageBuffer
+        btf.setStorageBuffer(0, servoGeradeaus) // prüft und speichert in a_StorageBuffer
         if (zf) {
             btf.zeigeFunkgruppe()
             btf.zeigeBIN(btf.getStorageServoKorrektur(), btf.ePlot.bcd, 4)
