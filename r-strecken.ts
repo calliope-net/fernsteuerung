@@ -59,8 +59,10 @@ namespace receiver { // r-strecken.ts
                 let timeout_Encoder = abstandSensor ? 80 : 10 // 2 s Timeout wenn Encoder nicht zählt
 
                 encoderStartStrecke(true, strecke, impulse) // stellt n_EncoderCounter auf 0
-                pinServo16(servo)
-                selectMotor(motor)
+
+                selectMotor128Servo16(motor, servo)
+                // pinServo16(servo)
+                // selectMotor(motor)
 
                 while (n_EncoderAutoStop) //
                 {
@@ -86,7 +88,7 @@ namespace receiver { // r-strecken.ts
                     else
                         basic.pause(200) // Pause kann größer sein, weil Stop schon im Encoder Event erfolgt ist
                 }
-                selectMotor(c_MotorStop)
+                selectMotorStop() // selectMotor(c_MotorStop)
 
             }
             else { // kein Encoder
@@ -96,8 +98,9 @@ namespace receiver { // r-strecken.ts
                 if (impulse)
                     zehntelsekunden /= n_EncoderFaktor
 
-                pinServo16(servo)
-                selectMotor(motor)
+                selectMotor128Servo16(motor, servo)
+                // pinServo16(servo)
+                // selectMotor(motor)
 
                 while (zehntelsekunden-- > 0) //
                 {
@@ -120,7 +123,7 @@ namespace receiver { // r-strecken.ts
 
                     basic.pause(25) // 1 Zehntelsekunde = 4*25 ms
                 }
-                selectMotor(c_MotorStop)
+                selectMotorStop() // selectMotor(c_MotorStop)
             }
             return ret
         }
@@ -176,7 +179,7 @@ namespace receiver { // r-strecken.ts
                     n_EncoderStrecke_impulse = 0 // Ereignis nur einmalig auslösen, wieder aktivieren mit encoder_start
 
                     if (n_EncoderAutoStop) {
-                        selectMotor(c_MotorStop)
+                        selectMotorStop() // selectMotor(c_MotorStop)
                         n_EncoderAutoStop = false
                     }
 

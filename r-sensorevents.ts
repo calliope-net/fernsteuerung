@@ -213,7 +213,7 @@ namespace receiver { // r-sensorevents.ts
         let cm = selectAbstand_cm(true)
 
         if (cm < stop_cm) {
-            selectMotor(c_MotorStop)
+            selectMotorStop() //    selectMotor(c_MotorStop)
             return true
         } else
             return false
