@@ -4,13 +4,14 @@ namespace receiver { // r-receiver.ts
     //color=#008272 
 
     export enum eHardware { // === NICHT DIE ZAHLENWERTE ÄNDERN, das ist der Index für die Pins ===
-        //% block="Calliope v3 mit Leiterplatte (Maker Kit Car)"
+        //% block="Calliope v3 mit Leiterplatte"
         v3 = 0,     // Index in Arrays
         //% block="Calliope v1 (CaR 4)"
         car4 = 1   // Index in Arrays
     }
 
     export let n_Hardware = eHardware.v3 // Index in Arrays:// 0:_Calliope v3 Pins_
+    export let n_v3_2Motoren = false // Buggy
 
     // eHardware ist der Index für folgende Arrays:
     //export let a_ModellFunkgruppe = [0xA8, 239] // v3, car4
@@ -49,6 +50,28 @@ namespace receiver { // r-receiver.ts
     export let n_Servo90Winkel = c_Servo90_geradeaus // aktuell eingestellter Winkel
 
 
+
+    //% group="calliope-net.github.io/fernsteuerung"
+    //% block="beim Start: Calliope v3 \\| 2 Motoren || • Encoder %encoder • Rad ⌀ mm %radDmm • Funkgruppe anzeigen %zf" weight=9
+    //% encoder.shadow="toggleOnOff" encoder.defl=1
+    //% radDmm.min=60 radDmm.max=80 radDmm.defl=65
+    //% zf.shadow="toggleYesNo" zf.defl=1
+    export function beimStart2Motoren(encoder = true, radDmm = 65, zf = true) {
+        n_v3_2Motoren = true
+        n_Hardware = eHardware.v3 // !vor pinRelay!
+        pinRelay(true) // Relais an schalten (braucht gültiges n_Hardware, um den Pin zu finden)
+        if (zf) {
+            btf.zeigeFunkgruppe()
+           // btf.zeigeBIN(btf.getStorageServoKorrektur(), btf.ePlot.bcd, 4)
+        }
+        qwiicMotorReset() // dauert länger als 2 Sekunden
+
+        if (encoder)
+            encoderOn(radDmm)
+
+        btf.beimStartReceiver(btf.eNamespace.receiver)
+    }
+
     //% group="calliope-net.github.io/fernsteuerung"
     //% block="beim Start: Empfänger | %modell Servo ↑ ° %servoGeradeaus Encoder %encoder Rad Durchmesser mm %radDmm Funkgruppe anzeigen %zf" weight=8
     //% servoGeradeaus.min=81 servoGeradeaus.max=99 servoGeradeaus.defl=90
@@ -58,11 +81,12 @@ namespace receiver { // r-receiver.ts
     // funkgruppe.min=160 funkgruppe.max=191
     // inlineInputMode=inline
     export function beimStart(modell: eHardware, servoGeradeaus: number, encoder: boolean, radDmm: number, zf = true/* , funkgruppe?: number */) { //  Funkgruppe %funkgruppe
+        n_v3_2Motoren = false
         n_Hardware = modell // !vor pinRelay!
 
         pinRelay(true) // Relais an schalten (braucht gültiges n_Hardware, um den Pin zu finden)
 
-        btf.setStorageBuffer(0, servoGeradeaus) // prüft und speichert in a_StorageBuffer
+        btf.setStorageBuffer(0, servoGeradeaus) // Funkgruppe 0 und ServoGeradeaus; prüft und speichert in a_StorageBuffer
         if (zf) {
             btf.zeigeFunkgruppe()
             btf.zeigeBIN(btf.getStorageServoKorrektur(), btf.ePlot.bcd, 4)
@@ -91,6 +115,10 @@ namespace receiver { // r-receiver.ts
         ) // setzt auch n_start true, muss deshalb zuletzt stehen
 
     }
+
+
+
+
 
     //% group="calliope-net.github.io/fernsteuerung"
     //% block="Knopf A+B halten, Servo Korrektur" weight=4

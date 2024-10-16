@@ -4,13 +4,13 @@ namespace receiver { // r-beispiele.ts
 
     // ========== subcategory=Beispiele
 
-    export function writeMotor128Servo16(motor128: number, y_1_16_31: number) {
+    function writeMotor128Servo16(motor128: number, y_1_16_31: number) {
         selectMotor(motor128)
-        pinServo16(y_1_16_31) 
+        pinServo16(y_1_16_31)
     }
-    export function writeMotorenStop() {
+    function writeMotorenStop() {
         selectMotorStop(true)
-       // pinServo16(16) // nicht lenken
+        // pinServo16(16) // nicht lenken
     }
 
     // ========== group="Abstand Sensor Ereignis" subcategory=Beispiele
@@ -91,7 +91,7 @@ namespace receiver { // r-beispiele.ts
     // abstand_Stop.shadow=toggleYesNo
     //% pause_zs.shadow=cb2_zehntelsekunden
     // abstand.min=10 abstand.max=50 abstand.defl=30
-    export function event_Spur_folgen(spur_folgen: boolean, links_hell: boolean, rechts_hell: boolean, motor128: number, motorLenken: number, servo16: number,  abstand_Stop: boolean, pause_zs: number, index = 0) {
+    export function event_Spur_folgen(spur_folgen: boolean, links_hell: boolean, rechts_hell: boolean, motor128: number, motorLenken: number, servo16: number, abstand_Stop: boolean, pause_zs: number, index = 0) {
         if (spur_folgen) {
 
             btf.resetTimer()
@@ -189,65 +189,65 @@ namespace receiver { // r-beispiele.ts
     // stop.shadow="toggleYesNo"
     // abstand.min=10 abstand.max=50 abstand.defl=20
     // inlineInputMode=inline
-  /*   export function beispielSpurfolger16(motor128: number, langsamfahren: number, servo16: number, repeat: boolean, stop: boolean, abstand: number) {
-        // repeat ist false beim ersten Durchlauf der Schleife, true bei Wiederholungen
-        if (!repeat) {
-            m_lenken = undefined // gespeicherte Werte löschen
-            m_inSpur = false     // beim ersten Durchlauf der Schleife
-            setLedColors(eRGBled.b, Colors.Off, false)
-            setLedColors(eRGBled.c, Colors.Off, false)
-        }
-
-        if (stop && abstand > 0 && getQwiicUltrasonic(true) < abstand) {
-
-            selectMotor(c_MotorStop)
-
-            setLedColors(eRGBled.b, Colors.Red)
-            basic.pause(Math.randomRange(500, 5000)) // 0.5 .. 5 Sekunden warten bis es wieder los fährt
-        }
-        else {
-
-            let lenken = Math.abs(servo16 - 16)  // 16-16=0 / 1-16=15 / 31-16=15
-
-            if (getSpursensor(eDH.dunkel, eDH.dunkel)) {
-                selectMotor(motor128)
-                pinServo16(16) // nicht lenken
-                m_inSpur = true
-            }
-            else if (getSpursensor(eDH.dunkel, eDH.hell)) {
-                selectMotor(langsamfahren) // links lenken <16 = 1
-                pinServo16(16 - lenken)
-                if (m_inSpur)
-                    m_lenken = 16 - lenken
-            }
-            else if (getSpursensor(eDH.hell, eDH.dunkel)) {
-                selectMotor(langsamfahren)
-                pinServo16(16 + lenken) // rechts lenken >16 = 31
-                if (m_inSpur)
-                    m_lenken = 16 + lenken
-            }
-            else if (m_lenken) { // hell hell
-                selectMotor(langsamfahren)
-                pinServo16(m_lenken) // lenken wie zuletzt gespeichert
-                m_inSpur = false
-            }
-            else { // hell hell
-                selectMotor(motor128) // schnell geradeaus fahren bis zur schwarzen Linie
-                pinServo16(16) // nicht lenken
-                m_inSpur = false
-            }
-
-            if (stop) {
-                setLedColors(eRGBled.b, Colors.Yellow, stop) // gelb, wenn Abstandssensor aktiviert ist
-                setLedColors(eRGBled.c, Colors.Off, false)
-             // setLedColors(eRGBled.c, Colors.White, getSpursensor(eDH.hell, eDH.hell))
-            }
-            else {
-                setLedColors(eRGBled.b, Colors.White, getSpurLinks(eDH.hell))  // wenn Abstandssensor nicht aktiviert ist
-                setLedColors(eRGBled.c, Colors.White, getSpurRechts(eDH.hell)) // Spursensor links und rechts anzeigen
-            }
-        }
-    } */
+    /*   export function beispielSpurfolger16(motor128: number, langsamfahren: number, servo16: number, repeat: boolean, stop: boolean, abstand: number) {
+          // repeat ist false beim ersten Durchlauf der Schleife, true bei Wiederholungen
+          if (!repeat) {
+              m_lenken = undefined // gespeicherte Werte löschen
+              m_inSpur = false     // beim ersten Durchlauf der Schleife
+              setLedColors(eRGBled.b, Colors.Off, false)
+              setLedColors(eRGBled.c, Colors.Off, false)
+          }
+  
+          if (stop && abstand > 0 && getQwiicUltrasonic(true) < abstand) {
+  
+              selectMotor(c_MotorStop)
+  
+              setLedColors(eRGBled.b, Colors.Red)
+              basic.pause(Math.randomRange(500, 5000)) // 0.5 .. 5 Sekunden warten bis es wieder los fährt
+          }
+          else {
+  
+              let lenken = Math.abs(servo16 - 16)  // 16-16=0 / 1-16=15 / 31-16=15
+  
+              if (getSpursensor(eDH.dunkel, eDH.dunkel)) {
+                  selectMotor(motor128)
+                  pinServo16(16) // nicht lenken
+                  m_inSpur = true
+              }
+              else if (getSpursensor(eDH.dunkel, eDH.hell)) {
+                  selectMotor(langsamfahren) // links lenken <16 = 1
+                  pinServo16(16 - lenken)
+                  if (m_inSpur)
+                      m_lenken = 16 - lenken
+              }
+              else if (getSpursensor(eDH.hell, eDH.dunkel)) {
+                  selectMotor(langsamfahren)
+                  pinServo16(16 + lenken) // rechts lenken >16 = 31
+                  if (m_inSpur)
+                      m_lenken = 16 + lenken
+              }
+              else if (m_lenken) { // hell hell
+                  selectMotor(langsamfahren)
+                  pinServo16(m_lenken) // lenken wie zuletzt gespeichert
+                  m_inSpur = false
+              }
+              else { // hell hell
+                  selectMotor(motor128) // schnell geradeaus fahren bis zur schwarzen Linie
+                  pinServo16(16) // nicht lenken
+                  m_inSpur = false
+              }
+  
+              if (stop) {
+                  setLedColors(eRGBled.b, Colors.Yellow, stop) // gelb, wenn Abstandssensor aktiviert ist
+                  setLedColors(eRGBled.c, Colors.Off, false)
+               // setLedColors(eRGBled.c, Colors.White, getSpursensor(eDH.hell, eDH.hell))
+              }
+              else {
+                  setLedColors(eRGBled.b, Colors.White, getSpurLinks(eDH.hell))  // wenn Abstandssensor nicht aktiviert ist
+                  setLedColors(eRGBled.c, Colors.White, getSpurRechts(eDH.hell)) // Spursensor links und rechts anzeigen
+              }
+          }
+      } */
 
 
     // group="1 Spurfolger (1 ↓ 128 ↑ 255) (1 ↖ 16 ↗ 31)" subcategory=Beispiele
@@ -259,53 +259,53 @@ namespace receiver { // r-beispiele.ts
     // repeat.shadow="toggleYesNo" repeat.defl=1
     // abstand.min=10 abstand.max=50 abstand.defl=20
     // inlineInputMode=inline
-  /*   export function eventSpurfolger(links_hell: boolean, rechts_hell: boolean, stop: boolean, motor128: number, langsamfahren: number, servo16: number, repeat: boolean) {
-        // repeat ist false beim ersten Durchlauf der Schleife, true bei Wiederholungen
-        if (!repeat) {
-            m_lenken = undefined // gespeicherte Werte löschen
-            m_inSpur = false     // beim ersten Durchlauf der Schleife
-            // setLedColors(eRGBled.b, Colors.Off, false)
-        }
-
-
-        if (stop) {
-            selectMotorStop(false) // nicht geradeaus lenken
-            setLedColors(eRGBled.b, Colors.Red)
-            basic.pause(Math.randomRange(500, 5000)) // 0.5 .. 5 Sekunden warten bis es wieder los fährt
-        }
-        else {
-            let lenken = Math.abs(servo16 - 16)  // 16-16=0 / 1-16=15 / 31-16=15
-
-            if (!links_hell && !rechts_hell) { // dunkel dunkel
-                selectMotor(motor128)
-                pinServoGeradeaus() // nicht lenken
-                m_inSpur = true
-            }
-            else if (!links_hell && rechts_hell) { // dunkel hell
-                selectMotor(langsamfahren) // links lenken <16 = 1
-                pinServo16(16 - lenken)
-                if (m_inSpur)
-                    m_lenken = 16 - lenken
-            }
-            else if (links_hell && !rechts_hell) { // hell dunkel
-                selectMotor(langsamfahren)
-                pinServo16(16 + lenken) // rechts lenken >16 = 31
-                if (m_inSpur)
-                    m_lenken = 16 + lenken
-            }
-            else if (m_lenken) { // hell hell
-                selectMotor(langsamfahren)
-                pinServo16(m_lenken) // lenken wie zuletzt gespeichert
-                m_inSpur = false
-            }
-            else { // hell hell
-                selectMotor(motor128) // schnell geradeaus fahren bis zur schwarzen Linie
-                pinServoGeradeaus() // nicht lenken
-                m_inSpur = false
-            }
-            setLedColors(eRGBled.b, Colors.Yellow, stop) // gelb, wenn Spursensor aktiviert ist
-        }
-    } */
+    /*   export function eventSpurfolger(links_hell: boolean, rechts_hell: boolean, stop: boolean, motor128: number, langsamfahren: number, servo16: number, repeat: boolean) {
+          // repeat ist false beim ersten Durchlauf der Schleife, true bei Wiederholungen
+          if (!repeat) {
+              m_lenken = undefined // gespeicherte Werte löschen
+              m_inSpur = false     // beim ersten Durchlauf der Schleife
+              // setLedColors(eRGBled.b, Colors.Off, false)
+          }
+  
+  
+          if (stop) {
+              selectMotorStop(false) // nicht geradeaus lenken
+              setLedColors(eRGBled.b, Colors.Red)
+              basic.pause(Math.randomRange(500, 5000)) // 0.5 .. 5 Sekunden warten bis es wieder los fährt
+          }
+          else {
+              let lenken = Math.abs(servo16 - 16)  // 16-16=0 / 1-16=15 / 31-16=15
+  
+              if (!links_hell && !rechts_hell) { // dunkel dunkel
+                  selectMotor(motor128)
+                  pinServoGeradeaus() // nicht lenken
+                  m_inSpur = true
+              }
+              else if (!links_hell && rechts_hell) { // dunkel hell
+                  selectMotor(langsamfahren) // links lenken <16 = 1
+                  pinServo16(16 - lenken)
+                  if (m_inSpur)
+                      m_lenken = 16 - lenken
+              }
+              else if (links_hell && !rechts_hell) { // hell dunkel
+                  selectMotor(langsamfahren)
+                  pinServo16(16 + lenken) // rechts lenken >16 = 31
+                  if (m_inSpur)
+                      m_lenken = 16 + lenken
+              }
+              else if (m_lenken) { // hell hell
+                  selectMotor(langsamfahren)
+                  pinServo16(m_lenken) // lenken wie zuletzt gespeichert
+                  m_inSpur = false
+              }
+              else { // hell hell
+                  selectMotor(motor128) // schnell geradeaus fahren bis zur schwarzen Linie
+                  pinServoGeradeaus() // nicht lenken
+                  m_inSpur = false
+              }
+              setLedColors(eRGBled.b, Colors.Yellow, stop) // gelb, wenn Spursensor aktiviert ist
+          }
+      } */
 
 
 
