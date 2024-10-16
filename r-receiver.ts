@@ -20,11 +20,10 @@ namespace receiver { // r-receiver.ts
     let a_PinServo: AnalogPin[] = [108, AnalogPin.C4]       // 0:AnalogPin.C8 GPIO1
     export let a_PinLicht: DigitalPin[] = [112, DigitalPin.C7]    // 0:DigitalPin.C12 GPIO4 Jacdac
     export let a_PinEncoder: DigitalPin[] = [114, DigitalPin.P2]   // 0:DigitalPin.C14 SPI
+    // Spursensor in r-pins.ts
+    // export let a_PinSpurRechts: DigitalPin[] = [115, DigitalPin.C9]// 0:DigitalPin.C13 SPI
+    // export let a_PinSpurLinks: DigitalPin[] = [113, DigitalPin.C11]// 0:DigitalPin.C15 SPI
 
-    // PinSpur in r-pins.ts
-    // export let a_PinSpurrechts: DigitalPin[] = [115, DigitalPin.C9]// 0:DigitalPin.C13 SPI
-    // export let a_PinSpurlinks: DigitalPin[] = [113, DigitalPin.C11]// 0:DigitalPin.C15 SPI
-    
     // CaR 4 Pins
     //export const pinRelay = DigitalPin.P0          // 5V Grove Relay
     //export const pinFototransistor = AnalogPin.P1  // GND fischertechnik 36134 Fototransistor

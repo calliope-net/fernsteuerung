@@ -1,20 +1,20 @@
 
 namespace receiver { // r-pins.ts
 
-    let a_PinSpurLinks: DigitalPin[] = [113, DigitalPin.C11]// 0:DigitalPin.C15 SPI
-    let a_PinSpurRechts: DigitalPin[] = [115, DigitalPin.C9]// 0:DigitalPin.C13 SPI
+    let a_PinSpurLinks: DigitalPin[] = [113, DigitalPin.C11] // 0:DigitalPin.C15 SPI
+    let a_PinSpurRechts: DigitalPin[] = [115, DigitalPin.C9] // 0:DigitalPin.C13 SPI
 
-    let n_PinSpurKabelVorn = false // bei true wird rechts und links getauscht
+    let n_PinSpurTauschen = false // bei true wird rechts und links getauscht
 
     function spurLinksDigitalPin(): DigitalPin {
-        if (!n_PinSpurKabelVorn)
+        if (!n_PinSpurTauschen)
             return a_PinSpurLinks[n_Hardware]  // Kabel am Spur Sensor hinten
         else
             return a_PinSpurRechts[n_Hardware] // Kabel vorn: rechts und links tauschen
     }
 
     function spurRechtsDigitalPin(): DigitalPin {
-        if (!n_PinSpurKabelVorn)
+        if (!n_PinSpurTauschen)
             return a_PinSpurRechts[n_Hardware] // Kabel am Spur Sensor hinten
         else
             return a_PinSpurLinks[n_Hardware]  // Kabel vorn: rechts und links tauschen
@@ -25,10 +25,10 @@ namespace receiver { // r-pins.ts
 
 
     //% group="Spur Sensor pins.digitalReadPin (vom gewählten Modell)" subcategory="Pins"
-    //% block="Spur Sensor links/rechts tauschen %bKabel (Kabel nach vorn)" weight=7
-    //% bKabel.shadow=toggleYesNo
-    export function pinSpurKabelVorn(bKabel = false) {
-        n_PinSpurKabelVorn = bKabel
+    //% block="Spur Sensor links/rechts tauschen %tauschen (Kabel nach vorn)" weight=7
+    //% tauschen.shadow=toggleYesNo
+    export function pinSpurTauschen(tauschen = false) {
+        n_PinSpurTauschen = tauschen
     }
 
 
@@ -63,10 +63,12 @@ namespace receiver { // r-pins.ts
 
     // group="Spur Sensor" subcategory="Sensoren"
     //% group="Spur Sensor pins.onPulsed Events (vom gewählten Modell)" subcategory="Pins"
-    //% block="Spur Sensor Pin Ereignisse registrieren" weight=8
-    export function spurSensorRegisterEvents() {
+    //% block="Spur Sensor Pin Ereignisse registrieren || links/rechts tauschen %tauschen" weight=8
+    //% tauschen.shadow=toggleYesNo
+    export function spurSensorRegisterEvents(tauschen = false) {
         if (!n_SpurSensorEventsRegistered && !n_EncoderEventRegistered) {
 
+            n_PinSpurTauschen = tauschen
             n_SpurLinksHell = pinSpurlinks(eDH.hell)   // pins.digitalReadPin(a_PinSpurlinks[n_Hardware]) == 1
             n_SpurRechtsHell = pinSpurrechts(eDH.hell) // pins.digitalReadPin(a_PinSpurrechts[n_Hardware]) == 1
 
