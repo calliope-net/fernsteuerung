@@ -129,6 +129,50 @@ namespace receiver { // r-receiver.ts
     }
 
 
+
+    // ========== group="Fahren und Lenken"
+
+    //% group="Fahren und Lenken"
+    //% block="Fahren %motor \\% • Lenken %servo ° || • 2 Motoren %lenkenProzent \\%" weight=5
+    //% motor.shadow=speedPicker motor.defl=50
+    //% servo.shadow=protractorPicker servo.defl=90
+    //% lenkenProzent.min=10 lenkenProzent.max=90 lenkenProzent.defl=50
+    export function writeMotorServoPicker(motor: number, servo: number, lenkenProzent = 50) {
+        selectMotor128Servo16(btf.speedPicker(motor), btf.protractorPicker(servo), lenkenProzent)
+    }
+
+    //% group="Fahren und Lenken"
+    //% block="Fahren (1↓128↑255) %x_1_128_255 • Lenken (1↖16↗31) %y_1_16_31 || • 2 Motoren %lenkenProzent \\%" weight=4
+    //% x_1_128_255.min=1 x_1_128_255.max=255 x_1_128_255.defl=128
+    //% y_1_16_31.min=1 y_1_16_31.max=31 y_1_16_31.defl=16
+    //% lenkenProzent.min=10 lenkenProzent.max=90 lenkenProzent.defl=50
+    export function selectMotor128Servo16(x_1_128_255: number, y_1_16_31: number, lenkenProzent = 50) {
+
+        if (n_Hardware == eHardware.car4) { // Fahrmotor am Qwiic Modul
+            qwiicMotor128(eQwiicMotor.ma, x_1_128_255)
+            if (y_1_16_31 != 0)
+                pinServo16(y_1_16_31)       // Servo
+        }
+        else if (n_v3_2Motoren) {           // Buggy mit 2 Motoren
+            dual2MotorenLenken(x_1_128_255, y_1_16_31, lenkenProzent)
+        }
+        else {                              // Standard M0 Fahrmotor an Calliope v3 Pins
+            dualMotor128(eDualMotor.M0, x_1_128_255)
+            if (y_1_16_31 != 0)
+                pinServo16(y_1_16_31)       // Servo
+        }
+    }
+
+    //% group="Fahren und Lenken"
+    //% block="Fahren Stop • Lenken ↑ %servoGeradeaus" weight=3
+    //% servoGeradeaus.shadow=toggleYesNo servoGeradeaus.defl=1
+    export function selectMotorStop(servoGeradeaus: boolean) {
+        selectMotor128Servo16(c_MotorStop, servoGeradeaus ? 16 : 0)
+        //if (servoGeradeaus)
+        //    pinServo90(90)
+    }
+
+
     // ========== group="Motor 0 1 (Calliope v3)"
 
     //% group="Motor 0 1 (Calliope v3)"
@@ -207,15 +251,6 @@ namespace receiver { // r-receiver.ts
             qwiicMotor128(eQwiicMotor.ma, speed)
         else // Standard M0 Fahrmotor an Calliope v3 Pins
             dualMotor128(eDualMotor.M0, speed)
-    }
-
-    //% group="Motor (vom gewählten Modell)"
-    //% block="Motor Stop • Servo ↑ %servoGeradeaus" weight=3
-    //% servoGeradeaus.shadow=toggleYesNo servoGeradeaus.defl=1
-    export function selectMotorStop(servoGeradeaus: boolean) {
-        selectMotor(c_MotorStop)
-        if (servoGeradeaus)
-            pinServo90(90)
     }
 
 

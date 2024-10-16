@@ -8,7 +8,7 @@ namespace sender { // s-sender.ts
     //% group="calliope-net.github.io/fernsteuerung"
     //% block="beim Start: Sender || • Modell anzeigen %zf • Funkgruppe %funkgruppe" weight=8
     //% zf.shadow="toggleYesNo" zf.defl=1
-    export function beimStart(zf = true, funkgruppe?: btf.eFunkgruppe) {
+    export function beimStart(zf = true, funkgruppe?: btf.eFunkgruppe) { // funkgruppe ist undefined wenn im Block nicht angezeigt
         if (!btf.simulator()) {
             btf.setStorageBuffer(funkgruppe) // prüft und speichert in a_StorageBuffer
 
