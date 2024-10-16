@@ -18,7 +18,7 @@ namespace receiver { // r-receiver.ts
 
     // Calliope v3 freie Pins: C8, C9, C12, C13, C14, C15
     export let a_PinRelay: DigitalPin[] = [109, DigitalPin.P0]     // 0:DigitalPin.C9 GPIO2
-    let a_PinServo: AnalogPin[] = [108, AnalogPin.C4]       // 0:AnalogPin.C8 GPIO1
+    export let a_PinServo: AnalogPin[] = [108, AnalogPin.C4]       // 0:AnalogPin.C8 GPIO1
     export let a_PinLicht: DigitalPin[] = [112, DigitalPin.C7]    // 0:DigitalPin.C12 GPIO4 Jacdac
     export let a_PinEncoder: DigitalPin[] = [114, DigitalPin.P2]   // 0:DigitalPin.C14 SPI
     // Spursensor in r-pins.ts
@@ -44,12 +44,12 @@ namespace receiver { // r-receiver.ts
 
     export const c_MotorStop = 128
     // export let a_DualMotorSpeed = [c_MotorStop, c_MotorStop]
-
-    const c_Servo90_geradeaus = 90
-    let n_Servo90KorrekturFaktor = 1 // Winkel für geradeaus wird beim Start eingestellt
+/* 
+    export const c_Servo90_geradeaus = 90
+    export let n_Servo90KorrekturFaktor = 1 // Winkel für geradeaus wird beim Start eingestellt
     export let n_Servo90Winkel = c_Servo90_geradeaus // aktuell eingestellter Winkel
 
-
+ */
 
     //% group="calliope-net.github.io/fernsteuerung"
     //% block="beim Start: Calliope v3 \\| 2 Motoren || • Encoder %encoder • Rad ⌀ mm %radDmm • Funkgruppe anzeigen %zf" weight=9
@@ -245,53 +245,53 @@ namespace receiver { // r-receiver.ts
             //     onDualMotorPowerHandler(motor, duty_percent) // v3 Ereignis Block auslösen, nur wenn benutzt
         }
     }
-
-    // ========== group="Servo (vom gewählten Modell)"
-
-    //% group="Servo (vom gewählten Modell)"
-    //% block="Servo (Picker) %servo °" weight=4
-    //% servo.shadow=protractorPicker servo.defl=90
-    export function pinServoPicker(servo: number) {
-        pinServo16(btf.protractorPicker(servo))
-    }
-
-    //% group="Servo (vom gewählten Modell)"
-    //% block="Servo (1 ↖ 16 ↗ 31) %winkel" weight=3
-    //% winkel.min=1 winkel.max=31 winkel.defl=16
-    export function pinServo16(winkel: number) {
-        if (btf.between(winkel, 1, 31))
-            // Formel: (x+14)*3
-            // winkel 1..16..31 links und rechts tauschen (32-winkel) 32-1=31 32-16=16 32-31=1
-            // winkel 31..16..1
-            // 32+14=46 46-1=45     46-16=30    46-31=15
-            //          45*3=135    30*3=90     15*3=45
-            pinServo90((14 + (32 - winkel)) * 3)  // 1->135 16->90 31->45
-        //pinServo90((46 - winkel) * 3)  // 1->135 16->90 31->45
-        //  servo_set90((14 + winkel) * 3)  // 1->135 16->90 31->45
-        else
-            pinServo90(c_Servo90_geradeaus)
-    }
-
-    //% group="Servo (vom gewählten Modell)"
-    //% block="Servo (135° ↖ 90° ↗ 45°) %winkel °" weight=2
-    //% winkel.min=45 winkel.max=135 winkel.defl=90
-    export function pinServo90(winkel: number) {
-        // Richtung ändern: 180-winkel
-        // (0+14)*3=42 keine Änderung, gültige Werte im Buffer 1-31  (1+14)*3=45  (16+14)*3=90  (31+14)*3=135
-        if (btf.between(winkel, 45, 135) && n_Servo90Winkel != winkel) {
-            n_Servo90Winkel = winkel
-            // pins.servoWritePin(a_PinServo[n_Hardware], winkel + (n_Servo90Geradeaus - c_Servo_geradeaus))
-            //pins.servoWritePin(a_PinServo[n_Hardware], winkel * (n_Servo90Geradeaus / c_Servo_geradeaus))
-            pins.servoWritePin(a_PinServo[n_Hardware], winkel * n_Servo90KorrekturFaktor)
+    /* 
+        // ========== group="Servo (vom gewählten Modell)"
+    
+        // group="Servo (vom gewählten Modell)"
+        // block="Servo (Picker) %servo °" weight=4
+        // servo.shadow=protractorPicker servo.defl=90
+        //export function pinServoPicker(servo: number) {
+        //    pinServo16(btf.protractorPicker(servo))
+        //}
+    
+        //% group="Servo (vom gewählten Modell)"
+        //% block="Servo (1 ↖ 16 ↗ 31) %winkel" weight=3
+        //% winkel.min=1 winkel.max=31 winkel.defl=16
+        export function pinServo16(winkel: number) {
+            if (btf.between(winkel, 1, 31))
+                // Formel: (x+14)*3
+                // winkel 1..16..31 links und rechts tauschen (32-winkel) 32-1=31 32-16=16 32-31=1
+                // winkel 31..16..1
+                // 32+14=46 46-1=45     46-16=30    46-31=15
+                //          45*3=135    30*3=90     15*3=45
+                pinServo90((14 + (32 - winkel)) * 3)  // 1->135 16->90 31->45
+            //pinServo90((46 - winkel) * 3)  // 1->135 16->90 31->45
+            //  servo_set90((14 + winkel) * 3)  // 1->135 16->90 31->45
+            else
+                pinServo90(c_Servo90_geradeaus)
         }
-    }
-
-    //% group="Servo (vom gewählten Modell)"
-    //% block="Servo geradeaus" weight=1
-    export function pinServoGeradeaus() {
-        pinServo90(c_Servo90_geradeaus)
-    }
-
+    
+        //% group="Servo (vom gewählten Modell)"
+        //% block="Servo (135° ↖ 90° ↗ 45°) %winkel °" weight=2
+        //% winkel.min=45 winkel.max=135 winkel.defl=90
+        export function pinServo90(winkel: number) {
+            // Richtung ändern: 180-winkel
+            // (0+14)*3=42 keine Änderung, gültige Werte im Buffer 1-31  (1+14)*3=45  (16+14)*3=90  (31+14)*3=135
+            if (btf.between(winkel, 45, 135) && n_Servo90Winkel != winkel) {
+                n_Servo90Winkel = winkel
+                // pins.servoWritePin(a_PinServo[n_Hardware], winkel + (n_Servo90Geradeaus - c_Servo_geradeaus))
+                //pins.servoWritePin(a_PinServo[n_Hardware], winkel * (n_Servo90Geradeaus / c_Servo_geradeaus))
+                pins.servoWritePin(a_PinServo[n_Hardware], winkel * n_Servo90KorrekturFaktor)
+            }
+        }
+    
+        //% group="Servo (vom gewählten Modell)"
+        //% block="Servo geradeaus" weight=1
+        export function pinServoGeradeaus() {
+            pinServo90(c_Servo90_geradeaus)
+        }
+     */
     // ========== group="Motor (vom gewählten Modell)"
 
     //% group="Motor (vom gewählten Modell)"
