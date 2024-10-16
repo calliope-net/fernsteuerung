@@ -10,7 +10,8 @@ namespace receiver { // r-advanced.ts
         if (n_Hardware == eHardware.car4) // Fahrmotor am Qwiic Modul
             return a_QwiicMotorSpeed[eQwiicMotor.ma]
         else
-            return a_DualMotorSpeed[eDualMotor.M0]
+            return btf.mapInt32(a_DualMotor_percent[eDualMotor.M0], -100, 100, 1, 255)
+        // return a_DualMotorSpeed[eDualMotor.M0]
     }
 
     //% group="aktuelle Werte (vom gewählten Modell)" advanced=true
