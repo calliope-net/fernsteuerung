@@ -1,29 +1,49 @@
 
 namespace receiver { // r-pins.ts
 
-    // PINs sind in r-receiver.ts definiert
+    let a_PinSpurLinks: DigitalPin[] = [113, DigitalPin.C11]// 0:DigitalPin.C15 SPI
+    let a_PinSpurRechts: DigitalPin[] = [115, DigitalPin.C9]// 0:DigitalPin.C13 SPI
+
+    let n_PinSpurKabelVorn = false // bei true wird rechts und links getauscht
+
+    function spurLinksDigitalPin(): DigitalPin {
+        if (!n_PinSpurKabelVorn)
+            return a_PinSpurLinks[n_Hardware]  // Kabel am Spur Sensor hinten
+        else
+            return a_PinSpurRechts[n_Hardware] // Kabel vorn: rechts und links tauschen
+    }
+
+    function spurRechtsDigitalPin(): DigitalPin {
+        if (!n_PinSpurKabelVorn)
+            return a_PinSpurRechts[n_Hardware] // Kabel am Spur Sensor hinten
+        else
+            return a_PinSpurLinks[n_Hardware]  // Kabel vorn: rechts und links tauschen
+    }
 
 
     // ========== group="Spur Sensor Pins (vom gewählten Modell)" subcategory="Pins"
+
+
+    //% group="Spur Sensor pins.digitalReadPin (vom gewählten Modell)" subcategory="Pins"
+    //% block="Spur Sensor links/rechts tauschen %bKabel (Kabel nach vorn)" weight=7
+    //% bKabel.shadow=toggleYesNo
+    export function pinSpurKabelVorn(bKabel = false) {
+        n_PinSpurKabelVorn = bKabel
+    }
+
 
     // export enum eDH { dunkel = 0, hell = 1 } // 0 ist schwarz
 
     //% group="Spur Sensor pins.digitalReadPin (vom gewählten Modell)" subcategory="Pins"
     //% block="Spur Sensor Pin links %hell" weight=6
-    export function pinSpurlinks(hell: eDH) {
-        if (a_PinSpurlinks.length > n_Hardware)
-            return pins.digitalReadPin(a_PinSpurlinks[n_Hardware]) == hell // 0 ist schwarz
-        else
-            return false
+    export function pinSpurlinks(hell: eDH): boolean {
+        return pins.digitalReadPin(spurLinksDigitalPin()) == hell
     }
 
     //% group="Spur Sensor pins.digitalReadPin (vom gewählten Modell)" subcategory="Pins"
     //% block="Spur Sensor Pin rechts %hell" weight=5
-    export function pinSpurrechts(hell: eDH) {
-        if (a_PinSpurrechts.length > n_Hardware)
-            return pins.digitalReadPin(a_PinSpurrechts[n_Hardware]) == hell // 0 ist schwarz
-        else
-            return false
+    export function pinSpurrechts(hell: eDH): boolean {
+        return pins.digitalReadPin(spurRechtsDigitalPin()) == hell
     }
 
     //% group="Spur Sensor pins.digitalReadPin (vom gewählten Modell)" subcategory="Pins" deprecated=1
@@ -47,14 +67,14 @@ namespace receiver { // r-pins.ts
     export function spurSensorRegisterEvents() {
         if (!n_SpurSensorEventsRegistered && !n_EncoderEventRegistered) {
 
-            n_SpurLinksHell = pins.digitalReadPin(a_PinSpurlinks[n_Hardware]) == 1
-            n_SpurRechtsHell = pins.digitalReadPin(a_PinSpurrechts[n_Hardware]) == 1
+            n_SpurLinksHell = pinSpurlinks(eDH.hell)   // pins.digitalReadPin(a_PinSpurlinks[n_Hardware]) == 1
+            n_SpurRechtsHell = pinSpurrechts(eDH.hell) // pins.digitalReadPin(a_PinSpurrechts[n_Hardware]) == 1
 
             // PulseValue.Low
             // ↑high, ↓low, Event niedrig bei l->h loslassen
             // Zeit wie lange es low ↓↑ war in µs
 
-            pins.onPulsed(a_PinSpurlinks[n_Hardware], PulseValue.Low, function () {
+            pins.onPulsed(spurLinksDigitalPin(), PulseValue.Low, function () {
                 // links hell
                 if (pins.pulseDuration() > c_pulseDuration) { // 10ms
                     n_SpurLinksHell = true
@@ -62,7 +82,7 @@ namespace receiver { // r-pins.ts
                         onSpurPinEventHandler(n_SpurLinksHell, n_SpurRechtsHell)
                 }
             })
-            pins.onPulsed(a_PinSpurlinks[n_Hardware], PulseValue.High, function () {
+            pins.onPulsed(spurLinksDigitalPin(), PulseValue.High, function () {
                 // links dunkel
                 if (pins.pulseDuration() > c_pulseDuration) { // 10ms
                     n_SpurLinksHell = false
@@ -71,7 +91,7 @@ namespace receiver { // r-pins.ts
                 }
             })
 
-            pins.onPulsed(a_PinSpurrechts[n_Hardware], PulseValue.Low, function () {
+            pins.onPulsed(spurRechtsDigitalPin(), PulseValue.Low, function () {
                 // rechts hell
                 if (pins.pulseDuration() > c_pulseDuration) { // 10ms
                     n_SpurRechtsHell = true
@@ -79,7 +99,7 @@ namespace receiver { // r-pins.ts
                         onSpurPinEventHandler(n_SpurLinksHell, n_SpurRechtsHell)
                 }
             })
-            pins.onPulsed(a_PinSpurrechts[n_Hardware], PulseValue.High, function () {
+            pins.onPulsed(spurRechtsDigitalPin(), PulseValue.High, function () {
                 // rechts dunkel
                 if (pins.pulseDuration() > c_pulseDuration) { // 10ms
                     n_SpurRechtsHell = false
