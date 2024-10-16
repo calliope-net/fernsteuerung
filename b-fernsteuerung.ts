@@ -75,16 +75,6 @@ namespace btf { // b-fernsteuerung.ts
         }
     }
 
-    //% group="Bluetooth" advanced=1
-    //% block="setzt Funkgruppe auf %funkgruppe" weight=5
-    export function setFunkgruppe(funkgruppe: eFunkgruppe) {
-        if (between(funkgruppe, c_funkgruppe_min, c_funkgruppe_max)) {
-            a_StorageBuffer[eStorageBuffer.funkgruppe] = funkgruppe
-            radio.setGroup(funkgruppe)
-            storage.putBuffer(a_StorageBuffer) // im Flash speichern
-        }
-    }
-
     //% group="calliope-net.github.io/fernsteuerung"
     //% block="%id" color="#7E84F7" weight=2
     //% id.defl=ButtonEvent.Hold
@@ -229,9 +219,19 @@ namespace btf { // b-fernsteuerung.ts
 
 
 
-    // ========== group="lokales Programm (ohne Fernsteuerung)"
+    // ========== group="Bluetooth Einstellungen"
 
-    //% group="lokales Programm (ohne Fernsteuerung)"
+    //% group="Bluetooth Einstellungen"
+    //% block="setze Funkgruppe auf %funkgruppe" weight=5
+    export function setFunkgruppe(funkgruppe: eFunkgruppe) {
+        if (between(funkgruppe, c_funkgruppe_min, c_funkgruppe_max)) {
+            a_StorageBuffer[eStorageBuffer.funkgruppe] = funkgruppe
+            radio.setGroup(funkgruppe)
+            storage.putBuffer(a_StorageBuffer) // im Flash speichern
+        }
+    }
+
+    //% group="Bluetooth Einstellungen"
     //% block="Timeout deaktivieren %timeoutDisbled" weight=3
     //% timeoutDisbled.shadow="toggleYesNo"
     export function set_timeoutDisbled(timeoutDisbled: boolean) {
@@ -239,13 +239,13 @@ namespace btf { // b-fernsteuerung.ts
         n_lastConnectedTime = input.runningTime()  // startet das lange timeout (abschalten) neu
     }
 
-    //% group="lokales Programm (ohne Fernsteuerung)"
+    //% group="Bluetooth Einstellungen"
     //% block="Timeout deaktiviert" weight=2
     export function get_timeoutDisbled() {
         return n_timeoutDisbled
     }
 
-    //% group="lokales Programm (ohne Fernsteuerung)"
+    //% group="Bluetooth Einstellungen"
     //% block="Reset Timeout Timer" weight=1
     export function resetTimer() {
         if ((input.runningTime() - n_lastConnectedTime) > 2500)

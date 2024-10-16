@@ -143,14 +143,6 @@ namespace btf { // b-enums.ts
         b7 = 0x80
     }
 
-    /* export enum eNOT {
-        //% block=" "
-        t,
-        //% block="nicht"
-        f
-    } */
-
-
     export enum ePause { // Zehntelsekunden
         //% block="1 Sekunde"
         s1 = 10,

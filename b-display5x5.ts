@@ -17,7 +17,7 @@ namespace btf { // b-dispaly5x5.ts
     let a5x5_x01y0 = [false, false]
     let a5x5_xBuffer = Buffer.create(5)
     
-    //% group="BIN" subcategory="LEDs, Display"
+    //% group="BIN (5x5 Matrix)" subcategory="LEDs, Display"
     //% block="zeige ↓↓... Funkgruppe" weight=8
     export function zeigeFunkgruppe() {
         let int = getStorageFunkgruppe()
@@ -29,7 +29,7 @@ namespace btf { // b-dispaly5x5.ts
     }
 
 
-    //% group="BIN" subcategory="LEDs, Display"
+    //% group="BIN (5x5 Matrix)" subcategory="LEDs, Display"
     //% block="zeige ↑↑... x0 %x0y0 x1 %x1y0" weight=7
     //% x0y0.shadow=toggleOnOff
     //% x1y0.shadow=toggleOnOff
@@ -44,7 +44,7 @@ namespace btf { // b-dispaly5x5.ts
     }
 
 
-    //% group="BIN" subcategory="LEDs, Display"
+    //% group="BIN (5x5 Matrix)" subcategory="LEDs, Display"
     //% block="zeige ↑↑↕.. aktive Motoren %buffer" weight=6
     //% buffer.shadow="btf_sendBuffer19"
     export function zeige5x5Buffer(buffer: Buffer) {
@@ -74,7 +74,7 @@ namespace btf { // b-dispaly5x5.ts
     }
 
 
-    //% group="BIN" subcategory="LEDs, Display"
+    //% group="BIN (5x5 Matrix)" subcategory="LEDs, Display"
     //% block="zeige ...↕↕ Joystick %buffer" weight=5
     //% buffer.shadow="btf_sendBuffer19"
     export function zeige5x5Joystick(buffer: Buffer) {
@@ -172,7 +172,7 @@ namespace btf { // b-dispaly5x5.ts
         map
     }
 
-    //% group="BIN" subcategory="LEDs, Display"
+    //% group="BIN (5x5 Matrix)" subcategory="LEDs, Display"
     //% block="zeige ↕↕↕↕↕ %int %format ←x %xLed" weight=1
     //% xLed.min=0 xLed.max=4 xLed.defl=4
     export function zeigeBIN(int: number, format: ePlot, xLed: number) {
@@ -240,7 +240,7 @@ namespace btf { // b-dispaly5x5.ts
 
     let n_showString = ""
 
-    //% group="Text" subcategory="LEDs, Display"
+    //% group="Text (5x5 Matrix)" subcategory="LEDs, Display"
     //% block="zeige Text wenn geändert %text" weight=1
     //% text.shadow="btf_text"
     export function zeigeText(text: any) {
