@@ -1,7 +1,7 @@
 
 namespace sender { // s-buttons.ts
 
-    export const c_ModellCount = 6
+    export const c_ModellCount = 5
 
     export enum eModell { // zuletzt gewähltes Modell wird im Flash offset 1 dauerhaft gespeiechert
         //% block="Modell Calli:Bot"
@@ -12,10 +12,10 @@ namespace sender { // s-buttons.ts
         mkcg,
         //% block="Modell Maker Kit Car Kran"
         mkck,
-        //% block="Modell Buggy"
-        buggy,
         //% block="Modell Calliope auf Rädern 4"
         car4
+        // block="Modell Buggy"
+        //buggy,
     } // so viele Images müssen im Array sein - Bilder am Ende dieser Datei
 
     export enum eFunktion {
@@ -29,16 +29,14 @@ namespace sender { // s-buttons.ts
         ma_mb,      // MA und MB (Seilrolle und Drehkranz)
         //% block="0 Kran Zahnstange und Drehkranz"
         mc_mb,      // MC und MB (Zahnstange und Drehkranz)
-
-        // _10fernstarten,
+      
         //% block="1 Programm 'Spur folgen'"
         f10fernstartenSpurfolger,
         //% block="1 Programm 'Hindernis ausweichen'"
         f10fernstartenAbstand,
         //% block="2 Fahrplan '5 Strecken senden'"
         f20fahrplan,
-
-        // _20fahrplan,
+     
         //% block="3 Sensoren fernprogrammieren"
         f30sensoren
     }
@@ -293,10 +291,10 @@ namespace sender { // s-buttons.ts
                 ai = [1, 31, 17, 17, 24] // Kran
                 break
             }
-            case eModell.buggy: {
+            /* case eModell.buggy: {
                 ai = [14, 4, 4, 4, 14] // Buggy
                 break
-            }
+            } */
             case eModell.car4: {
                 ai = [6, 11, 10, 11, 6] // CaR 4
                 break
