@@ -44,12 +44,12 @@ namespace receiver { // r-receiver.ts
 
     export const c_MotorStop = 128
     // export let a_DualMotorSpeed = [c_MotorStop, c_MotorStop]
-/* 
-    export const c_Servo90_geradeaus = 90
-    export let n_Servo90KorrekturFaktor = 1 // Winkel für geradeaus wird beim Start eingestellt
-    export let n_Servo90Winkel = c_Servo90_geradeaus // aktuell eingestellter Winkel
-
- */
+    /* 
+        export const c_Servo90_geradeaus = 90
+        export let n_Servo90KorrekturFaktor = 1 // Winkel für geradeaus wird beim Start eingestellt
+        export let n_Servo90Winkel = c_Servo90_geradeaus // aktuell eingestellter Winkel
+    
+     */
 
     //% group="calliope-net.github.io/fernsteuerung"
     //% block="beim Start: Calliope v3 \\| 2 Motoren || • Encoder %encoder • Rad ⌀ mm %radDmm • Funkgruppe anzeigen %zf" weight=9
@@ -58,6 +58,8 @@ namespace receiver { // r-receiver.ts
     //% zf.shadow="toggleYesNo" zf.defl=1
     export function beimStart2Motoren(encoder = true, radDmm = 65, zf = true) {
         n_v3_2Motoren = true
+        pinSpurTauschen(true)
+
         n_Hardware = eHardware.v3 // !vor pinRelay!
         pinRelay(true) // Relais an schalten (braucht gültiges n_Hardware, um den Pin zu finden)
         btf.setStorageBuffer()
