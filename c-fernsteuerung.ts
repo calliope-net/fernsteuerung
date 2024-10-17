@@ -5,7 +5,7 @@ namespace cb2 { // c-fernsteuerung.ts
     // ========== group="Fernsteuerung mit Joystick (reagiert auf Sensoren)" subcategory="Fernsteuerung"
 
     //% group="0 Fernsteuerung mit Joystick (reagiert auf Sensoren)" subcategory="Fernsteuerung"
-    //% block="0 Fahren und Lenken mit Joystick aus %buffer • lenken %lenkenProzent \\%" weight=8
+    //% block="0 Fahren und Lenken mit Joystick aus %buffer || • lenken %lenkenProzent \\%" weight=8
     //% buffer.shadow=btf_receivedBuffer19
     //% lenkenProzent.min=10 lenkenProzent.max=90 lenkenProzent.defl=50
     export function fahreJoystick(buffer: Buffer, lenkenProzent = 50) {
