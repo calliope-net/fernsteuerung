@@ -109,9 +109,10 @@ namespace receiver { // r-fernsteuerung.ts
     let n_SpurStop = false
 
     //% group="0 Fernsteuerung mit Joystick (Sensor auslösen in dauerhaft Schleife)" subcategory="Fernsteuerung"
-    //% block="0 Fahren und Lenken mit Joystick (M:01ABCD S:0) aus %buffer " weight=5
+    //% block="0 Fahren und Lenken mit Joystick (M:01ABCD S:0) aus %buffer || • lenken %lenkenProzent \\%" weight=5
     //% buffer.shadow="btf_receivedBuffer19"
-    export function fahreJoystick(buffer: Buffer) {
+    //% lenkenProzent.min=10 lenkenProzent.max=90 lenkenProzent.defl=30
+    export function fahreJoystick(buffer: Buffer, lenkenProzent = 30) {
 
         if (btf.isBetriebsart(buffer, btf.e0Betriebsart.p0Fahren)) { // Betriebsart 00 mit Joystick fernsteuern
 
@@ -198,7 +199,8 @@ namespace receiver { // r-fernsteuerung.ts
                     // Motor M0+Servo M1 (Fahren und Lenken)
                     selectMotor128Servo16(
                         btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor),
-                        btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo)
+                        btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo),
+                        lenkenProzent
                     )
                     // selectMotor(btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor))
                     // pinServo16(btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo))

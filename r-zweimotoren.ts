@@ -52,11 +52,11 @@ namespace receiver { // r-zweimotoren.ts
     }
 
 
-    //% group="0 Fernsteuerung mit Joystick (reagiert auf Sensoren)" subcategory="2 Motoren"
-    //% block="0 Fahren und Lenken mit Joystick aus %buffer • lenken %lenkenProzent \\%" weight=8
-    //% buffer.shadow=btf_receivedBuffer19
-    //% lenkenProzent.min=10 lenkenProzent.max=90 lenkenProzent.defl=30
-    export function dual2MotorenLenkenBuffer(buffer: Buffer, lenkenProzent = 30) {
+    // group="0 Fernsteuerung mit Joystick (reagiert auf Sensoren)" subcategory="2 Motoren"
+    // block="0 Fahren und Lenken mit Joystick aus %buffer • lenken %lenkenProzent \\%" weight=8
+    // buffer.shadow=btf_receivedBuffer19
+    // lenkenProzent.min=10 lenkenProzent.max=90 lenkenProzent.defl=30
+    /* export function dual2MotorenLenkenBuffer(buffer: Buffer, lenkenProzent = 30) {
 
         if (buffer
             && btf.isBetriebsart(buffer, btf.e0Betriebsart.p0Fahren)
@@ -71,6 +71,6 @@ namespace receiver { // r-zweimotoren.ts
             )
 
         }
-    }
+    } */
 
 } // r-zweimotoren.ts
