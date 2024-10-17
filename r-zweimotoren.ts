@@ -1,12 +1,14 @@
 
 namespace receiver { // r-zweimotoren.ts
 
+    const c_l = 30
+
     //% group="Fahren und Lenken" subcategory="2 Motoren"
     //% block="Fahren %motor \\% • Lenken %servo ° || • Lenken %lenkenProzent \\%" weight=5
     //% motor.shadow=speedPicker motor.defl=50
     //% servo.shadow=protractorPicker servo.defl=90
-    //% lenkenProzent.min=10 lenkenProzent.max=90 lenkenProzent.defl=50
-    export function dual2MotorenLenkenPicker(motor: number, servo: number, lenkenProzent = 50) {
+    //% lenkenProzent.min=10 lenkenProzent.max=90 lenkenProzent.defl=30
+    export function dual2MotorenLenkenPicker(motor: number, servo: number, lenkenProzent = 30) {
         dual2Motoren0Lenken16(motor, btf.protractorPicker(servo), lenkenProzent)
     }
 
@@ -15,12 +17,12 @@ namespace receiver { // r-zweimotoren.ts
     //% block="Fahren (1↓128↑255) %x_1_128_255 • Lenken (1↖16↗31) %y_1_16_31 || • Lenken %lenkenProzent \\%" weight=4
     //% x_1_128_255.min=1 x_1_128_255.max=255 x_1_128_255.defl=128
     //% y_1_16_31.min=1 y_1_16_31.max=31 y_1_16_31.defl=16
-    //% lenkenProzent.min=10 lenkenProzent.max=90 lenkenProzent.defl=50
-    export function dual2MotorenLenken(x_1_128_255: number, y_1_16_31: number, lenkenProzent = 50) {
+    //% lenkenProzent.min=10 lenkenProzent.max=90 lenkenProzent.defl=30
+    export function dual2MotorenLenken(x_1_128_255: number, y_1_16_31: number, lenkenProzent = 30) {
         dual2Motoren0Lenken16(btf.mapInt32(x_1_128_255, 1, 255, -100, 100), y_1_16_31, lenkenProzent)
     }
 
-    function dual2Motoren0Lenken16(m_100_0_100: number, y_1_16_31: number, lenkenProzent = 50) {
+    function dual2Motoren0Lenken16(m_100_0_100: number, y_1_16_31: number, lenkenProzent = 30) {
 
         let l_percent = m_100_0_100
         let r_percent = m_100_0_100
@@ -53,8 +55,8 @@ namespace receiver { // r-zweimotoren.ts
     //% group="0 Fernsteuerung mit Joystick (reagiert auf Sensoren)" subcategory="2 Motoren"
     //% block="0 Fahren und Lenken mit Joystick aus %buffer • lenken %lenkenProzent \\%" weight=8
     //% buffer.shadow=btf_receivedBuffer19
-    //% lenkenProzent.min=10 lenkenProzent.max=90 lenkenProzent.defl=50
-    export function dual2MotorenLenkenBuffer(buffer: Buffer, lenkenProzent = 50) {
+    //% lenkenProzent.min=10 lenkenProzent.max=90 lenkenProzent.defl=30
+    export function dual2MotorenLenkenBuffer(buffer: Buffer, lenkenProzent = 30) {
 
         if (buffer
             && btf.isBetriebsart(buffer, btf.e0Betriebsart.p0Fahren)

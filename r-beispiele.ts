@@ -80,18 +80,18 @@ namespace receiver { // r-beispiele.ts
     let m_inSpur = false
 
     //% group="Spur Sensor Ereignis" subcategory=Beispiele
-    //% block="Spur folgen | gestartet %spur_folgen <links_hell> %links_hell <rechts_hell> %rechts_hell Fahren (1↓128↑255) %motor128 langsam Fahren %motorLenken Lenken (1↖16↗31) %servo16 <abstand_Stop> %abstand_Stop Pause ⅒s %pause_zs" weight=6
+    //% block="Spur folgen | gestartet %spur_folgen <links_hell> %links_hell <rechts_hell> %rechts_hell Fahren (1↓128↑255) %motor128 langsam Fahren %motorLenken Lenken (1↖16↗31) %servo16 lenkender Motor \\% %lenkenProzent <abstand_Stop> %abstand_Stop Pause ⅒s %pause_zs" weight=6
     //% spur_folgen.shadow=toggleOnOff
     // links_hell.shadow=toggleYesNo
     // rechts_hell.shadow=toggleYesNo
     //% motor128.min=1 motor128.max=255 motor128.defl=192
     //% motorLenken.min=1 motorLenken.max=255 motorLenken.defl=160
     //% servo16.min=1 servo16.max=31 servo16.defl=31
-    // lenkenProzent.min=10 lenkenProzent.max=90 lenkenProzent.defl=0
+    //% lenkenProzent.min=10 lenkenProzent.max=90 lenkenProzent.defl=0
     // abstand_Stop.shadow=toggleYesNo
     //% pause_zs.shadow=cb2_zehntelsekunden
     // abstand.min=10 abstand.max=50 abstand.defl=30
-    export function event_Spur_folgen(spur_folgen: boolean, links_hell: boolean, rechts_hell: boolean, motor128: number, motorLenken: number, servo16: number, abstand_Stop: boolean, pause_zs: number, index = 0) {
+    export function event_Spur_folgen_(spur_folgen: boolean, links_hell: boolean, rechts_hell: boolean, motor128: number, motorLenken: number, servo16: number, lenkenProzent: number, abstand_Stop: boolean, pause_zs: number, index = 0) {
         if (spur_folgen) {
 
             btf.resetTimer()
@@ -117,17 +117,17 @@ namespace receiver { // r-beispiele.ts
                     m_inSpur = true
                 }
                 else if (!links_hell && rechts_hell) { // dunkel hell
-                    selectMotor128Servo16(motorLenken, 16 - lenken) // links lenken <16 = 1
+                    selectMotor128Servo16(motorLenken, 16 - lenken, lenkenProzent) // links lenken <16 = 1
                     if (m_inSpur)
                         m_lenken = 16 - lenken
                 }
                 else if (links_hell && !rechts_hell) { // hell dunkel
-                    selectMotor128Servo16(motorLenken, 16 + lenken) // rechts lenken >16 = 31
+                    selectMotor128Servo16(motorLenken, 16 + lenken, lenkenProzent) // rechts lenken >16 = 31
                     if (m_inSpur)
                         m_lenken = 16 + lenken
                 }
                 else if (m_lenken) { // hell hell
-                    selectMotor128Servo16(motorLenken, m_lenken) // lenken wie zuletzt gespeichert
+                    selectMotor128Servo16(motorLenken, m_lenken, lenkenProzent) // lenken wie zuletzt gespeichert
                     m_inSpur = false // hell hell
                 }
                 else { // hell hell

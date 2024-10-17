@@ -152,7 +152,7 @@ namespace cb2 { // c-beispiele.ts
                     m_inSpur = false // hell hell
                 }
                 else { // hell hell
-                    writeMotor128Servo16(motor128, 16, 0) // geradeaus fahren bis zur schwarzen Linie
+                    writeMotor128Servo16(motor128, 16) // geradeaus fahren bis zur schwarzen Linie
                     m_inSpur = false // hell hell
                 }
 
