@@ -365,7 +365,7 @@ namespace receiver { // r-fernsteuerung.ts
     //% inlineInputMode=inline
     export function buffer_Spur_folgen(buffer: Buffer, links_hell: boolean, rechts_hell: boolean, abstand_Stop: boolean) {
         if (buffer)
-            event_Spur_folgen_(spur_folgen(buffer), links_hell, rechts_hell,
+            event_Spur_folgen(spur_folgen(buffer), links_hell, rechts_hell,
                 btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b0_Motor), // MC vorwärts gerade = 192
                 btf.getByte(buffer, btf.eBufferPointer.md, btf.eBufferOffset.b0_Motor), // MD vorwärts langsam fahren beim lenken = 160
                 btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b1_Servo), // MC lenken = 31

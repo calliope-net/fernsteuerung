@@ -91,7 +91,7 @@ namespace receiver { // r-beispiele.ts
     // abstand_Stop.shadow=toggleYesNo
     //% pause_zs.shadow=cb2_zehntelsekunden
     // abstand.min=10 abstand.max=50 abstand.defl=30
-    export function event_Spur_folgen_(spur_folgen: boolean, links_hell: boolean, rechts_hell: boolean, motor128: number, motorLenken: number, servo16: number, lenkenProzent: number, abstand_Stop: boolean, pause_zs: number, index = 0) {
+    export function event_Spur_folgen(spur_folgen: boolean, links_hell: boolean, rechts_hell: boolean, motor128: number, motorLenken: number, servo16: number, lenkenProzent: number, abstand_Stop: boolean, pause_zs: number, index = 0) {
         if (spur_folgen) {
 
             btf.resetTimer()
