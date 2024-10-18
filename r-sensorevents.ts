@@ -54,8 +54,8 @@ namespace receiver { // r-sensorevents.ts
             n_SpurTimer = input.runningTime()
 
             //let spur = readInputs(i2c)[0] & 0b11
-            let spur = pinSpur2Bit()
-            //let spur = (pinSpurLinks(eDH.hell) ? 0b10 : 0) + (pinSpurRechts(eDH.hell) ? 0b01 : 0)
+            //let spur = pinSpur2Bit()
+            let spur = (pinSpurLinks(eDH.hell) ? 0b10 : 0) + (pinSpurRechts(eDH.hell) ? 0b01 : 0)
             //let spur = (n_SpurLinksHell ? 0b10 : 0) + (n_SpurRechtsHell ? 0b01 : 0)
 
             if (n_Spur2Bit != spur || !a_raiseSpurEvent_gestartet[index]) { // bei Änderung oder beim ersten Mal - ganz am Anfang
