@@ -2,31 +2,31 @@
 namespace receiver { // r-sensorevents.ts
 
 
-  //  export enum eDH { hell = 1, dunkel = 0 }
-  /*
-    //% group="Spur Sensor (Event oder ReadPin)" subcategory="Sensoren"
-    //% block="Spur Sensor links %l" weight=7
-    export function getSpurLinks(l: eDH) {
-        if (n_SpurSensorEventsRegistered)
-            return (l == eDH.hell) ? n_SpurLinksHell : !n_SpurLinksHell
-        else
-            return pinSpurLinks(l) // DigitalPin direkt lesen
-    }
-
-    //% group="Spur Sensor (Event oder ReadPin)" subcategory="Sensoren"
-    //% block="Spur Sensor rechts %r" weight=6
-   export function getSpurRechts(r: eDH) {
-        if (n_SpurSensorEventsRegistered)
-            return (r == eDH.hell) ? n_SpurRechtsHell : !n_SpurRechtsHell
-        else
-            return pinSpurRechts(r) // DigitalPin direkt lesen
-    } */
+    //  export enum eDH { hell = 1, dunkel = 0 }
+    /*
+      //% group="Spur Sensor (Event oder ReadPin)" subcategory="Sensoren"
+      //% block="Spur Sensor links %l" weight=7
+      export function getSpurLinks(l: eDH) {
+          if (n_SpurSensorEventsRegistered)
+              return (l == eDH.hell) ? n_SpurLinksHell : !n_SpurLinksHell
+          else
+              return pinSpurLinks(l) // DigitalPin direkt lesen
+      }
+  
+      //% group="Spur Sensor (Event oder ReadPin)" subcategory="Sensoren"
+      //% block="Spur Sensor rechts %r" weight=6
+     export function getSpurRechts(r: eDH) {
+          if (n_SpurSensorEventsRegistered)
+              return (r == eDH.hell) ? n_SpurRechtsHell : !n_SpurRechtsHell
+          else
+              return pinSpurRechts(r) // DigitalPin direkt lesen
+      } */
 
     // group="Spur Sensor (Event oder ReadPin)" subcategory="Sensoren" deprecated=1
     // block="Spur Sensoren links %l und rechts %r" weight=5
-   /*  export function getSpursensor(l: eDH, r: eDH) {
-        return getSpurLinks(l) && getSpurRechts(r)
-    } */
+    /*  export function getSpursensor(l: eDH, r: eDH) {
+         return getSpurLinks(l) && getSpurRechts(r)
+     } */
 
 
 
@@ -36,7 +36,9 @@ namespace receiver { // r-sensorevents.ts
 
     let a_raiseSpurEvent_gestartet = [false, false]
     let n_SpurTimer = input.runningTime()
-    let n_Spur2Bit = 0 // letzter Status 00 01 10 11
+    // let n_Spur2Bit = 0 // letzter Status 00 01 10 11
+    let n_links_hell = false
+    let n_rechts_hell = false
 
     //% group="Spur Sensor (dauerhaft Schleife)" subcategory="Sensoren"
     //% block="Spur Sensor Ereignis auslösen %on || • Pause %ms ms" weight=3
@@ -53,15 +55,22 @@ namespace receiver { // r-sensorevents.ts
                 basic.pause(t) // restliche Zeit-Differenz warten
             n_SpurTimer = input.runningTime()
 
-            //let spur = readInputs(i2c)[0] & 0b11
-            //let spur = pinSpur2Bit()
-            let spur = (pinSpurLinks(eDH.hell) ? 0b10 : 0) + (pinSpurRechts(eDH.hell) ? 0b01 : 0)
-            //let spur = (n_SpurLinksHell ? 0b10 : 0) + (n_SpurRechtsHell ? 0b01 : 0)
-
-            if (n_Spur2Bit != spur || !a_raiseSpurEvent_gestartet[index]) { // bei Änderung oder beim ersten Mal - ganz am Anfang
-                n_Spur2Bit = spur
+            let spurB = pinSpurBoolean()
+            if (n_links_hell !== spurB[0] || n_rechts_hell !== spurB[1] || !a_raiseSpurEvent_gestartet[index]) { // bei Änderung oder beim ersten Mal - ganz am Anfang
+                n_links_hell = spurB[0]
+                n_rechts_hell = spurB[1]
                 spurEventHandler()
             }
+            /* 
+                        //let spur = readInputs(i2c)[0] & 0b11
+                        //let spur = pinSpur2Bit()
+                        let spur = (pinSpurLinks(eDH.hell) ? 0b10 : 0) + (pinSpurRechts(eDH.hell) ? 0b01 : 0)
+                        //let spur = (n_SpurLinksHell ? 0b10 : 0) + (n_SpurRechtsHell ? 0b01 : 0)
+            
+                        if (n_Spur2Bit != spur || !a_raiseSpurEvent_gestartet[index]) { // bei Änderung oder beim ersten Mal - ganz am Anfang
+                            n_Spur2Bit = spur
+                            spurEventHandler()
+                        } */
             a_raiseSpurEvent_gestartet[index] = true
         }
         else if (a_raiseSpurEvent_gestartet[index]) {
@@ -74,7 +83,8 @@ namespace receiver { // r-sensorevents.ts
         if (onAbstandEventHandler)
             onAbstandEventHandler(n_AbstandSensor, n_AbstandStop, 0)
         if (onSpurEventHandler)
-            onSpurEventHandler((n_Spur2Bit & 0b10) == 0b10, (n_Spur2Bit & 0b01) == 0b01, n_AbstandStop)
+            onSpurEventHandler(n_links_hell, n_rechts_hell, n_AbstandStop)
+        //  onSpurEventHandler((n_Spur2Bit & 0b10) == 0b10, (n_Spur2Bit & 0b01) == 0b01, n_AbstandStop)
     }
 
     let onSpurEventHandler: (links_hell: boolean, rechts_hell: boolean, abstand_Stop: boolean) => void
@@ -220,7 +230,8 @@ namespace receiver { // r-sensorevents.ts
         if (onAbstandEventHandler)
             onAbstandEventHandler(n_AbstandSensor, n_AbstandStop, cm)
         if (onSpurEventHandler)
-            onSpurEventHandler((n_Spur2Bit & 0b10) == 0b10, (n_Spur2Bit & 0b01) == 0b01, n_AbstandStop)
+            onSpurEventHandler(n_links_hell, n_rechts_hell, n_AbstandStop)
+        //  onSpurEventHandler((n_Spur2Bit & 0b10) == 0b10, (n_Spur2Bit & 0b01) == 0b01, n_AbstandStop)
     }
 
     let onAbstandEventHandler: (abstand_Sensor: boolean, abstand_Stop: boolean, cm: number) => void

@@ -48,12 +48,15 @@ namespace receiver { // r-pins.ts
     }
 
     //% group="Spur Sensor pins.digitalReadPin (vom gewählten Modell)" subcategory="Pins"
-    //% block="Spur Sensor Pin Bits 00 01 10 11" weight=4
-    export function pinSpur2Bit() {
+    //% block="Spur Sensor Pin boolean[]" weight=4
+    export function pinSpurBoolean(): boolean[] {
+        let l = pins.digitalReadPin(a_PinSpurLinks[n_Hardware]) == eDH.hell
+        let r = pins.digitalReadPin(a_PinSpurRechts[n_Hardware]) == eDH.hell
+
         if (n_SpurSensorKabel == eSpurSensorKabel.hinten)
-            return (pins.digitalReadPin(a_PinSpurLinks[n_Hardware]) << 1) & pins.digitalReadPin(a_PinSpurRechts[n_Hardware]) 
+            return [l, r] // (pins.digitalReadPin(a_PinSpurLinks[n_Hardware]) << 1) & pins.digitalReadPin(a_PinSpurRechts[n_Hardware])
         else
-            return (pins.digitalReadPin(a_PinSpurRechts[n_Hardware]) << 1) & pins.digitalReadPin(a_PinSpurLinks[n_Hardware]) 
+            return [r, l] // (pins.digitalReadPin(a_PinSpurRechts[n_Hardware]) << 1) & pins.digitalReadPin(a_PinSpurLinks[n_Hardware])
         //  return pinSpurLinks(l) && pinSpurRechts(r)
     }
 
