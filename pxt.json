@@ -1,6 +1,6 @@
 {
     "name": "fernsteuerung",
-    "version": "1.6.108",
+    "version": "1.6.109",
     "description": "",
     "dependencies": {
         "core": "*",
