@@ -58,7 +58,7 @@ namespace receiver { // r-receiver.ts
     //% zf.shadow="toggleYesNo" zf.defl=1
     export function beimStart2Motoren(encoder = true, radDmm = 65, zf = true) {
         n_v3_2Motoren = true
-        pinSpurTauschen(true)
+        spurSensorKabel(eSpurSensorKabel.vorn)
 
         n_Hardware = eHardware.v3 // !vor pinRelay!
         pinRelay(true) // Relais an schalten (braucht gültiges n_Hardware, um den Pin zu finden)

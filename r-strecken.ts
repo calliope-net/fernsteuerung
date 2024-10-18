@@ -163,7 +163,7 @@ namespace receiver { // r-strecken.ts
     //% group="Encoder" subcategory="Strecken"
     //% block="Encoder Pin Ereignisse registrieren" weight=8
     export function encoderRegisterEvent() {
-        if (n_hasEncoder && !n_EncoderEventRegistered && !n_SpurSensorEventsRegistered) {
+        if (n_hasEncoder && !n_EncoderEventRegistered /* && !n_SpurSensorEventsRegistered */) {
 
             n_EncoderFaktor = 63.9 * (26 / 14) / (n_radDurchmesser_mm / 10 * Math.PI)
 

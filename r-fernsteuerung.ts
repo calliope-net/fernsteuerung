@@ -169,11 +169,11 @@ namespace receiver { // r-fernsteuerung.ts
                 } else if (!bSpur)
                     n_SpurStop = false */
 
-                if (bSpurSensorAktiviert && getSpurLinks(eDH.dunkel)) {
+                if (bSpurSensorAktiviert && pinSpurLinks(eDH.dunkel)) {
                     n_SpurStop = true
                     ledb = Colors.White // dunkel
-                    ledc = getSpurRechts(eDH.dunkel) ? Colors.White : 0x404040
-                } else if (bSpurSensorAktiviert && getSpurRechts(eDH.dunkel)) {
+                    ledc = pinSpurRechts(eDH.dunkel) ? Colors.White : 0x404040
+                } else if (bSpurSensorAktiviert && pinSpurRechts(eDH.dunkel)) {
                     n_SpurStop = true
                     ledb = 0x404040 // hell
                     ledc = Colors.White // dunkel
