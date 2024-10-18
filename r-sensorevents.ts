@@ -3,24 +3,28 @@ namespace receiver { // r-sensorevents.ts
 
 
     //  export enum eDH { hell = 1, dunkel = 0 }
-    /*
-      //% group="Spur Sensor (Event oder ReadPin)" subcategory="Sensoren"
-      //% block="Spur Sensor links %l" weight=7
-      export function getSpurLinks(l: eDH) {
-          if (n_SpurSensorEventsRegistered)
-              return (l == eDH.hell) ? n_SpurLinksHell : !n_SpurLinksHell
-          else
-              return pinSpurLinks(l) // DigitalPin direkt lesen
-      }
-  
-      //% group="Spur Sensor (Event oder ReadPin)" subcategory="Sensoren"
-      //% block="Spur Sensor rechts %r" weight=6
-     export function getSpurRechts(r: eDH) {
-          if (n_SpurSensorEventsRegistered)
-              return (r == eDH.hell) ? n_SpurRechtsHell : !n_SpurRechtsHell
-          else
-              return pinSpurRechts(r) // DigitalPin direkt lesen
-      } */
+
+    //% group="Spur Sensor (dauerhaft oder ReadPin)" subcategory="Sensoren"
+    //% block="Spur Sensor links hell" weight=7
+    export function getSpurLinksHell() {
+        //if (n_SpurSensorEventsRegistered)
+        //    return (l == eDH.hell) ? n_SpurLinksHell : !n_SpurLinksHell
+        if (a_raiseSpurEvent_gestartet[0] || a_raiseSpurEvent_gestartet[1])
+            return n_links_hell
+        else
+            return pinSpurLinks(eDH.hell) // DigitalPin direkt lesen
+    }
+
+    //% group="Spur Sensor (dauerhaft oder ReadPin)" subcategory="Sensoren"
+    //% block="Spur Sensor rechts hell" weight=6
+    export function getSpurRechtsHell() {
+        //if (n_SpurSensorEventsRegistered)
+        //    return (r == eDH.hell) ? n_SpurRechtsHell : !n_SpurRechtsHell
+        if (a_raiseSpurEvent_gestartet[0] || a_raiseSpurEvent_gestartet[1])
+            return n_rechts_hell
+        else
+            return pinSpurRechts(eDH.hell) // DigitalPin direkt lesen
+    }
 
     // group="Spur Sensor (Event oder ReadPin)" subcategory="Sensoren" deprecated=1
     // block="Spur Sensoren links %l und rechts %r" weight=5
