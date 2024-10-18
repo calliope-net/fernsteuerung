@@ -106,7 +106,7 @@ namespace receiver { // r-sensorevents.ts
     //% ms.defl=25
     //% inlineInputMode=inline
     export function raiseSpurEvent(on: boolean, ms = 25, index = 0) {
-        if (on && spurSensorRegisterEvents()) { // nur einmalig
+        if (on /* && spurSensorRegisterEvents() */) { // nur einmalig
             //if (!a_raiseSpurEvent_gestartet[index])
             //    spurSensorRegisterEvents() 
 
@@ -116,7 +116,8 @@ namespace receiver { // r-sensorevents.ts
             n_SpurTimer = input.runningTime()
 
             //let spur = readInputs(i2c)[0] & 0b11
-            let spur = (n_SpurLinksHell ? 0b10 : 0) + (n_SpurRechtsHell ? 0b01 : 0)
+            let spur = (getSpurLinks(eDH.hell) ? 0b10 : 0) + (getSpurRechts(eDH.hell) ? 0b01 : 0)
+            //let spur = (n_SpurLinksHell ? 0b10 : 0) + (n_SpurRechtsHell ? 0b01 : 0)
 
             if (n_Spur != spur || !a_raiseSpurEvent_gestartet[index]) { // bei Änderung oder beim ersten Mal - ganz am Anfang
                 n_Spur = spur

@@ -65,7 +65,7 @@ namespace receiver { // r-pins.ts
     //% group="Spur Sensor pins.onPulsed Events (vom gewählten Modell)" subcategory="Pins"
     //% block="Spur Sensor Pin Ereignisse registrieren" weight=8
     //% tauschen.shadow=toggleYesNo
-    export function spurSensorRegisterEvents() {
+ /*    export function spurSensorRegisterEvents() {
         if (!n_SpurSensorEventsRegistered && !n_EncoderEventRegistered) { // || • l/r tauschen %tauschen
 
             //n_PinSpurTauschen = tauschen
@@ -127,7 +127,7 @@ namespace receiver { // r-pins.ts
     export function onSpurPinEvent(cb: (links_hell: boolean, rechts_hell: boolean) => void) {
         onSpurPinEventHandler = cb
     }
-
+ */
 
 
     // ========== group="Digital Pins (vom gewählten Modell)" subcategory="Pins"
