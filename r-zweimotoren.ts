@@ -1,7 +1,7 @@
 
 namespace receiver { // r-zweimotoren.ts
 
-    const c_l = 30
+
 
     //% group="Fahren und Lenken" subcategory="2 Motoren"
     //% block="Fahren %motor \\% • Lenken %servo ° || • Lenken %lenkenProzent \\%" weight=5
@@ -37,40 +37,15 @@ namespace receiver { // r-zweimotoren.ts
             r_percent *= Math.map(y_1_16_31, 16, 32, 1, lenkenProzent / 100) // 16=nichtlenken=100% // 32=rechtslenken50%
         }
 
-        // if (onDualMotorPowerHandler) {
         if (l_percent == r_percent) {
-            dualMotorPower_percent(eDualMotor.M0_M1, l_percent)
-            // onDualMotorPowerHandler(eDualMotor.M0_M1, l_percent) // v3 Ereignis Block auslösen, nur wenn benutzt
+            dualMotorPower_percent(eDualMotor.M0_M1, l_percent)// v3 Ereignis Block auslösen, nur wenn benutzt
         }
         else {
             dualMotorPower_percent(eDualMotor.M0, l_percent)
             dualMotorPower_percent(eDualMotor.M1, r_percent)
-            // onDualMotorPowerHandler(eDualMotor.M0, l_percent) // v3 Ereignis Block auslösen, nur wenn benutzt
-            // onDualMotorPowerHandler(eDualMotor.M1, r_percent)
         }
-        // }
+
     }
 
-
-    // group="0 Fernsteuerung mit Joystick (reagiert auf Sensoren)" subcategory="2 Motoren"
-    // block="0 Fahren und Lenken mit Joystick aus %buffer • lenken %lenkenProzent \\%" weight=8
-    // buffer.shadow=btf_receivedBuffer19
-    // lenkenProzent.min=10 lenkenProzent.max=90 lenkenProzent.defl=30
-    /* export function dual2MotorenLenkenBuffer(buffer: Buffer, lenkenProzent = 30) {
-
-        if (buffer
-            && btf.isBetriebsart(buffer, btf.e0Betriebsart.p0Fahren)
-            && btf.getaktiviert(buffer, btf.e3aktiviert.m0)) // Betriebsart 00 mit Joystick fernsteuern
-        {
-            let iBufferPointer = btf.eBufferPointer.m0
-
-            dual2MotorenLenken(
-                btf.getByte(buffer, iBufferPointer, btf.eBufferOffset.b0_Motor),
-                btf.getByte(buffer, iBufferPointer, btf.eBufferOffset.b1_Servo),
-                lenkenProzent
-            )
-
-        }
-    } */
 
 } // r-zweimotoren.ts

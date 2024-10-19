@@ -11,7 +11,10 @@ namespace receiver { // r-receiver.ts
     }
 
     export let n_Hardware = eHardware.v3 // Index in Arrays:// 0:_Calliope v3 Pins_
-    export let n_v3_2Motoren = false // Buggy
+   // export let n_v3_2Motoren = false // Buggy
+    export function is_v3_2Motoren() {
+        return n_Hardware == eHardware.v3 && btf.getStorageFunkgruppe() == btf.eFunkgruppe.b4
+    }
 
     // eHardware ist der Index für folgende Arrays:
     //export let a_ModellFunkgruppe = [0xA8, 239] // v3, car4
@@ -57,8 +60,8 @@ namespace receiver { // r-receiver.ts
     //% radDmm.min=60 radDmm.max=80 radDmm.defl=65
     //% zf.shadow="toggleYesNo" zf.defl=1
     export function beimStart2Motoren(encoder = true, radDmm = 65, zf = true) {
-        n_v3_2Motoren = true
-        spurSensorKabel(eSpurSensorKabel.vorn)
+       // n_v3_2Motoren = true
+       // spurSensorKabel(eSpurSensorKabel.vorn)
 
         n_Hardware = eHardware.v3 // !vor pinRelay!
         pinRelay(true) // Relais an schalten (braucht gültiges n_Hardware, um den Pin zu finden)
@@ -84,7 +87,7 @@ namespace receiver { // r-receiver.ts
     // funkgruppe.min=160 funkgruppe.max=191
     // inlineInputMode=inline
     export function beimStart(modell: eHardware, servoGeradeaus: number, encoder: boolean, radDmm: number, zf = true/* , funkgruppe?: number */) { //  Funkgruppe %funkgruppe
-        n_v3_2Motoren = false
+       // n_v3_2Motoren = false
         n_Hardware = modell // !vor pinRelay!
 
         pinRelay(true) // Relais an schalten (braucht gültiges n_Hardware, um den Pin zu finden)
@@ -155,7 +158,7 @@ namespace receiver { // r-receiver.ts
             if (y_1_16_31 != 0)
                 pinServo16(y_1_16_31)       // Servo
         }
-        else if (n_v3_2Motoren) {           // Buggy mit 2 Motoren
+        else if (is_v3_2Motoren()) {        // Buggy mit 2 Motoren
             dual2MotorenLenken(x_1_128_255, y_1_16_31, lenkenProzent)
         }
         else {                              // Standard M0 Fahrmotor an Calliope v3 Pins
@@ -178,7 +181,7 @@ namespace receiver { // r-receiver.ts
         if (n_Hardware == eHardware.car4) { // Fahrmotor am Qwiic Modul
             return a_QwiicMotorSpeed[eQwiicMotor.ma] >= c_MotorStop
         }
-        else if (n_v3_2Motoren) {           // Buggy mit 2 Motoren
+        else if (is_v3_2Motoren()) {        // Buggy mit 2 Motoren
             return a_DualMotor_percent[eDualMotor.M0] >= 0
         }
         else {                              // Standard M0 Fahrmotor an Calliope v3 Pins
