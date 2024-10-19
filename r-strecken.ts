@@ -44,7 +44,7 @@ namespace receiver { // r-strecken.ts
 
         abstandSensor = abstandSensor && abstand > 0 && motor > c_MotorStop && selectAbstandSensorConnected()
 
-        btf.setLedColors(btf.eRgbLed.b, Colors.Yellow, abstandSensor)
+        //   btf.setLedColors(btf.eRgbLed.b, Colors.Yellow, abstandSensor)
 
 
         if (motor != 0 && motor != c_MotorStop && servo != 0 && strecke != 0) {
@@ -170,9 +170,9 @@ namespace receiver { // r-strecken.ts
             n_zweiEncoder = is_v3_2Motoren()
             n_EncoderFaktor = 63.9 * (26 / 14) / (n_radDurchmesser_mm / 10 * Math.PI)
 
+            btf.setLedColors(btf.eRgbLed.b, Colors.Violet)
             // ========== Event Handler registrieren
             pins.onPulsed(a_PinEncoderM0[n_Hardware], PulseValue.Low, function () {
-                btf.setLedColors(btf.eRgbLed.b, Colors.Violet)
                 if (selectMotorRichtungVor()) //(selectMotorSpeed() > c_MotorStop)
                     n_EncoderCounterM0++ // vorwärts
                 else
