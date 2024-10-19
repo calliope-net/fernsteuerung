@@ -216,8 +216,8 @@ namespace btf { // b-dispaly5x5.ts
             // wenn die nächste Zahl weniger Ziffern hat, werden die links daneben nicht gelöscht
             // pro Ziffer werden mit zeigeBIN immer 5 LEDs geschaltet, die obere 2^4 ist immer aus
             if (between(xStellen, 2, 5))
-                for (let x = 0; x > xStellen; x++) { // xStellen löschen von xLed nach links
-                    zeigeBIN(0, ePlot.bin, xLed - x)
+                for (let z = 0; z < xStellen; z++) { // xStellen löschen von xLed nach links
+                    zeigeBIN(0, ePlot.bin, xLed - z)
                 }
 
             while (int > 0 && between(xLed, 0, 4)) {
