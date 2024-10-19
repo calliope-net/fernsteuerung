@@ -22,7 +22,7 @@ namespace cb2 { // c-callibot.ts 005F7F
 
         writeReset() // Reset Motoren, LEDs
 
-        btf.setStorageBuffer() // prüft und speichert in a_StorageBuffer
+        btf.loadStorageBuffer4FromFlash() // prüft und speichert in a_StorageBuffer
 
         if (zf)
             btf.zeigeFunkgruppe()

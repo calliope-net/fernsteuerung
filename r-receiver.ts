@@ -62,7 +62,7 @@ namespace receiver { // r-receiver.ts
 
         n_Hardware = eHardware.v3 // !vor pinRelay!
         pinRelay(true) // Relais an schalten (braucht gültiges n_Hardware, um den Pin zu finden)
-        btf.setStorageBuffer()
+        btf.loadStorageBuffer4FromFlash()
         if (zf) {
             btf.zeigeFunkgruppe()
             // btf.zeigeBIN(btf.getStorageServoKorrektur(), btf.ePlot.bcd, 4)
@@ -89,7 +89,7 @@ namespace receiver { // r-receiver.ts
 
         pinRelay(true) // Relais an schalten (braucht gültiges n_Hardware, um den Pin zu finden)
 
-        btf.setStorageBuffer(0, servoGeradeaus) // Funkgruppe 0 und ServoGeradeaus; prüft und speichert in a_StorageBuffer
+        btf.loadStorageBuffer4FromFlash(0, servoGeradeaus) // Funkgruppe 0 und ServoGeradeaus; prüft und speichert in a_StorageBuffer
         if (zf) {
             btf.zeigeFunkgruppe()
             btf.zeigeBIN(btf.getStorageServoKorrektur(), btf.ePlot.bcd, 4)

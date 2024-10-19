@@ -254,7 +254,7 @@ namespace btf { // b-fernsteuerung.ts
 
     // ========== "Storage (Flash)"
 
-    export function setStorageBuffer(funkgruppe?: number, servoKorrektur?: number) {
+    export function loadStorageBuffer4FromFlash(funkgruppe?: number, servoKorrektur?: number) {
         // Storage enthält 4 Byte, Funkgruppe und Modell (nur beim Sender), + 2 Byte unbenutzt
         // modellFunkgruppe kann undefined sein, dann Standardwert c_funkgruppe_min nehmen
         // wenn ein gültiger Wert im Flash ist, nicht ändern (Parameter modellFunkgruppe ignorieren)

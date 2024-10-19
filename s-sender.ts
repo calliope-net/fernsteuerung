@@ -10,7 +10,7 @@ namespace sender { // s-sender.ts
     //% zf.shadow="toggleYesNo" zf.defl=1
     export function beimStart(zf = true, funkgruppe?: btf.eFunkgruppe) { // funkgruppe ist undefined wenn im Block nicht angezeigt
         if (!btf.simulator()) {
-            btf.setStorageBuffer(funkgruppe) // prüft und speichert in a_StorageBuffer
+            btf.loadStorageBuffer4FromFlash(funkgruppe) // prüft und speichert in a_StorageBuffer
 
             setStatusModell(btf.getStorageModell(), zf, 1500) // zeigt Modell an und schreibt auch in Flash
 
