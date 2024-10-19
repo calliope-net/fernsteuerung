@@ -3,17 +3,17 @@ namespace receiver { // r-zweimotoren.ts
 
 
 
-    //% group="Fahren und Lenken" subcategory="2 Motoren"
+    //% group="Fahren und Lenken" subcategory="2 Motoren" deprecated=1
     //% block="Fahren %motor \\% • Lenken %servo ° || • Lenken %lenkenProzent \\%" weight=5
     //% motor.shadow=speedPicker motor.defl=50
     //% servo.shadow=protractorPicker servo.defl=90
     //% lenkenProzent.min=10 lenkenProzent.max=90 lenkenProzent.defl=30
-    export function dual2MotorenLenkenPicker(motor: number, servo: number, lenkenProzent = 30) {
+    export function dual2MotorenLenkenPicker_(motor: number, servo: number, lenkenProzent = 30) {
         dual2Motoren0Lenken16(motor, btf.protractorPicker(servo), lenkenProzent)
     }
 
 
-    //% group="Fahren und Lenken" subcategory="2 Motoren"
+    //% group="Fahren und Lenken" subcategory="2 Motoren" deprecated=1
     //% block="Fahren (1↓128↑255) %x_1_128_255 • Lenken (1↖16↗31) %y_1_16_31 || • Lenken %lenkenProzent \\%" weight=4
     //% x_1_128_255.min=1 x_1_128_255.max=255 x_1_128_255.defl=128
     //% y_1_16_31.min=1 y_1_16_31.max=31 y_1_16_31.defl=16
