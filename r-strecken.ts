@@ -167,10 +167,10 @@ namespace receiver { // r-strecken.ts
     export function encoderRegisterEvent() {
         if (n_hasEncoder && !n_EncoderEventRegistered /* && !n_SpurSensorEventsRegistered */) {
 
-            n_zweiEncoder = true // is_v3_2Motoren()
+            n_zweiEncoder = is_v3_2Motoren()
             n_EncoderFaktor = 63.9 * (26 / 14) / (n_radDurchmesser_mm / 10 * Math.PI)
 
-            btf.setLedColors(btf.eRgbLed.b, Colors.Violet)
+            btf.setLedColors(btf.eRgbLed.b, Colors.Blue)
             // ========== Event Handler registrieren
             pins.onPulsed(a_PinEncoderM0[n_Hardware], PulseValue.Low, function () {
                 if (selectMotorRichtungVor()) //(selectMotorSpeed() > c_MotorStop)
@@ -279,7 +279,7 @@ namespace receiver { // r-strecken.ts
         if (impulse)
             return n_EncoderCounterM1
         else
-            return Math.round(n_EncoderCounterM1 / n_EncoderFaktor)
+            return Math.round(n_EncoderCounterM1 / n_EncoderFaktor) + 1
     }
 
     //% group="2 Encoder" subcategory="Strecken"
