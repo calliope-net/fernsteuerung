@@ -16,7 +16,7 @@ namespace btf { // b-dispaly5x5.ts
     //let n5x5_x01y0 = 0 // Bit 5-4 Betriebsart in x=0-1 y=0
     let a5x5_x01y0 = [false, false]
     let a5x5_xBuffer = Buffer.create(5)
-    
+
     //% group="BIN (5x5 Matrix)" subcategory="LEDs, Display"
     //% block="zeige ↓↓... Funkgruppe" weight=8
     export function zeigeFunkgruppe() {
@@ -173,32 +173,35 @@ namespace btf { // b-dispaly5x5.ts
     }
 
     //% group="BIN (5x5 Matrix)" subcategory="LEDs, Display"
-    //% block="zeige ↕↕↕↕↕ %int %format ←x %xLed" weight=1
+    //% block="zeige ↕↕↕↕↕ %int %format ←x %xLed || Stellen %xStellen" weight=1
     //% xLed.min=0 xLed.max=4 xLed.defl=4
-    export function zeigeBIN(int: number, format: ePlot, xLed: number) {
+    //% xStellen.min=1 xStellen.max=5 xStellen.defl=1
+    //% inlineInputMode=inline 
+    export function zeigeBIN(int: number, format: ePlot, xLed: number, xStellen = 1) {
         int = Math.imul(int, 1) // 32 bit signed integer
         xLed = Math.imul(xLed, 1) // entfernt mögliche Kommastellen
 
-        if (format == ePlot.bin && between(xLed, 0, 4)) {
-
-            // pro Ziffer werden mit zeigeBIN immer 5 LEDs geschaltet 0..31
-            if (n5x5_setClearScreen) {  // wenn vorher Image oder Text angezeigt wurde
-                n5x5_setClearScreen = false
-                a5x5_xBuffer.fill(0xFF) // mit ungültigen Werten füllen, die rekursiv wieder zu 0 werden
-                for (let x = 4; x >= 0; x--) {
-                    zeigeBIN(0, ePlot.bin, x)
+        if (format == ePlot.bin) {
+            if (between(xLed, 0, 4)) {
+                // pro Ziffer werden mit zeigeBIN immer 5 LEDs geschaltet 0..31
+                if (n5x5_setClearScreen) {  // wenn vorher Image oder Text angezeigt wurde
+                    n5x5_setClearScreen = false
+                    a5x5_xBuffer.fill(0xFF) // mit ungültigen Werten füllen, die rekursiv wieder zu 0 werden
+                    for (let x = 4; x >= 0; x--) {
+                        zeigeBIN(0, ePlot.bin, x)
+                    }
+                    // basic.clearScreen()     // löschen und Funkgruppe in 01 ↕↕... wieder anzeigen
+                    zeigeFunkgruppe()       // !ruft zeigeBIN rekursiv auf!
+                    a5x5_x01y0 = [false, false] // n5x5_x01y0 = 0 // Betriebsart auch neu anzeigen nach clearScreen
                 }
-                // basic.clearScreen()     // löschen und Funkgruppe in 01 ↕↕... wieder anzeigen
-                zeigeFunkgruppe()       // !ruft zeigeBIN rekursiv auf!
-                a5x5_x01y0 = [false, false] // n5x5_x01y0 = 0 // Betriebsart auch neu anzeigen nach clearScreen
-            }
-            // nur bei Änderung
-            if (a5x5_xBuffer[xLed] != int) {
-                a5x5_xBuffer[xLed] = int
+                // nur bei Änderung
+                if (a5x5_xBuffer[xLed] != int) {
+                    a5x5_xBuffer[xLed] = int
 
-                for (let y = 4; y >= 0; y--) {
-                    if ((int % 2) == 1) { led.plot(xLed, y) } else { led.unplot(xLed, y) }
-                    int = int >> 1 // bitweise Division durch 2
+                    for (let y = 4; y >= 0; y--) {
+                        if ((int % 2) == 1) { led.plot(xLed, y) } else { led.unplot(xLed, y) }
+                        int = int >> 1 // bitweise Division durch 2
+                    }
                 }
             }
         }
@@ -212,6 +215,11 @@ namespace btf { // b-dispaly5x5.ts
             // bcd und hex zeigt von rechts nach links so viele Spalten an, wie die Zahl Ziffern hat
             // wenn die nächste Zahl weniger Ziffern hat, werden die links daneben nicht gelöscht
             // pro Ziffer werden mit zeigeBIN immer 5 LEDs geschaltet, die obere 2^4 ist immer aus
+            if (between(xStellen, 2, 5))
+                for (let x = 0; x > xStellen; x++) { // xStellen löschen von xLed nach links
+                    zeigeBIN(0, ePlot.bin, xLed - x)
+                }
+
             while (int > 0 && between(xLed, 0, 4)) {
                 if (format == ePlot.bcd) {
                     zeigeBIN(int % 10, ePlot.bin, xLed) // Ziffer 0..9
