@@ -172,13 +172,15 @@ namespace receiver { // r-strecken.ts
 
             btf.setLedColors(btf.eRgbLed.b, Colors.Blue)
             // ========== Event Handler registrieren
-            pins.onPulsed(a_PinEncoderM0[n_Hardware], PulseValue.High, function () {
+            /* pins.onPulsed(a_PinEncoderM0[n_Hardware], PulseValue.High, function () {//
                 if (selectMotorRichtungVor()) //(selectMotorSpeed() > c_MotorStop)
                     n_EncoderCounterM0++ // vorwärts
                 else
                     n_EncoderCounterM0-- // rückwärts
 
                 encoderAutoStop(false) // M0
+            }) */
+
                 /* if (n_EncoderStrecke_impulse > 0 && Math.abs(n_EncoderCounter) >= n_EncoderStrecke_impulse) {
                     n_EncoderStrecke_impulse = 0 // Ereignis nur einmalig auslösen, wieder aktivieren mit encoder_start
 
@@ -190,8 +192,6 @@ namespace receiver { // r-strecken.ts
                     if (onEncoderStopHandler)
                         onEncoderStopHandler(n_EncoderCounter / n_EncoderFaktor)
                 } */
-            })
-
 
             // ========== Event Handler registrieren
 
@@ -200,14 +200,14 @@ namespace receiver { // r-strecken.ts
                 btf.setLedColors(btf.eRgbLed.b, Colors.White)
 
                 // ========== Event Handler registrieren
-                pins.onPulsed(a_PinEncoderM1[n_Hardware], PulseValue.High, function () {
+                /* pins.onPulsed(a_PinEncoderM1[n_Hardware], PulseValue.High, function () {
                     if (selectMotorRichtungVor()) //(selectMotorSpeed() > c_MotorStop)
                         n_EncoderCounterM1++ // vorwärts
                     else
                         n_EncoderCounterM1-- // rückwärts
 
                     encoderAutoStop(true) // M1
-                })
+                }) */
                 // ========== Event Handler registrieren
 
                 pins.setPull(a_PinEncoderM1[n_Hardware], PinPullMode.PullUp) // Encoder PIN Eingang PullUp
