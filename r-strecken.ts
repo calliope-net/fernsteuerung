@@ -170,7 +170,7 @@ namespace receiver { // r-strecken.ts
             n_zweiEncoder = is_v3_2Motoren()
             n_EncoderFaktor = 63.9 * (26 / 14) / (n_radDurchmesser_mm / 10 * Math.PI)
 
-          /*   btf.setLedColors(btf.eRgbLed.b, Colors.Blue)
+            btf.setLedColors(btf.eRgbLed.b, Colors.Blue)
             // ========== Event Handler registrieren
             pins.onPulsed(a_PinEncoderM0[n_Hardware], PulseValue.Low, function () {
                 if (selectMotorRichtungVor()) //(selectMotorSpeed() > c_MotorStop)
@@ -179,9 +179,7 @@ namespace receiver { // r-strecken.ts
                     n_EncoderCounterM0-- // rückwärts
 
                 encoderAutoStop(false) // M0
-               
-            }) */
- /* if (n_EncoderStrecke_impulse > 0 && Math.abs(n_EncoderCounter) >= n_EncoderStrecke_impulse) {
+                /* if (n_EncoderStrecke_impulse > 0 && Math.abs(n_EncoderCounter) >= n_EncoderStrecke_impulse) {
                     n_EncoderStrecke_impulse = 0 // Ereignis nur einmalig auslösen, wieder aktivieren mit encoder_start
 
                     if (n_EncoderAutoStop) {
@@ -192,10 +190,11 @@ namespace receiver { // r-strecken.ts
                     if (onEncoderStopHandler)
                         onEncoderStopHandler(n_EncoderCounter / n_EncoderFaktor)
                 } */
+            })
+
 
             // ========== Event Handler registrieren
 
-            pins.setPull(a_PinEncoderM0[n_Hardware], PinPullMode.PullUp)  // Encoder PIN Eingang PullUp
 
             if (n_zweiEncoder) {
                 btf.setLedColors(btf.eRgbLed.b, Colors.White)
@@ -213,6 +212,9 @@ namespace receiver { // r-strecken.ts
 
                 pins.setPull(a_PinEncoderM1[n_Hardware], PinPullMode.PullUp) // Encoder PIN Eingang PullUp
             }
+
+            // ! setPull muss nach allen onPulsed stehen, das deaktiviert die Events wieder !
+            pins.setPull(a_PinEncoderM0[n_Hardware], PinPullMode.PullUp)  // Encoder PIN Eingang PullUp
 
             n_EncoderEventRegistered = true
         }
