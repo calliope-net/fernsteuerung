@@ -66,7 +66,7 @@ namespace receiver { // r-strecken.ts
 
                 while (n_EncoderAutoStop) //
                 {
-                    if (timeout_Encoder-- <= 0 && Math.abs(n_EncoderCounterM0) < 10) { // kein Impuls nach 2s: kein Encoder vorhanden
+                    if (timeout_Encoder-- <= 0 && Math.abs(n_EncoderCounterM1) < 10) { // kein Impuls nach 2s: kein Encoder vorhanden
                         n_hasEncoder = false // bei ersten 2s timeout false, nächster Aufruf zählt dann nach Zeit
                         btf.setLedColors(btf.eRgbLed.c, Colors.Red)
                         ret = false
