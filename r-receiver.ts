@@ -19,8 +19,8 @@ namespace receiver { // r-receiver.ts
     // Calliope v3 freie Pins: C8, C9, C12, C13, C14, C15
     export let a_PinRelay: DigitalPin[] = [109, DigitalPin.P0]     // 0:DigitalPin.C9 GPIO2
     export let a_PinServo: AnalogPin[] = [108, AnalogPin.C4]       // 0:AnalogPin.C8 GPIO1
-    export let a_PinLicht: DigitalPin[] = [112, DigitalPin.C7]    // 0:DigitalPin.C12 GPIO4 Jacdac
-    export let a_PinEncoder: DigitalPin[] = [114, DigitalPin.P2]   // 0:DigitalPin.C14 SPI
+    export let a_PinEncoderM1: DigitalPin[] = [112, DigitalPin.C7]    // 0:DigitalPin.C12 GPIO4 Jacdac, CaR4 Licht
+    export let a_PinEncoderM0: DigitalPin[] = [114, DigitalPin.P2]   // 0:DigitalPin.C14 SPI
     // Spursensor in r-pins.ts
     // export let a_PinSpurRechts: DigitalPin[] = [115, DigitalPin.C9]// 0:DigitalPin.C13 SPI
     // export let a_PinSpurLinks: DigitalPin[] = [113, DigitalPin.C11]// 0:DigitalPin.C15 SPI

@@ -66,7 +66,7 @@ namespace receiver { // r-strecken.ts
 
                 while (n_EncoderAutoStop) //
                 {
-                    if (timeout_Encoder-- <= 0 && Math.abs(n_EncoderCounter) < 10) { // kein Impuls nach 2s: kein Encoder vorhanden
+                    if (timeout_Encoder-- <= 0 && Math.abs(n_EncoderCounterM0) < 10) { // kein Impuls nach 2s: kein Encoder vorhanden
                         n_hasEncoder = false // bei ersten 2s timeout false, nächster Aufruf zählt dann nach Zeit
                         btf.setLedColors(btf.eRgbLed.c, Colors.Red)
                         ret = false
@@ -148,11 +148,13 @@ namespace receiver { // r-strecken.ts
 
     export let n_hasEncoder = false
     let n_EncoderFaktor = 63.9 * (26 / 14) / (8 * Math.PI) // 63.9 Motorwelle * (26/14) Zahnräder / (8cm * PI) Rad Umfang = 4.6774502 cm
-    let n_EncoderCounter: number = 0 // Impuls Zähler negativ wenn rückwärts
+    let n_EncoderCounterM0: number = 0 // Impuls Zähler negativ wenn rückwärts
+    let n_EncoderCounterM1: number = 0 // Impuls Zähler negativ wenn rückwärts
     let n_EncoderStrecke_impulse: number = 0
     let n_EncoderAutoStop = false // true während der Fahrt, false bei Stop nach Ende der Strecke
     let n_radDurchmesser_mm = 65 // radDmm: Rad Durchmesser in Millimeter
     export let n_EncoderEventRegistered = false
+    let n_zweiEncoder = false
 
     // aufgerufen von receiver.beimStart 
     export function encoderOn(radDmm: number) {
@@ -165,17 +167,19 @@ namespace receiver { // r-strecken.ts
     export function encoderRegisterEvent() {
         if (n_hasEncoder && !n_EncoderEventRegistered /* && !n_SpurSensorEventsRegistered */) {
 
+            n_zweiEncoder = is_v3_2Motoren()
             n_EncoderFaktor = 63.9 * (26 / 14) / (n_radDurchmesser_mm / 10 * Math.PI)
 
             // ========== Event Handler registrieren
-            pins.onPulsed(a_PinEncoder[n_Hardware], PulseValue.Low, function () {
+            pins.onPulsed(a_PinEncoderM0[n_Hardware], PulseValue.Low, function () {
 
                 if (selectMotorRichtungVor()) //(selectMotorSpeed() > c_MotorStop)
-                    n_EncoderCounter++ // vorwärts
+                    n_EncoderCounterM0++ // vorwärts
                 else
-                    n_EncoderCounter-- // rückwärts
+                    n_EncoderCounterM0-- // rückwärts
 
-                if (n_EncoderStrecke_impulse > 0 && Math.abs(n_EncoderCounter) >= n_EncoderStrecke_impulse) {
+                encoderAutoStop(false) // M0
+                /* if (n_EncoderStrecke_impulse > 0 && Math.abs(n_EncoderCounter) >= n_EncoderStrecke_impulse) {
                     n_EncoderStrecke_impulse = 0 // Ereignis nur einmalig auslösen, wieder aktivieren mit encoder_start
 
                     if (n_EncoderAutoStop) {
@@ -185,18 +189,51 @@ namespace receiver { // r-strecken.ts
 
                     if (onEncoderStopHandler)
                         onEncoderStopHandler(n_EncoderCounter / n_EncoderFaktor)
-                }
+                } */
             })
             // ========== Event Handler registrieren
 
+            pins.setPull(a_PinEncoderM0[n_Hardware], PinPullMode.PullUp)  // Encoder PIN Eingang PullUp
 
-            // Encoder PIN Eingang PullUp
-            pins.setPull(a_PinEncoder[n_Hardware], PinPullMode.PullUp)
+
+            if (n_zweiEncoder) {
+                // ========== Event Handler registrieren
+                pins.onPulsed(a_PinEncoderM1[n_Hardware], PulseValue.Low, function () {
+                    if (selectMotorRichtungVor()) //(selectMotorSpeed() > c_MotorStop)
+                        n_EncoderCounterM1++ // vorwärts
+                    else
+                        n_EncoderCounterM1-- // rückwärts
+
+                    encoderAutoStop(true) // M1
+                })
+                // ========== Event Handler registrieren
+
+                pins.setPull(a_PinEncoderM1[n_Hardware], PinPullMode.PullUp) // Encoder PIN Eingang PullUp
+            }
 
             n_EncoderEventRegistered = true
         }
         return n_EncoderEventRegistered && n_hasEncoder
     }
+
+    function encoderAutoStop(m1: boolean) {
+        let encoderWert_impulse = Math.abs(n_EncoderCounterM0)
+        if (n_zweiEncoder)
+            encoderWert_impulse = Math.idiv(encoderWert_impulse + Math.abs(n_EncoderCounterM1), 2)
+
+        if (n_EncoderStrecke_impulse > 0 && encoderWert_impulse >= n_EncoderStrecke_impulse) { // && Math.abs(n_EncoderCounterM0) >=
+            n_EncoderStrecke_impulse = 0 // Ereignis nur einmalig auslösen, wieder aktivieren mit encoder_start
+
+            if (n_EncoderAutoStop) {
+                selectMotorStop() // selectMotor(c_MotorStop)
+                n_EncoderAutoStop = false
+            }
+
+            if (onEncoderStopHandler)
+                onEncoderStopHandler(encoderWert_impulse / n_EncoderFaktor)
+        }
+    }
+
 
     //% group="Encoder" subcategory="Strecken"
     //% block="Encoder starten • AutoStop %autostop bei (cm) %strecke || Impulse %impulse" weight=6
@@ -205,13 +242,12 @@ namespace receiver { // r-strecken.ts
     //% impulse.shadow=toggleYesNo
     export function encoderStartStrecke(autostop: boolean, strecke: number, impulse = false) {
         if (encoderRegisterEvent()) {
-            n_EncoderCounter = 0 // Impuls Zähler zurück setzen
+            n_EncoderCounterM0 = 0 // Impuls Zähler zurück setzen
+            n_EncoderCounterM1 = 0
 
             if (strecke > 0) {
                 n_EncoderStrecke_impulse = impulse ? strecke : Math.round(strecke * n_EncoderFaktor)
                 n_EncoderAutoStop = autostop
-
-                // btf.n_lastConnectedTime = input.runningTime() // Connection-Timeout Zähler zurück setzen um Abschaltung zu verhindern
             }
             else {
                 n_EncoderStrecke_impulse = 0
@@ -226,21 +262,37 @@ namespace receiver { // r-strecken.ts
 
 
     //% group="Encoder" subcategory="Strecken"
-    //% block="Encoder Wert (±cm) || Impulse %impulse" weight=4
+    //% block="Encoder M0 Wert (±cm) || Impulse %impulse" weight=4
     //% impulse.shadow=toggleYesNo
-    export function encoderCounter(impulse = false) {
+    export function encoderCounterM0(impulse = false) {
         if (impulse)
-            return n_EncoderCounter
+            return n_EncoderCounterM0
         else
-            return Math.round(n_EncoderCounter / n_EncoderFaktor)
+            return Math.round(n_EncoderCounterM0 / n_EncoderFaktor)
     }
 
+    //% group="2 Encoder" subcategory="Strecken"
+    //% block="Encoder M1 Wert (±cm) || Impulse %impulse" weight=3
+    //% impulse.shadow=toggleYesNo
+    export function encoderCounterM1(impulse = false) {
+        if (impulse)
+            return n_EncoderCounterM1
+        else
+            return Math.round(n_EncoderCounterM1 / n_EncoderFaktor)
+    }
+
+    //% group="2 Encoder" subcategory="Strecken"
+    //% block="Encoder Mittelwert (abs cm) || Impulse %impulse" weight=2
+    //% impulse.shadow=toggleYesNo
+    export function encoderMittelwert(impulse = false) {
+        return Math.idiv(Math.abs(encoderCounterM0(impulse)) + Math.abs(encoderCounterM1(impulse)), 2)
+    }
 
     // ========== EVENT HANDLER === sichtbarer Event-Block
     let onEncoderStopHandler: (cm: number) => void
 
     //% group="Encoder" subcategory="Strecken"
-    //% block="wenn Ziel erreicht" weight=2
+    //% block="wenn Ziel erreicht" weight=1
     //% draggableParameters=reporter
     export function onEncoderStop(cb: (cm: number) => void) {
         onEncoderStopHandler = cb

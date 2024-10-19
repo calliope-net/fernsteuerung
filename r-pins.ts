@@ -138,13 +138,13 @@ namespace receiver { // r-pins.ts
             pins.digitalWritePin(a_PinRelay[n_Hardware], pON ? 1 : 0)
     }
 
-    //% group="Digital Pins (vom gewählten Modell)" subcategory="Pins"
-    //% block="Licht %pON" weight=7
-    //% pON.shadow="toggleOnOff"
-    export function pinLicht(pON: boolean) {
+    // group="Digital Pins (vom gewählten Modell)" subcategory="Pins"
+    // block="Licht %pON" weight=7
+    // pON.shadow="toggleOnOff"
+    /* export function pinLicht(pON: boolean) {
         if (a_PinLicht.length > n_Hardware)
             pins.digitalWritePin(a_PinLicht[n_Hardware], pON ? 1 : 0)
-    }
+    } */
 
     export enum eDigitalPins { // Pins gültig für alle Modelle, unterscheiden sich bei v3 im Enum Wert
         P0 = DigitalPin.P0,
