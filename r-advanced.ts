@@ -2,6 +2,22 @@
 namespace receiver { // r-advanced.ts
 
 
+    // ========== group="aktuelles Modell" advanced=true
+
+    //% group="aktuelles Modell" advanced=true
+    //% block="%modell" weight=4
+    export function is_Modell(modell: eHardware) {
+        return n_Hardware == modell
+    }
+
+    //% group="aktuelles Modell" advanced=true
+    //% block="Modell mit 2 Motoren ohne Servo (Buggy)" weight=3
+    export function is_v3_2Motoren() {
+        return n_Hardware == eHardware.v3 && btf.getStorageFunkgruppe() == btf.eFunkgruppe.b4
+    }
+
+
+
     // ========== group="aktuelle Werte (vom gewählten Modell)" advanced=true
 
     //% group="aktuelle Werte (vom gewählten Modell)" advanced=true

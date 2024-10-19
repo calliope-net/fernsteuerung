@@ -51,12 +51,12 @@ namespace receiver { // r-receiver.ts
     
      */
 
-    //% group="calliope-net.github.io/fernsteuerung"
-    //% block="beim Start: Calliope v3 \\| 2 Motoren || • Encoder %encoder • Rad ⌀ mm %radDmm • Funkgruppe anzeigen %zf" weight=9
-    //% encoder.shadow="toggleOnOff" encoder.defl=1
-    //% radDmm.min=60 radDmm.max=80 radDmm.defl=65
-    //% zf.shadow="toggleYesNo" zf.defl=1
-    export function beimStart2Motoren(encoder = true, radDmm = 65, zf = true) {
+    // group="calliope-net.github.io/fernsteuerung"
+    // block="beim Start: Calliope v3 \\| 2 Motoren || • Encoder %encoder • Rad ⌀ mm %radDmm • Funkgruppe anzeigen %zf" weight=9
+    // encoder.shadow="toggleOnOff" encoder.defl=1
+    // radDmm.min=60 radDmm.max=80 radDmm.defl=65
+    // zf.shadow="toggleYesNo" zf.defl=1
+    /* export function beimStart2Motoren(encoder = true, radDmm = 65, zf = true) {
         // n_v3_2Motoren = true
         // spurSensorKabel(eSpurSensorKabel.vorn)
 
@@ -73,7 +73,7 @@ namespace receiver { // r-receiver.ts
             encoderOn(radDmm)
 
         btf.beimStartReceiver(btf.eNamespace.receiver)
-    }
+    } */
 
     //% group="calliope-net.github.io/fernsteuerung"
     //% block="beim Start: Empfänger | %modell Servo ↑ ° %servoGeradeaus Encoder %encoder Rad Durchmesser mm %radDmm Funkgruppe anzeigen %zf" weight=8
@@ -89,7 +89,7 @@ namespace receiver { // r-receiver.ts
 
         pinRelay(true) // Relais an schalten (braucht gültiges n_Hardware, um den Pin zu finden)
 
-        btf.loadStorageBuffer4FromFlash(0, servoGeradeaus) // Funkgruppe 0 und ServoGeradeaus; prüft und speichert in a_StorageBuffer
+        btf.loadStorageBuffer4FromFlash(0, servoGeradeaus) // lädt aus Flash; prüft und speichert in a_StorageBuffer; nicht in Flash
         if (zf) {
             btf.zeigeFunkgruppe()
             // btf.zeigeBIN(btf.getStorageServoKorrektur(), btf.ePlot.bcd, 4)
@@ -134,13 +134,13 @@ namespace receiver { // r-receiver.ts
         //btf.n_servoKorrekturButton = !btf.n_servoKorrekturButton
         btf.n_StorageChange = btf.eStorageBuffer.servoKorrektur
     }
-
-    //% group="calliope-net.github.io/fernsteuerung"
-    //% block="Modell mit 2 Motoren ohne Servo (Buggy)" weight=3
+/* 
+    // group="calliope-net.github.io/fernsteuerung"
+    // block="Modell mit 2 Motoren ohne Servo (Buggy)" weight=3
     export function is_v3_2Motoren() {
         return n_Hardware == eHardware.v3 && btf.getStorageFunkgruppe() == btf.eFunkgruppe.b4
     }
-
+ */
 
     // ========== group="Fahren und Lenken"
 
