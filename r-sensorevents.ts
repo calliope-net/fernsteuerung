@@ -39,7 +39,7 @@ namespace receiver { // r-sensorevents.ts
     // ========== group="Spur Sensor" subcategory="Sensoren"
 
     let a_raiseSpurEvent_gestartet = [false, false]
-    let n_SpurTimer = input.runningTime()
+   // let n_SpurTimer = input.runningTime()
     // let n_Spur2Bit = 0 // letzter Status 00 01 10 11
     let n_links_hell = false
     let n_rechts_hell = false
@@ -54,10 +54,10 @@ namespace receiver { // r-sensorevents.ts
             //if (!a_raiseSpurEvent_gestartet[index])
             //    spurSensorRegisterEvents() 
 
-            let t = input.runningTime() - n_SpurTimer // ms seit letztem raiseSpurEvent
-            if (t < ms)
-                basic.pause(t) // restliche Zeit-Differenz warten
-            n_SpurTimer = input.runningTime()
+           // let t = input.runningTime() - n_SpurTimer // ms seit letztem raiseSpurEvent
+           // if (t < ms)
+           //     basic.pause(t) // restliche Zeit-Differenz warten
+           // n_SpurTimer = input.runningTime()
 
             let spurB = pinSpurBoolean()
             if (n_links_hell !== spurB[0] || n_rechts_hell !== spurB[1] || !a_raiseSpurEvent_gestartet[index]) { // bei Änderung oder beim ersten Mal - ganz am Anfang
@@ -186,13 +186,13 @@ namespace receiver { // r-sensorevents.ts
     let n_AbstandSensor = false // Sensor aktiviert (im Buffer bzw. Knopf A)
 
     //% group="Distance Sensor (dauerhaft Schleife)" subcategory="Sensoren"
-    //% block="Abstand Sensor Ereignis auslösen %on • Stop %stop_cm cm • Start %start_cm cm || • Pause %ms ms" weight=3
+    //% block="Abstand Sensor Ereignis auslösen %on • Stop %stop_cm cm || • Start %start_cm cm • Pause %ms ms" weight=3
     //% on.shadow=toggleOnOff
     //% stop_cm.defl=30
-    //% start_cm.defl=35
+    // start_cm.defl=35
     //% ms.defl=25
     //% inlineInputMode=inline
-    export function raiseAbstandEvent(on: boolean, stop_cm: number, start_cm: number, ms = 25, index = 0) { //abstand_Sensor?: boolean, bei Aufruf mit buffer ist index=1 (r-fernsteuerung.ts)
+    export function raiseAbstandEvent(on: boolean, stop_cm: number, start_cm?: number, ms = 25, index = 0) { //abstand_Sensor?: boolean, bei Aufruf mit buffer ist index=1 (r-fernsteuerung.ts)
         // n_AbstandSensor = (abstand_Sensor == undefined) ? on : abstand_Sensor
         n_AbstandSensor = on
 
@@ -201,6 +201,9 @@ namespace receiver { // r-sensorevents.ts
         //}
 
         if (on && selectAbstandSensorConnected()) {
+
+            if (start_cm == undefined)
+                start_cm = stop_cm + 5
 
             if (!a_raiseAbstandEvent_gestartet[index])
                 selectRanging(true) // nur Laser Sensor StartRanging einmal am Anfang
