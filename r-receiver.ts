@@ -11,10 +11,7 @@ namespace receiver { // r-receiver.ts
     }
 
     export let n_Hardware = eHardware.v3 // Index in Arrays:// 0:_Calliope v3 Pins_
-   // export let n_v3_2Motoren = false // Buggy
-    export function is_v3_2Motoren() {
-        return n_Hardware == eHardware.v3 && btf.getStorageFunkgruppe() == btf.eFunkgruppe.b4
-    }
+    // export let n_v3_2Motoren = false // Buggy
 
     // eHardware ist der Index für folgende Arrays:
     //export let a_ModellFunkgruppe = [0xA8, 239] // v3, car4
@@ -60,8 +57,8 @@ namespace receiver { // r-receiver.ts
     //% radDmm.min=60 radDmm.max=80 radDmm.defl=65
     //% zf.shadow="toggleYesNo" zf.defl=1
     export function beimStart2Motoren(encoder = true, radDmm = 65, zf = true) {
-       // n_v3_2Motoren = true
-       // spurSensorKabel(eSpurSensorKabel.vorn)
+        // n_v3_2Motoren = true
+        // spurSensorKabel(eSpurSensorKabel.vorn)
 
         n_Hardware = eHardware.v3 // !vor pinRelay!
         pinRelay(true) // Relais an schalten (braucht gültiges n_Hardware, um den Pin zu finden)
@@ -87,7 +84,7 @@ namespace receiver { // r-receiver.ts
     // funkgruppe.min=160 funkgruppe.max=191
     // inlineInputMode=inline
     export function beimStart(modell: eHardware, servoGeradeaus: number, encoder: boolean, radDmm: number, zf = true/* , funkgruppe?: number */) { //  Funkgruppe %funkgruppe
-       // n_v3_2Motoren = false
+        // n_v3_2Motoren = false
         n_Hardware = modell // !vor pinRelay!
 
         pinRelay(true) // Relais an schalten (braucht gültiges n_Hardware, um den Pin zu finden)
@@ -95,12 +92,17 @@ namespace receiver { // r-receiver.ts
         btf.loadStorageBuffer4FromFlash(0, servoGeradeaus) // Funkgruppe 0 und ServoGeradeaus; prüft und speichert in a_StorageBuffer
         if (zf) {
             btf.zeigeFunkgruppe()
-            btf.zeigeBIN(btf.getStorageServoKorrektur(), btf.ePlot.bcd, 4)
+            // btf.zeigeBIN(btf.getStorageServoKorrektur(), btf.ePlot.bcd, 4)
         }
-        n_Servo90KorrekturFaktor = btf.getStorageServoKorrektur() / c_Servo90_geradeaus // z.B. 95/90=1.05
 
-        n_Servo90Winkel = 0 // damit der Servo ändert und bewegt
-        pinServo90(c_Servo90_geradeaus)
+        if (!is_v3_2Motoren()) { // Modell mit Servo
+            if (zf)
+                btf.zeigeBIN(btf.getStorageServoKorrektur(), btf.ePlot.bcd, 4)
+            n_Servo90KorrekturFaktor = btf.getStorageServoKorrektur() / c_Servo90_geradeaus // z.B. 95/90=1.05
+
+            n_Servo90Winkel = 0 // damit der Servo ändert und bewegt
+            pinServo90(c_Servo90_geradeaus)
+        }
 
         qwiicMotorReset() // dauert länger als 2 Sekunden
 
@@ -133,6 +135,11 @@ namespace receiver { // r-receiver.ts
         btf.n_StorageChange = btf.eStorageBuffer.servoKorrektur
     }
 
+    //% group="calliope-net.github.io/fernsteuerung"
+    //% block="Modell mit 2 Motoren ohne Servo (Buggy)" weight=3
+    export function is_v3_2Motoren() {
+        return n_Hardware == eHardware.v3 && btf.getStorageFunkgruppe() == btf.eFunkgruppe.b4
+    }
 
 
     // ========== group="Fahren und Lenken"
