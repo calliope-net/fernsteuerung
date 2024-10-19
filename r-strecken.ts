@@ -172,7 +172,7 @@ namespace receiver { // r-strecken.ts
 
             btf.setLedColors(btf.eRgbLed.b, Colors.Blue)
             // ========== Event Handler registrieren
-            pins.onPulsed(a_PinEncoderM0[n_Hardware], PulseValue.Low, function () {
+            pins.onPulsed(a_PinEncoderM0[n_Hardware], PulseValue.High, function () {
                 if (selectMotorRichtungVor()) //(selectMotorSpeed() > c_MotorStop)
                     n_EncoderCounterM0++ // vorwärts
                 else
@@ -200,7 +200,7 @@ namespace receiver { // r-strecken.ts
                 btf.setLedColors(btf.eRgbLed.b, Colors.White)
 
                 // ========== Event Handler registrieren
-                pins.onPulsed(a_PinEncoderM1[n_Hardware], PulseValue.Low, function () {
+                pins.onPulsed(a_PinEncoderM1[n_Hardware], PulseValue.High, function () {
                     if (selectMotorRichtungVor()) //(selectMotorSpeed() > c_MotorStop)
                         n_EncoderCounterM1++ // vorwärts
                     else
