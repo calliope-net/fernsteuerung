@@ -21,7 +21,7 @@ namespace btf { // b-dispaly5x5.ts
     //% block="zeige ↓↓... Funkgruppe" weight=8
     export function zeigeFunkgruppe() {
         let int = getStorageFunkgruppe()
-        if (between(int, c_funkgruppe_min, c_funkgruppe_max)) {
+        if (between(int, eFunkgruppe.b0, eFunkgruppe.b7)) {
             // zeigeBIN(getStorageFunkgruppe() << 4, ePlot.hex, 1) // 5x5 x=0-1 y=1-2-3-4 (y=0 ist bei hex immer aus)
             int = [0x10, 0x30, 0x70, 0xF0, 0xF1, 0xF3, 0xF7, 0xFF][getStorageFunkgruppe() & 0x07] // 3 Bit 0..7 als Index
         }

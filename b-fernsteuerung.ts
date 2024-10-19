@@ -1,8 +1,8 @@
 //% color=#E3008C weight=95 icon="\uf012" block="Fernsteuerung"
 namespace btf { // b-fernsteuerung.ts
 
-    export const c_funkgruppe_min = 0xB0 // nur 8 mögliche Funkgruppen als index im StatusBuffer beim Sender
-    export const c_funkgruppe_max = 0xB7
+  // export const c_funkgruppe_min = 0xB0 // nur 8 mögliche Funkgruppen als index im StatusBuffer beim Sender
+  // export const c_funkgruppe_max = 0xB7
 
     // Storage im Flash
     let a_StorageBuffer = Buffer.create(4) // lokaler Speicher 4 Byte NumberFormat.UInt32LE
@@ -39,7 +39,7 @@ namespace btf { // b-fernsteuerung.ts
         if (!(input.buttonIsPressed(Button.B))) {
 
             if (n_StorageChange == eStorageBuffer.funkgruppe) {
-                if (a_StorageBuffer[eStorageBuffer.funkgruppe] > c_funkgruppe_min) {
+                if (a_StorageBuffer[eStorageBuffer.funkgruppe] > eFunkgruppe.b0) {
                     radio.setGroup(--a_StorageBuffer[eStorageBuffer.funkgruppe]) // erst -1, dann zurück lesen
                 }
                 setClearScreen()
@@ -60,7 +60,7 @@ namespace btf { // b-fernsteuerung.ts
         if (!(input.buttonIsPressed(Button.A))) {
 
             if (n_StorageChange == eStorageBuffer.funkgruppe) {
-                if (a_StorageBuffer[eStorageBuffer.funkgruppe] < c_funkgruppe_max) {
+                if (a_StorageBuffer[eStorageBuffer.funkgruppe] < eFunkgruppe.b7) {
                     radio.setGroup(++a_StorageBuffer[eStorageBuffer.funkgruppe]) // erst +1, dann zurück lesen
                 }
                 setClearScreen()
@@ -224,7 +224,7 @@ namespace btf { // b-fernsteuerung.ts
     //% group="Bluetooth Einstellungen"
     //% block="setze Funkgruppe auf %funkgruppe" weight=5
     export function setFunkgruppe(funkgruppe: eFunkgruppe) {
-        if (between(funkgruppe, c_funkgruppe_min, c_funkgruppe_max)) {
+        if (between(funkgruppe, eFunkgruppe.b0, eFunkgruppe.b7)) {
             a_StorageBuffer[eStorageBuffer.funkgruppe] = funkgruppe
             radio.setGroup(funkgruppe)
             storage.putBuffer(a_StorageBuffer) // im Flash speichern
@@ -261,12 +261,12 @@ namespace btf { // b-fernsteuerung.ts
 
         a_StorageBuffer = storage.getBuffer()
 
-        if (between(funkgruppe, c_funkgruppe_min, c_funkgruppe_max))
+        if (between(funkgruppe, eFunkgruppe.b0, eFunkgruppe.b7))
             a_StorageBuffer[eStorageBuffer.funkgruppe] = funkgruppe
 
         // Funkgruppe (am offset 0) muss c_funkgruppe_min .. c_funkgruppe_max sein
-        if (!between(a_StorageBuffer[eStorageBuffer.funkgruppe], c_funkgruppe_min, c_funkgruppe_max))
-            a_StorageBuffer[eStorageBuffer.funkgruppe] = c_funkgruppe_min
+        if (!between(a_StorageBuffer[eStorageBuffer.funkgruppe], eFunkgruppe.b0, eFunkgruppe.b7))
+            a_StorageBuffer[eStorageBuffer.funkgruppe] = eFunkgruppe.b0
         // a_StorageBuffer[eStorageBuffer.funkgruppe] = (funkgruppe) ? funkgruppe : c_funkgruppe_min
 
         if (!between(a_StorageBuffer[eStorageBuffer.servoKorrektur], 82, 98))

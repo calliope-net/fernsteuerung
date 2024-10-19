@@ -6,25 +6,10 @@ namespace receiver { // r-pins.ts
 
     export enum eSpurSensorKabel { hinten, vorn }
     let n_SpurSensorKabel = eSpurSensorKabel.hinten // bei true wird rechts und links getauscht
-
-    /* 
-        function spurLinksDigitalPin(): DigitalPin {
-            if (!n_PinSpurTauschen)
-                return a_PinSpurLinks[n_Hardware]  // Kabel am Spur Sensor hinten
-            else
-                return a_PinSpurRechts[n_Hardware] // Kabel vorn: rechts und links tauschen
-        }
-    
-        function spurRechtsDigitalPin(): DigitalPin {
-            if (!n_PinSpurTauschen)
-                return a_PinSpurRechts[n_Hardware] // Kabel am Spur Sensor hinten
-            else
-                return a_PinSpurLinks[n_Hardware]  // Kabel vorn: rechts und links tauschen
-        }
-     */
+   
+   
 
     // ========== group="Spur Sensor (vom gewählten Modell)" subcategory="Pins"
-
 
     //% group="Spur Sensor (vom gewählten Modell)" subcategory="Pins"
     //% block="Spur Sensor Kabel nach %tauschen" weight=7
