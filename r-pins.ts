@@ -177,14 +177,14 @@ namespace receiver { // r-pins.ts
 
 
     // group="Servo (vom gewählten Modell)" subcategory="Pins"
-    // block="Servo (Picker) %servo °" weight=4
+    // block="Servo (Picker) %servo °" weight=9
     // servo.shadow=protractorPicker servo.defl=90
     //export function pinServoPicker(servo: number) {
     //    pinServo16(btf.protractorPicker(servo))
     //}
 
     //% group="Servo (vom gewählten Modell)" subcategory="Pins"
-    //% block="Servo (1 ↖ 16 ↗ 31) %winkel" weight=3
+    //% block="Servo (1 ↖ 16 ↗ 31) %winkel" weight=7
     //% winkel.min=1 winkel.max=31 winkel.defl=16
     export function pinServo16(winkel: number) {
         if (btf.between(winkel, 1, 31))
@@ -201,12 +201,12 @@ namespace receiver { // r-pins.ts
     }
 
     //% group="Servo (vom gewählten Modell)" subcategory="Pins"
-    //% block="Servo (135° ↖ 90° ↗ 45°) %winkel °" weight=2
+    //% block="Servo (135° ↖ 90° ↗ 45°) %winkel °" weight=5
     //% winkel.min=45 winkel.max=135 winkel.defl=90
     export function pinServo90(winkel: number) {
         // Richtung ändern: 180-winkel
         // (0+14)*3=42 keine Änderung, gültige Werte im Buffer 1-31  (1+14)*3=45  (16+14)*3=90  (31+14)*3=135
-        if (btf.between(winkel, 45, 135) && n_Servo90Winkel != winkel) {
+        if (n_hasServo && btf.between(winkel, 45, 135) && n_Servo90Winkel != winkel) {
             n_Servo90Winkel = winkel
             // pins.servoWritePin(a_PinServo[n_Hardware], winkel + (n_Servo90Geradeaus - c_Servo_geradeaus))
             //pins.servoWritePin(a_PinServo[n_Hardware], winkel * (n_Servo90Geradeaus / c_Servo_geradeaus))
@@ -215,11 +215,16 @@ namespace receiver { // r-pins.ts
     }
 
     //% group="Servo (vom gewählten Modell)" subcategory="Pins"
-    //% block="Servo geradeaus" weight=1
+    //% block="Servo geradeaus" weight=3
     export function pinServoGeradeaus() {
         pinServo90(c_Servo90_geradeaus)
     }
 
+    //% group="Servo (vom gewählten Modell)" subcategory="Pins"
+    //% block="Servo angeschlossen" weight=1
+    export function pinServoConnected() {
+        return n_hasServo
+    }
 
 
 
