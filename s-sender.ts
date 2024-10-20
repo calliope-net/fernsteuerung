@@ -78,21 +78,21 @@ namespace sender { // s-sender.ts
 
     // folgende Funktionen bieten (im namespace sender) Zugriff auf die 3 Variablen modell, funktion, buttons
 
-    export function setStatusModell(pModell: eModell, zeigeModell: boolean, pause = 500) {
+    export function setStatusModell(pModell: eModell, zeigeModell: boolean, pause = 1000) {
         if (!btf.between(pModell, 0, c_ModellCount - 1)) {
             pModell = eModell.cb2e
             // flash = true
         }
         getCurrentStatusBuffer()[eStatusBuffer.modell] = pModell
-        //let t = input.runningTime() + pause // ms
+        let t = input.runningTime() + pause // ms
         if (zeigeModell)
             zeigeModellImagePause(0)
         btf.setStorageModell(pModell) // geändertes Modell wird auch im Flash gespeichert, das dauert lange
-        //t -= input.runningTime()
-        //if (t < 0)
-        //    basic.pause(t) // Rest warten
-        if (zeigeModell && pause > 0)
-            basic.pause(pause)
+        t -= input.runningTime()
+        if (zeigeModell && t > 0)
+            basic.pause(t) // Rest warten
+        //if (zeigeModell && pause > 0)
+        //    basic.pause(pause)
     }
     export function getStatusModell(): eModell {
         return getCurrentStatusBuffer()[eStatusBuffer.modell]
