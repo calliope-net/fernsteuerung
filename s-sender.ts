@@ -78,7 +78,7 @@ namespace sender { // s-sender.ts
 
     // folgende Funktionen bieten (im namespace sender) Zugriff auf die 3 Variablen modell, funktion, buttons
 
-    export function setStatusModell(pModell: eModell, zeigeModell: boolean, pause = 1000) {
+    export function setStatusModell(pModell: eModell, zeigeModell: boolean, pause = 500) {
         if (!btf.between(pModell, 0, c_ModellCount - 1)) {
             pModell = eModell.cb2e
             // flash = true
