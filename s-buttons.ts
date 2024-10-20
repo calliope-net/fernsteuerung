@@ -51,10 +51,11 @@ namespace sender { // s-buttons.ts
             //if (getStatusModell() > 0)
             //    setStatusModell(getStatusModell() - 1, true) // setStatusModell() schreibt auch in Flash
             //basic.pause(1500) // zeigeModellImagePause(1500)
-            if (getStatusModell() > 0) {
+            if (getStatusModell() > 0)
                 setStatusModell(getStatusModell() - 1, true) // setStatusModell() schreibt auch in Flash und zeigt Modell wenn true
-                btf.zeigeFunkgruppe()
-            }
+            else
+                zeigeModellImagePause(500)
+            btf.zeigeFunkgruppe()
         }
 
         // cb2e||mkcs // von 'Spur folgen' auf 'Abstand ausweichen' umschalten
@@ -107,10 +108,11 @@ namespace sender { // s-buttons.ts
     export function buttonB() {
 
         if (!isFunktion(eFunktion.ng)) { // nicht gestartet
-            if (getStatusModell() < c_ModellCount - 1) {
+            if (getStatusModell() < c_ModellCount - 1)
                 setStatusModell(getStatusModell() + 1, true) // setStatusModell() schreibt auch in Flash und zeigt Modell wenn true
-                btf.zeigeFunkgruppe()
-            }
+            else
+                zeigeModellImagePause(500)
+            btf.zeigeFunkgruppe()
         }
         // Maker Kit Car && Gabelstapler 'Fahren und Lenken'
         else if (isModell(eModell.mkcg) && isFunktion(eFunktion.m0_m1_s0)) {
