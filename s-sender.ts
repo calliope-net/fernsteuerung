@@ -12,7 +12,7 @@ namespace sender { // s-sender.ts
         if (!btf.simulator()) {
             btf.loadStorageBuffer4FromFlash(funkgruppe) // prüft und speichert in a_StorageBuffer
 
-            setStatusModell(btf.getStorageModell(), zf, 1500) // zeigt Modell an und schreibt auch in Flash
+            setStatusModell(btf.getStorageModell(), zf) // zeigt Modell an und schreibt auch in Flash
 
             if (zf || funkgruppe != undefined)
                 btf.zeigeFunkgruppe()
@@ -78,7 +78,7 @@ namespace sender { // s-sender.ts
 
     // folgende Funktionen bieten (im namespace sender) Zugriff auf die 3 Variablen modell, funktion, buttons
 
-    export function setStatusModell(pModell: eModell, zeigeModell: boolean, pause: number) {
+    export function setStatusModell(pModell: eModell, zeigeModell: boolean, pause = 1000) {
         if (!btf.between(pModell, 0, c_ModellCount - 1)) {
             pModell = eModell.cb2e
             // flash = true

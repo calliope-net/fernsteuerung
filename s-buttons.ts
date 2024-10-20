@@ -1,7 +1,7 @@
 
 namespace sender { // s-buttons.ts
 
-    export const c_ModellCount = 5
+    export const c_ModellCount = 4
 
     export enum eModell { // zuletzt gewähltes Modell wird im Flash offset 1 dauerhaft gespeiechert
         //% block="Modell Calli:Bot"
@@ -12,8 +12,8 @@ namespace sender { // s-buttons.ts
         mkcg,
         //% block="Modell Maker Kit Car Kran"
         mkck,
-        //% block="Modell Calliope auf Rädern 4"
-        car4
+        // block="Modell Calliope auf Rädern 4"
+        //car4
         // block="Modell Buggy"
         //buggy,
     } // so viele Images müssen im Array sein - Bilder am Ende dieser Datei
@@ -29,14 +29,14 @@ namespace sender { // s-buttons.ts
         ma_mb,      // MA und MB (Seilrolle und Drehkranz)
         //% block="0 Kran Zahnstange und Drehkranz"
         mc_mb,      // MC und MB (Zahnstange und Drehkranz)
-      
+
         //% block="1 Programm 'Spur folgen'"
         f10fernstartenSpurfolger,
         //% block="1 Programm 'Hindernis ausweichen'"
         f10fernstartenAbstand,
         //% block="2 Fahrplan '5 Strecken senden'"
         f20fahrplan,
-     
+
         //% block="3 Sensoren fernprogrammieren"
         f30sensoren
     }
@@ -51,9 +51,10 @@ namespace sender { // s-buttons.ts
             //if (getStatusModell() > 0)
             //    setStatusModell(getStatusModell() - 1, true) // setStatusModell() schreibt auch in Flash
             //basic.pause(1500) // zeigeModellImagePause(1500)
-
-            setStatusModell(getStatusModell() - 1, true, 1500) // setStatusModell() schreibt auch in Flash
-            btf.zeigeFunkgruppe()
+            if (getStatusModell() > 0) {
+                setStatusModell(getStatusModell() - 1, true) // setStatusModell() schreibt auch in Flash und zeigt Modell wenn true
+                btf.zeigeFunkgruppe()
+            }
         }
 
         // cb2e||mkcs // von 'Spur folgen' auf 'Abstand ausweichen' umschalten
@@ -106,13 +107,10 @@ namespace sender { // s-buttons.ts
     export function buttonB() {
 
         if (!isFunktion(eFunktion.ng)) { // nicht gestartet
-            //zeigeModellImagePause(0)
-            //if (getStatusModell() < c_ModellCount - 1)
-            //    setStatusModell(getStatusModell() + 1, true) // setStatusModell() schreibt auch in Flash
-            //basic.pause(1500) // zeigeModellImagePause(1500)
-
-            setStatusModell(getStatusModell() + 1, true, 1500) // setStatusModell() schreibt auch in Flash
-            btf.zeigeFunkgruppe()
+            if (getStatusModell() < c_ModellCount - 1) {
+                setStatusModell(getStatusModell() + 1, true) // setStatusModell() schreibt auch in Flash und zeigt Modell wenn true
+                btf.zeigeFunkgruppe()
+            }
         }
         // Maker Kit Car && Gabelstapler 'Fahren und Lenken'
         else if (isModell(eModell.mkcg) && isFunktion(eFunktion.m0_m1_s0)) {
@@ -291,14 +289,14 @@ namespace sender { // s-buttons.ts
                 ai = [1, 31, 17, 17, 24] // Kran
                 break
             }
-            /* case eModell.buggy: {
-                ai = [14, 4, 4, 4, 14] // Buggy
-                break
-            } */
-            case eModell.car4: {
-                ai = [6, 11, 10, 11, 6] // CaR 4
-                break
-            }
+            //case eModell.buggy: {
+            //    ai = [14, 4, 4, 4, 14] // Buggy
+            //    break
+            //}
+            //case eModell.car4: {
+            //    ai = [6, 11, 10, 11, 6] // CaR 4
+            //    break
+            //}
         }
 
         for (let xLed = 0; xLed < ai.length; xLed++) {
