@@ -4,22 +4,22 @@ namespace receiver { // r-pins.ts
     let a_PinSpurLinks: DigitalPin[] = [113, DigitalPin.C11] // 0:DigitalPin.C15 SPI
     let a_PinSpurRechts: DigitalPin[] = [115, DigitalPin.C9] // 0:DigitalPin.C13 SPI
 
-    enum eSpurSensorKabel { hinten, vorn }
-    // let n_SpurSensorKabel = eSpurSensorKabel.hinten // bei true wird rechts und links getauscht
-    function is_SpurSensorKabel() {
-        if (is_v3_2Motoren())
-            return eSpurSensorKabel.vorn
-        else
-            return eSpurSensorKabel.hinten
-    }
+    export enum eSpurSensorKabel { hinten, vorn }
+    export let n_SpurSensorKabel = eSpurSensorKabel.hinten // bei true wird rechts und links getauscht
+    /*  function is_SpurSensorKabel() {
+         if (is_v3_2Motoren())
+             return eSpurSensorKabel.vorn
+         else
+             return eSpurSensorKabel.hinten
+     } */
 
     // ========== group="Spur Sensor (vom gewählten Modell)" subcategory="Pins"
 
-    // group="Spur Sensor (vom gewählten Modell)" subcategory="Pins"
-    // block="Spur Sensor Kabel nach %tauschen" weight=7
-    //export function spurSensorKabel(kabel = eSpurSensorKabel.hinten) {
-    //    n_SpurSensorKabel = kabel
-    //}
+    //% group="Spur Sensor (vom gewählten Modell)" subcategory="Pins"
+    //% block="Spur Sensor Kabel nach %tauschen" weight=7
+    export function spurSensorKabel(kabel = eSpurSensorKabel.hinten) {
+        n_SpurSensorKabel = kabel
+    }
 
 
     export enum eDH { hell = 1, dunkel = 0 } // 0 ist schwarz, 1 ist hell
@@ -27,13 +27,13 @@ namespace receiver { // r-pins.ts
     //% group="Spur Sensor (vom gewählten Modell)" subcategory="Pins"
     //% block="Spur Sensor Pin links %hell" weight=6
     export function pinSpurLinks(hell: eDH): boolean {
-        return pins.digitalReadPin(is_SpurSensorKabel() == eSpurSensorKabel.hinten ? a_PinSpurLinks[n_Hardware] : a_PinSpurRechts[n_Hardware]) == hell
+        return pins.digitalReadPin(n_SpurSensorKabel == eSpurSensorKabel.hinten ? a_PinSpurLinks[n_Hardware] : a_PinSpurRechts[n_Hardware]) == hell
     }
 
     //% group="Spur Sensor (vom gewählten Modell)" subcategory="Pins"
     //% block="Spur Sensor Pin rechts %hell" weight=5
     export function pinSpurRechts(hell: eDH): boolean {
-        return pins.digitalReadPin(is_SpurSensorKabel() == eSpurSensorKabel.hinten ? a_PinSpurRechts[n_Hardware] : a_PinSpurLinks[n_Hardware]) == hell
+        return pins.digitalReadPin(n_SpurSensorKabel == eSpurSensorKabel.hinten ? a_PinSpurRechts[n_Hardware] : a_PinSpurLinks[n_Hardware]) == hell
     }
 
     //% group="Spur Sensor (vom gewählten Modell)" subcategory="Pins"
@@ -42,7 +42,7 @@ namespace receiver { // r-pins.ts
         let l = pins.digitalReadPin(a_PinSpurLinks[n_Hardware]) == eDH.hell
         let r = pins.digitalReadPin(a_PinSpurRechts[n_Hardware]) == eDH.hell
 
-        if (is_SpurSensorKabel() == eSpurSensorKabel.hinten)
+        if (n_SpurSensorKabel == eSpurSensorKabel.hinten)
             return [l, r] // (pins.digitalReadPin(a_PinSpurLinks[n_Hardware]) << 1) & pins.digitalReadPin(a_PinSpurRechts[n_Hardware])
         else
             return [r, l] // (pins.digitalReadPin(a_PinSpurRechts[n_Hardware]) << 1) & pins.digitalReadPin(a_PinSpurLinks[n_Hardware])

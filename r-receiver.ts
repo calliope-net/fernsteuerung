@@ -12,7 +12,7 @@ namespace receiver { // r-receiver.ts
 
     export let n_Hardware = eHardware.v3 // Index in Arrays:// 0:_Calliope v3 Pins_
     export let n_hasServo = true
-    // export let n_v3_2Motoren = false // Buggy
+    export let n_v3_2Motoren = false // Buggy true
 
     // eHardware ist der Index für folgende Arrays:
     //export let a_ModellFunkgruppe = [0xA8, 239] // v3, car4
@@ -85,27 +85,35 @@ namespace receiver { // r-receiver.ts
     // funkgruppe.min=160 funkgruppe.max=191
     // inlineInputMode=inline
     export function beimStart(modell: eHardware, servoGeradeaus: number, encoder: boolean, radDmm: number, zf = true/* , funkgruppe?: number */) { //  Funkgruppe %funkgruppe
-        // n_v3_2Motoren = false
         n_Hardware = modell // !vor pinRelay!
-
         pinRelay(true) // Relais an schalten (braucht gültiges n_Hardware, um den Pin zu finden)
 
         btf.loadStorageBuffer4FromFlash(0, servoGeradeaus) // lädt aus Flash; prüft und speichert in a_StorageBuffer; nicht in Flash
-        if (zf) {
-            btf.zeigeFunkgruppe()
-            // btf.zeigeBIN(btf.getStorageServoKorrektur(), btf.ePlot.bcd, 4)
-        }
 
-        if (!is_v3_2Motoren()) { // Modell mit Servo
-            if (zf)
+        n_v3_2Motoren = (n_Hardware == eHardware.v3) && (btf.getStorageFunkgruppe() == btf.eFunkgruppe.b4)
+        n_hasServo = !n_v3_2Motoren
+        n_SpurSensorKabel = n_v3_2Motoren ? eSpurSensorKabel.vorn : eSpurSensorKabel.hinten
+        //if (zf) {
+        //    btf.zeigeFunkgruppe()
+        //    // btf.zeigeBIN(btf.getStorageServoKorrektur(), btf.ePlot.bcd, 4)
+        //}
+
+        if (n_hasServo) { // Modell mit Servo
+            if (zf) {
+                btf.zeigeFunkgruppe()
                 btf.zeigeBIN(btf.getStorageServoKorrektur(), btf.ePlot.bcd, 4)
-            n_hasServo = true
+            }
             n_Servo90KorrekturFaktor = btf.getStorageServoKorrektur() / c_Servo90_geradeaus // z.B. 95/90=1.05
-
             n_Servo90Winkel = 0 // damit der Servo ändert und bewegt
             pinServo90(c_Servo90_geradeaus)
-        } else {
-            n_hasServo = false
+        }
+        else {
+            if (zf) {
+                let ai = [14, 4, 4, 4, 14] // Buggy Image anzeigen
+                for (let xLed = 0; xLed < ai.length; xLed++) {
+                    btf.zeigeBIN(ai[xLed], btf.ePlot.bin, xLed)
+                }
+            }
         }
 
         qwiicMotorReset() // dauert länger als 2 Sekunden
@@ -169,7 +177,7 @@ namespace receiver { // r-receiver.ts
             if (y_1_16_31 != 0)
                 pinServo16(y_1_16_31)       // Servo
         }
-        else if (is_v3_2Motoren()) {        // Buggy mit 2 Motoren
+        else if (n_v3_2Motoren) {        // Buggy mit 2 Motoren
             dual2MotorenLenken(x_1_128_255, y_1_16_31, lenkenProzent)
         }
         else {                              // Standard M0 Fahrmotor an Calliope v3 Pins
@@ -192,7 +200,7 @@ namespace receiver { // r-receiver.ts
         if (n_Hardware == eHardware.car4) { // Fahrmotor am Qwiic Modul
             return a_QwiicMotorSpeed[eQwiicMotor.ma] >= c_MotorStop
         }
-        else if (is_v3_2Motoren()) {        // Buggy mit 2 Motoren
+        else if (n_v3_2Motoren) {        // Buggy mit 2 Motoren
             return a_DualMotor_percent[eDualMotor.M0] >= 0
         }
         else {                              // Standard M0 Fahrmotor an Calliope v3 Pins
