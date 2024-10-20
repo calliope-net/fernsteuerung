@@ -15,8 +15,7 @@ namespace receiver { // r-receiver.ts
     export let n_v3_2Motoren = false // Buggy true
 
     // eHardware ist der Index für folgende Arrays:
-    //export let a_ModellFunkgruppe = [0xA8, 239] // v3, car4
-
+  
     // Calliope v3 freie Pins: C8, C9, C12, C13, C14, C15
     export let a_PinRelay: DigitalPin[] = [109, DigitalPin.P0]     // 0:DigitalPin.C9 GPIO2
     export let a_PinServo: AnalogPin[] = [108, AnalogPin.C4]       // 0:AnalogPin.C8 GPIO1
@@ -41,17 +40,9 @@ namespace receiver { // r-receiver.ts
     //export const pinSpurlinks = DigitalPin.C11     // 9V fischertechnik 128598 IR-Spursensor
 
 
-    export enum eDualMotor { M0, M1, M0_M1 } // muss mit v3 identisch sein
-
     export const c_MotorStop = 128
-    // export let a_DualMotorSpeed = [c_MotorStop, c_MotorStop]
-    /* 
-        export const c_Servo90_geradeaus = 90
-        export let n_Servo90KorrekturFaktor = 1 // Winkel für geradeaus wird beim Start eingestellt
-        export let n_Servo90Winkel = c_Servo90_geradeaus // aktuell eingestellter Winkel
-    
-     */
-
+    export enum eDualMotor { M0, M1, M0_M1 } // muss mit v3 identisch sein
+   
     // group="calliope-net.github.io/fernsteuerung"
     // block="beim Start: Calliope v3 \\| 2 Motoren || • Encoder %encoder • Rad ⌀ mm %radDmm • Funkgruppe anzeigen %zf" weight=9
     // encoder.shadow="toggleOnOff" encoder.defl=1
@@ -82,7 +73,6 @@ namespace receiver { // r-receiver.ts
     //% encoder.shadow="toggleOnOff"
     //% radDmm.min=60 radDmm.max=80 radDmm.defl=65
     //% zf.shadow="toggleYesNo" zf.defl=1
-    // funkgruppe.min=160 funkgruppe.max=191
     // inlineInputMode=inline
     export function beimStart(modell: eHardware, servoGeradeaus: number, encoder: boolean, radDmm: number, zf = true/* , funkgruppe?: number */) { //  Funkgruppe %funkgruppe
         n_Hardware = modell // !vor pinRelay!
@@ -138,22 +128,14 @@ namespace receiver { // r-receiver.ts
     }
 
 
-
-
-
     //% group="calliope-net.github.io/fernsteuerung"
     //% block="Knopf A+B halten, Servo Korrektur" weight=4
     export function buttonABhold() {
         //btf.n_servoKorrekturButton = !btf.n_servoKorrekturButton
         btf.n_StorageChange = btf.eStorageBuffer.servoKorrektur
     }
-    /* 
-        // group="calliope-net.github.io/fernsteuerung"
-        // block="Modell mit 2 Motoren ohne Servo (Buggy)" weight=3
-        export function is_v3_2Motoren() {
-            return n_Hardware == eHardware.v3 && btf.getStorageFunkgruppe() == btf.eFunkgruppe.b4
-        }
-     */
+  
+
 
     // ========== group="Fahren und Lenken"
 
@@ -270,72 +252,5 @@ namespace receiver { // r-receiver.ts
             //     onDualMotorPowerHandler(motor, duty_percent) // v3 Ereignis Block auslösen, nur wenn benutzt
         }
     }
-    /* 
-        // ========== group="Servo (vom gewählten Modell)"
-    
-        // group="Servo (vom gewählten Modell)"
-        // block="Servo (Picker) %servo °" weight=4
-        // servo.shadow=protractorPicker servo.defl=90
-        //export function pinServoPicker(servo: number) {
-        //    pinServo16(btf.protractorPicker(servo))
-        //}
-    
-        //% group="Servo (vom gewählten Modell)"
-        //% block="Servo (1 ↖ 16 ↗ 31) %winkel" weight=3
-        //% winkel.min=1 winkel.max=31 winkel.defl=16
-        export function pinServo16(winkel: number) {
-            if (btf.between(winkel, 1, 31))
-                // Formel: (x+14)*3
-                // winkel 1..16..31 links und rechts tauschen (32-winkel) 32-1=31 32-16=16 32-31=1
-                // winkel 31..16..1
-                // 32+14=46 46-1=45     46-16=30    46-31=15
-                //          45*3=135    30*3=90     15*3=45
-                pinServo90((14 + (32 - winkel)) * 3)  // 1->135 16->90 31->45
-            //pinServo90((46 - winkel) * 3)  // 1->135 16->90 31->45
-            //  servo_set90((14 + winkel) * 3)  // 1->135 16->90 31->45
-            else
-                pinServo90(c_Servo90_geradeaus)
-        }
-    
-        //% group="Servo (vom gewählten Modell)"
-        //% block="Servo (135° ↖ 90° ↗ 45°) %winkel °" weight=2
-        //% winkel.min=45 winkel.max=135 winkel.defl=90
-        export function pinServo90(winkel: number) {
-            // Richtung ändern: 180-winkel
-            // (0+14)*3=42 keine Änderung, gültige Werte im Buffer 1-31  (1+14)*3=45  (16+14)*3=90  (31+14)*3=135
-            if (btf.between(winkel, 45, 135) && n_Servo90Winkel != winkel) {
-                n_Servo90Winkel = winkel
-                // pins.servoWritePin(a_PinServo[n_Hardware], winkel + (n_Servo90Geradeaus - c_Servo_geradeaus))
-                //pins.servoWritePin(a_PinServo[n_Hardware], winkel * (n_Servo90Geradeaus / c_Servo_geradeaus))
-                pins.servoWritePin(a_PinServo[n_Hardware], winkel * n_Servo90KorrekturFaktor)
-            }
-        }
-    
-        //% group="Servo (vom gewählten Modell)"
-        //% block="Servo geradeaus" weight=1
-        export function pinServoGeradeaus() {
-            pinServo90(c_Servo90_geradeaus)
-        }
-     */
-    // ========== group="Motor (vom gewählten Modell)"
-
-    //% group="Motor (vom gewählten Modell)"
-    //% block="Motor (-100 ↓ 0 ↑ +100) %speed \\%" weight=5
-    //% speed.shadow=speedPicker
-    /* export function selectMotorPicker(speed: number) {
-        selectMotor(btf.speedPicker(speed))
-    } 
-
-    //% group="Motor (vom gewählten Modell)"
-    //% block="Motor (1 ↓ 128 ↑ 255) %speed (128 ist STOP)" weight=4
-    //% speed.min=0 speed.max=255 speed.defl=128
-    export function selectMotor(speed: number) {
-        if (n_Hardware == eHardware.car4) // Fahrmotor am Qwiic Modul
-            qwiicMotor128(eQwiicMotor.ma, speed)
-        else // Standard M0 Fahrmotor an Calliope v3 Pins
-            dualMotor128(eDualMotor.M0, speed)
-    }
-*/
-
-
+  
 } // r-receiver.ts
