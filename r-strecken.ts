@@ -44,7 +44,7 @@ namespace receiver { // r-strecken.ts
 
         abstandSensor = abstandSensor && abstand > 0 && motor > c_MotorStop && selectAbstandSensorConnected()
 
-        //   btf.setLedColors(btf.eRgbLed.b, Colors.Yellow, abstandSensor)
+        btf.setLedColors(btf.eRgbLed.b, Colors.Yellow, abstandSensor)
 
 
         if (motor != 0 && motor != c_MotorStop && servo != 0 && strecke != 0) {
@@ -54,7 +54,10 @@ namespace receiver { // r-strecken.ts
             btf.resetTimer() // langes Timeout 30s, Abschaltung verhindern
 
             if (checkEncoder && encoderRegisterEvent()) { // n_EncoderEventRegistered && n_hasEncoder
-                btf.setLedColors(btf.eRgbLed.c, Colors.Green)
+                if (n_v3_2Motoren)
+                    btf.setLedColors(btf.eRgbLed.c, Colors.Blue)
+                else
+                    btf.setLedColors(btf.eRgbLed.c, Colors.Green)
 
                 let timeout_Encoder = abstandSensor ? 80 : 10 // 2 s Timeout wenn Encoder nicht zählt
 
@@ -170,7 +173,7 @@ namespace receiver { // r-strecken.ts
             n_zweiEncoder = n_v3_2Motoren
             n_EncoderFaktor = 63.9 * (26 / 14) / (n_radDurchmesser_mm / 10 * Math.PI) // 5.811429
 
-            btf.setLedColors(btf.eRgbLed.b, Colors.Blue)
+            // btf.setLedColors(btf.eRgbLed.b, Colors.Blue)
             // ========== Event Handler registrieren
             pins.onPulsed(a_PinEncoderM0[n_Hardware], PulseValue.High, function () {//
                 if (selectMotorRichtungVor()) //(selectMotorSpeed() > c_MotorStop)
@@ -197,7 +200,7 @@ namespace receiver { // r-strecken.ts
 
 
             if (n_zweiEncoder) {
-                btf.setLedColors(btf.eRgbLed.b, Colors.White)
+                // btf.setLedColors(btf.eRgbLed.b, Colors.White)
 
                 // ========== Event Handler registrieren
                 pins.onPulsed(a_PinEncoderM1[n_Hardware], PulseValue.High, function () {
