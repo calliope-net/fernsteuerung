@@ -113,6 +113,7 @@ namespace receiver { // r-receiver.ts
                 for (let xLed = 0; xLed < ai.length; xLed++) {
                     btf.zeigeBIN(ai[xLed], btf.ePlot.bin, xLed)
                 }
+                btf.setClearScreen()
             }
         }
 
