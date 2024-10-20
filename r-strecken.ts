@@ -66,7 +66,7 @@ namespace receiver { // r-strecken.ts
 
                 while (n_EncoderAutoStop) //
                 {
-                    if (timeout_Encoder-- <= 0 && Math.abs(n_EncoderCounter_M1) < 10) { // kein Impuls nach 2s: kein Encoder vorhanden
+                    if (timeout_Encoder-- <= 0 && Math.abs(n_EncoderCounterM0) < 10) { // kein Impuls nach 2s: kein Encoder vorhanden
                         n_hasEncoder = false // bei ersten 2s timeout false, nächster Aufruf zählt dann nach Zeit
                         btf.setLedColors(btf.eRgbLed.c, Colors.Red)
                         ret = false
@@ -149,7 +149,7 @@ namespace receiver { // r-strecken.ts
     export let n_hasEncoder = false
     let n_EncoderFaktor = 63.9 * (26 / 14) / (8 * Math.PI) // 63.9 Motorwelle * (26/14) Zahnräder / (8cm * PI) Rad Umfang = 4.6774502 cm
     let n_EncoderCounterM0: number = 0 // Impuls Zähler negativ wenn rückwärts
-    let n_EncoderCounter_M1: number = 0 // Impuls Zähler negativ wenn rückwärts
+    let n_EncoderCounterM1: number = 0 // Impuls Zähler negativ wenn rückwärts
     let n_EncoderStrecke_impulse: number = 0
     let n_EncoderAutoStop = false // true während der Fahrt, false bei Stop nach Ende der Strecke
     let n_radDurchmesser_mm = 65 // radDmm: Rad Durchmesser in Millimeter
@@ -181,17 +181,17 @@ namespace receiver { // r-strecken.ts
                 encoderAutoStop(false) // M0
             })
 
-                /* if (n_EncoderStrecke_impulse > 0 && Math.abs(n_EncoderCounter) >= n_EncoderStrecke_impulse) {
-                    n_EncoderStrecke_impulse = 0 // Ereignis nur einmalig auslösen, wieder aktivieren mit encoder_start
+            /* if (n_EncoderStrecke_impulse > 0 && Math.abs(n_EncoderCounter) >= n_EncoderStrecke_impulse) {
+                n_EncoderStrecke_impulse = 0 // Ereignis nur einmalig auslösen, wieder aktivieren mit encoder_start
 
-                    if (n_EncoderAutoStop) {
-                        selectMotorStop() // selectMotor(c_MotorStop)
-                        n_EncoderAutoStop = false
-                    }
+                if (n_EncoderAutoStop) {
+                    selectMotorStop() // selectMotor(c_MotorStop)
+                    n_EncoderAutoStop = false
+                }
 
-                    if (onEncoderStopHandler)
-                        onEncoderStopHandler(n_EncoderCounter / n_EncoderFaktor)
-                } */
+                if (onEncoderStopHandler)
+                    onEncoderStopHandler(n_EncoderCounter / n_EncoderFaktor)
+            } */
 
             // ========== Event Handler registrieren
 
@@ -202,19 +202,19 @@ namespace receiver { // r-strecken.ts
                 // ========== Event Handler registrieren
                 pins.onPulsed(a_PinEncoderM1[n_Hardware], PulseValue.High, function () {
                     if (selectMotorRichtungVor()) //(selectMotorSpeed() > c_MotorStop)
-                        n_EncoderCounter_M1++ // vorwärts
+                        n_EncoderCounterM1++ // vorwärts
                     else
-                        n_EncoderCounter_M1-- // rückwärts
+                        n_EncoderCounterM1-- // rückwärts
 
                     encoderAutoStop(true) // M1
                 })
                 // ========== Event Handler registrieren
 
-               // pins.setPull(a_PinEncoderM1[n_Hardware], PinPullMode.PullUp) // Encoder PIN Eingang PullUp
+                pins.setPull(a_PinEncoderM1[n_Hardware], PinPullMode.PullUp) // Encoder PIN Eingang PullUp
             }
 
             // ! setPull muss nach allen onPulsed stehen, das deaktiviert die Events wieder !
-           // pins.setPull(a_PinEncoderM0[n_Hardware], PinPullMode.PullUp)  // Encoder PIN Eingang PullUp
+            pins.setPull(a_PinEncoderM0[n_Hardware], PinPullMode.PullUp)  // Encoder PIN Eingang PullUp
 
             n_EncoderEventRegistered = true
         }
@@ -224,7 +224,7 @@ namespace receiver { // r-strecken.ts
     function encoderAutoStop(m1: boolean) {
         let encoderWert_impulse = Math.abs(n_EncoderCounterM0)
         if (n_zweiEncoder)
-            encoderWert_impulse = Math.idiv(encoderWert_impulse + Math.abs(n_EncoderCounter_M1), 2)
+            encoderWert_impulse = Math.idiv(encoderWert_impulse + Math.abs(n_EncoderCounterM1), 2)
 
         if (n_EncoderStrecke_impulse > 0 && encoderWert_impulse >= n_EncoderStrecke_impulse) { // && Math.abs(n_EncoderCounterM0) >=
             n_EncoderStrecke_impulse = 0 // Ereignis nur einmalig auslösen, wieder aktivieren mit encoder_start
@@ -248,7 +248,7 @@ namespace receiver { // r-strecken.ts
     export function encoderStartStrecke(autostop: boolean, strecke: number, impulse = false) {
         if (encoderRegisterEvent()) {
             n_EncoderCounterM0 = 0 // Impuls Zähler zurück setzen
-            n_EncoderCounter_M1 = 0
+            n_EncoderCounterM1 = 0
 
             if (strecke > 0) {
                 n_EncoderStrecke_impulse = impulse ? strecke : Math.round(strecke * n_EncoderFaktor)
@@ -281,9 +281,9 @@ namespace receiver { // r-strecken.ts
     //% impulse.shadow=toggleYesNo
     export function encoderCounterM1(impulse = false) {
         if (impulse)
-            return n_EncoderCounter_M1
+            return n_EncoderCounterM1
         else
-            return Math.round(n_EncoderCounter_M1 / n_EncoderFaktor) + 1
+            return Math.round(n_EncoderCounterM1 / n_EncoderFaktor)
     }
 
     //% group="2 Encoder" subcategory="Strecken"
