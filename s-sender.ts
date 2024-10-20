@@ -12,7 +12,7 @@ namespace sender { // s-sender.ts
         if (!btf.simulator()) {
             btf.loadStorageBuffer4FromFlash(funkgruppe) // prüft und speichert in a_StorageBuffer
 
-            setStatusModell(btf.getStorageModell(), zf) // zeigt Modell an und schreibt auch in Flash
+            setStatusModell(btf.getStorageModell(), zf, 1500) // zeigt Modell an und schreibt auch in Flash
 
             if (zf || funkgruppe != undefined)
                 btf.zeigeFunkgruppe()
@@ -43,7 +43,7 @@ namespace sender { // s-sender.ts
             basic.pause(600) // warten bis gesendet (aller 400ms) und wieder false
             if (!btf.n_sendReset) {
                 setStatusFunktion(eFunktion.ng) // nach dem Empfänger auch den Sender zurück setzen, sendet dann nicht mehr
-                zeigeModellImagePause(1500)
+                zeigeModellImagePause(1000)
             }
         }
     }
@@ -84,10 +84,13 @@ namespace sender { // s-sender.ts
             // flash = true
         }
         getCurrentStatusBuffer()[eStatusBuffer.modell] = pModell
+        let t = input.runningTime() + pause // ms
         if (zeigeModell)
-            zeigeModellImagePause(pause)
-        // if (flash)
-        btf.setStorageModell(pModell) // geändertes Modell wird auch im Flash gespeichert
+            zeigeModellImagePause(0)
+        btf.setStorageModell(pModell) // geändertes Modell wird auch im Flash gespeichert, das dauert lange
+        t -= input.runningTime()
+        if (t < 0)
+            basic.pause(t) // Rest warten
     }
     export function getStatusModell(): eModell {
         return getCurrentStatusBuffer()[eStatusBuffer.modell]
