@@ -84,13 +84,15 @@ namespace sender { // s-sender.ts
             // flash = true
         }
         getCurrentStatusBuffer()[eStatusBuffer.modell] = pModell
-        let t = input.runningTime() + pause // ms
+        //let t = input.runningTime() + pause // ms
         if (zeigeModell)
             zeigeModellImagePause(0)
         btf.setStorageModell(pModell) // geändertes Modell wird auch im Flash gespeichert, das dauert lange
-        t -= input.runningTime()
-        if (t < 0)
-            basic.pause(t) // Rest warten
+        //t -= input.runningTime()
+        //if (t < 0)
+        //    basic.pause(t) // Rest warten
+        if (zeigeModell && pause > 0)
+            basic.pause(pause)
     }
     export function getStatusModell(): eModell {
         return getCurrentStatusBuffer()[eStatusBuffer.modell]
