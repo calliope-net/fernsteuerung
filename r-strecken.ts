@@ -54,12 +54,13 @@ namespace receiver { // r-strecken.ts
             btf.resetTimer() // langes Timeout 30s, Abschaltung verhindern
 
             if (checkEncoder && encoderRegisterEvent()) { // n_EncoderEventRegistered && n_hasEncoder
-                if (n_v3_2Motoren)
-                    btf.setLedColors(btf.eRgbLed.c, Colors.Blue)
-                else
-                    btf.setLedColors(btf.eRgbLed.c, Colors.Green)
+                // if (n_v3_2Motoren)
+                //     btf.setLedColors(btf.eRgbLed.c, Colors.Blue)
+                // else
+                //     btf.setLedColors(btf.eRgbLed.c, Colors.Green)
 
                 let timeout_Encoder = abstandSensor ? 80 : 10 // 2 s Timeout wenn Encoder nicht zählt
+                let rgbLed_cEncoder = Colors.Off
 
                 encoderStartStrecke(true, strecke, impulse) // stellt n_EncoderCounter auf 0
 
@@ -71,11 +72,18 @@ namespace receiver { // r-strecken.ts
                 {
                     if (timeout_Encoder-- <= 0 && Math.abs(n_EncoderCounterM0) < 10) { // kein Impuls nach 2s: kein Encoder vorhanden
                         n_hasEncoder = false // bei ersten 2s timeout false, nächster Aufruf zählt dann nach Zeit
-                        btf.setLedColors(btf.eRgbLed.c, Colors.Red)
+                        btf.setLedColors(btf.eRgbLed.c, Colors.Red) // kein Encoder rot
                         ret = false
                         break
                     }
-
+                    if (rgbLed_cEncoder == Colors.Off && Math.abs(n_EncoderCounterM0) > 10) { // nur eRgbLed
+                        if (Math.abs(n_EncoderCounterM1) > 10)
+                            rgbLed_cEncoder = Colors.Blue  // 2 Encoder blau
+                        else
+                            rgbLed_cEncoder = Colors.Green // 1 Encoder grün
+                        btf.setLedColors(btf.eRgbLed.c, rgbLed_cEncoder)
+                    }
+                   
                     x++
                     if (abstandSensor && (selectAbstand_cm(true) < abstand) && x > 4) { // && motor > c_MotorStop && abstand > 0 && selectAbstandSensorConnected()
                         btf.setLedColors(btf.eRgbLed.b, Colors.Red)
