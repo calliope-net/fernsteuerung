@@ -154,9 +154,12 @@ namespace btf { // b-fernsteuerung.ts
             if (receivedBuffer.length == 19
                 //  && (a_receivedPacketSerialNumber == 0 || a_receivedPacketSerialNumber == radio.receivedPacket(RadioPacketProperty.SerialNumber))
             ) {
+                if ((receivedBuffer[0] & 0x80) == 0x80) // Bit 7 reset
+                    control.reset() // Soft-Reset, Calliope zurücksetzen
+
                 let isBetriebsart00Fahren = (receivedBuffer[0] & 0b00110000) == e0Betriebsart.p0Fahren && (receivedBuffer[3] & 0b00111111) != 0
                 // leerer Buffer (bei Fahrplan) soll nicht als Betriebsart 00 erkannt werden; zusätzlich muss Motor aktiviert sein
-                
+
                 if ( // ODER ||
                     !isBetriebsart00Fahren // 01 10 11 in den Betriebsarten immer true, SerialNumber ignorieren
                     ||
@@ -166,8 +169,8 @@ namespace btf { // b-fernsteuerung.ts
                 ) {
                     a_receivedBuffer19 = receivedBuffer // lokal speichern
 
-                    if ((receivedBuffer[0] & 0x80) == 0x80) // Bit 7 reset
-                        control.reset() // Soft-Reset, Calliope zurücksetzen
+                    //if ((receivedBuffer[0] & 0x80) == 0x80) // Bit 7 reset
+                    //    control.reset() // Soft-Reset, Calliope zurücksetzen
 
                     if (isBetriebsart00Fahren) // SerialNumber nur bei Joystick speichern und später beachten
                         a_receivedPacketSerialNumber = radio.receivedPacket(RadioPacketProperty.SerialNumber)
