@@ -161,12 +161,13 @@ namespace btf { // b-fernsteuerung.ts
                     ||
                     a_receivedPacketSerialNumber == radio.receivedPacket(RadioPacketProperty.SerialNumber)
                 ) {
-
-                    a_receivedPacketSerialNumber = radio.receivedPacket(RadioPacketProperty.SerialNumber)
                     a_receivedBuffer19 = receivedBuffer // lokal speichern
 
                     if ((receivedBuffer[0] & 0x80) == 0x80) // Bit 7 reset
                         control.reset() // Soft-Reset, Calliope zurücksetzen
+
+                    if (isBetriebsart(receivedBuffer, e0Betriebsart.p0Fahren))
+                        a_receivedPacketSerialNumber = radio.receivedPacket(RadioPacketProperty.SerialNumber)
 
                     n_timeoutDisbled =
                         ((receivedBuffer[0] & 0x20) == 0x20) // Bit 5 Programm=1 / Betriebsart ..10.... oder ..11....
