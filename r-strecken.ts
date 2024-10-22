@@ -83,7 +83,7 @@ namespace receiver { // r-strecken.ts
                             rgbLed_cEncoder = Colors.Green // 1 Encoder grün
                         btf.setLedColors(btf.eRgbLed.c, rgbLed_cEncoder)
                     }
-                   
+
                     x++
                     if (abstandSensor && (selectAbstand_cm(true) < abstand) && x > 4) { // && motor > c_MotorStop && abstand > 0 && selectAbstandSensorConnected()
                         btf.setLedColors(btf.eRgbLed.b, Colors.Red)
@@ -252,7 +252,7 @@ namespace receiver { // r-strecken.ts
 
 
     //% group="Encoder" subcategory="Strecken"
-    //% block="Encoder starten • AutoStop %autostop bei (cm) %strecke || Impulse %impulse" weight=6
+    //% block="Encoder starten • AutoStop %autostop bei (cm) %strecke || Impulse %impulse" weight=7
     //% autostop.shadow="toggleYesNo" autostop.defl=1
     //% strecke.min=1 strecke.max=255 strecke.defl=20
     //% impulse.shadow=toggleYesNo
@@ -278,7 +278,7 @@ namespace receiver { // r-strecken.ts
 
 
     //% group="Encoder" subcategory="Strecken"
-    //% block="Encoder M0 Wert (±cm) || Impulse %impulse" weight=4
+    //% block="Encoder M0 Wert (±cm) || Impulse %impulse" weight=6
     //% impulse.shadow=toggleYesNo
     export function encoderCounterM0(impulse = false) {
         if (impulse)
@@ -287,8 +287,33 @@ namespace receiver { // r-strecken.ts
             return Math.round(n_EncoderCounterM0 / n_EncoderFaktor)
     }
 
+    // ========== EVENT HANDLER === sichtbarer Event-Block
+    let onEncoderStopHandler: (cm: number) => void
+
+    //% group="Encoder" subcategory="Strecken"
+    //% block="wenn Ziel erreicht" weight=3
+    //% draggableParameters=reporter
+    export function onEncoderStop(cb: (cm: number) => void) {
+        onEncoderStopHandler = cb
+    }
+    // ========== EVENT HANDLER === sichtbarer Event-Block
+
+
+
+    //% group="Encoder" subcategory="Strecken"
+    //% block="Encoder Timeout" weight=1
+    export function timeoutStrecke() {
+        n_EncoderAutoStop = false
+        selectMotorStop()
+        btf.setLedColors(btf.eRgbLed.a, Colors.Green, true, true)
+    }
+
+
+
+    // ========== group="2 Encoder" subcategory="Strecken"
+
     //% group="2 Encoder" subcategory="Strecken"
-    //% block="Encoder M1 Wert (±cm) || Impulse %impulse" weight=3
+    //% block="Encoder M1 Wert (±cm) || Impulse %impulse" weight=4
     //% impulse.shadow=toggleYesNo
     export function encoderCounterM1(impulse = false) {
         if (impulse)
@@ -303,18 +328,5 @@ namespace receiver { // r-strecken.ts
     export function encoderMittelwert(impulse = false) {
         return Math.idiv(Math.abs(encoderCounterM0(impulse)) + Math.abs(encoderCounterM1(impulse)), 2)
     }
-
-    // ========== EVENT HANDLER === sichtbarer Event-Block
-    let onEncoderStopHandler: (cm: number) => void
-
-    //% group="Encoder" subcategory="Strecken"
-    //% block="wenn Ziel erreicht" weight=1
-    //% draggableParameters=reporter
-    export function onEncoderStop(cb: (cm: number) => void) {
-        onEncoderStopHandler = cb
-    }
-    // ========== EVENT HANDLER === sichtbarer Event-Block
-
-
 
 } // r-strecken.ts
