@@ -148,8 +148,8 @@ namespace receiver { // r-beispiele.ts
 
 
 
-    export function fernProgrammierung(buffer: Buffer, abstand: boolean, links_hell: boolean, rechts_hell: boolean) {
-        if (btf.getaktiviert(buffer, btf.e3aktiviert.ue) && abstand) { // 2
+  //  export function fernProgrammierung(buffer: Buffer, abstand: boolean, links_hell: boolean, rechts_hell: boolean) {
+        /* if (btf.getaktiviert(buffer, btf.e3aktiviert.ue) && abstand) { // 2
 
             selectMotor128Servo16(
                 btf.getByte(buffer, btf.eBufferPointer.ue, btf.eBufferOffset.b0_Motor),
@@ -157,7 +157,7 @@ namespace receiver { // r-beispiele.ts
             )
             // selectMotor(btf.getByte(buffer, btf.eBufferPointer.ue, btf.eBufferOffset.b0_Motor)) // 4
             // pinServo16(btf.getByte(buffer, btf.eBufferPointer.ue, btf.eBufferOffset.b1_Servo)) // 5
-        }
+        } */
         /* weiter wie oben
         
         
@@ -182,7 +182,7 @@ namespace receiver { // r-beispiele.ts
               pinServo16(btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo)) // 2
           }
    */
-    }
+  //  }
 
 
 
