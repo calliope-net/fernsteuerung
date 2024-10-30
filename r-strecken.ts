@@ -1,8 +1,10 @@
 
 namespace receiver { // r-strecken.ts
 
+    let n_raiseEncoderEvent_gestartet = false
+    let n_BufferPointer = btf.eBufferPointer.m0
 
-    //% group="2 Fahrplan: 5 Strecken" subcategory="Strecken"
+    //% group="2 Fahrplan (Encoder Event in dauerhaft Schleife)" subcategory="Strecken"
     //% block="2 Encoder Ereignis auslösen %buffer || • Start+ %start_cm cm • Pause %ms ms" weight=8
     //% buffer.shadow=btf_receivedBuffer19
     //% start_cm.defl=5
@@ -12,17 +14,66 @@ namespace receiver { // r-strecken.ts
     export function buffer_raiseEncoderEvent(buffer: Buffer, start_cm = 5, ms = 25) {
         if (buffer) {
 
+            if (btf.isBetriebsart(buffer, btf.e0Betriebsart.p2Fahrplan)) { // Betriebsart 2 Fahrplan senden
+
+                if (!n_raiseEncoderEvent_gestartet) {
+                    n_raiseEncoderEvent_gestartet = true
+                    n_BufferPointer = btf.eBufferPointer.m0
+                }
+                let impulse = false
+                let strecke_cm = btf.getByte(buffer, n_BufferPointer, btf.eBufferOffset.b2_Fahrstrecke)
+                let strecke_impulse = 0
+
+
+                if (strecke_cm > 0) {
+                    strecke_impulse = impulse ? strecke_cm : Math.round(strecke_cm * n_EncoderFaktor)
+                    // n_EncoderAutoStop = autostop
+                }
+                //else
+                //    strecke_impulse = 0
+
+
+                let encoderWert_impulse = Math.abs(n_EncoderCounterM0)
+                if (n_zweiEncoder)
+                    encoderWert_impulse = Math.idiv(encoderWert_impulse + Math.abs(n_EncoderCounterM1), 2)
+
+
+                if (strecke_impulse > 0 && encoderWert_impulse >= strecke_impulse) { // && Math.abs(n_EncoderCounterM0) >=
+                    //strecke_impulse = 0 // Ereignis nur einmalig auslösen, wieder aktivieren mit encoder_start
+
+                    //if (n_EncoderAutoStop) {
+                    selectMotorStop() // selectMotor(c_MotorStop)
+                    //  n_EncoderAutoStop = false
+                    //}
+
+                    //if (onEncoderStopHandler)
+                    //    onEncoderStopHandler(encoderWert_impulse / n_EncoderFaktor)
+                }
+
+
+            }
             // Events müssen auch mit on=false aufgerufen werden, damit das Programm beendet wird (Motor Stop)
-           /*  raiseAbstandEvent( // MD-5 Hindernis ausweichen ODER // MC-4 Spur folgen und Abstand Sensor aktiviert
-                hindernis_ausweichen(buffer) || (spur_folgen(buffer) && btf.getSensor(buffer, btf.eBufferPointer.mc, btf.eSensor.b6Abstand)),
-                btf.getAbstand(buffer),
-                btf.getAbstand(buffer) + start_cm,
-                ms,
-                // undefined, // btf.getSensor(buffer, btf.eBufferPointer.mc, btf.eSensor.b6Abstand),
-                1
-            ) */
+            /*  raiseAbstandEvent( // MD-5 Hindernis ausweichen ODER // MC-4 Spur folgen und Abstand Sensor aktiviert
+                 hindernis_ausweichen(buffer) || (spur_folgen(buffer) && btf.getSensor(buffer, btf.eBufferPointer.mc, btf.eSensor.b6Abstand)),
+                 btf.getAbstand(buffer),
+                 btf.getAbstand(buffer) + start_cm,
+                 ms,
+                 // undefined, // btf.getSensor(buffer, btf.eBufferPointer.mc, btf.eSensor.b6Abstand),
+                 1
+             ) */
         }
     }
+
+    // ========== EVENT HANDLER === sichtbarer Event-Block
+    let onEncoderEventHandler: (fahren: number, lenken: number, strecke_cm: number, encoder_cm: number) => void
+
+    //% group="2 Fahrplan (Encoder Event in dauerhaft Schleife)" subcategory="Strecken"
+    //% block="wenn Encoder Ereignis" weight=3
+    //% draggableParameters=reporter
+    export function onEncoderEvent(cb: (fahren: number, lenken: number, strecke_cm: number, encoder_cm: number) => void) {
+        onEncoderEventHandler = cb
+    }
+    // ========== EVENT HANDLER === sichtbarer Event-Block
 
 
 
