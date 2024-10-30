@@ -2,6 +2,32 @@
 namespace receiver { // r-strecken.ts
 
 
+    //% group="2 Fahrplan: 5 Strecken" subcategory="Strecken"
+    //% block="2 Encoder Ereignis auslösen %buffer || • Start+ %start_cm cm • Pause %ms ms" weight=8
+    //% buffer.shadow=btf_receivedBuffer19
+    //% start_cm.defl=5
+    //% ms.defl=25
+    // inlineInputMode=inline 
+    //expandableArgumentMode="toggle"
+    export function buffer_raiseEncoderEvent(buffer: Buffer, start_cm = 5, ms = 25) {
+        if (buffer) {
+
+            // Events müssen auch mit on=false aufgerufen werden, damit das Programm beendet wird (Motor Stop)
+           /*  raiseAbstandEvent( // MD-5 Hindernis ausweichen ODER // MC-4 Spur folgen und Abstand Sensor aktiviert
+                hindernis_ausweichen(buffer) || (spur_folgen(buffer) && btf.getSensor(buffer, btf.eBufferPointer.mc, btf.eSensor.b6Abstand)),
+                btf.getAbstand(buffer),
+                btf.getAbstand(buffer) + start_cm,
+                ms,
+                // undefined, // btf.getSensor(buffer, btf.eBufferPointer.mc, btf.eSensor.b6Abstand),
+                1
+            ) */
+        }
+    }
+
+
+
+
+
     // ========== group="Geschwindigkeit (-100 ↓ 0 ↑ +100), Winkel (0° ↖ 90° ↗ 180°)" subcategory="Strecken"
 
     //% group="Geschwindigkeit (-100 ↓ 0 ↑ +100), Winkel (0° ↖ 90° ↗ 180°)" subcategory="Strecken"
