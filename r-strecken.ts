@@ -32,8 +32,7 @@ namespace receiver { // r-strecken.ts
                 }
 
                 if (n_BufferPointer <= btf.eBufferPointer.md) { // nach Ende ist n_BufferPointer > md
-                    btf.zeigeBIN_BufferPointer(n_BufferPointer, 2)
-
+            
                     let fahren = btf.getByte(buffer, n_BufferPointer, btf.eBufferOffset.b0_Motor)
                     let lenken = btf.getByte(buffer, n_BufferPointer, btf.eBufferOffset.b1_Servo)
                     let strecke_cm = btf.getByte(buffer, n_BufferPointer, btf.eBufferOffset.b2_Fahrstrecke)
@@ -74,7 +73,7 @@ namespace receiver { // r-strecken.ts
                             // else {
                             //     onEncoderEventHandler(c_MotorStop, 0, strecke_cm, n_BufferPointer, false, encoderWert_impulse / n_EncoderFaktor)
                             // }
-
+                            btf.zeigeBIN_BufferPointer(n_BufferPointer, 2)
                         }
                     } // los fahren
                     else {
