@@ -25,7 +25,6 @@ namespace receiver { // r-strecken.ts
 
                     n_EncoderCounterM0 = 0 // Impuls Zähler zurück setzen
                     n_EncoderCounterM1 = 0
-
                 }
 
                 if (n_BufferPointer <= btf.eBufferPointer.md) {
@@ -53,19 +52,25 @@ namespace receiver { // r-strecken.ts
                     if (strecke_impulse > 0 && encoderWert_impulse < strecke_impulse) {
                         // los fahren
 
-                        if (onEncoderEventHandler && n_BufferPointer_handled != n_BufferPointer) {
+                        if (onEncoderEventHandler && n_BufferPointer_handled != n_BufferPointer) { // nur einmal los fahren bei gleichem n_BufferPointer
                             n_BufferPointer_handled = n_BufferPointer
 
                             let fahren = btf.getByte(buffer, n_BufferPointer, btf.eBufferOffset.b0_Motor)
                             let lenken = btf.getByte(buffer, n_BufferPointer, btf.eBufferOffset.b1_Servo)
 
-                            onEncoderEventHandler(fahren, lenken, strecke_cm, n_BufferPointer, encoderWert_impulse / n_EncoderFaktor) // nur einmal los fahren bei gleichem n_BufferPointer
+                            if (fahren > 0 && fahren != c_MotorStop && lenken > 0) {
+                                onEncoderEventHandler(fahren, lenken, strecke_cm, n_BufferPointer, true, encoderWert_impulse / n_EncoderFaktor)
+                            }
+                            else {
+                                onEncoderEventHandler(c_MotorStop, 0, strecke_cm, n_BufferPointer, false, encoderWert_impulse / n_EncoderFaktor)
+                            }
+
                         }
                     } // los fahren
                     else {
                         // Stop
                         if (onEncoderEventHandler)
-                            onEncoderEventHandler(c_MotorStop, 0, strecke_cm, n_BufferPointer, encoderWert_impulse / n_EncoderFaktor)
+                            onEncoderEventHandler(c_MotorStop, 0, strecke_cm, n_BufferPointer, true, encoderWert_impulse / n_EncoderFaktor)
 
                         //if (n_BufferPointer < btf.eBufferPointer.md) {
                         // nächste Strecke fahren
@@ -101,7 +106,8 @@ namespace receiver { // r-strecken.ts
 
 
             } // Betriebsart 2 Fahrplan senden
-            // else
+            else
+                n_RadioPacket_TimeStamp = 0
             //    n_raiseEncoderEvent_gestartet = false
 
 
@@ -109,12 +115,12 @@ namespace receiver { // r-strecken.ts
     }
 
     // ========== EVENT HANDLER === sichtbarer Event-Block
-    let onEncoderEventHandler: (fahren: number, lenken: number, strecke_cm: number, nr: btf.eBufferPointer, encoder_cm: number) => void
+    let onEncoderEventHandler: (fahren: number, lenken: number, strecke_cm: number, nr: btf.eBufferPointer, ok: boolean, encoder_cm: number) => void
 
     //% group="2 Fahrplan (Encoder Event in dauerhaft Schleife)" subcategory="Strecken"
     //% block="wenn Encoder Ereignis" weight=3
     //% draggableParameters=reporter
-    export function onEncoderEvent(cb: (fahren: number, lenken: number, strecke: number, nr: btf.eBufferPointer, encoder: number) => void) {
+    export function onEncoderEvent(cb: (fahren: number, lenken: number, strecke: number, nr: btf.eBufferPointer, ok: boolean, encoder: number) => void) {
         onEncoderEventHandler = cb
     }
     // ========== EVENT HANDLER === sichtbarer Event-Block
