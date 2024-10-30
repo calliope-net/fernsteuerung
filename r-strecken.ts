@@ -3,22 +3,24 @@ namespace receiver { // r-strecken.ts
 
     let n_RadioPacket_TimeStamp = 0
     // let n_raiseEncoderEvent_gestartet = false
-    let n_BufferPointer = btf.eBufferPointer.m1
+    let n_BufferPointer = btf.eBufferPointer.m1 // 5 Strecken beginnen bei m1 ma mb mc md
     let n_BufferPointer_handled = 0
+    let n_zehntelsekunden = 0
 
     //% group="2 Fahrplan (Encoder Event in dauerhaft Schleife)" subcategory="Strecken"
-    //% block="2 Encoder Ereignis auslösen %buffer || • Start+ %start_cm cm • Pause %ms ms" weight=8
+    //% block="2 Encoder Ereignis auslösen %buffer || • Encoder %checkEncoder" weight=8
     //% buffer.shadow=btf_receivedBuffer19
-    //% start_cm.defl=5
-    //% ms.defl=25
+    //% checkEncoder.shadow=toggleYesNo checkEncoder.defl=1
+    // start_cm.defl=5
+    // ms.defl=25
     // inlineInputMode=inline 
-    //expandableArgumentMode="toggle"
-    export function buffer_raiseEncoderEvent(buffer: Buffer, start_cm = 5, ms = 25) {
+    // expandableArgumentMode="toggle"
+    export function buffer_raiseEncoderEvent(buffer: Buffer, checkEncoder = true) {
         if (buffer) {
 
             if (btf.isBetriebsart(buffer, btf.e0Betriebsart.p2Fahrplan)) { // Betriebsart 2 Fahrplan senden
 
-                if (n_RadioPacket_TimeStamp != radio.receivedPacket(RadioPacketProperty.Time) && encoderRegisterEvent()) {
+                if (n_RadioPacket_TimeStamp != radio.receivedPacket(RadioPacketProperty.Time)) {
                     // n_raiseEncoderEvent_gestartet = true
                     n_RadioPacket_TimeStamp = radio.receivedPacket(RadioPacketProperty.Time)
                     n_BufferPointer = btf.eBufferPointer.m1
@@ -26,40 +28,50 @@ namespace receiver { // r-strecken.ts
 
                     n_EncoderCounterM0 = 0 // Impuls Zähler zurück setzen
                     n_EncoderCounterM1 = 0
+                    n_zehntelsekunden = input.runningTime()
                 }
-                btf.zeigeBIN_BufferPointer(n_BufferPointer, 2)
-                if (n_BufferPointer <= btf.eBufferPointer.md) {
 
+                if (n_BufferPointer <= btf.eBufferPointer.md) { // nach Ende ist n_BufferPointer > md
+                    btf.zeigeBIN_BufferPointer(n_BufferPointer, 2)
+
+                    let fahren = btf.getByte(buffer, n_BufferPointer, btf.eBufferOffset.b0_Motor)
+                    let lenken = btf.getByte(buffer, n_BufferPointer, btf.eBufferOffset.b1_Servo)
                     let strecke_cm = btf.getByte(buffer, n_BufferPointer, btf.eBufferOffset.b2_Fahrstrecke)
-                    let strecke_impulse = 0
+                    let strecke_check = fahren > 0 && fahren != c_MotorStop && lenken > 0 && strecke_cm > 0
 
-                    if (btf.getSensor(buffer, n_BufferPointer, btf.eSensor.b7Impulse))
-                        strecke_impulse = strecke_cm
-                    else
-                        strecke_impulse = Math.round(strecke_cm * n_EncoderFaktor)
+                    let strecke_impulse = 0     // SOLL Wert aus Buffer
+                    let encoderWert_impulse = 0 // IST Wert aus EncoderCounter bzw. Zeit
 
-                    //if (strecke_cm > 0) {
-                    //    strecke_impulse = impulse ? strecke_cm : Math.round(strecke_cm * n_EncoderFaktor)
-                    // n_EncoderAutoStop = autostop
-                    //}
-                    //else
-                    //    strecke_impulse = 0
+                    if (checkEncoder && encoderRegisterEvent()) { // n_EncoderEventRegistered && n_hasEncoder
+                        if (btf.getSensor(buffer, n_BufferPointer, btf.eSensor.b7Impulse))
+                            strecke_impulse = strecke_cm
+                        else
+                            strecke_impulse = Math.round(strecke_cm * n_EncoderFaktor)
+
+                        encoderWert_impulse = Math.abs(n_EncoderCounterM0)
+                        if (n_zweiEncoder)
+                            encoderWert_impulse = Math.idiv(encoderWert_impulse + Math.abs(n_EncoderCounterM1), 2)
+                    }
+                    else {
+                        // kein Encoder - zehntelsekunden
+                        strecke_impulse = strecke_cm // SOLL cm sind zehntelsekunden
+                        encoderWert_impulse = Math.idiv(input.runningTime() - n_zehntelsekunden, 100)
+                    }
 
 
-                    let encoderWert_impulse = Math.abs(n_EncoderCounterM0)
-                    if (n_zweiEncoder)
-                        encoderWert_impulse = Math.idiv(encoderWert_impulse + Math.abs(n_EncoderCounterM1), 2)
 
-                    if (strecke_impulse > 0 && encoderWert_impulse < strecke_impulse) {
+                    // if (fahren > 0 && fahren != c_MotorStop && lenken > 0) {
+
+
+
+                    if (strecke_check && encoderWert_impulse < strecke_impulse) {
                         // los fahren
 
                         if (onEncoderEventHandler && (n_BufferPointer_handled != n_BufferPointer)) { // nur einmal los fahren bei gleichem n_BufferPointer
                             n_BufferPointer_handled = n_BufferPointer
 
-                          //  btf.zeigeBIN_BufferPointer(n_BufferPointer, 2)
+                            //  btf.zeigeBIN_BufferPointer(n_BufferPointer, 2)
 
-                            let fahren = btf.getByte(buffer, n_BufferPointer, btf.eBufferOffset.b0_Motor)
-                            let lenken = btf.getByte(buffer, n_BufferPointer, btf.eBufferOffset.b1_Servo)
 
                             if (fahren > 0 && fahren != c_MotorStop && lenken > 0) {
                                 onEncoderEventHandler(fahren, lenken, strecke_cm, n_BufferPointer, true, encoderWert_impulse / n_EncoderFaktor)
@@ -73,7 +85,7 @@ namespace receiver { // r-strecken.ts
                     else {
                         // Stop
                         if (onEncoderEventHandler)
-                            onEncoderEventHandler(c_MotorStop, 0, strecke_cm, n_BufferPointer, true, encoderWert_impulse / n_EncoderFaktor)
+                            onEncoderEventHandler(c_MotorStop, 0, strecke_cm, n_BufferPointer, strecke_check, encoderWert_impulse / n_EncoderFaktor)
 
                         //if (n_BufferPointer < btf.eBufferPointer.md) {
                         // nächste Strecke fahren
@@ -87,25 +99,10 @@ namespace receiver { // r-strecken.ts
                         //    n_raiseEncoderEvent_gestartet = false
 
                     } // Stop
+                    // } // (fahren > 0 && fahren != c_MotorStop && lenken > 0)
                 } // n_BufferPointer <= btf.eBufferPointer.md
 
-                /* if (strecke_impulse > 0 && encoderWert_impulse >= strecke_impulse) { // && Math.abs(n_EncoderCounterM0) >=
-                    //strecke_impulse = 0 // Ereignis nur einmalig auslösen, wieder aktivieren mit encoder_start
 
-                    //if (n_EncoderAutoStop) {
-                    selectMotorStop() // selectMotor(c_MotorStop)
-                    //  n_EncoderAutoStop = false
-                    //}
-
-                    if (onEncoderEventHandler)
-                        onEncoderEventHandler(c_MotorStop, 0, 0, 0)
-
-                    if (n_BufferPointer < btf.eBufferPointer.md) {
-                        n_BufferPointer += 3
-                    }
-                    else
-                        n_raiseEncoderEvent_gestartet = false
-                } */
 
 
             } // Betriebsart 2 Fahrplan senden
