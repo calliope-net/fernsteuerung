@@ -21,7 +21,7 @@ namespace receiver { // r-strecken.ts
             if (btf.isBetriebsart(buffer, btf.e0Betriebsart.p2Fahrplan)) { // Betriebsart 2 Fahrplan senden
 
                 if (n_RadioPacket_TimeStamp != radio.receivedPacket(RadioPacketProperty.Time)) {
-                    // n_raiseEncoderEvent_gestartet = true
+                    // bei dem selben Buffer (in der dauerhaft Schleife) nur einmal am Anfang machen
                     n_RadioPacket_TimeStamp = radio.receivedPacket(RadioPacketProperty.Time)
                     n_BufferPointer = btf.eBufferPointer.m1
                     n_BufferPointer_handled = 0
@@ -32,7 +32,7 @@ namespace receiver { // r-strecken.ts
                 }
 
                 if (n_BufferPointer <= btf.eBufferPointer.md) { // nach Ende ist n_BufferPointer > md
-            
+
                     let fahren = btf.getByte(buffer, n_BufferPointer, btf.eBufferOffset.b0_Motor)
                     let lenken = btf.getByte(buffer, n_BufferPointer, btf.eBufferOffset.b1_Servo)
                     let strecke_cm = btf.getByte(buffer, n_BufferPointer, btf.eBufferOffset.b2_Fahrstrecke)
@@ -41,34 +41,65 @@ namespace receiver { // r-strecken.ts
                     let strecke_impulse = 0     // SOLL Wert aus Buffer
                     let encoderWert_impulse = 0 // IST Wert aus EncoderCounter bzw. Zeit
 
+                    // Encoder
                     if (checkEncoder && encoderRegisterEvent()) { // n_EncoderEventRegistered && n_hasEncoder
-                        if (btf.getSensor(buffer, n_BufferPointer, btf.eSensor.b7Impulse))
-                            strecke_impulse = strecke_cm
-                        else
-                            strecke_impulse = Math.round(strecke_cm * n_EncoderFaktor)
 
                         encoderWert_impulse = Math.abs(n_EncoderCounterM0)
-                        if (n_zweiEncoder)
-                            encoderWert_impulse = Math.idiv(encoderWert_impulse + Math.abs(n_EncoderCounterM1), 2)
+
+                        if (encoderWert_impulse < 10 && (input.runningTime() - n_zehntelsekunden) > 2000) {
+                            // kein Impuls nach 2s: kein Encoder vorhanden
+                            n_hasEncoder = false // nächster Aufruf zählt dann nach Zeit; encoderRegisterEvent() ist false
+                            // kein Encoder - zehntelsekunden
+                            strecke_impulse = strecke_cm // SOLL cm sind zehntelsekunden
+                            encoderWert_impulse = Math.idiv(input.runningTime() - n_zehntelsekunden, 100) // zehntelsekunden seit n_zehntelsekunden = input.runningTime()
+                        }
+                        else {
+                            if (n_zweiEncoder)
+                                encoderWert_impulse = Math.idiv(encoderWert_impulse + Math.abs(n_EncoderCounterM1), 2)
+
+                            if (btf.getSensor(buffer, n_BufferPointer, btf.eSensor.b7Impulse))
+                                strecke_impulse = strecke_cm
+                            else
+                                strecke_impulse = Math.round(strecke_cm * n_EncoderFaktor)
+                        }
                     }
                     else {
                         // kein Encoder - zehntelsekunden
                         strecke_impulse = strecke_cm // SOLL cm sind zehntelsekunden
-                        encoderWert_impulse = Math.idiv(input.runningTime() - n_zehntelsekunden, 100)
+                        encoderWert_impulse = Math.idiv(input.runningTime() - n_zehntelsekunden, 100) // zehntelsekunden seit n_zehntelsekunden = input.runningTime()
                     }
 
+                    // Abstand Sensor
+                    let abstand_cm = btf.getAbstand(buffer)
+                    let abstandSensor = btf.getSensor(buffer, n_BufferPointer, btf.eSensor.b6Abstand)
+                        && abstand_cm > 0
+                        && fahren > c_MotorStop // nur vorwärts
+                        && selectAbstandSensorConnected()
 
-                    if (strecke_check && encoderWert_impulse < strecke_impulse) {
+                    let abstandStop = abstandSensor
+                        && (selectAbstand_cm(true) < abstand_cm)
+                        && (input.runningTime() - n_zehntelsekunden) > 100 // erste 100ms Messungen selectAbstand_cm(true) ignorieren
+
+                    if (strecke_check
+                        && !abstandStop
+                        && encoderWert_impulse < strecke_impulse
+                        //&& n_BufferPointer_handled != n_BufferPointer
+                    ) {
                         // los fahren
 
+                        /*    if (abstandSensor && (selectAbstand_cm(true) < abstand_cm) && (input.runningTime() - n_zehntelsekunden) > 100) {
+                               // erste 100ms Messungen selectAbstand_cm(true) ignorieren
+                               onEncoderEventHandler(c_MotorStop, 0, strecke_cm, n_BufferPointer, false, encoderWert_impulse / n_EncoderFaktor)
+   
+                           }
+                           else 
+                                     */
                         if (n_BufferPointer_handled != n_BufferPointer) { // nur einmal los fahren bei gleichem n_BufferPointer
+
                             n_BufferPointer_handled = n_BufferPointer
 
-                            //  btf.zeigeBIN_BufferPointer(n_BufferPointer, 2)
-
-
-                            // if (fahren > 0 && fahren != c_MotorStop && lenken > 0) {
                             onEncoderEventHandler(fahren, lenken, strecke_cm, n_BufferPointer, true, encoderWert_impulse / n_EncoderFaktor)
+                            // if (fahren > 0 && fahren != c_MotorStop && lenken > 0) {
                             // }
                             // else {
                             //     onEncoderEventHandler(c_MotorStop, 0, strecke_cm, n_BufferPointer, false, encoderWert_impulse / n_EncoderFaktor)
@@ -79,7 +110,7 @@ namespace receiver { // r-strecken.ts
                     else {
                         // Stop
                         // if (onEncoderEventHandler)
-                        onEncoderEventHandler(c_MotorStop, 16, strecke_cm, n_BufferPointer, strecke_check, encoderWert_impulse / n_EncoderFaktor)
+                        onEncoderEventHandler(c_MotorStop, 16, strecke_cm, n_BufferPointer, strecke_check && !abstandStop, encoderWert_impulse / n_EncoderFaktor)
 
                         //if (n_BufferPointer < btf.eBufferPointer.md) {
                         // nächste Strecke fahren
