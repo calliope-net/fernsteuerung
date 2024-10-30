@@ -80,11 +80,7 @@ namespace receiver { // r-strecken.ts
                         && (selectAbstand_cm(true) < abstand_cm)
                         && (input.runningTime() - n_zehntelsekunden) > 100 // erste 100ms Messungen selectAbstand_cm(true) ignorieren
 
-                    if (strecke_check
-                        && !abstandStop
-                        && encoderWert_impulse < strecke_impulse
-                        //&& n_BufferPointer_handled != n_BufferPointer
-                    ) {
+                    if (strecke_check && !abstandStop && encoderWert_impulse < strecke_impulse) {
                         // los fahren
 
                         /*    if (abstandSensor && (selectAbstand_cm(true) < abstand_cm) && (input.runningTime() - n_zehntelsekunden) > 100) {
