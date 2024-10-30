@@ -16,7 +16,7 @@ namespace receiver { // r-strecken.ts
     // inlineInputMode=inline 
     // expandableArgumentMode="toggle"
     export function buffer_raiseEncoderEvent(buffer: Buffer, checkEncoder = true) {
-        if (buffer) {
+        if (buffer && onEncoderEventHandler) { // beide Objekte nicht undefined
 
             if (btf.isBetriebsart(buffer, btf.e0Betriebsart.p2Fahrplan)) { // Betriebsart 2 Fahrplan senden
 
@@ -59,33 +59,28 @@ namespace receiver { // r-strecken.ts
                     }
 
 
-
-                    // if (fahren > 0 && fahren != c_MotorStop && lenken > 0) {
-
-
-
                     if (strecke_check && encoderWert_impulse < strecke_impulse) {
                         // los fahren
 
-                        if (onEncoderEventHandler && (n_BufferPointer_handled != n_BufferPointer)) { // nur einmal los fahren bei gleichem n_BufferPointer
+                        if (n_BufferPointer_handled != n_BufferPointer) { // nur einmal los fahren bei gleichem n_BufferPointer
                             n_BufferPointer_handled = n_BufferPointer
 
                             //  btf.zeigeBIN_BufferPointer(n_BufferPointer, 2)
 
 
-                            if (fahren > 0 && fahren != c_MotorStop && lenken > 0) {
-                                onEncoderEventHandler(fahren, lenken, strecke_cm, n_BufferPointer, true, encoderWert_impulse / n_EncoderFaktor)
-                            }
-                            else {
-                                onEncoderEventHandler(c_MotorStop, 0, strecke_cm, n_BufferPointer, false, encoderWert_impulse / n_EncoderFaktor)
-                            }
+                            // if (fahren > 0 && fahren != c_MotorStop && lenken > 0) {
+                            onEncoderEventHandler(fahren, lenken, strecke_cm, n_BufferPointer, true, encoderWert_impulse / n_EncoderFaktor)
+                            // }
+                            // else {
+                            //     onEncoderEventHandler(c_MotorStop, 0, strecke_cm, n_BufferPointer, false, encoderWert_impulse / n_EncoderFaktor)
+                            // }
 
                         }
                     } // los fahren
                     else {
                         // Stop
-                        if (onEncoderEventHandler)
-                            onEncoderEventHandler(c_MotorStop, 0, strecke_cm, n_BufferPointer, strecke_check, encoderWert_impulse / n_EncoderFaktor)
+                        // if (onEncoderEventHandler)
+                        onEncoderEventHandler(c_MotorStop, 16, strecke_cm, n_BufferPointer, strecke_check, encoderWert_impulse / n_EncoderFaktor)
 
                         //if (n_BufferPointer < btf.eBufferPointer.md) {
                         // nächste Strecke fahren
@@ -93,6 +88,7 @@ namespace receiver { // r-strecken.ts
 
                         n_EncoderCounterM0 = 0 // Impuls Zähler zurück setzen
                         n_EncoderCounterM1 = 0
+                        n_zehntelsekunden = input.runningTime()
 
                         // }
                         // else // letzte Strecke beendet
@@ -106,12 +102,12 @@ namespace receiver { // r-strecken.ts
 
 
             } // Betriebsart 2 Fahrplan senden
-            else
-                n_RadioPacket_TimeStamp = 0
+            //else
+            //    n_RadioPacket_TimeStamp = 0
             //    n_raiseEncoderEvent_gestartet = false
 
 
-        } // if(buffer)
+        } // if(buffer && onEncoderEventHandler)
     }
 
     // ========== EVENT HANDLER === sichtbarer Event-Block
