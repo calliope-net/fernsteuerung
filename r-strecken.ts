@@ -16,19 +16,32 @@ namespace receiver { // r-strecken.ts
 
             if (btf.isBetriebsart(buffer, btf.e0Betriebsart.p2Fahrplan)) { // Betriebsart 2 Fahrplan senden
 
-                if (!n_raiseEncoderEvent_gestartet) {
+                let fahren = 0
+                let lenken = 0
+
+                if (!n_raiseEncoderEvent_gestartet && encoderRegisterEvent()) {
                     n_raiseEncoderEvent_gestartet = true
                     n_BufferPointer = btf.eBufferPointer.m0
+
+                    n_EncoderCounterM0 = 0 // Impuls Zähler zurück setzen
+                    n_EncoderCounterM1 = 0
+
+                    fahren = btf.getByte(buffer, n_BufferPointer, btf.eBufferOffset.b0_Motor)
+                    lenken = btf.getByte(buffer, n_BufferPointer, btf.eBufferOffset.b1_Servo)
                 }
-                let impulse = false
+
                 let strecke_cm = btf.getByte(buffer, n_BufferPointer, btf.eBufferOffset.b2_Fahrstrecke)
                 let strecke_impulse = 0
 
+                if (btf.getSensor(buffer, n_BufferPointer, btf.eSensor.b7Impulse))
+                    strecke_impulse = strecke_cm
+                else
+                    strecke_impulse = Math.round(strecke_cm * n_EncoderFaktor)
 
-                if (strecke_cm > 0) {
-                    strecke_impulse = impulse ? strecke_cm : Math.round(strecke_cm * n_EncoderFaktor)
-                    // n_EncoderAutoStop = autostop
-                }
+                //if (strecke_cm > 0) {
+                //    strecke_impulse = impulse ? strecke_cm : Math.round(strecke_cm * n_EncoderFaktor)
+                // n_EncoderAutoStop = autostop
+                //}
                 //else
                 //    strecke_impulse = 0
 
@@ -36,6 +49,29 @@ namespace receiver { // r-strecken.ts
                 let encoderWert_impulse = Math.abs(n_EncoderCounterM0)
                 if (n_zweiEncoder)
                     encoderWert_impulse = Math.idiv(encoderWert_impulse + Math.abs(n_EncoderCounterM1), 2)
+
+                if (strecke_impulse > 0 && encoderWert_impulse < strecke_impulse) {
+                    // los fahren
+
+
+                }
+                else {
+                    // Stop
+                    if (onEncoderEventHandler)
+                        onEncoderEventHandler(c_MotorStop, 0, 0, 0)
+
+                    if (n_BufferPointer < btf.eBufferPointer.md) {
+                        // nächste Strecke fahren
+                        n_BufferPointer += 3
+
+                        n_EncoderCounterM0 = 0 // Impuls Zähler zurück setzen
+                        n_EncoderCounterM1 = 0
+
+                    }
+                    else // letzte Strecke beendet
+                        n_raiseEncoderEvent_gestartet = false
+
+                }
 
 
                 if (strecke_impulse > 0 && encoderWert_impulse >= strecke_impulse) { // && Math.abs(n_EncoderCounterM0) >=
@@ -46,12 +82,21 @@ namespace receiver { // r-strecken.ts
                     //  n_EncoderAutoStop = false
                     //}
 
-                    //if (onEncoderStopHandler)
-                    //    onEncoderStopHandler(encoderWert_impulse / n_EncoderFaktor)
+                    if (onEncoderEventHandler)
+                        onEncoderEventHandler(c_MotorStop, 0, 0, 0)
+
+                    if (n_BufferPointer < btf.eBufferPointer.md) {
+                        n_BufferPointer += 3
+                    }
+                    else
+                        n_raiseEncoderEvent_gestartet = false
                 }
 
 
             }
+            else
+                n_raiseEncoderEvent_gestartet = false
+
             // Events müssen auch mit on=false aufgerufen werden, damit das Programm beendet wird (Motor Stop)
             /*  raiseAbstandEvent( // MD-5 Hindernis ausweichen ODER // MC-4 Spur folgen und Abstand Sensor aktiviert
                  hindernis_ausweichen(buffer) || (spur_folgen(buffer) && btf.getSensor(buffer, btf.eBufferPointer.mc, btf.eSensor.b6Abstand)),
