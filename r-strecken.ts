@@ -22,6 +22,7 @@ namespace receiver { // r-strecken.ts
                     // n_raiseEncoderEvent_gestartet = true
                     n_RadioPacket_TimeStamp = radio.receivedPacket(RadioPacketProperty.Time)
                     n_BufferPointer = btf.eBufferPointer.m0
+                    n_BufferPointer_handled = 0
 
                     n_EncoderCounterM0 = 0 // Impuls Zähler zurück setzen
                     n_EncoderCounterM1 = 0
@@ -52,8 +53,10 @@ namespace receiver { // r-strecken.ts
                     if (strecke_impulse > 0 && encoderWert_impulse < strecke_impulse) {
                         // los fahren
 
-                        if (onEncoderEventHandler && n_BufferPointer_handled != n_BufferPointer) { // nur einmal los fahren bei gleichem n_BufferPointer
+                        if (onEncoderEventHandler && (n_BufferPointer_handled != n_BufferPointer)) { // nur einmal los fahren bei gleichem n_BufferPointer
                             n_BufferPointer_handled = n_BufferPointer
+
+                            btf.zeigeBIN_BufferPointer(n_BufferPointer, 2)
 
                             let fahren = btf.getByte(buffer, n_BufferPointer, btf.eBufferOffset.b0_Motor)
                             let lenken = btf.getByte(buffer, n_BufferPointer, btf.eBufferOffset.b1_Servo)
