@@ -3,7 +3,7 @@ namespace receiver { // r-strecken.ts
 
     let n_RadioPacket_TimeStamp = 0
     // let n_raiseEncoderEvent_gestartet = false
-    let n_BufferPointer = btf.eBufferPointer.m0
+    let n_BufferPointer = btf.eBufferPointer.m1
     let n_BufferPointer_handled = 0
 
     //% group="2 Fahrplan (Encoder Event in dauerhaft Schleife)" subcategory="Strecken"
@@ -21,13 +21,13 @@ namespace receiver { // r-strecken.ts
                 if (n_RadioPacket_TimeStamp != radio.receivedPacket(RadioPacketProperty.Time) && encoderRegisterEvent()) {
                     // n_raiseEncoderEvent_gestartet = true
                     n_RadioPacket_TimeStamp = radio.receivedPacket(RadioPacketProperty.Time)
-                    n_BufferPointer = btf.eBufferPointer.m0
+                    n_BufferPointer = btf.eBufferPointer.m1
                     n_BufferPointer_handled = 0
 
                     n_EncoderCounterM0 = 0 // Impuls Zähler zurück setzen
                     n_EncoderCounterM1 = 0
                 }
-
+                btf.zeigeBIN_BufferPointer(n_BufferPointer, 2)
                 if (n_BufferPointer <= btf.eBufferPointer.md) {
 
                     let strecke_cm = btf.getByte(buffer, n_BufferPointer, btf.eBufferOffset.b2_Fahrstrecke)
@@ -56,7 +56,7 @@ namespace receiver { // r-strecken.ts
                         if (onEncoderEventHandler && (n_BufferPointer_handled != n_BufferPointer)) { // nur einmal los fahren bei gleichem n_BufferPointer
                             n_BufferPointer_handled = n_BufferPointer
 
-                            btf.zeigeBIN_BufferPointer(n_BufferPointer, 2)
+                          //  btf.zeigeBIN_BufferPointer(n_BufferPointer, 2)
 
                             let fahren = btf.getByte(buffer, n_BufferPointer, btf.eBufferOffset.b0_Motor)
                             let lenken = btf.getByte(buffer, n_BufferPointer, btf.eBufferOffset.b1_Servo)
