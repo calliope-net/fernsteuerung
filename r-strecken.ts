@@ -2,14 +2,6 @@
 namespace receiver { // r-strecken.ts
 
 
-    //% group="2 Fahrplan (Encoder Event in dauerhaft Schleife)" subcategory="Strecken"
-    //% block="wenn Encoder Ereignis" weight=3
-    //% draggableParameters=reporter
-    export function onEncoderEvent(cb: (fahren: number, lenken: number, strecke_nr: btf.eBufferPointer, strecke_ok: boolean, impulse: number) => void) {
-        // onEncoderEventHandler = cb
-    }
-
-
     let n_RadioPacket_TimeStamp = 0
     // let n_raiseEncoderEvent_gestartet = false
     let n_BufferPointer = btf.eBufferPointer.m1 // 5 Strecken beginnen bei m1 ma mb mc md
@@ -49,6 +41,7 @@ namespace receiver { // r-strecken.ts
 
                     let strecke_impulse = 0     // SOLL Wert aus Buffer
                     let encoderWert_impulse = 0 // IST Wert aus EncoderCounter bzw. Zeit
+                    let hasEncoderColor = Colors.Off
 
                     // Encoder
                     if (checkEncoder && encoderRegisterEvent()) { // n_EncoderEventRegistered && n_hasEncoder
@@ -62,20 +55,26 @@ namespace receiver { // r-strecken.ts
                             strecke_impulse = strecke_cm // SOLL cm sind zehntelsekunden
                             encoderWert_impulse = Math.idiv(input.runningTime() - n_zehntelsekunden, 100) // zehntelsekunden seit n_zehntelsekunden = input.runningTime()
 
-                            btf.setLedColors(btf.eRgbLed.c, Colors.Red) // timeout kein Encoder rot
+                           // btf.setLedColors(btf.eRgbLed.c, Colors.Red) // timeout kein Encoder rot
+                            hasEncoderColor = Colors.Red
                         }
                         else {
                             if (n_zweiEncoder) {
                                 let encoderWert_m1 = Math.abs(n_EncoderCounterM1)
                                 encoderWert_impulse = Math.idiv(encoderWert_impulse + encoderWert_m1, 2) // Mittelwert (m0+m1)/2
-                                if (encoderWert_m1 > 10)
-                                    btf.setLedColors(btf.eRgbLed.c, Colors.Blue) // 2 Encoder blau
-                                else
-                                    btf.setLedColors(btf.eRgbLed.c, Colors.Violet) // 2. Encoder zählt nicht Fehler lila
+                                if (encoderWert_m1 > 10) {
+                                  //  btf.setLedColors(btf.eRgbLed.c, Colors.Blue) // 2 Encoder blau
+                                    hasEncoderColor = Colors.Blue
+                                }
+                                else {
+                                  //  btf.setLedColors(btf.eRgbLed.c, Colors.Violet) // 2. Encoder zählt nicht Fehler lila
+                                    hasEncoderColor = Colors.Violet
+                                }
                             }
-                            else
-                                btf.setLedColors(btf.eRgbLed.c, Colors.Green) // 1 Encoder grün
-
+                            else {
+                               // btf.setLedColors(btf.eRgbLed.c, Colors.Green) // 1 Encoder grün
+                                hasEncoderColor = Colors.Green
+                            }
                             if (btf.getSensor(buffer, n_BufferPointer, btf.eSensor.b7Impulse))
                                 strecke_impulse = strecke_cm
                             else
@@ -87,8 +86,12 @@ namespace receiver { // r-strecken.ts
                         strecke_impulse = strecke_cm // SOLL cm sind zehntelsekunden
                         encoderWert_impulse = Math.idiv(input.runningTime() - n_zehntelsekunden, 100) // zehntelsekunden seit n_zehntelsekunden = input.runningTime()
 
-                        btf.setLedColors(btf.eRgbLed.c, Colors.Yellow) // kein Encoder gelb
+                       // btf.setLedColors(btf.eRgbLed.c, Colors.Yellow) // kein Encoder gelb
+                        hasEncoderColor = Colors.Yellow
                     }
+
+                    let encoder_array: number[] = [strecke_impulse, encoderWert_impulse, hasEncoderColor, n_EncoderCounterM0, n_EncoderCounterM1, n_EncoderFaktor]
+
 
                     // Abstand Sensor
                     let abstand_cm = btf.getAbstand(buffer)
@@ -116,20 +119,20 @@ namespace receiver { // r-strecken.ts
 
                             n_BufferPointer_handled = n_BufferPointer
 
-                            onEncoderEventHandler(fahren, lenken, n_BufferPointer, false, encoderWert_impulse)
+                            onEncoderEventHandler(fahren, lenken, n_BufferPointer, false, encoder_array)
                             // if (fahren > 0 && fahren != c_MotorStop && lenken > 0) {
                             // }
                             // else {
                             //     onEncoderEventHandler(c_MotorStop, 0, strecke_cm, n_BufferPointer, false, encoderWert_impulse / n_EncoderFaktor)
                             // }
-                            btf.zeigeBIN_BufferPointer(n_BufferPointer, 2)
+                            //btf.zeigeBIN_BufferPointer(n_BufferPointer, 2)
                         }
                     } // los fahren
                     else {
                         // Stop
                         btf.setLedColors(btf.eRgbLed.b, Colors.Red, abstandStop)
                         // if (onEncoderEventHandler)
-                        onEncoderEventHandler(c_MotorStop, 16, n_BufferPointer, strecke_check && !abstandStop, encoderWert_impulse)
+                        onEncoderEventHandler(c_MotorStop, 16, n_BufferPointer, strecke_check && !abstandStop, encoder_array)
 
                         //if (n_BufferPointer < btf.eBufferPointer.md) {
                         // nächste Strecke fahren
@@ -160,9 +163,15 @@ namespace receiver { // r-strecken.ts
     }
 
     // ========== EVENT HANDLER === sichtbarer Event-Block
-    let onEncoderEventHandler: (fahren: number, lenken: number, strecke_nr: btf.eBufferPointer, strecke_ok: boolean, impulse: number) => void
+    let onEncoderEventHandler: (fahren: number, lenken: number, bp: btf.eBufferPointer, ok: boolean, encoder: number[]) => void
 
- 
+    //% group="2 Fahrplan (Encoder Event in dauerhaft Schleife)" subcategory="Strecken"
+    //% block="wenn Encoder Ereignis" weight=3
+    //% draggableParameters=reporter
+    export function onEncoderEvent(cb: (fahren: number, lenken: number, bp: btf.eBufferPointer, ok: boolean, encoder: number[]) => void) {
+        onEncoderEventHandler = cb
+    }
+
     // ========== EVENT HANDLER === sichtbarer Event-Block
 
 
