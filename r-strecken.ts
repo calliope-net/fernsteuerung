@@ -166,12 +166,12 @@ namespace receiver { // r-strecken.ts
     }
 
     // ========== EVENT HANDLER === sichtbarer Event-Block
-    let onEncoderEventHandler: (fahren: number, lenken: number, bp: btf.eBufferPointer, ok: boolean, encoder: number[]) => void
+    let onEncoderEventHandler: (fahren: number, lenken: number, bp: btf.eBufferPointer, ok: boolean, array: number[]) => void
 
     //% group="2 Fahrplan (Encoder Event in dauerhaft Schleife)" subcategory="Strecken"
     //% block="wenn Encoder Ereignis" weight=3
     //% draggableParameters=reporter
-    export function onEncoderEvent(cb: (fahren: number, lenken: number, bp: btf.eBufferPointer, ok: boolean, encoder: number[]) => void) {
+    export function onEncoderEvent(cb: (fahren: number, lenken: number, bp: btf.eBufferPointer, ok: boolean, array: number[]) => void) {
         onEncoderEventHandler = cb
     }
 
