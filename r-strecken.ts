@@ -107,7 +107,7 @@ namespace receiver { // r-strecken.ts
 
                             n_BufferPointer_handled = n_BufferPointer
 
-                            onEncoderEventHandler(fahren, lenken, strecke_cm, n_BufferPointer, true, encoderWert_impulse / n_EncoderFaktor)
+                            onEncoderEventHandler(fahren, lenken, strecke_cm, n_BufferPointer, false, encoderWert_impulse / n_EncoderFaktor)
                             // if (fahren > 0 && fahren != c_MotorStop && lenken > 0) {
                             // }
                             // else {

@@ -36,17 +36,22 @@ namespace btf { // b-enums.ts
         //% block="[16] MD (5)"
         md = 16,
 
-       /*  //% block="[4] Ultraschallsensor"
-        ue = 4,
-        //% block="[7] Spursensor 00"
-        s00 = 7,
-        //% block="[10] Spursensor 01"
-        s01 = 10,
-        //% block="[13] Spursensor 10"
-        s10 = 13,
-        //% block="[16] Spursensor 11"
-        s11 = 16, */
+        /*  //% block="[4] Ultraschallsensor"
+         ue = 4,
+         //% block="[7] Spursensor 00"
+         s00 = 7,
+         //% block="[10] Spursensor 01"
+         s01 = 10,
+         //% block="[13] Spursensor 10"
+         s10 = 13,
+         //% block="[16] Spursensor 11"
+         s11 = 16, */
     }
+
+    //% blockId=btf_eBufferPointer
+    //% block="%e" blockHidden=true
+    export function btf_eBufferPointer(e: eBufferPointer): number { return e }
+
 
     export enum eBufferOffset { // 3 Byte (b0-b1-b2) ab n_BufferPointer
         //% block="Motor (1 ↓ 128 ↑ 255)"
@@ -76,17 +81,17 @@ namespace btf { // b-enums.ts
         mc = 0x10,
         //% block="Motor MD-5"
         md = 0x20,
-/* 
-        //% block="Ultraschallsensor"
-        ue = 0x02,
-        //% block="Spursensor 00"
-        s00 = 0x04,
-        //% block="Spursensor 01"
-        s01 = 0x08,
-        //% block="Spursensor 10"
-        s10 = 0x10,
-        //% block="Spursensor 11"
-        s11 = 0x20 */
+        /* 
+                //% block="Ultraschallsensor"
+                ue = 0x02,
+                //% block="Spursensor 00"
+                s00 = 0x04,
+                //% block="Spursensor 01"
+                s01 = 0x08,
+                //% block="Spursensor 10"
+                s10 = 0x10,
+                //% block="Spursensor 11"
+                s11 = 0x20 */
     }
 
     export enum e3Abstand {
