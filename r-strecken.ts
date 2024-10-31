@@ -107,7 +107,7 @@ namespace receiver { // r-strecken.ts
 
                             n_BufferPointer_handled = n_BufferPointer
 
-                            onEncoderEventHandler(fahren, lenken, strecke_cm, n_BufferPointer, false, encoderWert_impulse / n_EncoderFaktor)
+                            onEncoderEventHandler(fahren, lenken, n_BufferPointer, false, [strecke_impulse, encoderWert_impulse, n_EncoderFaktor])
                             // if (fahren > 0 && fahren != c_MotorStop && lenken > 0) {
                             // }
                             // else {
@@ -120,7 +120,7 @@ namespace receiver { // r-strecken.ts
                         // Stop
                         btf.setLedColors(btf.eRgbLed.b, Colors.Red, abstandStop)
                         // if (onEncoderEventHandler)
-                        onEncoderEventHandler(c_MotorStop, 16, strecke_cm, n_BufferPointer, strecke_check && !abstandStop, encoderWert_impulse / n_EncoderFaktor)
+                        onEncoderEventHandler(c_MotorStop, 16, n_BufferPointer, strecke_check && !abstandStop, [strecke_impulse, encoderWert_impulse, n_EncoderFaktor])
 
                         //if (n_BufferPointer < btf.eBufferPointer.md) {
                         // nächste Strecke fahren
@@ -151,12 +151,12 @@ namespace receiver { // r-strecken.ts
     }
 
     // ========== EVENT HANDLER === sichtbarer Event-Block
-    let onEncoderEventHandler: (fahren: number, lenken: number, strecke_cm: number, nr: btf.eBufferPointer, ok: boolean, encoder_cm: number) => void
+    let onEncoderEventHandler: (fahren: number, lenken: number, strecke_nr: btf.eBufferPointer, strecke_ok: boolean, a_impulse: number[]) => void
 
     //% group="2 Fahrplan (Encoder Event in dauerhaft Schleife)" subcategory="Strecken"
     //% block="wenn Encoder Ereignis" weight=3
     //% draggableParameters=reporter
-    export function onEncoderEvent(cb: (fahren: number, lenken: number, strecke: number, nr: btf.eBufferPointer, ok: boolean, encoder: number) => void) {
+    export function onEncoderEvent(cb: (fahren: number, lenken: number, strecke_nr: btf.eBufferPointer, strecke_ok: boolean, a_impulse: number[]) => void) {
         onEncoderEventHandler = cb
     }
     // ========== EVENT HANDLER === sichtbarer Event-Block
@@ -336,6 +336,13 @@ namespace receiver { // r-strecken.ts
         n_radDurchmesser_mm = radDmm
     }
 
+
+    //% group="Encoder" subcategory="Strecken"
+    //% block="Encoder angeschlossen" weight=9
+    export function encoderConnected() {
+        return n_hasEncoder
+    }
+
     //% group="Encoder" subcategory="Strecken"
     //% block="Encoder Pin Ereignisse registrieren" weight=8
     export function encoderRegisterEvent() {
@@ -464,6 +471,12 @@ namespace receiver { // r-strecken.ts
 
 
     //% group="Encoder" subcategory="Strecken"
+    //% block="Encoder Faktor" weight=2
+    export function encoderFaktor() {
+        return n_EncoderFaktor
+    }
+
+    //% group="Encoder" subcategory="Strecken"
     //% block="Encoder Timeout" weight=1
     export function timeoutStrecke() {
         n_EncoderAutoStop = false
@@ -474,6 +487,14 @@ namespace receiver { // r-strecken.ts
 
 
     // ========== group="2 Encoder" subcategory="Strecken"
+
+
+    //% group="2 Encoder" subcategory="Strecken"
+    //% block="2 Motoren ohne Servo (Buggy)" weight=6
+    export function is_v3_2Motoren() {
+        return n_v3_2Motoren
+    }
+
 
     //% group="2 Encoder" subcategory="Strecken"
     //% block="Encoder M1 Wert (±cm) || Impulse %impulse" weight=4

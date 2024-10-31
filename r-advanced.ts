@@ -10,12 +10,12 @@ namespace receiver { // r-advanced.ts
         return n_Hardware == modell
     }
 
-    //% group="aktuelles Modell" advanced=true
-    //% block="2 Motoren ohne Servo (Buggy)" weight=3
-    export function is_v3_2Motoren() {
+    // group="aktuelles Modell" advanced=true
+    // block="2 Motoren ohne Servo (Buggy)" weight=3
+    /* export function is_v3_2Motoren() {
         return n_v3_2Motoren
         // return n_Hardware == eHardware.v3 && btf.getStorageFunkgruppe() == btf.eFunkgruppe.b4
-    }
+    } */
 
 
 
@@ -37,11 +37,11 @@ namespace receiver { // r-advanced.ts
         return Math.idiv(n_Servo90Winkel, 3) - 14
     }
 
-    //% group="aktuelle Werte (vom gewählten Modell)" advanced=true
-    //% block="Encoder angeschlossen" weight=3
-    export function encoderConnected() {
+    // group="aktuelle Werte (vom gewählten Modell)" advanced=true
+    // block="Encoder angeschlossen" weight=3
+    /* export function encoderConnected() {
         return n_hasEncoder
-    }
+    } */
 
 
 
