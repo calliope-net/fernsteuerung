@@ -1,6 +1,15 @@
 
 namespace receiver { // r-strecken.ts
 
+
+    //% group="2 Fahrplan (Encoder Event in dauerhaft Schleife)" subcategory="Strecken"
+    //% block="wenn Encoder Ereignis" weight=3
+    //% draggableParameters=reporter
+    export function onEncoderEvent(cb: (fahren: number, lenken: number, strecke_nr: btf.eBufferPointer, strecke_ok: boolean, impulse: number) => void) {
+        // onEncoderEventHandler = cb
+    }
+
+
     let n_RadioPacket_TimeStamp = 0
     // let n_raiseEncoderEvent_gestartet = false
     let n_BufferPointer = btf.eBufferPointer.m1 // 5 Strecken beginnen bei m1 ma mb mc md
@@ -107,7 +116,7 @@ namespace receiver { // r-strecken.ts
 
                             n_BufferPointer_handled = n_BufferPointer
 
-                            onEncoderEventHandler(fahren, lenken, n_BufferPointer, false, [strecke_impulse, encoderWert_impulse, n_EncoderFaktor])
+                            onEncoderEventHandler(fahren, lenken, n_BufferPointer, false, encoderWert_impulse)
                             // if (fahren > 0 && fahren != c_MotorStop && lenken > 0) {
                             // }
                             // else {
@@ -120,7 +129,7 @@ namespace receiver { // r-strecken.ts
                         // Stop
                         btf.setLedColors(btf.eRgbLed.b, Colors.Red, abstandStop)
                         // if (onEncoderEventHandler)
-                        onEncoderEventHandler(c_MotorStop, 16, n_BufferPointer, strecke_check && !abstandStop, [strecke_impulse, encoderWert_impulse, n_EncoderFaktor])
+                        onEncoderEventHandler(c_MotorStop, 16, n_BufferPointer, strecke_check && !abstandStop, encoderWert_impulse)
 
                         //if (n_BufferPointer < btf.eBufferPointer.md) {
                         // nächste Strecke fahren
@@ -151,14 +160,9 @@ namespace receiver { // r-strecken.ts
     }
 
     // ========== EVENT HANDLER === sichtbarer Event-Block
-    let onEncoderEventHandler: (fahren: number, lenken: number, strecke_nr: btf.eBufferPointer, strecke_ok: boolean, a_impulse: number[]) => void
+    let onEncoderEventHandler: (fahren: number, lenken: number, strecke_nr: btf.eBufferPointer, strecke_ok: boolean, impulse: number) => void
 
-    //% group="2 Fahrplan (Encoder Event in dauerhaft Schleife)" subcategory="Strecken"
-    //% block="wenn Encoder Ereignis" weight=3
-    //% draggableParameters=reporter
-    export function onEncoderEvent(cb: (fahren: number, lenken: number, strecke_nr: btf.eBufferPointer, strecke_ok: boolean, a_impulse: number[]) => void) {
-        onEncoderEventHandler = cb
-    }
+ 
     // ========== EVENT HANDLER === sichtbarer Event-Block
 
 
