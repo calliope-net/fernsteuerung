@@ -222,6 +222,11 @@ namespace btf { // b-fernsteuerung.ts
     //% block="receivedData" weight=4
     export function btf_receivedBuffer19() { return a_receivedBuffer19 }
 
+    //% blockId=btf_RadioPacketTime
+    //% group="Bluetooth empfangen (19 Byte)"
+    //% block="receivedTimeStamp" blockHidden=true
+    export function btf_RadioPacketTime() { return radio.receivedPacket(RadioPacketProperty.Time) }
+
 
     //% group="Bluetooth empfangen (19 Byte)"
     //% block="Timeout > %ms ms || und deaktiviert %timeoutDisbled" weight=3

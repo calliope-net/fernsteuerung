@@ -4,26 +4,26 @@ namespace receiver { // r-strecken.ts
 
     let n_RadioPacket_TimeStamp = 0
     // let n_raiseEncoderEvent_gestartet = false
-    let n_BufferPointer = btf.eBufferPointer.m1 // 5 Strecken beginnen bei m1 ma mb mc md
+    let n_BufferPointer = btf.eBufferPointer.m0 // m0 ist ungültig, 5 Strecken beginnen bei m1 ma mb mc md
     let n_BufferPointer_handled = 0
     let n_zehntelsekunden = 0
 
     //% group="2 Fahrplan (Encoder Event in dauerhaft Schleife)" subcategory="Strecken"
-    //% block="2 Encoder Ereignis auslösen %buffer || • Encoder %checkEncoder" weight=8
+    //% block="2 Encoder Ereignis auslösen %buffer %timeStamp || • Encoder %checkEncoder" weight=8
     //% buffer.shadow=btf_receivedBuffer19
+    //% timeStamp.shadow=btf_RadioPacketTime
     //% checkEncoder.shadow=toggleYesNo checkEncoder.defl=1
-    // start_cm.defl=5
     // ms.defl=25
     // inlineInputMode=inline 
     // expandableArgumentMode="toggle"
-    export function buffer_raiseEncoderEvent(buffer: Buffer, checkEncoder = true) {
+    export function buffer_raiseEncoderEvent(buffer: Buffer, timeStamp: number, checkEncoder = true) {
         if (buffer && onEncoderEventHandler) { // beide Objekte nicht undefined
 
             if (btf.isBetriebsart(buffer, btf.e0Betriebsart.p2Fahrplan)) { // Betriebsart 2 Fahrplan senden
 
-                if (n_RadioPacket_TimeStamp != radio.receivedPacket(RadioPacketProperty.Time)) {
+                if (n_RadioPacket_TimeStamp != timeStamp) {
                     // bei dem selben Buffer (in der dauerhaft Schleife) nur einmal am Anfang machen
-                    n_RadioPacket_TimeStamp = radio.receivedPacket(RadioPacketProperty.Time)
+                    n_RadioPacket_TimeStamp = timeStamp
                     n_BufferPointer = btf.eBufferPointer.m1
                     n_BufferPointer_handled = 0
 
@@ -32,7 +32,7 @@ namespace receiver { // r-strecken.ts
                     n_zehntelsekunden = input.runningTime()
                 }
 
-                if (n_BufferPointer <= btf.eBufferPointer.md) { // nach Ende ist n_BufferPointer > md
+                if (n_BufferPointer >= btf.eBufferPointer.m1 && n_BufferPointer <= btf.eBufferPointer.md) { // nach Ende ist n_BufferPointer > md
 
                     let fahren = btf.getByte(buffer, n_BufferPointer, btf.eBufferOffset.b0_Motor)
                     let lenken = btf.getByte(buffer, n_BufferPointer, btf.eBufferOffset.b1_Servo)
