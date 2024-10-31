@@ -52,10 +52,20 @@ namespace receiver { // r-strecken.ts
                             // kein Encoder - zehntelsekunden
                             strecke_impulse = strecke_cm // SOLL cm sind zehntelsekunden
                             encoderWert_impulse = Math.idiv(input.runningTime() - n_zehntelsekunden, 100) // zehntelsekunden seit n_zehntelsekunden = input.runningTime()
+
+                            btf.setLedColors(btf.eRgbLed.c, Colors.Red) // timeout kein Encoder rot
                         }
                         else {
-                            if (n_zweiEncoder)
-                                encoderWert_impulse = Math.idiv(encoderWert_impulse + Math.abs(n_EncoderCounterM1), 2)
+                            if (n_zweiEncoder) {
+                                let encoderWert_m1 = Math.abs(n_EncoderCounterM1)
+                                encoderWert_impulse = Math.idiv(encoderWert_impulse + encoderWert_m1, 2) // Mittelwert (m0+m1)/2
+                                if (encoderWert_m1 > 10)
+                                    btf.setLedColors(btf.eRgbLed.c, Colors.Blue) // 2 Encoder blau
+                                else
+                                    btf.setLedColors(btf.eRgbLed.c, Colors.Violet) // 2. Encoder zählt nicht Fehler lila
+                            }
+                            else
+                                btf.setLedColors(btf.eRgbLed.c, Colors.Green) // 1 Encoder grün
 
                             if (btf.getSensor(buffer, n_BufferPointer, btf.eSensor.b7Impulse))
                                 strecke_impulse = strecke_cm
@@ -67,6 +77,8 @@ namespace receiver { // r-strecken.ts
                         // kein Encoder - zehntelsekunden
                         strecke_impulse = strecke_cm // SOLL cm sind zehntelsekunden
                         encoderWert_impulse = Math.idiv(input.runningTime() - n_zehntelsekunden, 100) // zehntelsekunden seit n_zehntelsekunden = input.runningTime()
+
+                        btf.setLedColors(btf.eRgbLed.c, Colors.Yellow) // kein Encoder gelb
                     }
 
                     // Abstand Sensor
@@ -82,6 +94,7 @@ namespace receiver { // r-strecken.ts
 
                     if (strecke_check && !abstandStop && encoderWert_impulse < strecke_impulse) {
                         // los fahren
+                        btf.setLedColors(btf.eRgbLed.b, Colors.Yellow, abstandSensor)
 
                         /*    if (abstandSensor && (selectAbstand_cm(true) < abstand_cm) && (input.runningTime() - n_zehntelsekunden) > 100) {
                                // erste 100ms Messungen selectAbstand_cm(true) ignorieren
@@ -105,6 +118,7 @@ namespace receiver { // r-strecken.ts
                     } // los fahren
                     else {
                         // Stop
+                        btf.setLedColors(btf.eRgbLed.b, Colors.Red, abstandStop)
                         // if (onEncoderEventHandler)
                         onEncoderEventHandler(c_MotorStop, 16, strecke_cm, n_BufferPointer, strecke_check && !abstandStop, encoderWert_impulse / n_EncoderFaktor)
 
