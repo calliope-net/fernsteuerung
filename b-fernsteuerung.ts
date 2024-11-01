@@ -229,14 +229,14 @@ namespace btf { // b-fernsteuerung.ts
 
 
     //% group="Bluetooth empfangen (19 Byte)"
-    //% block="Timeout > %ms ms || und deaktiviert %timeoutDisbled" weight=5
+    //% block="Timeout > %ms ms" weight=5
     //% timeoutDisbled.shadow="toggleYesNo"
     //% ms.defl=1000
-    export function timeout(ms: number, timeoutDisbled = false) {
-        if (!timeoutDisbled) // kurzes Fernsteuerung-timeout (1s) nur bei Joystick, nicht auslösen wenn n_timeoutDisbled=true
-            return !n_timeoutDisbled && ((input.runningTime() - n_lastConnectedTime) > ms)
-        else // längeres Programm-timeout (60s) immer auslösen falls Programm hängt (zum aus schalten)
-            return ((input.runningTime() - n_lastConnectedTime) > ms)
+    export function timeout(ms: number) { // , timeoutDisbled = false || und deaktiviert %timeoutDisbled
+        // if (!timeoutDisbled) // kurzes Fernsteuerung-timeout (1s) nur bei Joystick, nicht auslösen wenn n_timeoutDisbled=true
+        //     return !n_timeoutDisbled && ((input.runningTime() - n_lastConnectedTime) > ms)
+        // else // längeres Programm-timeout (60s) immer auslösen falls Programm hängt (zum aus schalten)
+        return ((input.runningTime() - n_lastConnectedTime) > ms)
     }
 
     //% group="Bluetooth empfangen (19 Byte)"
@@ -247,6 +247,16 @@ namespace btf { // b-fernsteuerung.ts
         // isBetriebsart testet: if (buffer)
         return isBetriebsart(buffer, betriebsart) && ((input.runningTime() - n_lastConnectedTime) > ms)
     }
+
+    //% group="Bluetooth empfangen (19 Byte)"
+    //% block="%betriebsart Timeout > %ms ms" weight=3
+    //% buffer.shadow=btf_receivedBuffer19
+    //% ms.defl=1000 ms.min=1000 ms.max=300000
+    export function timeoutReceivedBuffer(betriebsart: e0Betriebsart, ms: number) {
+        // isBetriebsart testet: if (buffer)
+        return isBetriebsart(a_receivedBuffer19, betriebsart) && timeout(ms)
+    }
+
 
 
     // ========== group="Bluetooth Einstellungen"

@@ -492,13 +492,13 @@ namespace receiver { // r-strecken.ts
         return n_EncoderFaktor
     }
 
-    //% group="Encoder" subcategory="Strecken"
-    //% block="Encoder Timeout" weight=1
-    export function timeoutStrecke() {
+    // group="Encoder" subcategory="Strecken"
+    // block="Encoder Timeout" weight=1
+    /* export function timeoutStrecke() {
         n_EncoderAutoStop = false
         selectMotorStop()
         btf.setLedColors(btf.eRgbLed.a, Colors.Green, true, true)
-    }
+    } */
 
 
 

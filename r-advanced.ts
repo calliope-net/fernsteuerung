@@ -67,16 +67,16 @@ namespace receiver { // r-advanced.ts
     let n_Funktion = eFunktion.ng
 
     //% group="lokale Funktion" advanced=true
-    //% block="lokale Funktion %pFunktion || Timeout %timeoutAutomatik" weight=4
+    //% block="lokale Funktion %pFunktion" weight=4
     // timeoutAutomatik.shadow=toggleOnOff timeoutAutomatik.defl=1
-    export function setFunktion(pFunktion: eFunktion, timeoutAutomatik = eTimeoutDisable.automatisch) {
+    export function setFunktion(pFunktion: eFunktion) { // , timeoutAutomatik = eTimeoutDisable.automatisch || Timeout %timeoutAutomatik
         if (n_Funktion != pFunktion) {
             n_Funktion = pFunktion
-            if (timeoutAutomatik == eTimeoutDisable.automatisch)
-                //    btf.set_timeoutDisbled(timeoutAutomatik)
+            //if (timeoutAutomatik == eTimeoutDisable.automatisch)
+            //    btf.set_timeoutDisbled(timeoutAutomatik)
 
-                //if (timeoutDisbled == undefined) // Automatik
-              //  btf.set_timeoutDisbled(n_Funktion != eFunktion.ng) // true wenn!=0
+            //if (timeoutDisbled == undefined) // Automatik
+            //  btf.set_timeoutDisbled(n_Funktion != eFunktion.ng) // true wenn!=0
             //else
             //    btf.set_timeoutDisbled(timeoutDisbled)
 
