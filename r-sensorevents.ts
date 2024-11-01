@@ -39,7 +39,7 @@ namespace receiver { // r-sensorevents.ts
     // ========== group="Spur Sensor" subcategory="Sensoren"
 
     let a_raiseSpurEvent_gestartet = [false, false]
-   // let n_SpurTimer = input.runningTime()
+    // let n_SpurTimer = input.runningTime()
     // let n_Spur2Bit = 0 // letzter Status 00 01 10 11
     let n_links_hell = false
     let n_rechts_hell = false
@@ -54,10 +54,10 @@ namespace receiver { // r-sensorevents.ts
             //if (!a_raiseSpurEvent_gestartet[index])
             //    spurSensorRegisterEvents() 
 
-           // let t = input.runningTime() - n_SpurTimer // ms seit letztem raiseSpurEvent
-           // if (t < ms)
-           //     basic.pause(t) // restliche Zeit-Differenz warten
-           // n_SpurTimer = input.runningTime()
+            // let t = input.runningTime() - n_SpurTimer // ms seit letztem raiseSpurEvent
+            // if (t < ms)
+            //     basic.pause(t) // restliche Zeit-Differenz warten
+            // n_SpurTimer = input.runningTime()
 
             let spurB = pinSpurBoolean()
             if (n_links_hell !== spurB[0] || n_rechts_hell !== spurB[1] || !a_raiseSpurEvent_gestartet[index]) { // bei Änderung oder beim ersten Mal - ganz am Anfang
@@ -110,7 +110,9 @@ namespace receiver { // r-sensorevents.ts
     //% group="Ultraschall oder Laser Distance Sensor" subcategory="Sensoren"
     //% block="Abstand Sensor angeschlossen" weight=8
     export function selectAbstandSensorConnected() {
-        if (n_Hardware == eHardware.v3) {
+        if (btf.n_Namespace == btf.eNamespace.cb2)
+            return true
+        else if (n_Hardware == eHardware.v3) {
             //if (n_QwiicUltrasonicConnected == undefined)
             //    selectAbstand(true)
             return qwiicUltrasonicConnected() || laserSensorConnected()
@@ -125,7 +127,7 @@ namespace receiver { // r-sensorevents.ts
     //% block="Laser Sensor Ranging %on" weight=7
     //% on.shadow=toggleOnOff
     export function selectRanging(on: boolean) {
-        if (n_Hardware == eHardware.v3 && laserSensorConnected())
+        if (laserSensorConnected())
             if (on)
                 laserRanging(eSYSTEM__MODE_START.startRanging)
             else
@@ -136,7 +138,9 @@ namespace receiver { // r-sensorevents.ts
     //% block="Abstand cm • einlesen %read" weight=6
     //% read.shadow=toggleYesNo
     export function selectAbstand_cm(read: boolean) {
-        if (n_Hardware == eHardware.v3 && qwiicUltrasonicConnected())
+        if (btf.n_Namespace == btf.eNamespace.cb2)
+            return cb2.readUltraschallAbstand()
+        else if (n_Hardware == eHardware.v3 && qwiicUltrasonicConnected())
             return getQwiicUltrasonic(read) // in r-qwiic.ts i2c einlesen
         else if (n_Hardware == eHardware.v3 && laserSensorConnected())
             return laserAbstand_cm(read, true)
