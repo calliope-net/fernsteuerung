@@ -229,7 +229,7 @@ namespace btf { // b-fernsteuerung.ts
 
 
     //% group="Bluetooth empfangen (19 Byte)"
-    //% block="Timeout > %ms ms || und deaktiviert %timeoutDisbled" weight=3
+    //% block="Timeout > %ms ms || und deaktiviert %timeoutDisbled" weight=5
     //% timeoutDisbled.shadow="toggleYesNo"
     //% ms.defl=1000
     export function timeout(ms: number, timeoutDisbled = false) {
@@ -239,6 +239,14 @@ namespace btf { // b-fernsteuerung.ts
             return ((input.runningTime() - n_lastConnectedTime) > ms)
     }
 
+    //% group="Bluetooth empfangen (19 Byte)"
+    //% block="%buffer %betriebsart Timeout > %ms ms" weight=3
+    //% buffer.shadow=btf_receivedBuffer19
+    //% ms.defl=1000
+    export function timeoutBuffer(buffer: Buffer, betriebsart: e0Betriebsart, ms: number) {
+        // isBetriebsart testet: if (buffer)
+        return isBetriebsart(buffer, betriebsart) && ((input.runningTime() - n_lastConnectedTime) > ms)
+    }
 
 
     // ========== group="Bluetooth Einstellungen"
@@ -252,21 +260,21 @@ namespace btf { // b-fernsteuerung.ts
             storage.putBuffer(a_StorageBuffer) // im Flash speichern
         }
     }
-
-    //% group="Bluetooth Einstellungen"
-    //% block="Timeout deaktivieren %timeoutDisbled" weight=3
-    //% timeoutDisbled.shadow="toggleYesNo"
-    export function set_timeoutDisbled_(timeoutDisbled: boolean) {
-        n_timeoutDisbled = timeoutDisbled
-        n_lastConnectedTime = input.runningTime()  // startet das lange timeout (abschalten) neu
-    }
-
-    //% group="Bluetooth Einstellungen"
-    //% block="Timeout deaktiviert" weight=2
-    export function get_timeoutDisbled_() {
-        return n_timeoutDisbled
-    }
-
+    /* 
+        // group="Bluetooth Einstellungen"
+        // block="Timeout deaktivieren %timeoutDisbled" weight=3
+        // timeoutDisbled.shadow="toggleYesNo"
+        export function set_timeoutDisbled_(timeoutDisbled: boolean) {
+            n_timeoutDisbled = timeoutDisbled
+            n_lastConnectedTime = input.runningTime()  // startet das lange timeout (abschalten) neu
+        }
+    
+        // group="Bluetooth Einstellungen"
+        // block="Timeout deaktiviert" weight=2
+        export function get_timeoutDisbled_() {
+            return n_timeoutDisbled
+        }
+     */
     //% group="Bluetooth Einstellungen"
     //% block="Reset Timeout Timer" weight=1
     export function resetTimer() {
