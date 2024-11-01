@@ -37,8 +37,8 @@ namespace sender { // s-buttons.ts
         //% block="2 Fahrplan '5 Strecken senden'"
         f20fahrplan,
 
-        //% block="3 Sensoren fernprogrammieren"
-        f30sensoren
+        // block="3 Sensoren fernprogrammieren"
+       // f30sensoren
     }
 
 
