@@ -30,7 +30,7 @@ namespace btf { // b-fernsteuerung.ts
     } */
 
     export enum eNamespace { btf, sender, receiver, cb2 }
-    export let m_Namespace: eNamespace
+    export let n_Namespace: eNamespace
 
 
     //% group="calliope-net.github.io/fernsteuerung"
@@ -86,7 +86,7 @@ namespace btf { // b-fernsteuerung.ts
     // ========== group="Bluetooth senden" subcategory="Bluetooth"
 
     export function beimStartSender(e: eNamespace, callbackStorageChanged?: (pStorageChange: eStorageBuffer, buttonB: boolean) => void) {
-        m_Namespace = e
+        n_Namespace = e
         onStorageChanged = callbackStorageChanged
         radio.setGroup(getStorageFunkgruppe())
         radio.setTransmitPower(7)
@@ -137,7 +137,7 @@ namespace btf { // b-fernsteuerung.ts
     let onReceivedDataChangedHandler: (receivedData: Buffer, changed: boolean) => void
 
     export function beimStartReceiver(e: eNamespace, callbackStorageChanged?: (pStorageChange: eStorageBuffer, buttonB: boolean) => void) {
-        m_Namespace = e
+        n_Namespace = e
         onStorageChanged = callbackStorageChanged
         radio.setGroup(getStorageFunkgruppe())
         radio.setTransmitPower(7)

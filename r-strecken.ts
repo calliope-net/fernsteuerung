@@ -1,6 +1,33 @@
 
 namespace receiver { // r-strecken.ts
 
+    let n_encoderTimeout = false
+
+    function selectEncoder(checkEncoder = true): number[] {
+        let encoderCount = 0        // [0]
+        let encoderFaktor = 0       // [1]
+        let impulseLinks = 0        // [2]
+        let impulseRechts = 0       // [3]
+        let impulseMittelwert = 0   // [4]
+        if (checkEncoder && !n_encoderTimeout)
+            if (btf.n_Namespace == btf.eNamespace.receiver && encoderRegisterEvent()) {
+                encoderCount = n_zweiEncoder ? 2 : 1
+                encoderFaktor = n_EncoderFaktor
+                impulseLinks = n_EncoderCounterM0
+                impulseRechts = n_EncoderCounterM1
+                impulseMittelwert = n_zweiEncoder ? encoderMittelwert(true) : n_EncoderCounterM0
+            }
+            else if (btf.n_Namespace == btf.eNamespace.cb2 && cb2.writeEncoderReset()) {
+                encoderCount = 2
+                encoderFaktor = cb2.n_EncoderFaktor
+                let encoderValues = cb2.readEncoderValues()
+                impulseLinks = encoderValues[0]
+                impulseRechts = encoderValues[1]
+                impulseMittelwert = cb2.readEncoderMittelwert()
+            }
+        return [encoderCount, encoderFaktor, impulseLinks, impulseRechts, impulseMittelwert]
+    }
+
 
     let n_RadioPacket_TimeStamp = 0
     // let n_raiseEncoderEvent_gestartet = false
@@ -51,6 +78,7 @@ namespace receiver { // r-strecken.ts
                         if (encoderWert_impulse < 10 && (input.runningTime() - n_zehntelsekunden) > 2000) {
                             // kein Impuls nach 2s: kein Encoder vorhanden
                             n_hasEncoder = false // nächster Aufruf zählt dann nach Zeit; encoderRegisterEvent() ist false
+
                             // kein Encoder - zehntelsekunden
                             strecke_impulse = strecke_cm // SOLL cm sind zehntelsekunden
                             encoderWert_impulse = Math.idiv(input.runningTime() - n_zehntelsekunden, 100) // zehntelsekunden seit n_zehntelsekunden = input.runningTime()

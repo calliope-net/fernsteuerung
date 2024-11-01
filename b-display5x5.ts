@@ -57,7 +57,7 @@ namespace btf { // b-dispaly5x5.ts
         zeige5x5Betriebsart((buffer[0] & 0x20) == 0x20, (buffer[0] & 0x10) == 0x10)
 
         let xLed = 2 // 5x5 x=2 Motor Power außer m0
-        if (m_Namespace == eNamespace.cb2 && isBetriebsart(buffer, e0Betriebsart.p2Fahrplan)) {
+        if (n_Namespace == eNamespace.cb2 && isBetriebsart(buffer, e0Betriebsart.p2Fahrplan)) {
             // Betriebsart 20 Fahrplan nichts anzeigen siehe unten zeigeBINx234Fahrplan
         }
         // Mitte x=2 aktivierte Motoren aus Buffer anzeigen
@@ -86,7 +86,7 @@ namespace btf { // b-dispaly5x5.ts
             zeigeBIN_map255(buffer[eBufferPointer.m0], 3)
             zeigeBIN(buffer[eBufferPointer.m0 + eBufferOffset.b1_Servo] & 0x1F, ePlot.bin, 4)
         }
-        else if (m_Namespace == eNamespace.cb2 && btf.isBetriebsart(buffer, btf.e0Betriebsart.p2Fahrplan)) {
+        else if (n_Namespace == eNamespace.cb2 && btf.isBetriebsart(buffer, btf.e0Betriebsart.p2Fahrplan)) {
             // Betriebsart 20 Fahrplan nichts anzeigen siehe unten zeigeBINx234Fahrplan
         }
         else {
