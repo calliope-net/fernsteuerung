@@ -120,6 +120,7 @@ namespace receiver { // r-strecken.ts
 
                             n_BufferPointer_handled = n_BufferPointer
 
+                            btf.resetTimer()
                             onEncoderEventHandler(fahren, lenken, n_BufferPointer, false, encoder_array)
                             // if (fahren > 0 && fahren != c_MotorStop && lenken > 0) {
                             // }
@@ -135,6 +136,8 @@ namespace receiver { // r-strecken.ts
                             encoder_array[0] = Colors.Red
                         // btf.setLedColors(btf.eRgbLed.b, Colors.Red, abstandStop)
                         // if (onEncoderEventHandler)
+
+                        // btf.resetTimer()
                         onEncoderEventHandler(c_MotorStop, 16, n_BufferPointer, strecke_check && !abstandStop, encoder_array)
 
                         //if (n_BufferPointer < btf.eBufferPointer.md) {
