@@ -17,7 +17,7 @@ namespace btf { // b-fernsteuerung.ts
     //let n_startReceivedBuffer = false // nur bei true wird Ereignis 'wenn Datenpaket empfangen' ausgelöst
 
     // onReceivedBuffer
-    let n_timeoutDisbled = false // autonomes fahren nach Programm, kein Bluetooth timeout
+    // let n_timeoutDisbled = false // autonomes fahren nach Programm, kein Bluetooth timeout
     let n_lastConnectedTime = input.runningTime()  // ms seit Start
     let n_lastBetriebsart: e0Betriebsart // für DataChanged Erkennung
     let n_last6Motoren: number // für DataChanged Erkennung
@@ -175,11 +175,11 @@ namespace btf { // b-fernsteuerung.ts
                     if (isBetriebsart00Fahren) // SerialNumber nur bei Joystick speichern und später beachten
                         a_receivedPacketSerialNumber = radio.receivedPacket(RadioPacketProperty.SerialNumber)
 
-                    n_timeoutDisbled =
-                        ((receivedBuffer[0] & 0x20) == 0x20) // Bit 5 Programm=1 / Betriebsart ..10.... oder ..11....
-                        ||
-                        (((receivedBuffer[0] & 0x30) == 0x10) && ((receivedBuffer[3] & 0x01) == 0x00)) // Betriebsart 01 und Joystick nicht aktiv ([3]Bit 0=0) M0 Power
-
+                    /*  n_timeoutDisbled =
+                         ((receivedBuffer[0] & 0x20) == 0x20) // Bit 5 Programm=1 / Betriebsart ..10.... oder ..11....
+                         ||
+                         (((receivedBuffer[0] & 0x30) == 0x10) && ((receivedBuffer[3] & 0x01) == 0x00)) // Betriebsart 01 und Joystick nicht aktiv ([3]Bit 0=0) M0 Power
+  */
                     n_lastConnectedTime = input.runningTime() // Connection-Timeout Zähler zurück setzen
 
                     // die Variable 'onReceivedDataHandler' ist normalerweise undefined, dann passiert nichts
@@ -217,19 +217,8 @@ namespace btf { // b-fernsteuerung.ts
     }
 
 
-    //% blockId=btf_receivedBuffer19
     //% group="Bluetooth empfangen (19 Byte)"
-    //% block="receivedData" weight=4
-    export function btf_receivedBuffer19() { return a_receivedBuffer19 }
-
-    //% blockId=btf_RadioPacketTime
-    //% group="Bluetooth empfangen (19 Byte)"
-    //% block="receivedTimeStamp" blockHidden=true
-    export function btf_RadioPacketTime() { return radio.receivedPacket(RadioPacketProperty.Time) }
-
-
-    //% group="Bluetooth empfangen (19 Byte)"
-    //% block="Timeout > %ms ms" weight=5
+    //% block="Timeout > %ms ms" weight=6
     //% timeoutDisbled.shadow="toggleYesNo"
     //% ms.defl=1000
     export function timeout(ms: number) { // , timeoutDisbled = false || und deaktiviert %timeoutDisbled
@@ -239,14 +228,14 @@ namespace btf { // b-fernsteuerung.ts
         return ((input.runningTime() - n_lastConnectedTime) > ms)
     }
 
-    //% group="Bluetooth empfangen (19 Byte)"
-    //% block="%buffer %betriebsart Timeout > %ms ms" weight=3
-    //% buffer.shadow=btf_receivedBuffer19
-    //% ms.defl=1000
-    export function timeoutBuffer(buffer: Buffer, betriebsart: e0Betriebsart, ms: number) {
+    // group="Bluetooth empfangen (19 Byte)"
+    // block="%buffer %betriebsart Timeout > %ms ms" weight=4
+    // buffer.shadow=btf_receivedBuffer19
+    // ms.defl=1000
+    /* export function timeoutBuffer(buffer: Buffer, betriebsart: e0Betriebsart, ms: number) {
         // isBetriebsart testet: if (buffer)
         return isBetriebsart(buffer, betriebsart) && ((input.runningTime() - n_lastConnectedTime) > ms)
-    }
+    } */
 
     //% group="Bluetooth empfangen (19 Byte)"
     //% block="%betriebsart Timeout > %ms ms" weight=3
@@ -256,6 +245,18 @@ namespace btf { // b-fernsteuerung.ts
         // isBetriebsart testet: if (buffer)
         return isBetriebsart(a_receivedBuffer19, betriebsart) && timeout(ms)
     }
+
+    //% blockId=btf_receivedBuffer19
+    //% group="Bluetooth empfangen (19 Byte)"
+    //% block="receivedData" weight=2
+    export function btf_receivedBuffer19() { return a_receivedBuffer19 }
+
+    // hidden
+
+    //% blockId=btf_RadioPacketTime
+    //% group="Bluetooth empfangen (19 Byte)"
+    //% block="receivedTimeStamp" blockHidden=true
+    export function btf_RadioPacketTime() { return radio.receivedPacket(RadioPacketProperty.Time) }
 
 
 
@@ -288,9 +289,11 @@ namespace btf { // b-fernsteuerung.ts
     //% group="Bluetooth Einstellungen"
     //% block="Reset Timeout Timer" weight=1
     export function resetTimer() {
-        if ((input.runningTime() - n_lastConnectedTime) > 2500)
-            n_lastConnectedTime = input.runningTime()
+        // if ((input.runningTime() - n_lastConnectedTime) > 2500)
+        n_lastConnectedTime = input.runningTime()
     }
+
+
 
     // ========== "Storage (Flash)"
 
