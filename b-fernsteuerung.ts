@@ -256,14 +256,14 @@ namespace btf { // b-fernsteuerung.ts
     //% group="Bluetooth Einstellungen"
     //% block="Timeout deaktivieren %timeoutDisbled" weight=3
     //% timeoutDisbled.shadow="toggleYesNo"
-    export function set_timeoutDisbled(timeoutDisbled: boolean) {
+    export function set_timeoutDisbled_(timeoutDisbled: boolean) {
         n_timeoutDisbled = timeoutDisbled
         n_lastConnectedTime = input.runningTime()  // startet das lange timeout (abschalten) neu
     }
 
     //% group="Bluetooth Einstellungen"
     //% block="Timeout deaktiviert" weight=2
-    export function get_timeoutDisbled() {
+    export function get_timeoutDisbled_() {
         return n_timeoutDisbled
     }
 

@@ -76,7 +76,7 @@ namespace receiver { // r-advanced.ts
                 //    btf.set_timeoutDisbled(timeoutAutomatik)
 
                 //if (timeoutDisbled == undefined) // Automatik
-                btf.set_timeoutDisbled(n_Funktion != eFunktion.ng) // true wenn!=0
+              //  btf.set_timeoutDisbled(n_Funktion != eFunktion.ng) // true wenn!=0
             //else
             //    btf.set_timeoutDisbled(timeoutDisbled)
 
