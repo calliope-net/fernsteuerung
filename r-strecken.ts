@@ -10,14 +10,14 @@ namespace receiver { // r-strecken.ts
         let impulseRechts = 0       // [3]
         let impulseMittelwert = 0   // [4]
         if (checkEncoder && !n_encoderTimeout)
-            if (btf.n_Namespace == btf.eNamespace.receiver && encoderRegisterEvent()) {
+            if (btf.n_Namespace == btf.eNamespace.receiver && encoderRegisterEvent()) { // v3 MKC
                 encoderCount = n_zweiEncoder ? 2 : 1
                 encoderFaktor = n_EncoderFaktor
                 impulseLinks = n_EncoderCounterM0
                 impulseRechts = n_EncoderCounterM1
                 impulseMittelwert = n_zweiEncoder ? encoderMittelwert(true) : Math.abs(n_EncoderCounterM0)
             }
-            else if (btf.n_Namespace == btf.eNamespace.cb2) {
+            else if (btf.n_Namespace == btf.eNamespace.cb2) { // Calli:bot
                 encoderCount = 2
                 encoderFaktor = cb2.n_EncoderFaktor
                 let encoderValues = cb2.readEncoderValues()
@@ -36,7 +36,7 @@ namespace receiver { // r-strecken.ts
             }
             else if (btf.n_Namespace == btf.eNamespace.cb2) {
                 n_encoderTimeout = !cb2.writeEncoderReset()
-                // wenn kein CB2E wird n_encoderTimeout gleicht auf true gesetzt
+                // wenn kein CB2E wird n_encoderTimeout gleich auf true gesetzt
             }
         }
     }
