@@ -2,7 +2,7 @@
 namespace receiver { // r-strecken.ts
 
     //    [Colors.Off, encoderColor_c, strecke_impulse, encoderWert_impulse, aSelectEncoder[eSelectEncoder.impulseLinks], aSelectEncoder[eSelectEncoder.impulseRechts], aSelectEncoder[eSelectEncoder.encoderFaktor]
-   // export enum eEncoderArray { colorb, colorc, iStrecke, iEncoderWert, iLinks, iRechts, encoderFaktor }
+    // export enum eEncoderArray { colorb, colorc, iStrecke, iEncoderWert, iLinks, iRechts, encoderFaktor }
     export enum eSelectEncoder { eCount, eFaktor, iLinks, iRechts, iMittelwert, iStrecke, bPointer, status, colorb, colorc }
 
     let n_encoderTimeout = false
@@ -168,7 +168,7 @@ namespace receiver { // r-strecken.ts
                     if (strecke_check && !abstandStop && encoderWert_impulse < strecke_impulse) {
                         // los fahren
                         if (abstandSensor)
-                            a_SelectEncoder[eSelectEncoder.colorb]  = Colors.Yellow
+                            a_SelectEncoder[eSelectEncoder.colorb] = Colors.Yellow
                         // btf.setLedColors(btf.eRgbLed.b, Colors.Yellow, abstandSensor)
 
                         /*    if (abstandSensor && (selectAbstand_cm(true) < abstand_cm) && (input.runningTime() - n_zehntelsekunden) > 100) {
@@ -186,7 +186,7 @@ namespace receiver { // r-strecken.ts
                             a_SelectEncoder[eSelectEncoder.iStrecke] = strecke_impulse
                             a_SelectEncoder[eSelectEncoder.status] = 1
 
-                            onEncoderEventHandler(fahren, lenken, n_BufferPointer, false, a_SelectEncoder)
+                            onEncoderEventHandler(fahren, lenken, a_SelectEncoder)
                             // if (fahren > 0 && fahren != c_MotorStop && lenken > 0) {
                             // }
                             // else {
@@ -198,13 +198,13 @@ namespace receiver { // r-strecken.ts
                     else {
                         // Stop
                         if (abstandStop)
-                            a_SelectEncoder[eSelectEncoder.colorb]  = Colors.Red
+                            a_SelectEncoder[eSelectEncoder.colorb] = Colors.Red
                         // btf.setLedColors(btf.eRgbLed.b, Colors.Red, abstandStop)
                         // if (onEncoderEventHandler)
 
                         a_SelectEncoder[eSelectEncoder.status] = (strecke_check && !abstandStop) ? 2 : 3
 
-                        onEncoderEventHandler(c_MotorStop, 16, n_BufferPointer, strecke_check && !abstandStop, a_SelectEncoder)
+                        onEncoderEventHandler(c_MotorStop, 16, a_SelectEncoder)
 
                         //if (n_BufferPointer < btf.eBufferPointer.md) {
                         // nächste Strecke fahren
@@ -233,12 +233,12 @@ namespace receiver { // r-strecken.ts
     }
 
     // ========== EVENT HANDLER === sichtbarer Event-Block
-    let onEncoderEventHandler: (fahren: number, lenken: number, bp: btf.eBufferPointer, ok: boolean, array: number[]) => void
+    let onEncoderEventHandler: (fahren: number, lenken: number, array: number[]) => void
 
     //% group="2 Fahrplan (Encoder Event in dauerhaft Schleife)" subcategory="Strecken"
     //% block="wenn Encoder Ereignis" weight=3
     //% draggableParameters=reporter
-    export function onEncoderEvent(cb: (fahren: number, lenken: number, bp: btf.eBufferPointer, ok: boolean, array: number[]) => void) {
+    export function onEncoderEvent(cb: (fahren: number, lenken: number, array: number[]) => void) {
         onEncoderEventHandler = cb
     }
 
