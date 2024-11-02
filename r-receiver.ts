@@ -183,9 +183,9 @@ namespace receiver { // r-receiver.ts
         if (n_Hardware == eHardware.car4) { // Fahrmotor am Qwiic Modul
             return a_QwiicMotorSpeed[eQwiicMotor.ma] >= c_MotorStop
         }
-        else if (n_v3_2Motoren) {        // Buggy mit 2 Motoren
-            return a_DualMotor_percent[eDualMotor.M0] >= 0
-        }
+        //else if (n_v3_2Motoren) {        // Buggy mit 2 Motoren nur linker Motor
+        //    return a_DualMotor_percent[eDualMotor.M0] >= 0
+        //}
         else {                              // Standard M0 Fahrmotor an Calliope v3 Pins
             return a_DualMotor_percent[eDualMotor.M0] >= 0
         }

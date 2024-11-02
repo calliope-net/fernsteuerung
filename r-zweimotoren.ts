@@ -48,4 +48,76 @@ namespace receiver { // r-zweimotoren.ts
     }
 
 
+
+    // aktuelle Werte 
+    let n_m1_1_128_255: number
+    let n_m2_1_128_255: number
+
+    //% group="Fahren mit 2 Motoren (0: keine Änderung)" subcategory="2 Motoren"
+    //% block="2 Motoren (1↓128↑255) links %m1_1_128_255 • rechts %m2_1_128_255" weight=3
+    //% m1_1_128_255.min=0 m1_1_128_255.max=255 m1_1_128_255.defl=0
+    //% m2_1_128_255.min=0 m2_1_128_255.max=255 m2_1_128_255.defl=0
+    export function dual2Motoren128(m1_1_128_255: number, m2_1_128_255: number) {
+        //n_x1_128_255 = undefined
+        //n_y1_16_31 = undefined // die anderen zwischengespeicherten Werte ungültig machen
+
+        // ist ein Parameter 0, wird der Motor nicht angesteuert: keine Änderung
+        // ist ein Parameter gleich dem letzten Wert, wird der Motor ebenfalls nicht geändert
+
+        if (btf.between(m1_1_128_255, 1, 255) && n_m1_1_128_255 != m1_1_128_255) {
+            n_m1_1_128_255 = m1_1_128_255 // letzten Wert merken
+            dualMotorPower_percent(eDualMotor.M0, btf.mapInt32(m1_1_128_255, 1, 255, 100, 100))
+        }
+
+        if (btf.between(m2_1_128_255, 1, 255) && n_m2_1_128_255 != m2_1_128_255) {
+            n_m2_1_128_255 = m2_1_128_255 // letzten Wert merken
+            dualMotorPower_percent(eDualMotor.M1, btf.mapInt32(m2_1_128_255, 1, 255, 100, 100))
+        }
+
+
+        /* 
+                let motorBuffer: Buffer // undefined
+                let offset = 0
+                if (m1 && m2) {
+                    motorBuffer = Buffer.create(6)
+                    motorBuffer[offset++] = eRegister.SET_MOTOR
+                    motorBuffer[offset++] = 3 // 3 beide Motoren
+                } else if (m1) {
+                    motorBuffer = Buffer.create(4)
+                    motorBuffer[offset++] = eRegister.SET_MOTOR
+                    motorBuffer[offset++] = 1
+                } else if (m2) {
+                    motorBuffer = Buffer.create(4)
+                    motorBuffer[offset++] = eRegister.SET_MOTOR
+                    motorBuffer[offset++] = 2
+                }
+        
+                // M1 offset 2:Richtung, 3:PWM
+                if (m1 && (m1_1_128_255 & 0x80) == 0x80) { // 128..255 M1 vorwärts
+                    n_m1_1_128_255 = m1_1_128_255 // letzten Wert merken
+                    motorBuffer[offset++] = 0
+                    motorBuffer[offset++] = (m1_1_128_255 << 1)
+                } else if (m1) { // 1..127 M1 rückwärts
+                    n_m1_1_128_255 = m1_1_128_255
+                    motorBuffer[offset++] = 1
+                    motorBuffer[offset++] = ~(m1_1_128_255 << 1)
+                }
+        
+                // M2 wenn !m1 offset 2:Richtung, 3:PWM sonst offset 4:Richtung, 5:PWM
+                if (m2 && (m2_1_128_255 & 0x80) == 0x80) { // 128..255 M2 vorwärts
+                    n_m2_1_128_255 = m2_1_128_255 // letzten Wert merken
+                    motorBuffer[offset++] = 0
+                    motorBuffer[offset++] = (m2_1_128_255 << 1)
+                } else if (m2) { // 1..127 M2 rückwärts
+                    n_m2_1_128_255 = m2_1_128_255
+                    motorBuffer[offset++] = 1
+                    motorBuffer[offset++] = ~(m2_1_128_255 << 1)
+                }
+        
+                if (motorBuffer) // wenn beide false, ist motorBuffer undefined
+                    i2cWriteBuffer(motorBuffer)
+                //  } */
+    }
+
+
 } // r-zweimotoren.ts

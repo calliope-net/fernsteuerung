@@ -244,6 +244,15 @@ namespace receiver { // r-strecken.ts
         onEncoderEventHandler = cb
     }
 
+
+    let on2EncoderEventHandler: (m_links: number, m_rechts: number, array: number[]) => void
+
+    //% group="2 Fahrplan (Encoder Event in dauerhaft Schleife)" subcategory="Strecken"
+    //% block="wenn Encoder Ereignis (2 Motoren)" weight=2
+    //% draggableParameters=reporter
+    export function on2EncoderEvent(cb: (m_links: number, m_rechts: number, array: number[]) => void) {
+        onEncoderEventHandler = cb
+    }
     // ========== EVENT HANDLER === sichtbarer Event-Block
 
 
@@ -447,35 +456,23 @@ namespace receiver { // r-strecken.ts
             // btf.setLedColors(btf.eRgbLed.b, Colors.Blue)
             // ========== Event Handler registrieren
             pins.onPulsed(a_PinEncoderM0[n_Hardware], PulseValue.High, function () {//
-                if (selectMotorRichtungVor()) //(selectMotorSpeed() > c_MotorStop)
+                if (selectMotorRichtungVor()) // nur Motor M0 (bei zwei Motoren links) oder 1 Qwiic Fahr-Motor
                     n_EncoderCounterM0++ // vorwärts
                 else
                     n_EncoderCounterM0-- // rückwärts
 
                 encoderAutoStop(false) // M0
             })
-
-            /* if (n_EncoderStrecke_impulse > 0 && Math.abs(n_EncoderCounter) >= n_EncoderStrecke_impulse) {
-                n_EncoderStrecke_impulse = 0 // Ereignis nur einmalig auslösen, wieder aktivieren mit encoder_start
-    
-                if (n_EncoderAutoStop) {
-                    selectMotorStop() // selectMotor(c_MotorStop)
-                    n_EncoderAutoStop = false
-                }
-    
-                if (onEncoderStopHandler)
-                    onEncoderStopHandler(n_EncoderCounter / n_EncoderFaktor)
-            } */
+          
 
             // ========== Event Handler registrieren
 
 
-            if (n_zweiEncoder) {
-                // btf.setLedColors(btf.eRgbLed.b, Colors.White)
-
+            if (n_zweiEncoder) { // nur Buggy Calliope v3 mit Leiterplatte, bei Qwiic keine 2 Encoder
+             
                 // ========== Event Handler registrieren
                 pins.onPulsed(a_PinEncoderM1[n_Hardware], PulseValue.High, function () {
-                    if (selectMotorRichtungVor()) //(selectMotorSpeed() > c_MotorStop)
+                    if (a_DualMotor_percent[eDualMotor.M1] >= 0) //(selectMotorSpeed() > c_MotorStop)
                         n_EncoderCounterM1++ // vorwärts
                     else
                         n_EncoderCounterM1-- // rückwärts
