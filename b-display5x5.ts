@@ -134,10 +134,10 @@ namespace btf { // b-dispaly5x5.ts
     }
 
     //% group="BIN (5x5 Matrix)" subcategory="LEDs, Display"
-    //% block="zeige ..↕.. %iBufferPointer x %xLed" weight=4
+    //% block="zeige ..↕.. %iBufferPointer || xLed %xLed" weight=4
     //% iBufferPointer.shadow=btf_eBufferPointer
     //% xLed.min=0 xLed.max=4 xLed.defl=2
-    export function zeigeBIN_BufferPointer(iBufferPointer: number, xLed: number) {
+    export function zeigeBIN_BufferPointer(iBufferPointer: number, xLed = 2) {
         let int2 = a5x5_xBuffer[xLed]
         if (iBufferPointer == btf.eBufferPointer.m1) int2 |= 16
         if (iBufferPointer == btf.eBufferPointer.ma) int2 |= 8
