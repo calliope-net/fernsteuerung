@@ -66,12 +66,12 @@ namespace receiver { // r-zweimotoren.ts
 
         if (btf.between(m1_1_128_255, 1, 255) && n_m1_1_128_255 != m1_1_128_255) {
             n_m1_1_128_255 = m1_1_128_255 // letzten Wert merken
-            dualMotorPower_percent(eDualMotor.M0, btf.mapInt32(m1_1_128_255, 1, 255, 100, 100))
+            dualMotorPower_percent(eDualMotor.M0, btf.mapInt32(m1_1_128_255, 1, 255, -100, 100))
         }
 
         if (btf.between(m2_1_128_255, 1, 255) && n_m2_1_128_255 != m2_1_128_255) {
             n_m2_1_128_255 = m2_1_128_255 // letzten Wert merken
-            dualMotorPower_percent(eDualMotor.M1, btf.mapInt32(m2_1_128_255, 1, 255, 100, 100))
+            dualMotorPower_percent(eDualMotor.M1, btf.mapInt32(m2_1_128_255, 1, 255, -100, 100))
         }
 
 

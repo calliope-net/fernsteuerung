@@ -106,6 +106,7 @@ namespace receiver { // r-strecken.ts
 
                     let fahren1 = 0
                     let strecke1_cm = 0
+              
                     if (fahrplan2Motoren) {
                         fahren1 = btf.getByte(buffer, n_BufferPointer + 3, btf.eBufferOffset.b0_Motor)
                         strecke1_cm = btf.getByte(buffer, n_BufferPointer + 3, btf.eBufferOffset.b2_Fahrstrecke)
