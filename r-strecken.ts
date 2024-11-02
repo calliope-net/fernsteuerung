@@ -5,7 +5,7 @@ namespace receiver { // r-strecken.ts
     // export enum eEncoderArray { colorb, colorc, iStrecke, iEncoderWert, iLinks, iRechts, encoderFaktor }
     export enum eSelectEncoder { eCount, eFaktor, iLinks, iRechts, iMittelwert, iStrecke, bPointer, status, colorb, colorc }
 
-    let n_encoderTimeout = false
+    let n_encoderConnected = true
     let a_SelectEncoder: number[] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
     function selectEncoder(checkEncoder = true) {
@@ -15,7 +15,7 @@ namespace receiver { // r-strecken.ts
        let impulseLinks = 0        // [2]
        let impulseRechts = 0       // [3]
        let impulseMittelwert = 0   // [4] */
-        if (checkEncoder && !n_encoderTimeout)
+        if (checkEncoder && n_encoderConnected)
             if (btf.n_Namespace == btf.eNamespace.receiver && encoderRegisterEvent()) { // v3 MKC
                 a_SelectEncoder[eSelectEncoder.eCount] = n_zweiEncoder ? 2 : 1
                 a_SelectEncoder[eSelectEncoder.eFaktor] = n_EncoderFaktor
@@ -34,18 +34,20 @@ namespace receiver { // r-strecken.ts
             else {
                 a_SelectEncoder[eSelectEncoder.eCount] = 0
             }
+        else
+            a_SelectEncoder[eSelectEncoder.eCount] = 0
         //return a
         //return [encoderCount, encoderFaktor, impulseLinks, impulseRechts, impulseMittelwert]
     }
 
     function selectEncoderReset() {
-        if (!n_encoderTimeout) {
+        if (n_encoderConnected) {
             if (btf.n_Namespace == btf.eNamespace.receiver) {
                 n_EncoderCounterM0 = 0 // Impuls Zähler zurück setzen
                 n_EncoderCounterM1 = 0
             }
             else if (btf.n_Namespace == btf.eNamespace.cb2) {
-                n_encoderTimeout = !cb2.writeEncoderReset()
+                n_encoderConnected = cb2.writeEncoderReset()
                 // wenn kein CB2E wird n_encoderTimeout gleich auf true gesetzt
             }
         }
@@ -113,7 +115,7 @@ namespace receiver { // r-strecken.ts
                         if (encoderWert_impulse < 10 && (input.runningTime() - n_zehntelsekunden) > 2000) {
                             // kein Impuls nach 2s: kein Encoder vorhanden
                             //n_hasEncoder = false // nächster Aufruf zählt dann nach Zeit; encoderRegisterEvent() ist false
-                            n_encoderTimeout = true
+                            n_encoderConnected = false
 
                             // kein Encoder - zehntelsekunden
                             strecke_impulse = strecke_cm // SOLL cm sind zehntelsekunden
@@ -123,7 +125,7 @@ namespace receiver { // r-strecken.ts
                         }
                         else {
                             // zwei Encoder - nur LED Farbe:
-                            if (a_SelectEncoder[eSelectEncoder.colorc] = Colors.Off)
+                            if (a_SelectEncoder[eSelectEncoder.colorc] == Colors.Off)
                                 if (a_SelectEncoder[eSelectEncoder.eCount] == 2) {
                                     if (Math.abs(a_SelectEncoder[eSelectEncoder.iRechts]) < 10 && (input.runningTime() - n_zehntelsekunden) > 2000) // 3 impulseRechts
                                         // kein Impuls nach 2s: kein zweiter Encoder vorhanden
