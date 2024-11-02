@@ -233,9 +233,10 @@ namespace receiver { // r-strecken.ts
 
 
     //% group="2 Fahrplan (Encoder Event in dauerhaft Schleife)" subcategory="Strecken"
-    //% block="%e" weight=2
-    export function encoderArray(e: eEncoderArray) {
-        return e
+    //% block="<array> %array %e" weight=2
+    export function encoderArray(array: any, e: eEncoderArray): number {
+        let a: number[] = array
+        return a[e]
     }
 
 
