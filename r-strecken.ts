@@ -99,8 +99,8 @@ namespace receiver { // r-strecken.ts
 
                     a_SelectEncoder[eSelectEncoder.bPointer] = n_BufferPointer
                     //a_SelectEncoder[eSelectEncoder.status] = 0
-                    a_SelectEncoder[eSelectEncoder.colorb] = Colors.Off
-                    a_SelectEncoder[eSelectEncoder.colorc] = Colors.Off
+                    //a_SelectEncoder[eSelectEncoder.colorb] = Colors.Off
+                    //a_SelectEncoder[eSelectEncoder.colorc] = Colors.Off
                     // let aSelectEncoder = selectEncoder(checkEncoder)
 
                     // Encoder
@@ -122,23 +122,25 @@ namespace receiver { // r-strecken.ts
                             a_SelectEncoder[eSelectEncoder.colorc] = Colors.Red // timeout kein Encoder rot
                         }
                         else {
-                            //if (n_zweiEncoder) {
-                            if (a_SelectEncoder[eSelectEncoder.eCount] == 2) {
-                                //let encoderWert_m1 = Math.abs(n_EncoderCounterM1)
-                                //encoderWert_impulse = Math.idiv(encoderWert_impulse + encoderWert_m1, 2) // Mittelwert (m0+m1)/2
-                                //if (encoderWert_m1 > 10) {
-                                if (Math.abs(a_SelectEncoder[eSelectEncoder.iRechts]) > 10) // 3 impulseRechts
-                                    a_SelectEncoder[eSelectEncoder.colorc] = Colors.Blue // 2 Encoder blau
+                            // zwei Encoder - nur LED Farbe:
+                            if (a_SelectEncoder[eSelectEncoder.colorc] = Colors.Off)
+                                if (a_SelectEncoder[eSelectEncoder.eCount] == 2) {
+                                    if (Math.abs(a_SelectEncoder[eSelectEncoder.iRechts]) < 10 && (input.runningTime() - n_zehntelsekunden) > 2000) // 3 impulseRechts
+                                        // kein Impuls nach 2s: kein zweiter Encoder vorhanden
+                                        a_SelectEncoder[eSelectEncoder.colorc] = Colors.Violet // 2. Encoder zählt nicht Fehler lila
+                                    else
+                                        a_SelectEncoder[eSelectEncoder.colorc] = Colors.Blue // 2 Encoder blau
+                                }
                                 else
-                                    a_SelectEncoder[eSelectEncoder.colorc] = Colors.Violet // 2. Encoder zählt nicht Fehler lila
-                            }
-                            else
-                                a_SelectEncoder[eSelectEncoder.colorc] = Colors.Green // 1 Encoder grün
+                                    a_SelectEncoder[eSelectEncoder.colorc] = Colors.Green // 1 Encoder grün
+                            // zwei Encoder - nur LED Farbe ^^
 
+
+                            // Länge der Strecke aus Buffer cm oder Impulse?
                             if (btf.getSensor(buffer, n_BufferPointer, btf.eSensor.b7Impulse))
                                 strecke_impulse = strecke_cm
                             else
-                                //strecke_impulse = Math.round(strecke_cm * n_EncoderFaktor)
+                                // cm in Impulse umrechnen
                                 strecke_impulse = Math.round(strecke_cm * a_SelectEncoder[eSelectEncoder.eFaktor]) // encoderFaktor
                         }
                     }
