@@ -2,36 +2,39 @@
 namespace receiver { // r-strecken.ts
 
     //    [Colors.Off, encoderColor_c, strecke_impulse, encoderWert_impulse, aSelectEncoder[eSelectEncoder.impulseLinks], aSelectEncoder[eSelectEncoder.impulseRechts], aSelectEncoder[eSelectEncoder.encoderFaktor]
-    export enum eEncoderArray { colorb, colorc, iStrecke, iEncoderWert, iLinks, iRechts, encoderFaktor }
+   // export enum eEncoderArray { colorb, colorc, iStrecke, iEncoderWert, iLinks, iRechts, encoderFaktor }
+    export enum eSelectEncoder { eCount, eFaktor, iLinks, iRechts, iMittelwert, iStrecke, bPointer, status, colorb, colorc }
 
     let n_encoderTimeout = false
+    let a_SelectEncoder: number[] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
-    enum eSelectEncoder { encoderCount, encoderFaktor, impulseLinks, impulseRechts, impulseMittelwert }
-
-    function selectEncoder(checkEncoder = true): number[] {
-        let a = [0, 0, 0, 0, 0]
-        /*  let encoderCount = 0        // [0]
-         let encoderFaktor = 0       // [1]
-         let impulseLinks = 0        // [2]
-         let impulseRechts = 0       // [3]
-         let impulseMittelwert = 0   // [4] */
+    function selectEncoder(checkEncoder = true) {
+        /*  let a = [0, 0, 0, 0, 0]
+       let encoderCount = 0        // [0]
+       let encoderFaktor = 0       // [1]
+       let impulseLinks = 0        // [2]
+       let impulseRechts = 0       // [3]
+       let impulseMittelwert = 0   // [4] */
         if (checkEncoder && !n_encoderTimeout)
             if (btf.n_Namespace == btf.eNamespace.receiver && encoderRegisterEvent()) { // v3 MKC
-                a[eSelectEncoder.encoderCount] = n_zweiEncoder ? 2 : 1
-                a[eSelectEncoder.encoderFaktor] = n_EncoderFaktor
-                a[eSelectEncoder.impulseLinks] = n_EncoderCounterM0
-                a[eSelectEncoder.impulseRechts] = n_EncoderCounterM1
-                a[eSelectEncoder.impulseMittelwert] = n_zweiEncoder ? encoderMittelwert(true) : Math.abs(n_EncoderCounterM0)
+                a_SelectEncoder[eSelectEncoder.eCount] = n_zweiEncoder ? 2 : 1
+                a_SelectEncoder[eSelectEncoder.eFaktor] = n_EncoderFaktor
+                a_SelectEncoder[eSelectEncoder.iLinks] = n_EncoderCounterM0
+                a_SelectEncoder[eSelectEncoder.iRechts] = n_EncoderCounterM1
+                a_SelectEncoder[eSelectEncoder.iMittelwert] = n_zweiEncoder ? encoderMittelwert(true) : Math.abs(n_EncoderCounterM0)
             }
             else if (btf.n_Namespace == btf.eNamespace.cb2) { // Calli:bot
-                a[eSelectEncoder.encoderCount] = 2
-                a[eSelectEncoder.encoderFaktor] = cb2.n_EncoderFaktor
+                a_SelectEncoder[eSelectEncoder.eCount] = 2
+                a_SelectEncoder[eSelectEncoder.eFaktor] = cb2.n_EncoderFaktor
                 let encoderValues = cb2.readEncoderValues()
-                a[eSelectEncoder.impulseLinks] = encoderValues[0]
-                a[eSelectEncoder.impulseRechts] = encoderValues[1]
-                a[eSelectEncoder.impulseMittelwert] = cb2.readEncoderMittelwert()
+                a_SelectEncoder[eSelectEncoder.iLinks] = encoderValues[0]
+                a_SelectEncoder[eSelectEncoder.iRechts] = encoderValues[1]
+                a_SelectEncoder[eSelectEncoder.iMittelwert] = cb2.readEncoderMittelwert()
             }
-        return a
+            else {
+                a_SelectEncoder[eSelectEncoder.eCount] = 0
+            }
+        //return a
         //return [encoderCount, encoderFaktor, impulseLinks, impulseRechts, impulseMittelwert]
     }
 
@@ -76,7 +79,7 @@ namespace receiver { // r-strecken.ts
 
                     //n_EncoderCounterM0 = 0 // Impuls Zähler zurück setzen
                     //n_EncoderCounterM1 = 0
-                    selectEncoderReset()
+                    selectEncoderReset() // Impuls Zähler zurück setzen
 
                     n_zehntelsekunden = input.runningTime()
                 }
@@ -90,16 +93,22 @@ namespace receiver { // r-strecken.ts
 
                     let strecke_impulse = 0     // SOLL Wert aus Buffer
                     let encoderWert_impulse = 0 // IST Wert aus EncoderCounter bzw. Zeit
-                    let encoderColor_c = Colors.Off
+                    //  let encoderColor_c = Colors.Off
 
-                    let aSelectEncoder = selectEncoder(checkEncoder)
+                    selectEncoder(checkEncoder) // Aufruf schreibt in Array a_SelectEncoder
+
+                    a_SelectEncoder[eSelectEncoder.bPointer] = n_BufferPointer
+                    //a_SelectEncoder[eSelectEncoder.status] = 0
+                    a_SelectEncoder[eSelectEncoder.colorb] = Colors.Off
+                    a_SelectEncoder[eSelectEncoder.colorc] = Colors.Off
+                    // let aSelectEncoder = selectEncoder(checkEncoder)
 
                     // Encoder
                     //if (checkEncoder && encoderRegisterEvent()) { // n_EncoderEventRegistered && n_hasEncoder
-                    if (aSelectEncoder[eSelectEncoder.encoderCount] > 0) {
+                    if (a_SelectEncoder[eSelectEncoder.eCount] > 0) {
 
                         //encoderWert_impulse = Math.abs(n_EncoderCounterM0)
-                        encoderWert_impulse = aSelectEncoder[eSelectEncoder.impulseMittelwert] // links oder Mittelwert (Betrag)
+                        encoderWert_impulse = a_SelectEncoder[eSelectEncoder.iMittelwert] // links oder Mittelwert (Betrag)
 
                         if (encoderWert_impulse < 10 && (input.runningTime() - n_zehntelsekunden) > 2000) {
                             // kein Impuls nach 2s: kein Encoder vorhanden
@@ -110,27 +119,27 @@ namespace receiver { // r-strecken.ts
                             strecke_impulse = strecke_cm // SOLL cm sind zehntelsekunden
                             encoderWert_impulse = Math.idiv(input.runningTime() - n_zehntelsekunden, 100) // zehntelsekunden seit n_zehntelsekunden = input.runningTime()
 
-                            encoderColor_c = Colors.Red // timeout kein Encoder rot
+                            a_SelectEncoder[eSelectEncoder.colorc] = Colors.Red // timeout kein Encoder rot
                         }
                         else {
                             //if (n_zweiEncoder) {
-                            if (aSelectEncoder[eSelectEncoder.encoderCount] == 2) {
+                            if (a_SelectEncoder[eSelectEncoder.eCount] == 2) {
                                 //let encoderWert_m1 = Math.abs(n_EncoderCounterM1)
                                 //encoderWert_impulse = Math.idiv(encoderWert_impulse + encoderWert_m1, 2) // Mittelwert (m0+m1)/2
                                 //if (encoderWert_m1 > 10) {
-                                if (Math.abs(aSelectEncoder[eSelectEncoder.impulseRechts]) > 10) // 3 impulseRechts
-                                    encoderColor_c = Colors.Blue // 2 Encoder blau
+                                if (Math.abs(a_SelectEncoder[eSelectEncoder.iRechts]) > 10) // 3 impulseRechts
+                                    a_SelectEncoder[eSelectEncoder.colorc] = Colors.Blue // 2 Encoder blau
                                 else
-                                    encoderColor_c = Colors.Violet // 2. Encoder zählt nicht Fehler lila
+                                    a_SelectEncoder[eSelectEncoder.colorc] = Colors.Violet // 2. Encoder zählt nicht Fehler lila
                             }
                             else
-                                encoderColor_c = Colors.Green // 1 Encoder grün
+                                a_SelectEncoder[eSelectEncoder.colorc] = Colors.Green // 1 Encoder grün
 
                             if (btf.getSensor(buffer, n_BufferPointer, btf.eSensor.b7Impulse))
                                 strecke_impulse = strecke_cm
                             else
                                 //strecke_impulse = Math.round(strecke_cm * n_EncoderFaktor)
-                                strecke_impulse = Math.round(strecke_cm * aSelectEncoder[eSelectEncoder.encoderFaktor]) // encoderFaktor
+                                strecke_impulse = Math.round(strecke_cm * a_SelectEncoder[eSelectEncoder.eFaktor]) // encoderFaktor
                         }
                     }
                     else {
@@ -138,11 +147,12 @@ namespace receiver { // r-strecken.ts
                         strecke_impulse = strecke_cm // SOLL cm sind zehntelsekunden
                         encoderWert_impulse = Math.idiv(input.runningTime() - n_zehntelsekunden, 100) // zehntelsekunden seit n_zehntelsekunden = input.runningTime()
 
-                        encoderColor_c = Colors.Yellow // kein Encoder gelb
+                        a_SelectEncoder[eSelectEncoder.colorc] = Colors.Yellow // kein Encoder gelb
                     }
 
                     // index in enum eEncoderArray beachten:
-                    let aEncoderArray: number[] = [Colors.Off, encoderColor_c, strecke_impulse, encoderWert_impulse, aSelectEncoder[eSelectEncoder.impulseLinks], aSelectEncoder[eSelectEncoder.impulseRechts], aSelectEncoder[eSelectEncoder.encoderFaktor]]
+                    //let aEncoderArray: number[] = [Colors.Off, a_SelectEncoder[eSelectEncoder.colorc], strecke_impulse, encoderWert_impulse, a_SelectEncoder[eSelectEncoder.iLinks], a_SelectEncoder[eSelectEncoder.iRechts], a_SelectEncoder[eSelectEncoder.eFaktor]]
+
 
                     // Abstand Sensor
                     let abstand_cm = btf.getAbstand(buffer)
@@ -158,7 +168,7 @@ namespace receiver { // r-strecken.ts
                     if (strecke_check && !abstandStop && encoderWert_impulse < strecke_impulse) {
                         // los fahren
                         if (abstandSensor)
-                            aEncoderArray[eEncoderArray.colorb] = Colors.Yellow
+                            a_SelectEncoder[eSelectEncoder.colorb]  = Colors.Yellow
                         // btf.setLedColors(btf.eRgbLed.b, Colors.Yellow, abstandSensor)
 
                         /*    if (abstandSensor && (selectAbstand_cm(true) < abstand_cm) && (input.runningTime() - n_zehntelsekunden) > 100) {
@@ -169,11 +179,14 @@ namespace receiver { // r-strecken.ts
                            else 
                                      */
                         if (n_BufferPointer_handled != n_BufferPointer) { // nur einmal los fahren bei gleichem n_BufferPointer
-
                             n_BufferPointer_handled = n_BufferPointer
-
                             btf.resetTimer()
-                            onEncoderEventHandler(fahren, lenken, n_BufferPointer, false, aEncoderArray)
+
+                            a_SelectEncoder[eSelectEncoder.iMittelwert] = encoderWert_impulse
+                            a_SelectEncoder[eSelectEncoder.iStrecke] = strecke_impulse
+                            a_SelectEncoder[eSelectEncoder.status] = 1
+
+                            onEncoderEventHandler(fahren, lenken, n_BufferPointer, false, a_SelectEncoder)
                             // if (fahren > 0 && fahren != c_MotorStop && lenken > 0) {
                             // }
                             // else {
@@ -185,12 +198,13 @@ namespace receiver { // r-strecken.ts
                     else {
                         // Stop
                         if (abstandStop)
-                            aEncoderArray[eEncoderArray.colorb] = Colors.Red
+                            a_SelectEncoder[eSelectEncoder.colorb]  = Colors.Red
                         // btf.setLedColors(btf.eRgbLed.b, Colors.Red, abstandStop)
                         // if (onEncoderEventHandler)
 
-                        // btf.resetTimer()
-                        onEncoderEventHandler(c_MotorStop, 16, n_BufferPointer, strecke_check && !abstandStop, aEncoderArray)
+                        a_SelectEncoder[eSelectEncoder.status] = (strecke_check && !abstandStop) ? 2 : 3
+
+                        onEncoderEventHandler(c_MotorStop, 16, n_BufferPointer, strecke_check && !abstandStop, a_SelectEncoder)
 
                         //if (n_BufferPointer < btf.eBufferPointer.md) {
                         // nächste Strecke fahren
@@ -198,7 +212,7 @@ namespace receiver { // r-strecken.ts
 
                         //n_EncoderCounterM0 = 0 // Impuls Zähler zurück setzen
                         //n_EncoderCounterM1 = 0
-                        selectEncoderReset()
+                        selectEncoderReset() // Impuls Zähler zurück setzen
 
                         n_zehntelsekunden = input.runningTime()
 
@@ -234,7 +248,7 @@ namespace receiver { // r-strecken.ts
 
     //% group="2 Fahrplan (Encoder Event in dauerhaft Schleife)" subcategory="Strecken"
     //% block="<array> %array %e" weight=2
-    export function encoderArray(array: any, e: eEncoderArray): number {
+    export function encoderArray(array: any, e: eSelectEncoder): number {
         let a: number[] = array
         return a[e]
     }
