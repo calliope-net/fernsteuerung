@@ -69,11 +69,12 @@ namespace receiver { // r-strecken.ts
     // inlineInputMode=inline 
     // expandableArgumentMode="toggle"
     export function buffer_raiseEncoderEvent(buffer: Buffer, timeStamp: number, checkEncoder = true) {
-        if (buffer && onEncoderEventHandler) { // beide Objekte nicht undefined
+        if (buffer && (onEncoderEventHandler || on2EncoderEventHandler)) { // beide Objekte nicht undefined
 
             if (btf.isBetriebsart(buffer, btf.e0Betriebsart.p2Fahrplan)) { // Betriebsart 2 Fahrplan senden
 
                 // 2 Motoren Buffer wenn m1 keine Daten hat, 2 Motoren hat nur Daten in ma und mc
+                // fahrplan2Motoren zeigt an welche Daten im Buffer sind, nicht das Modell
                 let fahrplan2Motoren = btf.getByte(buffer, btf.eBufferPointer.m1, btf.eBufferOffset.b0_Motor) == 0
 
                 if (n_RadioPacket_TimeStamp != timeStamp) {
@@ -151,10 +152,12 @@ namespace receiver { // r-strecken.ts
                                 strecke1_impulse = Math.round(strecke1_cm * a_SelectEncoder[eSelectEncoder.eFaktor]) // encoderFaktor
                             }
 
+
+                            // aktuellen Encoder Zählerstand einlesen bzw. zehntelsekunden seit Start der Strecke
                             if (fahrplan2Motoren) {
                                 // Fahrplan 2 Strecken, 2 Motoren
                                 encoder0_impulse = Math.abs(a_SelectEncoder[eSelectEncoder.iLinks])  // links
-                                encoder0_impulse = Math.abs(a_SelectEncoder[eSelectEncoder.iRechts]) // rechts
+                                encoder1_impulse = Math.abs(a_SelectEncoder[eSelectEncoder.iRechts]) // rechts
 
                             }
                             else { //  if (a_SelectEncoder[eSelectEncoder.eCount] > 0) {
@@ -169,9 +172,9 @@ namespace receiver { // r-strecken.ts
 
                                     // kein Encoder - zehntelsekunden - wie oben
                                     strecke0_impulse = strecke0_cm // SOLL cm sind zehntelsekunden
-                                    strecke1_impulse = strecke1_cm
+                                    //strecke1_impulse = strecke1_cm
                                     encoder0_impulse = Math.idiv(input.runningTime() - n_zehntelsekunden, 100) // zehntelsekunden Fahrzeit der aktuellen Strecke
-                                    encoder1_impulse = encoder0_impulse
+                                    //encoder1_impulse = encoder0_impulse
 
                                     a_SelectEncoder[eSelectEncoder.colorc] = Colors.Red // timeout kein Encoder rot
                                 }
@@ -219,55 +222,103 @@ namespace receiver { // r-strecken.ts
                             && (selectAbstand_cm(true) < abstand_cm)
                             && (input.runningTime() - n_zehntelsekunden) > 100 // erste 100ms Messungen selectAbstand_cm(true) ignorieren
 
-                        if (/* strecke_check && */ !abstandStop && encoder0_impulse < strecke0_impulse) {
-                            // los fahren
-                            if (abstandSensor)
-                                a_SelectEncoder[eSelectEncoder.colorb] = Colors.Yellow
-                            // btf.setLedColors(btf.eRgbLed.b, Colors.Yellow, abstandSensor)
+                        if (abstandStop)
+                            a_SelectEncoder[eSelectEncoder.colorb] = Colors.Red
+                        else if (abstandSensor)
+                            a_SelectEncoder[eSelectEncoder.colorb] = Colors.Yellow
 
-                            /*    if (abstandSensor && (selectAbstand_cm(true) < abstand_cm) && (input.runningTime() - n_zehntelsekunden) > 100) {
-                                   // erste 100ms Messungen selectAbstand_cm(true) ignorieren
-                                   onEncoderEventHandler(c_MotorStop, 0, strecke_cm, n_BufferPointer, false, encoderWert_impulse / n_EncoderFaktor)
-         
-                               }
-                               else 
-                                         */
-                            if (n_BufferPointer_handled != n_BufferPointer) { // nur einmal los fahren bei gleichem n_BufferPointer
-                                n_BufferPointer_handled = n_BufferPointer
-                                btf.resetTimer()
 
-                                a_SelectEncoder[eSelectEncoder.iMittelwert] = encoder0_impulse
-                                a_SelectEncoder[eSelectEncoder.iStrecke] = strecke0_impulse
-                                a_SelectEncoder[eSelectEncoder.status] = 1
 
-                                onEncoderEventHandler(fahren0, lenken0, a_SelectEncoder)
-                                // if (fahren > 0 && fahren != c_MotorStop && lenken > 0) {
-                                // }
-                                // else {
-                                //     onEncoderEventHandler(c_MotorStop, 0, strecke_cm, n_BufferPointer, false, encoderWert_impulse / n_EncoderFaktor)
-                                // }
-                                //btf.zeigeBIN_BufferPointer(n_BufferPointer, 2)
-                            }
-                        } // los fahren
-                        else {
-                            // Stop
+                        if (fahrplan2Motoren && on2EncoderEventHandler) {
+                            // Fahrplan 2 Strecken, 2 Motoren
+
                             if (abstandStop) {
-                                a_SelectEncoder[eSelectEncoder.colorb] = Colors.Red
+                                // Stop 2 Motoren
+                                a_SelectEncoder[eSelectEncoder.status] = 3  // 
+                                on2EncoderEventHandler(c_MotorStop, c_MotorStop, a_SelectEncoder)
+
+                                // nächste Strecke fahren
+                                n_BufferPointer += 6
+                                selectEncoderReset() // Impuls Zähler zurück setzen
+                                n_zehntelsekunden = input.runningTime()
                             }
-                            //if (strecke_check) {
-                            a_SelectEncoder[eSelectEncoder.status] = abstandStop ? 3 : 2 // (strecke_check && !abstandStop) ? 2 : 3
-                            onEncoderEventHandler(c_MotorStop, 16, a_SelectEncoder)
-                            // }
-                            // nächste Strecke fahren
+
+
+                            if (encoder0_impulse > strecke0_impulse) {
+                                // Stop M0
+
+
+
+                            }
+                            else if (!abstandStop && encoder1_impulse < strecke1_impulse) {
+                                // los fahren M1
+
+                            }
+                            else {
+                                // Stop 2 Motoren
+                                a_SelectEncoder[eSelectEncoder.status] = abstandStop ? 3 : 2 // (strecke_check && !abstandStop) ? 2 : 3
+                                on2EncoderEventHandler(c_MotorStop, c_MotorStop, a_SelectEncoder)
+
+                                // nächste Strecke fahren
+                                n_BufferPointer += 6
+                                selectEncoderReset() // Impuls Zähler zurück setzen
+                                n_zehntelsekunden = input.runningTime()
+                            }
+                        }
+                        else if (!fahrplan2Motoren && onEncoderEventHandler) {
+                            // Fahrplan 5 Strecken Fahren und Lenken = Encoder Mittelwert bei 2 Motoren
+                            if (/* strecke_check && */ !abstandStop && encoder0_impulse < strecke0_impulse) {
+                                // los fahren
+                                //if (abstandSensor)
+                                //    a_SelectEncoder[eSelectEncoder.colorb] = Colors.Yellow
+                                // btf.setLedColors(btf.eRgbLed.b, Colors.Yellow, abstandSensor)
+
+                                /*    if (abstandSensor && (selectAbstand_cm(true) < abstand_cm) && (input.runningTime() - n_zehntelsekunden) > 100) {
+                                       // erste 100ms Messungen selectAbstand_cm(true) ignorieren
+                                       onEncoderEventHandler(c_MotorStop, 0, strecke_cm, n_BufferPointer, false, encoderWert_impulse / n_EncoderFaktor)
+             
+                                   }
+                                   else 
+                                             */
+                                if (n_BufferPointer_handled != n_BufferPointer) { // nur einmal los fahren bei gleichem n_BufferPointer
+                                    n_BufferPointer_handled = n_BufferPointer
+                                    btf.resetTimer()
+
+                                    a_SelectEncoder[eSelectEncoder.iMittelwert] = encoder0_impulse
+                                    a_SelectEncoder[eSelectEncoder.iStrecke] = strecke0_impulse
+                                    a_SelectEncoder[eSelectEncoder.status] = 1
+
+                                    onEncoderEventHandler(fahren0, lenken0, a_SelectEncoder)
+                                    // if (fahren > 0 && fahren != c_MotorStop && lenken > 0) {
+                                    // }
+                                    // else {
+                                    //     onEncoderEventHandler(c_MotorStop, 0, strecke_cm, n_BufferPointer, false, encoderWert_impulse / n_EncoderFaktor)
+                                    // }
+                                    //btf.zeigeBIN_BufferPointer(n_BufferPointer, 2)
+                                }
+                            } // los fahren und lenken
+                            else {
+                                // Stop fahren und lenken
+                                //if (abstandStop) 
+                                //    a_SelectEncoder[eSelectEncoder.colorb] = Colors.Red
+
+                                //if (strecke_check) {
+                                a_SelectEncoder[eSelectEncoder.status] = abstandStop ? 3 : 2 // (strecke_check && !abstandStop) ? 2 : 3
+                                onEncoderEventHandler(c_MotorStop, 16, a_SelectEncoder)
+                                // }
+                                // nächste Strecke fahren
+                                n_BufferPointer += fahrplan2Motoren ? 6 : 3
+
+                                //n_EncoderCounterM0 = 0 // Impuls Zähler zurück setzen
+                                //n_EncoderCounterM1 = 0
+                                selectEncoderReset() // Impuls Zähler zurück setzen
+                                n_zehntelsekunden = input.runningTime()
+
+                            } // Stop fahren und lenken
+                        } // else fahrplan2Motoren = Fahrplan 5 Strecken
+                        else {
                             n_BufferPointer += fahrplan2Motoren ? 6 : 3
-
-                            //n_EncoderCounterM0 = 0 // Impuls Zähler zurück setzen
-                            //n_EncoderCounterM1 = 0
-                            selectEncoderReset() // Impuls Zähler zurück setzen
-
-                            n_zehntelsekunden = input.runningTime()
-
-                        } // Stop
+                        }
                     } // strecke_check
                     else {
                         // strecke ungültig, fahren, lenken, länge sind 0
