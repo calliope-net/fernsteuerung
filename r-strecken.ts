@@ -93,145 +93,143 @@ namespace receiver { // r-strecken.ts
                     let strecke_cm = btf.getByte(buffer, n_BufferPointer, btf.eBufferOffset.b2_Fahrstrecke)
                     let strecke_check = fahren > 0 && fahren != c_MotorStop && lenken > 0 && strecke_cm > 0
 
-                    let strecke_impulse = 0     // SOLL Wert aus Buffer
-                    let encoderWert_impulse = 0 // IST Wert aus EncoderCounter bzw. Zeit
-                    //  let encoderColor_c = Colors.Off
+                    if (strecke_check) {
+                        let strecke_impulse = 0 // SOLL Wert aus Buffer
+                        let encoder_impulse = 0 // IST Wert aus EncoderCounter bzw. Zeit
 
-                    selectEncoder(checkEncoder) // Aufruf schreibt in Array a_SelectEncoder
+                        selectEncoder(checkEncoder) // Aufruf schreibt in Array a_SelectEncoder
 
-                    a_SelectEncoder[eSelectEncoder.bPointer] = n_BufferPointer
-                    //a_SelectEncoder[eSelectEncoder.status] = 0
-                    //a_SelectEncoder[eSelectEncoder.colorb] = Colors.Off
-                    //a_SelectEncoder[eSelectEncoder.colorc] = Colors.Off
-                    // let aSelectEncoder = selectEncoder(checkEncoder)
+                        a_SelectEncoder[eSelectEncoder.bPointer] = n_BufferPointer
+                        //a_SelectEncoder[eSelectEncoder.status] = 0
+                        //a_SelectEncoder[eSelectEncoder.colorb] = Colors.Off
+                        //a_SelectEncoder[eSelectEncoder.colorc] = Colors.Off
+                        // let aSelectEncoder = selectEncoder(checkEncoder)
 
-                    // Encoder
-                    //if (checkEncoder && encoderRegisterEvent()) { // n_EncoderEventRegistered && n_hasEncoder
-                    if (a_SelectEncoder[eSelectEncoder.eCount] > 0) {
+                        // Encoder
+                        //if (checkEncoder && encoderRegisterEvent()) { // n_EncoderEventRegistered && n_hasEncoder
+                        if (a_SelectEncoder[eSelectEncoder.eCount] > 0) {
 
-                        //encoderWert_impulse = Math.abs(n_EncoderCounterM0)
-                        encoderWert_impulse = a_SelectEncoder[eSelectEncoder.iMittelwert] // links oder Mittelwert (Betrag)
+                            //encoderWert_impulse = Math.abs(n_EncoderCounterM0)
+                            encoder_impulse = a_SelectEncoder[eSelectEncoder.iMittelwert] // links oder Mittelwert (Betrag)
 
-                        if (encoderWert_impulse < 10 && (input.runningTime() - n_zehntelsekunden) > 2000) {
-                            // kein Impuls nach 2s: kein Encoder vorhanden
-                            //n_hasEncoder = false // nächster Aufruf zählt dann nach Zeit; encoderRegisterEvent() ist false
-                            n_encoderConnected = false
+                            if (encoder_impulse < 10 && (input.runningTime() - n_zehntelsekunden) > 2000) {
+                                // kein Impuls nach 2s: kein Encoder vorhanden
+                                //n_hasEncoder = false // nächster Aufruf zählt dann nach Zeit; encoderRegisterEvent() ist false
+                                n_encoderConnected = false
 
-                            // kein Encoder - zehntelsekunden
-                            strecke_impulse = strecke_cm // SOLL cm sind zehntelsekunden
-                            encoderWert_impulse = Math.idiv(input.runningTime() - n_zehntelsekunden, 100) // zehntelsekunden seit n_zehntelsekunden = input.runningTime()
+                                // kein Encoder - zehntelsekunden
+                                strecke_impulse = strecke_cm // SOLL cm sind zehntelsekunden
+                                encoder_impulse = Math.idiv(input.runningTime() - n_zehntelsekunden, 100) // zehntelsekunden seit n_zehntelsekunden = input.runningTime()
 
-                            a_SelectEncoder[eSelectEncoder.colorc] = Colors.Red // timeout kein Encoder rot
+                                a_SelectEncoder[eSelectEncoder.colorc] = Colors.Red // timeout kein Encoder rot
+                            }
+                            else {
+                                // zwei Encoder - nur LED Farbe:
+                                if (a_SelectEncoder[eSelectEncoder.colorc] == Colors.Off)
+                                    if (a_SelectEncoder[eSelectEncoder.eCount] == 2) {
+                                        if (Math.abs(a_SelectEncoder[eSelectEncoder.iRechts]) < 10 && (input.runningTime() - n_zehntelsekunden) > 2000) // 3 impulseRechts
+                                            // kein Impuls nach 2s: kein zweiter Encoder vorhanden
+                                            a_SelectEncoder[eSelectEncoder.colorc] = Colors.Violet // 2. Encoder zählt nicht Fehler lila
+                                        else
+                                            a_SelectEncoder[eSelectEncoder.colorc] = Colors.Blue // 2 Encoder blau
+                                    }
+                                    else
+                                        a_SelectEncoder[eSelectEncoder.colorc] = Colors.Green // 1 Encoder grün
+                                // zwei Encoder - nur LED Farbe ^^
+
+
+                                // Länge der Strecke aus Buffer cm oder Impulse?
+                                if (btf.getSensor(buffer, n_BufferPointer, btf.eSensor.b7Impulse))
+                                    strecke_impulse = strecke_cm
+                                else
+                                    // cm in Impulse umrechnen
+                                    strecke_impulse = Math.round(strecke_cm * a_SelectEncoder[eSelectEncoder.eFaktor]) // encoderFaktor
+                            }
                         }
                         else {
-                            // zwei Encoder - nur LED Farbe:
-                            if (a_SelectEncoder[eSelectEncoder.colorc] == Colors.Off)
-                                if (a_SelectEncoder[eSelectEncoder.eCount] == 2) {
-                                    if (Math.abs(a_SelectEncoder[eSelectEncoder.iRechts]) < 10 && (input.runningTime() - n_zehntelsekunden) > 2000) // 3 impulseRechts
-                                        // kein Impuls nach 2s: kein zweiter Encoder vorhanden
-                                        a_SelectEncoder[eSelectEncoder.colorc] = Colors.Violet // 2. Encoder zählt nicht Fehler lila
-                                    else
-                                        a_SelectEncoder[eSelectEncoder.colorc] = Colors.Blue // 2 Encoder blau
-                                }
-                                else
-                                    a_SelectEncoder[eSelectEncoder.colorc] = Colors.Green // 1 Encoder grün
-                            // zwei Encoder - nur LED Farbe ^^
+                            // kein Encoder - zehntelsekunden
+                            strecke_impulse = strecke_cm // SOLL cm sind zehntelsekunden
+                            encoder_impulse = Math.idiv(input.runningTime() - n_zehntelsekunden, 100) // zehntelsekunden seit n_zehntelsekunden = input.runningTime()
 
-
-                            // Länge der Strecke aus Buffer cm oder Impulse?
-                            if (btf.getSensor(buffer, n_BufferPointer, btf.eSensor.b7Impulse))
-                                strecke_impulse = strecke_cm
-                            else
-                                // cm in Impulse umrechnen
-                                strecke_impulse = Math.round(strecke_cm * a_SelectEncoder[eSelectEncoder.eFaktor]) // encoderFaktor
+                            a_SelectEncoder[eSelectEncoder.colorc] = Colors.Yellow // kein Encoder gelb
                         }
-                    }
-                    else {
-                        // kein Encoder - zehntelsekunden
-                        strecke_impulse = strecke_cm // SOLL cm sind zehntelsekunden
-                        encoderWert_impulse = Math.idiv(input.runningTime() - n_zehntelsekunden, 100) // zehntelsekunden seit n_zehntelsekunden = input.runningTime()
 
-                        a_SelectEncoder[eSelectEncoder.colorc] = Colors.Yellow // kein Encoder gelb
-                    }
-
-                    // index in enum eEncoderArray beachten:
-                    //let aEncoderArray: number[] = [Colors.Off, a_SelectEncoder[eSelectEncoder.colorc], strecke_impulse, encoderWert_impulse, a_SelectEncoder[eSelectEncoder.iLinks], a_SelectEncoder[eSelectEncoder.iRechts], a_SelectEncoder[eSelectEncoder.eFaktor]]
+                        // index in enum eEncoderArray beachten:
+                        //let aEncoderArray: number[] = [Colors.Off, a_SelectEncoder[eSelectEncoder.colorc], strecke_impulse, encoderWert_impulse, a_SelectEncoder[eSelectEncoder.iLinks], a_SelectEncoder[eSelectEncoder.iRechts], a_SelectEncoder[eSelectEncoder.eFaktor]]
 
 
-                    // Abstand Sensor
-                    let abstand_cm = btf.getAbstand(buffer)
-                    let abstandSensor = btf.getSensor(buffer, n_BufferPointer, btf.eSensor.b6Abstand)
-                        && abstand_cm > 0
-                        && fahren > c_MotorStop // nur vorwärts
-                        && selectAbstandSensorConnected()
+                        // Abstand Sensor
+                        let abstand_cm = btf.getAbstand(buffer)
+                        let abstandSensor = btf.getSensor(buffer, n_BufferPointer, btf.eSensor.b6Abstand)
+                            && abstand_cm > 0
+                            && fahren > c_MotorStop // nur vorwärts
+                            && selectAbstandSensorConnected()
 
-                    let abstandStop = abstandSensor
-                        && (selectAbstand_cm(true) < abstand_cm)
-                        && (input.runningTime() - n_zehntelsekunden) > 100 // erste 100ms Messungen selectAbstand_cm(true) ignorieren
+                        let abstandStop = abstandSensor
+                            && (selectAbstand_cm(true) < abstand_cm)
+                            && (input.runningTime() - n_zehntelsekunden) > 100 // erste 100ms Messungen selectAbstand_cm(true) ignorieren
 
-                    if (strecke_check && !abstandStop && encoderWert_impulse < strecke_impulse) {
-                        // los fahren
-                        if (abstandSensor)
-                            a_SelectEncoder[eSelectEncoder.colorb] = Colors.Yellow
-                        // btf.setLedColors(btf.eRgbLed.b, Colors.Yellow, abstandSensor)
+                        if (/* strecke_check && */ !abstandStop && encoder_impulse < strecke_impulse) {
+                            // los fahren
+                            if (abstandSensor)
+                                a_SelectEncoder[eSelectEncoder.colorb] = Colors.Yellow
+                            // btf.setLedColors(btf.eRgbLed.b, Colors.Yellow, abstandSensor)
 
-                        /*    if (abstandSensor && (selectAbstand_cm(true) < abstand_cm) && (input.runningTime() - n_zehntelsekunden) > 100) {
-                               // erste 100ms Messungen selectAbstand_cm(true) ignorieren
-                               onEncoderEventHandler(c_MotorStop, 0, strecke_cm, n_BufferPointer, false, encoderWert_impulse / n_EncoderFaktor)
-     
-                           }
-                           else 
-                                     */
-                        if (n_BufferPointer_handled != n_BufferPointer) { // nur einmal los fahren bei gleichem n_BufferPointer
-                            n_BufferPointer_handled = n_BufferPointer
-                            btf.resetTimer()
+                            /*    if (abstandSensor && (selectAbstand_cm(true) < abstand_cm) && (input.runningTime() - n_zehntelsekunden) > 100) {
+                                   // erste 100ms Messungen selectAbstand_cm(true) ignorieren
+                                   onEncoderEventHandler(c_MotorStop, 0, strecke_cm, n_BufferPointer, false, encoderWert_impulse / n_EncoderFaktor)
+         
+                               }
+                               else 
+                                         */
+                            if (n_BufferPointer_handled != n_BufferPointer) { // nur einmal los fahren bei gleichem n_BufferPointer
+                                n_BufferPointer_handled = n_BufferPointer
+                                btf.resetTimer()
 
-                            a_SelectEncoder[eSelectEncoder.iMittelwert] = encoderWert_impulse
-                            a_SelectEncoder[eSelectEncoder.iStrecke] = strecke_impulse
-                            a_SelectEncoder[eSelectEncoder.status] = 1
+                                a_SelectEncoder[eSelectEncoder.iMittelwert] = encoder_impulse
+                                a_SelectEncoder[eSelectEncoder.iStrecke] = strecke_impulse
+                                a_SelectEncoder[eSelectEncoder.status] = 1
 
-                            onEncoderEventHandler(fahren, lenken, a_SelectEncoder)
-                            // if (fahren > 0 && fahren != c_MotorStop && lenken > 0) {
+                                onEncoderEventHandler(fahren, lenken, a_SelectEncoder)
+                                // if (fahren > 0 && fahren != c_MotorStop && lenken > 0) {
+                                // }
+                                // else {
+                                //     onEncoderEventHandler(c_MotorStop, 0, strecke_cm, n_BufferPointer, false, encoderWert_impulse / n_EncoderFaktor)
+                                // }
+                                //btf.zeigeBIN_BufferPointer(n_BufferPointer, 2)
+                            }
+                        } // los fahren
+                        else {
+                            // Stop
+                            if (abstandStop) {
+                                a_SelectEncoder[eSelectEncoder.colorb] = Colors.Red
+                            }
+                            //if (strecke_check) {
+                            a_SelectEncoder[eSelectEncoder.status] = abstandStop ? 3 : 2 // (strecke_check && !abstandStop) ? 2 : 3
+                            onEncoderEventHandler(c_MotorStop, 16, a_SelectEncoder)
                             // }
-                            // else {
-                            //     onEncoderEventHandler(c_MotorStop, 0, strecke_cm, n_BufferPointer, false, encoderWert_impulse / n_EncoderFaktor)
-                            // }
-                            //btf.zeigeBIN_BufferPointer(n_BufferPointer, 2)
-                        }
-                    } // los fahren
+                            // nächste Strecke fahren
+                            n_BufferPointer += 3
+
+                            //n_EncoderCounterM0 = 0 // Impuls Zähler zurück setzen
+                            //n_EncoderCounterM1 = 0
+                            selectEncoderReset() // Impuls Zähler zurück setzen
+
+                            n_zehntelsekunden = input.runningTime()
+
+                        } // Stop
+                    } // strecke_check
                     else {
-                        // Stop
-                        if (abstandStop)
-                            a_SelectEncoder[eSelectEncoder.colorb] = Colors.Red
-                        // btf.setLedColors(btf.eRgbLed.b, Colors.Red, abstandStop)
-                        // if (onEncoderEventHandler)
-
-                        a_SelectEncoder[eSelectEncoder.status] = (strecke_check && !abstandStop) ? 2 : 3
-
-                        onEncoderEventHandler(c_MotorStop, 16, a_SelectEncoder)
-
-                        //if (n_BufferPointer < btf.eBufferPointer.md) {
+                        // strecke ungültig, fahren, lenken, länge sind 0
                         // nächste Strecke fahren
                         n_BufferPointer += 3
-
-                        //n_EncoderCounterM0 = 0 // Impuls Zähler zurück setzen
-                        //n_EncoderCounterM1 = 0
-                        selectEncoderReset() // Impuls Zähler zurück setzen
-
-                        n_zehntelsekunden = input.runningTime()
-
-                    } // Stop
+                        //selectEncoderReset() // Impuls Zähler zurück setzen
+                        //n_zehntelsekunden = input.runningTime()
+                    }
 
                 } // n_BufferPointer <= btf.eBufferPointer.md
 
-
-
-
             } // Betriebsart 2 Fahrplan senden
-            //else
-            //    n_RadioPacket_TimeStamp = 0
-            //    n_raiseEncoderEvent_gestartet = false
-
 
         } // if(buffer && onEncoderEventHandler)
     }
