@@ -48,7 +48,7 @@ namespace receiver { // r-strecken.ts
             }
             else if (btf.n_Namespace == btf.eNamespace.cb2) {
                 n_encoderConnected = cb2.writeEncoderReset()
-                // wenn kein CB2E wird n_encoderTimeout gleich auf true gesetzt
+                // wenn kein CB2E wird n_encoderConnected gleich auf false gesetzt
             }
         }
     }
@@ -73,10 +73,13 @@ namespace receiver { // r-strecken.ts
 
             if (btf.isBetriebsart(buffer, btf.e0Betriebsart.p2Fahrplan)) { // Betriebsart 2 Fahrplan senden
 
+                // 2 Motoren Buffer wenn m1 keine Daten hat, 2 Motoren hat nur Daten in ma und mc
+                let fahrplan2Motoren = btf.getByte(buffer, btf.eBufferPointer.m1, btf.eBufferOffset.b0_Motor) == 0
+
                 if (n_RadioPacket_TimeStamp != timeStamp) {
                     // bei dem selben Buffer (in der dauerhaft Schleife) nur einmal am Anfang machen
                     n_RadioPacket_TimeStamp = timeStamp
-                    n_BufferPointer = btf.eBufferPointer.m1
+                    n_BufferPointer = fahrplan2Motoren ? btf.eBufferPointer.ma : btf.eBufferPointer.m1
                     n_BufferPointer_handled = 0
 
                     //n_EncoderCounterM0 = 0 // Impuls Zähler zurück setzen
@@ -88,14 +91,32 @@ namespace receiver { // r-strecken.ts
 
                 if (n_BufferPointer >= btf.eBufferPointer.m1 && n_BufferPointer <= btf.eBufferPointer.md) { // nach Ende ist n_BufferPointer > md
 
-                    let fahren = btf.getByte(buffer, n_BufferPointer, btf.eBufferOffset.b0_Motor)
-                    let lenken = btf.getByte(buffer, n_BufferPointer, btf.eBufferOffset.b1_Servo)
-                    let strecke_cm = btf.getByte(buffer, n_BufferPointer, btf.eBufferOffset.b2_Fahrstrecke)
-                    let strecke_check = fahren > 0 && fahren != c_MotorStop && lenken > 0 && strecke_cm > 0
+                    let fahren0 = btf.getByte(buffer, n_BufferPointer, btf.eBufferOffset.b0_Motor)
+                    let lenken0 = btf.getByte(buffer, n_BufferPointer, btf.eBufferOffset.b1_Servo)
+                    let strecke0_cm = btf.getByte(buffer, n_BufferPointer, btf.eBufferOffset.b2_Fahrstrecke)
+                    let strecke_check = fahren0 > 0 && fahren0 != c_MotorStop && lenken0 > 0 && strecke0_cm > 0
+
+                    let fahren1 = 0
+                    let strecke1_cm = 0
+                    if (fahrplan2Motoren) {
+                        fahren1 = btf.getByte(buffer, n_BufferPointer + 3, btf.eBufferOffset.b0_Motor)
+                        strecke1_cm = btf.getByte(buffer, n_BufferPointer + 3, btf.eBufferOffset.b2_Fahrstrecke)
+                        strecke_check =
+                            !(fahren0 == 0 && fahren1 == 0) // nicht beide 0, wäre wirkungslos
+                            &&
+                            (
+                                fahren0 != c_MotorStop && strecke0_cm > 0 // mindestens einer muss Geschwindigkeit und Strecken Länge haben
+                                ||
+                                fahren1 != c_MotorStop && strecke1_cm > 0
+                            )
+                    }
+
 
                     if (strecke_check) {
-                        let strecke_impulse = 0 // SOLL Wert aus Buffer
-                        let encoder_impulse = 0 // IST Wert aus EncoderCounter bzw. Zeit
+                        let strecke0_impulse = 0 // SOLL Wert aus Buffer
+                        let strecke1_impulse = 0
+                        let encoder0_impulse = 0 // IST Wert aus EncoderCounter bzw. Zeit
+                        let encoder1_impulse = 0
 
                         selectEncoder(checkEncoder) // Aufruf schreibt in Array a_SelectEncoder
 
@@ -107,69 +128,98 @@ namespace receiver { // r-strecken.ts
 
                         // Encoder
                         //if (checkEncoder && encoderRegisterEvent()) { // n_EncoderEventRegistered && n_hasEncoder
-                        if (a_SelectEncoder[eSelectEncoder.eCount] > 0) {
-
-                            //encoderWert_impulse = Math.abs(n_EncoderCounterM0)
-                            encoder_impulse = a_SelectEncoder[eSelectEncoder.iMittelwert] // links oder Mittelwert (Betrag)
-
-                            if (encoder_impulse < 10 && (input.runningTime() - n_zehntelsekunden) > 2000) {
-                                // kein Impuls nach 2s: kein Encoder vorhanden
-                                //n_hasEncoder = false // nächster Aufruf zählt dann nach Zeit; encoderRegisterEvent() ist false
-                                n_encoderConnected = false
-
-                                // kein Encoder - zehntelsekunden
-                                strecke_impulse = strecke_cm // SOLL cm sind zehntelsekunden
-                                encoder_impulse = Math.idiv(input.runningTime() - n_zehntelsekunden, 100) // zehntelsekunden seit n_zehntelsekunden = input.runningTime()
-
-                                a_SelectEncoder[eSelectEncoder.colorc] = Colors.Red // timeout kein Encoder rot
-                            }
-                            else {
-                                // zwei Encoder - nur LED Farbe:
-                                if (a_SelectEncoder[eSelectEncoder.colorc] == Colors.Off)
-                                    if (a_SelectEncoder[eSelectEncoder.eCount] == 2) {
-                                        if (Math.abs(a_SelectEncoder[eSelectEncoder.iRechts]) < 10 && (input.runningTime() - n_zehntelsekunden) > 2000) // 3 impulseRechts
-                                            // kein Impuls nach 2s: kein zweiter Encoder vorhanden
-                                            a_SelectEncoder[eSelectEncoder.colorc] = Colors.Violet // 2. Encoder zählt nicht Fehler lila
-                                        else
-                                            a_SelectEncoder[eSelectEncoder.colorc] = Colors.Blue // 2 Encoder blau
-                                    }
-                                    else
-                                        a_SelectEncoder[eSelectEncoder.colorc] = Colors.Green // 1 Encoder grün
-                                // zwei Encoder - nur LED Farbe ^^
-
-
-                                // Länge der Strecke aus Buffer cm oder Impulse?
-                                if (btf.getSensor(buffer, n_BufferPointer, btf.eSensor.b7Impulse))
-                                    strecke_impulse = strecke_cm
-                                else
-                                    // cm in Impulse umrechnen
-                                    strecke_impulse = Math.round(strecke_cm * a_SelectEncoder[eSelectEncoder.eFaktor]) // encoderFaktor
-                            }
-                        }
-                        else {
+                        if (a_SelectEncoder[eSelectEncoder.eCount] == 0) {
                             // kein Encoder - zehntelsekunden
-                            strecke_impulse = strecke_cm // SOLL cm sind zehntelsekunden
-                            encoder_impulse = Math.idiv(input.runningTime() - n_zehntelsekunden, 100) // zehntelsekunden seit n_zehntelsekunden = input.runningTime()
+                            strecke0_impulse = strecke0_cm // SOLL cm sind zehntelsekunden
+                            strecke1_impulse = strecke1_cm
+                            encoder0_impulse = Math.idiv(input.runningTime() - n_zehntelsekunden, 100) // zehntelsekunden Fahrzeit der aktuellen Strecke
+                            encoder1_impulse = encoder0_impulse
 
                             a_SelectEncoder[eSelectEncoder.colorc] = Colors.Yellow // kein Encoder gelb
                         }
+                        else {
+                            // immer wenn encoder vorhanden
 
-                        // index in enum eEncoderArray beachten:
-                        //let aEncoderArray: number[] = [Colors.Off, a_SelectEncoder[eSelectEncoder.colorc], strecke_impulse, encoderWert_impulse, a_SelectEncoder[eSelectEncoder.iLinks], a_SelectEncoder[eSelectEncoder.iRechts], a_SelectEncoder[eSelectEncoder.eFaktor]]
+                            // Länge der Strecke aus Buffer cm oder Impulse?
+                            if (btf.getSensor(buffer, n_BufferPointer, btf.eSensor.b7Impulse)) {
+                                strecke0_impulse = strecke0_cm
+                                strecke1_impulse = strecke1_cm
+                            }
+                            else {
+                                // cm in Impulse umrechnen
+                                strecke0_impulse = Math.round(strecke0_cm * a_SelectEncoder[eSelectEncoder.eFaktor]) // encoderFaktor
+                                strecke1_impulse = Math.round(strecke1_cm * a_SelectEncoder[eSelectEncoder.eFaktor]) // encoderFaktor
+                            }
+
+                            if (fahrplan2Motoren) {
+                                // Fahrplan 2 Strecken, 2 Motoren
+                                encoder0_impulse = Math.abs(a_SelectEncoder[eSelectEncoder.iLinks])  // links
+                                encoder0_impulse = Math.abs(a_SelectEncoder[eSelectEncoder.iRechts]) // rechts
+
+                            }
+                            else { //  if (a_SelectEncoder[eSelectEncoder.eCount] > 0) {
+                                // Fahrplan 5 Strecken Fahren und Lenken = Encoder Mittelwert bei 2 Motoren
+                                encoder0_impulse = a_SelectEncoder[eSelectEncoder.iMittelwert] // links oder Mittelwert (Betrag)
+
+                                // Test ob Encoder vorhanden nur bei fischertechnik; Callibot erkennt das vorher am Typ
+                                if (encoder0_impulse < 10 && (input.runningTime() - n_zehntelsekunden) > 2000) {
+                                    // kein Impuls nach 2s: kein Encoder vorhanden
+                                    n_encoderConnected = false // nächster Aufruf zählt dann nach Zeit
+
+
+                                    // kein Encoder - zehntelsekunden - wie oben
+                                    strecke0_impulse = strecke0_cm // SOLL cm sind zehntelsekunden
+                                    strecke1_impulse = strecke1_cm
+                                    encoder0_impulse = Math.idiv(input.runningTime() - n_zehntelsekunden, 100) // zehntelsekunden Fahrzeit der aktuellen Strecke
+                                    encoder1_impulse = encoder0_impulse
+
+                                    a_SelectEncoder[eSelectEncoder.colorc] = Colors.Red // timeout kein Encoder rot
+                                }
+                                else {
+                                    // kein timeout - nur LED Farbe ob Encoder vorhanden
+                                    if (a_SelectEncoder[eSelectEncoder.colorc] == Colors.Off)
+                                        if (a_SelectEncoder[eSelectEncoder.eCount] == 2) {
+                                            if (Math.abs(a_SelectEncoder[eSelectEncoder.iRechts]) < 10 && (input.runningTime() - n_zehntelsekunden) > 2000) // 3 impulseRechts
+                                                // kein Impuls nach 2s: kein zweiter Encoder vorhanden
+                                                a_SelectEncoder[eSelectEncoder.colorc] = Colors.Violet // 2. Encoder zählt nicht Fehler lila
+                                            else
+                                                a_SelectEncoder[eSelectEncoder.colorc] = Colors.Blue // 2 Encoder blau
+                                        }
+                                        else
+                                            a_SelectEncoder[eSelectEncoder.colorc] = Colors.Green // 1 Encoder grün
+                                    // zwei Encoder - nur LED Farbe ^^
+
+
+                                    /*   // Länge der Strecke aus Buffer cm oder Impulse?
+                                      if (btf.getSensor(buffer, n_BufferPointer, btf.eSensor.b7Impulse)) {
+                                          strecke0_impulse = strecke0_cm
+                                          strecke1_impulse = strecke1_cm
+                                      }
+                                      else {
+                                          // cm in Impulse umrechnen
+                                          strecke0_impulse = Math.round(strecke0_cm * a_SelectEncoder[eSelectEncoder.eFaktor]) // encoderFaktor
+                                          strecke1_impulse = Math.round(strecke1_cm * a_SelectEncoder[eSelectEncoder.eFaktor]) // encoderFaktor
+                                      } */
+                                } // else (kein) encoder timeout
+
+                            } // else fahrplan2Motoren = Fahrplan 5 Strecken
+
+                        } // else kein encoder = >0
+
 
 
                         // Abstand Sensor
                         let abstand_cm = btf.getAbstand(buffer)
                         let abstandSensor = btf.getSensor(buffer, n_BufferPointer, btf.eSensor.b6Abstand)
                             && abstand_cm > 0
-                            && fahren > c_MotorStop // nur vorwärts
+                            && fahren0 > c_MotorStop // nur vorwärts
                             && selectAbstandSensorConnected()
 
                         let abstandStop = abstandSensor
                             && (selectAbstand_cm(true) < abstand_cm)
                             && (input.runningTime() - n_zehntelsekunden) > 100 // erste 100ms Messungen selectAbstand_cm(true) ignorieren
 
-                        if (/* strecke_check && */ !abstandStop && encoder_impulse < strecke_impulse) {
+                        if (/* strecke_check && */ !abstandStop && encoder0_impulse < strecke0_impulse) {
                             // los fahren
                             if (abstandSensor)
                                 a_SelectEncoder[eSelectEncoder.colorb] = Colors.Yellow
@@ -186,11 +236,11 @@ namespace receiver { // r-strecken.ts
                                 n_BufferPointer_handled = n_BufferPointer
                                 btf.resetTimer()
 
-                                a_SelectEncoder[eSelectEncoder.iMittelwert] = encoder_impulse
-                                a_SelectEncoder[eSelectEncoder.iStrecke] = strecke_impulse
+                                a_SelectEncoder[eSelectEncoder.iMittelwert] = encoder0_impulse
+                                a_SelectEncoder[eSelectEncoder.iStrecke] = strecke0_impulse
                                 a_SelectEncoder[eSelectEncoder.status] = 1
 
-                                onEncoderEventHandler(fahren, lenken, a_SelectEncoder)
+                                onEncoderEventHandler(fahren0, lenken0, a_SelectEncoder)
                                 // if (fahren > 0 && fahren != c_MotorStop && lenken > 0) {
                                 // }
                                 // else {
@@ -209,7 +259,7 @@ namespace receiver { // r-strecken.ts
                             onEncoderEventHandler(c_MotorStop, 16, a_SelectEncoder)
                             // }
                             // nächste Strecke fahren
-                            n_BufferPointer += 3
+                            n_BufferPointer += fahrplan2Motoren ? 6 : 3
 
                             //n_EncoderCounterM0 = 0 // Impuls Zähler zurück setzen
                             //n_EncoderCounterM1 = 0
@@ -222,7 +272,7 @@ namespace receiver { // r-strecken.ts
                     else {
                         // strecke ungültig, fahren, lenken, länge sind 0
                         // nächste Strecke fahren
-                        n_BufferPointer += 3
+                        n_BufferPointer += fahrplan2Motoren ? 6 : 3
                         //selectEncoderReset() // Impuls Zähler zurück setzen
                         //n_zehntelsekunden = input.runningTime()
                     }
@@ -245,13 +295,13 @@ namespace receiver { // r-strecken.ts
     }
 
 
-    let on2EncoderEventHandler: (m_links: number, m_rechts: number, array: number[]) => void
+    let on2EncoderEventHandler: (links: number, rechts: number, array: number[]) => void
 
     //% group="2 Fahrplan (Encoder Event in dauerhaft Schleife)" subcategory="Strecken"
     //% block="wenn Encoder Ereignis (2 Motoren)" weight=2
     //% draggableParameters=reporter
-    export function on2EncoderEvent(cb: (m_links: number, m_rechts: number, array: number[]) => void) {
-        onEncoderEventHandler = cb
+    export function on2EncoderEvent(cb: (links: number, rechts: number, array: number[]) => void) {
+        on2EncoderEventHandler = cb
     }
     // ========== EVENT HANDLER === sichtbarer Event-Block
 
@@ -463,13 +513,13 @@ namespace receiver { // r-strecken.ts
 
                 encoderAutoStop(false) // M0
             })
-          
+
 
             // ========== Event Handler registrieren
 
 
             if (n_zweiEncoder) { // nur Buggy Calliope v3 mit Leiterplatte, bei Qwiic keine 2 Encoder
-             
+
                 // ========== Event Handler registrieren
                 pins.onPulsed(a_PinEncoderM1[n_Hardware], PulseValue.High, function () {
                     if (a_DualMotor_percent[eDualMotor.M1] >= 0) //(selectMotorSpeed() > c_MotorStop)
