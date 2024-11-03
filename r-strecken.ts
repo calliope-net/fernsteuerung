@@ -269,8 +269,8 @@ namespace receiver { // r-strecken.ts
 
                             if (n_StatusM0 >= eStautusM.end && n_StatusM1 >= eStautusM.end) {
                                 // nächste Strecke fahren
-                                if (--n_Durchl_ufe > 0)
-                                    n_BufferPointer += 6
+                                //if (--n_Durchl_ufe > 0)
+                                n_BufferPointer += 6
                                 selectEncoderReset_neueStrecke() // Impuls Zähler zurück setzen
                             }
 
@@ -307,8 +307,8 @@ namespace receiver { // r-strecken.ts
 
                             if (n_StatusM0 >= eStautusM.end) {
                                 // nächste Strecke fahren
-                                if (--n_Durchl_ufe > 0)
-                                    n_BufferPointer += 3
+                                //if (--n_Durchl_ufe > 0)
+                                n_BufferPointer += 3
                                 selectEncoderReset_neueStrecke() // Impuls Zähler zurück setzen
                             }
 
@@ -364,7 +364,9 @@ namespace receiver { // r-strecken.ts
                         //selectEncoderReset() // Impuls Zähler zurück setzen
                         //n_zehntelsekunden = input.runningTime()
                     }
-
+                    if (n_BufferPointer > btf.eBufferPointer.md && --n_Durchl_ufe > 0) {
+                        n_BufferPointer = fahrplan2Motoren ? btf.eBufferPointer.ma : btf.eBufferPointer.m1
+                    }
                 } // n_BufferPointer <= btf.eBufferPointer.md
 
             } // Betriebsart 2 Fahrplan senden
