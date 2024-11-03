@@ -1,8 +1,6 @@
 
 namespace receiver { // r-strecken.ts
 
-    //    [Colors.Off, encoderColor_c, strecke_impulse, encoderWert_impulse, aSelectEncoder[eSelectEncoder.impulseLinks], aSelectEncoder[eSelectEncoder.impulseRechts], aSelectEncoder[eSelectEncoder.encoderFaktor]
-    // export enum eEncoderArray { colorb, colorc, iStrecke, iEncoderWert, iLinks, iRechts, encoderFaktor }
     export enum eSelectEncoder { eCount, eFaktor, iLinks, iRechts, iMittelwert, iStrecke, bPointer, status, colorb, colorc }
 
     let n_encoderConnected = true
@@ -61,6 +59,7 @@ namespace receiver { // r-strecken.ts
 
     let n_RadioPacket_TimeStamp = 0
     // let n_raiseEncoderEvent_gestartet = false
+    let n_Durchl_ufe = 1
     let n_BufferPointer = btf.eBufferPointer.m0 // m0 ist ungültig, 5 Strecken beginnen bei m1 ma mb mc md
     // let n_BufferPointer_handled = 0
     let n_zehntelsekunden = 0
@@ -89,6 +88,9 @@ namespace receiver { // r-strecken.ts
                     n_RadioPacket_TimeStamp = timeStamp
                     n_BufferPointer = fahrplan2Motoren ? btf.eBufferPointer.ma : btf.eBufferPointer.m1
                     // n_BufferPointer_handled = 0
+                    n_Durchl_ufe = btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo)
+                    if (!btf.between(n_Durchl_ufe, 1, 8))
+                        n_Durchl_ufe = 1
 
                     //n_EncoderCounterM0 = 0 // Impuls Zähler zurück setzen
                     //n_EncoderCounterM1 = 0
@@ -200,17 +202,6 @@ namespace receiver { // r-strecken.ts
                                             a_SelectEncoder[eSelectEncoder.colorc] = Colors.Green // 1 Encoder grün
                                     // zwei Encoder - nur LED Farbe ^^
 
-
-                                    /*   // Länge der Strecke aus Buffer cm oder Impulse?
-                                      if (btf.getSensor(buffer, n_BufferPointer, btf.eSensor.b7Impulse)) {
-                                          strecke0_impulse = strecke0_cm
-                                          strecke1_impulse = strecke1_cm
-                                      }
-                                      else {
-                                          // cm in Impulse umrechnen
-                                          strecke0_impulse = Math.round(strecke0_cm * a_SelectEncoder[eSelectEncoder.eFaktor]) // encoderFaktor
-                                          strecke1_impulse = Math.round(strecke1_cm * a_SelectEncoder[eSelectEncoder.eFaktor]) // encoderFaktor
-                                      } */
                                 } // else (kein) encoder timeout
 
                             } // else fahrplan2Motoren = Fahrplan 5 Strecken
@@ -278,7 +269,8 @@ namespace receiver { // r-strecken.ts
 
                             if (n_StatusM0 >= eStautusM.end && n_StatusM1 >= eStautusM.end) {
                                 // nächste Strecke fahren
-                                n_BufferPointer += 6
+                                if (--n_Durchl_ufe > 0)
+                                    n_BufferPointer += 6
                                 selectEncoderReset_neueStrecke() // Impuls Zähler zurück setzen
                             }
 
@@ -315,7 +307,8 @@ namespace receiver { // r-strecken.ts
 
                             if (n_StatusM0 >= eStautusM.end) {
                                 // nächste Strecke fahren
-                                n_BufferPointer += 3
+                                if (--n_Durchl_ufe > 0)
+                                    n_BufferPointer += 3
                                 selectEncoderReset_neueStrecke() // Impuls Zähler zurück setzen
                             }
 
