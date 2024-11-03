@@ -176,7 +176,7 @@ namespace btf { // b-fernsteuerung.ts
                     n_receivedPacketSerialNumber == radio.receivedPacket(RadioPacketProperty.SerialNumber)
                 ) {
                     a_receivedBuffer19 = receivedBuffer // lokal speichern
-                    n_receivedPacketTime == radio.receivedPacket(RadioPacketProperty.Time)
+                    n_receivedPacketTime = radio.receivedPacket(RadioPacketProperty.Time)
 
                     //if ((receivedBuffer[0] & 0x80) == 0x80) // Bit 7 reset
                     //    control.reset() // Soft-Reset, Calliope zurücksetzen
