@@ -5,9 +5,9 @@ namespace sender { // s-fahrplan.ts
     // ========== group="2 Fahrplan (5 Teilstrecken) senden" subcategory="Fahrplan"
 
     //% group="Fahrplan (5 Teilstrecken) senden" subcategory="Fahrplan"
-    //% block="2 Fahrplan senden • Fahren und Lenken %buffer Strecke 1 %p1 Strecke 2 %p2 Strecke 3 %p3 Strecke 4 %p4 Strecke 5 %p5 Anzahl Durchläufe %count M1-1 aktiviert %aktiviert Abstand Sensor %abstandSensor Stop bei Abstand < %abstand" weight=8
+    //% block="2 Fahrplan senden • Fahren und Lenken %buffer Buffer löschen %fill Strecke 1 %p1 Strecke 2 %p2 Strecke 3 %p3 Strecke 4 %p4 Strecke 5 %p5 Anzahl Durchläufe %count Abstand Sensor %abstandSensor Stop bei Abstand < %abstand" weight=8
     //% buffer.shadow="btf_sendBuffer19"
-    //% aktiviert.shadow=toggleOnOff aktiviert.defl=1
+    //% fill.shadow=toggleYesNo fill.defl=1
     //% p1.shadow=sender_1MotorPicker
     // p2.shadow=sender_1MotorPicker
     // p3.shadow=sender_1MotorPicker
@@ -16,12 +16,64 @@ namespace sender { // s-fahrplan.ts
     //% count.min=1 count.max=8 count.defl=1
     //% abstandSensor.shadow=toggleOnOff abstandSensor.defl=1
     //% abstand.defl=btf.e3Abstand.u1
+    export function send5Strecken(buffer: Buffer, fill: boolean, p1: Buffer, p2: Buffer, p3: Buffer, p4: Buffer, p5: Buffer, count: number, abstandSensor: boolean, abstand: btf.e3Abstand) {
+        if (buffer) {
+            if (fill)
+                buffer.fill(0)
+
+            btf.setBetriebsart(buffer, btf.e0Betriebsart.p2Fahrplan)
+            btf.setByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo, count) // m0-Servo Anzahl Durchläufe gesamt
+            // btf.setaktiviert(buffer, btf.e3aktiviert.m1, aktiviert)
+            btf.setAbstand(buffer, abstand)
+
+            if (p1 && p1.length == 3) {
+                buffer.write(btf.eBufferPointer.m1, p1) // 4-5-6
+                btf.setSensor(buffer, btf.eBufferPointer.m1, btf.eSensor.b6Abstand, abstandSensor)
+                btf.setaktiviert(buffer, btf.e3aktiviert.m1, true)
+            }
+            if (p2 && p2.length == 3) {
+                buffer.write(btf.eBufferPointer.ma, p2)
+                btf.setSensor(buffer, btf.eBufferPointer.ma, btf.eSensor.b6Abstand, abstandSensor)
+                btf.setaktiviert(buffer, btf.e3aktiviert.ma, true)
+            }
+            if (p3 && p3.length == 3) {
+                buffer.write(btf.eBufferPointer.mb, p3)
+                btf.setSensor(buffer, btf.eBufferPointer.mb, btf.eSensor.b6Abstand, abstandSensor)
+                btf.setaktiviert(buffer, btf.e3aktiviert.mb, true)
+            }
+            if (p4 && p4.length == 3) {
+                buffer.write(btf.eBufferPointer.mc, p4)
+                btf.setSensor(buffer, btf.eBufferPointer.mc, btf.eSensor.b6Abstand, abstandSensor)
+                btf.setaktiviert(buffer, btf.e3aktiviert.mc, true)
+            }
+            if (p5 && p5.length == 3) {
+                buffer.write(btf.eBufferPointer.md, p5) // 16-17-18
+                btf.setSensor(buffer, btf.eBufferPointer.md, btf.eSensor.b6Abstand, abstandSensor)
+                btf.setaktiviert(buffer, btf.e3aktiviert.md, true)
+            }
+        }
+    }
+
+
+
+    //% group="Fahrplan (5 Teilstrecken) senden" subcategory="Fahrplan" deprecated=1
+    //% block="2 Fahrplan senden • Fahren und Lenken %buffer Strecke 1 %p1 Strecke 2 %p2 Strecke 3 %p3 Strecke 4 %p4 Strecke 5 %p5 Anzahl Durchläufe %count M1-1 aktiviert %aktiviert Abstand Sensor %abstandSensor Stop bei Abstand < %abstand" weight=6
+    //% buffer.shadow="btf_sendBuffer19"
+    //% p1.shadow=sender_1MotorPicker
+    // p2.shadow=sender_1MotorPicker
+    // p3.shadow=sender_1MotorPicker
+    // p4.shadow=sender_1MotorPicker
+    // p5.shadow=sender_1MotorPicker
+    //% count.min=1 count.max=8 count.defl=1
+    //% aktiviert.shadow=toggleOnOff aktiviert.defl=1
+    //% abstandSensor.shadow=toggleOnOff abstandSensor.defl=1
+    //% abstand.defl=btf.e3Abstand.u1
     export function send2Strecken(buffer: Buffer, p1: Buffer, p2: Buffer, p3: Buffer, p4: Buffer, p5: Buffer, count: number, aktiviert: boolean, abstandSensor: boolean, abstand: btf.e3Abstand) {
 
         btf.setBetriebsart(buffer, btf.e0Betriebsart.p2Fahrplan)
         btf.setByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo, count) // m0-Servo Anzahl Durchläufe
-        btf.setaktiviert(btf.btf_sendBuffer19(), btf.e3aktiviert.m1, aktiviert)
-        btf.setAbstand(btf.btf_sendBuffer19(), abstand)
+        btf.setaktiviert(buffer, btf.e3aktiviert.m1, aktiviert)
+        btf.setAbstand(buffer, abstand)
 
         if (p1 && p1.length == 3) {
             buffer.write(btf.eBufferPointer.m1, p1) // 4-5-6
@@ -167,6 +219,39 @@ namespace sender { // s-fahrplan.ts
     // ========== group="2 Fahrplan (2 Teilstrecken • 2 Motoren) senden" subcategory="Fahrplan"
 
     //% group="Fahrplan 2 Motoren (2 Teilstrecken) senden" subcategory="Fahrplan"
+    //% block="2 Fahrplan senden • 2 Motoren %buffer Buffer löschen %fill Strecke 1 %p1 Strecke 2 %p2 Anzahl Durchläufe %count Abstand Sensor %abstandSensor Stop bei Abstand < %abstand" weight=9
+    //% buffer.shadow="btf_sendBuffer19"
+    //% fill.shadow=toggleYesNo fill.defl=1
+    //% p1.shadow=sender_2MotorenPicker
+    // p2.shadow=sender_2MotorenPicker
+    //% count.min=1 count.max=8 count.defl=1
+    //% abstandSensor.shadow=toggleOnOff abstandSensor.defl=1
+    //% abstand.defl=btf.e3Abstand.u1
+    export function send2Motoren(buffer: Buffer, fill: boolean, p1: Buffer, p2: Buffer, count = 1, abstandSensor: boolean, abstand: btf.e3Abstand) {
+        if (buffer) {
+            if (fill)
+                buffer.fill(0)
+
+            btf.setBetriebsart(buffer, btf.e0Betriebsart.p2Fahrplan)
+            btf.setByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo, count) // m0-Servo Anzahl Durchläufe
+            // btf.setaktiviert(buffer, btf.e3aktiviert.ma, aktiviert)
+            btf.setAbstand(buffer, abstand)
+
+            if (p1 && p1.length == 6) {
+                buffer.write(btf.eBufferPointer.ma, p1) // 7-8-9-10-11-12
+                btf.setSensor(buffer, btf.eBufferPointer.ma, btf.eSensor.b6Abstand, abstandSensor)
+                btf.setaktiviert(buffer, btf.e3aktiviert.ma, true)
+            }
+            if (p2 && p2.length == 6) {
+                buffer.write(btf.eBufferPointer.mc, p2) // 13-14-15-16-17-18
+                btf.setSensor(buffer, btf.eBufferPointer.mc, btf.eSensor.b6Abstand, abstandSensor)
+                btf.setaktiviert(buffer, btf.e3aktiviert.mc, true)
+            }
+        }
+    }
+
+
+    //% group="Fahrplan 2 Motoren (2 Teilstrecken) senden" subcategory="Fahrplan" deprecated=1
     //% block="2 Fahrplan senden • 2 Motoren %buffer Strecke 1 %p1 Strecke 2 %p2 Anzahl Durchläufe %count MA-2 aktiviert %aktiviert Abstand Sensor %abstandSensor Stop bei Abstand < %abstand" weight=8
     //% buffer.shadow="btf_sendBuffer19"
     //% p1.shadow=sender_2MotorenPicker
@@ -179,8 +264,8 @@ namespace sender { // s-fahrplan.ts
     export function send2x2Motoren(buffer: Buffer, p1: Buffer, p2: Buffer, count = 1, aktiviert: boolean, abstandSensor: boolean, abstand: btf.e3Abstand) {
         btf.setBetriebsart(buffer, btf.e0Betriebsart.p2Fahrplan)
         btf.setByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo, count) // m0-Servo Anzahl Durchläufe
-        btf.setaktiviert(btf.btf_sendBuffer19(), btf.e3aktiviert.ma, aktiviert)
-        btf.setAbstand(btf.btf_sendBuffer19(), abstand)
+        btf.setaktiviert(buffer, btf.e3aktiviert.ma, aktiviert)
+        btf.setAbstand(buffer, abstand)
 
         if (p1 && p1.length == 6) {
             buffer.write(btf.eBufferPointer.ma, p1) // 7-8-9-10-11-12
