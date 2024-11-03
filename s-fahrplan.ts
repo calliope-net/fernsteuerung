@@ -5,18 +5,18 @@ namespace sender { // s-fahrplan.ts
     // ========== group="2 Fahrplan (5 Teilstrecken) senden" subcategory="Fahrplan"
 
     //% group="Fahrplan (5 Teilstrecken) senden" subcategory="Fahrplan"
-    //% block="2 Fahrplan senden • Fahren und Lenken %buffer Buffer löschen %fill Strecke 1 %p1 Strecke 2 %p2 Strecke 3 %p3 Strecke 4 %p4 Strecke 5 %p5 Anzahl Durchläufe %count Abstand Sensor %abstandSensor Stop bei Abstand < %abstand" weight=8
+    //% block="2 Fahrplan senden • Fahren und Lenken %buffer Buffer löschen %fill Anzahl Durchläufe %count Abstand Sensor %abstandSensor Stop bei Abstand < %abstand Strecke 1 %p1|| Strecke 2 %p2 Strecke 3 %p3 Strecke 4 %p4 Strecke 5 %p5" weight=8
     //% buffer.shadow="btf_sendBuffer19"
     //% fill.shadow=toggleYesNo fill.defl=1
-    //% p1.shadow=sender_1MotorPicker
-    // p2.shadow=sender_1MotorPicker
-    // p3.shadow=sender_1MotorPicker
-    // p4.shadow=sender_1MotorPicker
-    // p5.shadow=sender_1MotorPicker
     //% count.min=1 count.max=8 count.defl=1
     //% abstandSensor.shadow=toggleOnOff abstandSensor.defl=1
     //% abstand.defl=btf.e3Abstand.u1
-    export function send5Strecken(buffer: Buffer, fill: boolean, p1: Buffer, p2: Buffer, p3: Buffer, p4: Buffer, p5: Buffer, count: number, abstandSensor: boolean, abstand: btf.e3Abstand) {
+    //% p1.shadow=sender_1MotorPicker
+    // p2.shadow=sender_1MotorPicker
+    // p3.shadow=sender_1Motor
+    // p4.shadow=sender_1MotorPicker
+    // p5.shadow=sender_1MotorPicker
+    export function send5Strecken(buffer: Buffer, fill: boolean, count: number, abstandSensor: boolean, abstand: btf.e3Abstand, p1: Buffer, p2?: Buffer, p3?: Buffer, p4?: Buffer, p5?: Buffer) {
         if (buffer) {
             if (fill)
                 buffer.fill(0)
