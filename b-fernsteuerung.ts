@@ -255,7 +255,7 @@ namespace btf { // b-fernsteuerung.ts
 
     //% blockId=btf_receivedBuffer19
     //% group="Bluetooth empfangen (19 Byte)"
-    //% block="receivedData" weight=2
+    //% block="receivedData" color="#BF7FCF" weight=2
     export function btf_receivedBuffer19() { return a_receivedBuffer19 }
 
     // hidden
@@ -285,6 +285,13 @@ namespace btf { // b-fernsteuerung.ts
             storage.putBuffer(a_StorageBuffer) // im Flash speichern
         }
     }
+
+    //% group="Bluetooth Einstellungen"
+    //% block="Funkgruppe %funkgruppe" weight=4
+    export function isFunkgruppe(funkgruppe: eFunkgruppe) {
+        return a_StorageBuffer[eStorageBuffer.funkgruppe] == funkgruppe
+    }
+
     /* 
         // group="Bluetooth Einstellungen"
         // block="Timeout deaktivieren %timeoutDisbled" weight=3
@@ -329,8 +336,6 @@ namespace btf { // b-fernsteuerung.ts
 
     // ========== StorageFunkgruppe offset 0
 
-    //% group="Bluetooth Einstellungen"
-    //% block="Funkgruppe" weight=4
     export function getStorageFunkgruppe(): eFunkgruppe {
         return a_StorageBuffer[eStorageBuffer.funkgruppe]
     }
