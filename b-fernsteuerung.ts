@@ -98,18 +98,18 @@ namespace btf { // b-fernsteuerung.ts
 
     let a_sendBuffer19 = Buffer.create(19) // wird gesendet mit radio.sendBuffer
 
-    //% group="Bluetooth senden (19 Byte)" deprecated=1
+    //% group="Bluetooth senden (19 Byte)"
     //% block="sendData löschen" weight=7
     export function fill_sendBuffer19() {
         a_sendBuffer19.fill(0)
     }
 
-    //% group="Bluetooth senden (19 Byte)"
-    //% block="Buffer löschen %buffer" weight=6
-    //% buffer.shadow="btf_sendBuffer19"
-    export function fillBuffer(buffer: Buffer) {
+    // group="Bluetooth senden (19 Byte)"
+    // block="Buffer löschen %buffer" weight=6
+    // buffer.shadow="btf_sendBuffer19"
+    /* export function fillBuffer(buffer: Buffer) {
         buffer.fill(0)
-    }
+    } */
 
     //% group="Bluetooth senden (19 Byte)"
     //% block="Buffer senden %sendBuffer" weight=5
@@ -133,7 +133,8 @@ namespace btf { // b-fernsteuerung.ts
 
     // ========== Bluetooth Event radio.onReceivedBuffer behandeln ==========
 
-    let a_receivedPacketSerialNumber = 0
+    let n_receivedPacketSerialNumber = 0
+    let n_receivedPacketTime = 0
     let a_receivedBuffer19: Buffer
 
     // deklariert die Variable mit dem Delegat-Typ '(receivedBuffer: Buffer) => void'
@@ -170,17 +171,18 @@ namespace btf { // b-fernsteuerung.ts
                 if ( // ODER ||
                     !isBetriebsart00Fahren // 01 10 11 in den Betriebsarten immer true, SerialNumber ignorieren
                     ||
-                    a_receivedPacketSerialNumber == 0 // nur wenn 00 Fahren, dann auch gleiche receivedPacketSerialNumber
+                    n_receivedPacketSerialNumber == 0 // nur wenn 00 Fahren, dann auch gleiche receivedPacketSerialNumber
                     ||
-                    a_receivedPacketSerialNumber == radio.receivedPacket(RadioPacketProperty.SerialNumber)
+                    n_receivedPacketSerialNumber == radio.receivedPacket(RadioPacketProperty.SerialNumber)
                 ) {
                     a_receivedBuffer19 = receivedBuffer // lokal speichern
+                    n_receivedPacketTime == radio.receivedPacket(RadioPacketProperty.Time)
 
                     //if ((receivedBuffer[0] & 0x80) == 0x80) // Bit 7 reset
                     //    control.reset() // Soft-Reset, Calliope zurücksetzen
 
                     if (isBetriebsart00Fahren) // SerialNumber nur bei Joystick speichern und später beachten
-                        a_receivedPacketSerialNumber = radio.receivedPacket(RadioPacketProperty.SerialNumber)
+                        n_receivedPacketSerialNumber = radio.receivedPacket(RadioPacketProperty.SerialNumber)
 
                     /*  n_timeoutDisbled =
                          ((receivedBuffer[0] & 0x20) == 0x20) // Bit 5 Programm=1 / Betriebsart ..10.... oder ..11....
@@ -236,7 +238,7 @@ namespace btf { // b-fernsteuerung.ts
     }
 
     // group="Bluetooth empfangen (19 Byte)"
-    // block="%buffer %betriebsart Timeout > %ms ms" weight=4
+    // block="%buffer %betriebsart Timeout > %ms ms" weight=5
     // buffer.shadow=btf_receivedBuffer19
     // ms.defl=1000
     /* export function timeoutBuffer(buffer: Buffer, betriebsart: e0Betriebsart, ms: number) {
@@ -245,7 +247,7 @@ namespace btf { // b-fernsteuerung.ts
     } */
 
     //% group="Bluetooth empfangen (19 Byte)"
-    //% block="%betriebsart Timeout > %ms ms" weight=3
+    //% block="%betriebsart Timeout > %ms ms" weight=4
     //% buffer.shadow=btf_receivedBuffer19
     //% ms.defl=1000 ms.min=1000 ms.max=120000
     export function timeoutReceivedBuffer(betriebsart: e0Betriebsart, ms: number) {
@@ -253,18 +255,28 @@ namespace btf { // b-fernsteuerung.ts
         return isBetriebsart(a_receivedBuffer19, betriebsart) && timeout(ms)
     }
 
+    //% group="Bluetooth empfangen (19 Byte)"
+    //% block="receivedData anlegen" weight=2
+    export function create_receivedBuffer19() {
+        a_receivedBuffer19 = Buffer.create(19)
+        n_receivedPacketTime++
+    }
+
     //% blockId=btf_receivedBuffer19
     //% group="Bluetooth empfangen (19 Byte)"
-    //% block="receivedData" color="#BF7FCF" weight=2
-    export function btf_receivedBuffer19() { return a_receivedBuffer19 }
+    //% block="receivedData" color="#BF7FCF" weight=1
+    export function btf_receivedBuffer19() {
+        return a_receivedBuffer19
+    }
 
     // hidden
 
     //% blockId=btf_RadioPacketTime
     //% group="Bluetooth empfangen (19 Byte)"
-    //% block="receivedTimeStamp" blockHidden=true
-    export function btf_RadioPacketTime() { return radio.receivedPacket(RadioPacketProperty.Time) }
-
+    //% block="receivedTimeStamp" color="#BF7FCF" blockHidden=true
+    export function btf_RadioPacketTime() {
+        return n_receivedPacketTime // radio.receivedPacket(RadioPacketProperty.Time) 
+    }
 
 
     // ========== group="Bluetooth Einstellungen"
