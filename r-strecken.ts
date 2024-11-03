@@ -106,7 +106,7 @@ namespace receiver { // r-strecken.ts
 
                     let fahren1 = 0
                     let strecke1_cm = 0
-              
+
                     if (fahrplan2Motoren) {
                         fahren1 = btf.getByte(buffer, n_BufferPointer + 3, btf.eBufferOffset.b0_Motor)
                         strecke1_cm = btf.getByte(buffer, n_BufferPointer + 3, btf.eBufferOffset.b2_Fahrstrecke)
@@ -295,7 +295,7 @@ namespace receiver { // r-strecken.ts
 
                                 a_SelectEncoder[eSelectEncoder.iMittelwert] = encoder0_impulse
                                 a_SelectEncoder[eSelectEncoder.iStrecke] = strecke0_impulse
-                                
+
                                 onEncoderEventHandler(fahren0, lenken0, a_SelectEncoder)
                             }
                             else if (!m0fahren && n_StatusM0 == eStautusM.begin) {
@@ -596,12 +596,23 @@ namespace receiver { // r-strecken.ts
         if (n_hasEncoder && !n_EncoderEventRegistered /* && !n_SpurSensorEventsRegistered */) {
 
             n_zweiEncoder = n_v3_2Motoren
-            n_EncoderFaktor = 63.9 * (26 / 14) / (n_radDurchmesser_mm / 10 * Math.PI) // 5.811429
+            if (n_zweiEncoder)
+                // Buggy
+                n_EncoderFaktor = 63.9 * (20 / 10) / (n_radDurchmesser_mm / 10 * Math.PI) // 6.258462 mit 65mm Rad, 2 Zahnräder 10:20
+            else
+                n_EncoderFaktor = 63.9 * (26 / 14) / (n_radDurchmesser_mm / 10 * Math.PI) // 5.811429 mit 65mm Rad, Differenzialgetriebe 14:26
 
             // btf.setLedColors(btf.eRgbLed.b, Colors.Blue)
             // ========== Event Handler registrieren
             pins.onPulsed(a_PinEncoderM0[n_Hardware], PulseValue.High, function () {//
-                if (selectMotorRichtungVor()) // nur Motor M0 (bei zwei Motoren links) oder 1 Qwiic Fahr-Motor
+                let motorRichtungVor: boolean
+
+                if (n_Hardware == eHardware.car4)  // Fahrmotor am Qwiic Modul
+                    motorRichtungVor = a_QwiicMotorSpeed[eQwiicMotor.ma] >= c_MotorStop
+                else                               // Standard M0 Fahrmotor an Calliope v3 Pins
+                    motorRichtungVor = a_DualMotor_percent[eDualMotor.M0] >= 0
+
+                if (motorRichtungVor) // nur Motor M0 (bei zwei Motoren links) oder 1 Qwiic Fahr-Motor
                     n_EncoderCounterM0++ // vorwärts
                 else
                     n_EncoderCounterM0-- // rückwärts
@@ -617,7 +628,7 @@ namespace receiver { // r-strecken.ts
 
                 // ========== Event Handler registrieren
                 pins.onPulsed(a_PinEncoderM1[n_Hardware], PulseValue.High, function () {
-                    if (a_DualMotor_percent[eDualMotor.M1] >= 0) //(selectMotorSpeed() > c_MotorStop)
+                    if (a_DualMotor_percent[eDualMotor.M1] >= 0) // zweiter M1 Fahrmotor an Calliope v3 Pins
                         n_EncoderCounterM1++ // vorwärts
                     else
                         n_EncoderCounterM1-- // rückwärts

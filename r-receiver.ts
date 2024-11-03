@@ -179,7 +179,7 @@ namespace receiver { // r-receiver.ts
         //    pinServo90(90)
     }
 
-    export function selectMotorRichtungVor() {
+    /* export function selectMotorRichtungVor_() {
         if (n_Hardware == eHardware.car4) { // Fahrmotor am Qwiic Modul
             return a_QwiicMotorSpeed[eQwiicMotor.ma] >= c_MotorStop
         }
@@ -190,7 +190,7 @@ namespace receiver { // r-receiver.ts
             return a_DualMotor_percent[eDualMotor.M0] >= 0
         }
 
-    }
+    } */
 
     // ========== group="Motor 0 1 (Calliope v3)"
 

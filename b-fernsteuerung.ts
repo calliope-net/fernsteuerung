@@ -98,10 +98,17 @@ namespace btf { // b-fernsteuerung.ts
 
     let a_sendBuffer19 = Buffer.create(19) // wird gesendet mit radio.sendBuffer
 
-    //% group="Bluetooth senden (19 Byte)"
+    //% group="Bluetooth senden (19 Byte)" deprecated=1
     //% block="sendData löschen" weight=7
     export function fill_sendBuffer19() {
         a_sendBuffer19.fill(0)
+    }
+
+    //% group="Bluetooth senden (19 Byte)"
+    //% block="Buffer löschen %buffer" weight=6
+    //% buffer.shadow="btf_sendBuffer19"
+    export function fillBuffer(buffer: Buffer) {
+        buffer.fill(0)
     }
 
     //% group="Bluetooth senden (19 Byte)"
@@ -263,6 +270,13 @@ namespace btf { // b-fernsteuerung.ts
     // ========== group="Bluetooth Einstellungen"
 
     //% group="Bluetooth Einstellungen"
+    //% block="Reset Timeout Timer" weight=7
+    export function resetTimer() {
+        // if ((input.runningTime() - n_lastConnectedTime) > 2500)
+        n_lastConnectedTime = input.runningTime()
+    }
+
+    //% group="Bluetooth Einstellungen"
     //% block="setze Funkgruppe auf %funkgruppe" weight=5
     export function setFunkgruppe(funkgruppe: eFunkgruppe) {
         if (between(funkgruppe, eFunkgruppe.b0, eFunkgruppe.b7)) {
@@ -286,12 +300,7 @@ namespace btf { // b-fernsteuerung.ts
             return n_timeoutDisbled
         }
      */
-    //% group="Bluetooth Einstellungen"
-    //% block="Reset Timeout Timer" weight=1
-    export function resetTimer() {
-        // if ((input.runningTime() - n_lastConnectedTime) > 2500)
-        n_lastConnectedTime = input.runningTime()
-    }
+
 
 
 
@@ -320,7 +329,9 @@ namespace btf { // b-fernsteuerung.ts
 
     // ========== StorageFunkgruppe offset 0
 
-    export function getStorageFunkgruppe() {
+    //% group="Bluetooth Einstellungen"
+    //% block="Funkgruppe" weight=4
+    export function getStorageFunkgruppe(): eFunkgruppe {
         return a_StorageBuffer[eStorageBuffer.funkgruppe]
     }
 
