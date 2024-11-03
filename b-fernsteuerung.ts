@@ -256,7 +256,7 @@ namespace btf { // b-fernsteuerung.ts
     }
 
     //% group="Bluetooth empfangen (19 Byte)"
-    //% block="receivedData anlegen" weight=2
+    //% block="receivedData anlegen" color="#BF7FCF" weight=2
     export function create_receivedBuffer19() {
         a_receivedBuffer19 = Buffer.create(19)
         n_receivedPacketTime++
