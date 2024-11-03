@@ -4,7 +4,7 @@ namespace cb2 { // c-callibot.ts 005F7F
     // ========== I²C ==========
     export enum eI2C { x22 = 0x22, x21 = 0x21 }
 
- export   let n_Callibot2_x22Connected = true // I²C Device ist angesteckt (und Calli:bot ist an geschaltet)
+    export let n_Callibot2_x22Connected = true // I²C Device ist angesteckt (und Calli:bot ist an geschaltet)
     // let n_Callibot2_x22hasEncoder = false // 2:CB2 3:CB2E 4:CB2A=Gymnasium
 
     export const c_MotorStop = 128

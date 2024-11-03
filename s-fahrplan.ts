@@ -10,6 +10,7 @@ namespace sender { // s-fahrplan.ts
     //% fill.shadow=toggleYesNo fill.defl=1
     //% count.min=1 count.max=8 count.defl=1
     //% abstandSensor.shadow=toggleOnOff abstandSensor.defl=1
+    // abstandSensor.shadow=btf_abstandSensor
     //% abstand.defl=btf.e3Abstand.u1
     //% p1.shadow=sender_1MotorPicker
     // p2.shadow=sender_1MotorPicker
@@ -219,15 +220,15 @@ namespace sender { // s-fahrplan.ts
     // ========== group="2 Fahrplan (2 Teilstrecken • 2 Motoren) senden" subcategory="Fahrplan"
 
     //% group="Fahrplan 2 Motoren (2 Teilstrecken) senden" subcategory="Fahrplan"
-    //% block="2 Fahrplan senden • 2 Motoren %buffer Buffer löschen %fill Strecke 1 %p1 Strecke 2 %p2 Anzahl Durchläufe %count Abstand Sensor %abstandSensor Stop bei Abstand < %abstand" weight=9
+    //% block="2 Fahrplan senden • 2 Motoren %buffer Buffer löschen %fill Anzahl Durchläufe %count Abstand Sensor %abstandSensor Stop bei Abstand < %abstand Strecke 1 %p1 Strecke 2 %p2" weight=9
     //% buffer.shadow="btf_sendBuffer19"
     //% fill.shadow=toggleYesNo fill.defl=1
-    //% p1.shadow=sender_2MotorenPicker
-    // p2.shadow=sender_2MotorenPicker
     //% count.min=1 count.max=8 count.defl=1
     //% abstandSensor.shadow=toggleOnOff abstandSensor.defl=1
     //% abstand.defl=btf.e3Abstand.u1
-    export function send2Motoren(buffer: Buffer, fill: boolean, p1: Buffer, p2: Buffer, count = 1, abstandSensor: boolean, abstand: btf.e3Abstand) {
+    //% p1.shadow=sender_2MotorenPicker
+    // p2.shadow=sender_2MotorenPicker
+    export function send2Motoren(buffer: Buffer, fill: boolean, count = 1, abstandSensor: boolean, abstand: btf.e3Abstand, p1: Buffer, p2: Buffer) {
         if (buffer) {
             if (fill)
                 buffer.fill(0)
