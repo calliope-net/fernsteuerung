@@ -64,8 +64,15 @@ namespace receiver { // r-qwiicmotor.ts
         poweroff_violet = Colors.Violet,
         poweron_blue = Colors.Blue
     }
-    function qwiicMotorRGBLEDs(pMotorChip: eQwiicMotorChip, color: eQwiicMotorRGBColor) {
+   /*  function qwiicMotorRGBLEDs(pMotorChip: eQwiicMotorChip, color: eQwiicMotorRGBColor) {
         btf.setLedColors(pMotorChip == eQwiicMotorChip.cd ? btf.eRgbLed.c : btf.eRgbLed.b, color, true)
+    } */
+
+    function qwiicMotorRGBLEDs(pMotorChip: eQwiicMotorChip, color: eQwiicMotorRGBColor) {
+        if (n_Hardware == eHardware.car4 && pMotorChip == eQwiicMotorChip.ab)
+            btf.setLedColors(btf.eRgbLed.a, color, true)
+        else
+            btf.setLedColors(pMotorChip == eQwiicMotorChip.cd ? btf.eRgbLed.c : btf.eRgbLed.b, color, true)
     }
 
     export function qwiicMotorReset() { // aufgerufen beim Start
@@ -149,6 +156,17 @@ namespace receiver { // r-qwiicmotor.ts
 
 
     // ========== group="Motor A B C D (I²C: 0x5D, 0x5E)" subcategory="Qwiic" color=#5FA38F
+
+
+    //% group="Motor A B C D (I²C: 0x5D, 0x5E)" subcategory="Qwiic" color=#5FA38F
+    //% block="Q Motor %pMotorChip Status" weight=6
+    export function qwiicMotorStatus(pMotorChip: eQwiicMotorChip) {
+        // CaR4 in Schleife warten bis ready
+        i2cWriteBuffer(pMotorChip, [eQwiicMotorI2CRegister.STATUS_1], true)
+        a_QwiicMotorChipReady[pMotorChip] = (i2cReadBuffer(pMotorChip, 1)[0] & 0x01) == 1
+        return a_QwiicMotorChipReady[pMotorChip]
+    }
+
 
     //% group="Motor A B C D (I²C: 0x5D, 0x5E)" subcategory="Qwiic" color=#5FA38F
     //% block="Q Motor %pMotorChip Power %pON" weight=3
