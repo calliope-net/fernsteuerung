@@ -161,7 +161,7 @@ namespace receiver { // r-pins.ts
     //% block="Digital Pin %pin %pON" weight=6
     //% pON.shadow="toggleOnOff"
     export function digitalWritePin(pin: eDigitalPins, pON: boolean) {
-        pins.digitalWritePin(<number>pin, pON ? 0 : 1)
+        pins.digitalWritePin(<number>pin, pON ? 1 : 0)
     }
 
 
