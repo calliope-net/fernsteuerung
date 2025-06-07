@@ -169,7 +169,7 @@ namespace receiver { // r-fernsteuerung.ts
                 } else if (!bSpur)
                     n_SpurStop = false */
 
-                if (bSpurSensorAktiviert &&  !getSpurLinksHell()) { // dunkel
+                if (bSpurSensorAktiviert && !getSpurLinksHell()) { // dunkel
                     n_SpurStop = true
                     ledb = Colors.White // dunkel
                     ledc = !getSpurRechtsHell() ? Colors.White : 0x404040 // dunkel ist white // hell ist 404040
@@ -213,67 +213,69 @@ namespace receiver { // r-fernsteuerung.ts
                 btf.setLedColors(btf.eRgbLed.c, ledc)
             }
 
+            if (n_Hardware == eHardware.v3) {
 
-            // Motor M1 (Gabelstapler)
-            if (btf.getaktiviert(buffer, btf.e3aktiviert.m1)) {
-                receiver.dualMotor128(receiver.eDualMotor.M1, btf.getByte(buffer, btf.eBufferPointer.m1, btf.eBufferOffset.b0_Motor))
-            }
+                // Motor M1 (Gabelstapler)
+                if (btf.getaktiviert(buffer, btf.e3aktiviert.m1)) {
+                    receiver.dualMotor128(receiver.eDualMotor.M1, btf.getByte(buffer, btf.eBufferPointer.m1, btf.eBufferOffset.b0_Motor))
+                }
 
 
 
-            // +++ Qwiic Motor A B C D +++
+                // +++ Qwiic Motor A B C D +++
 
-            // Qwiic Motor A B
-            /* if (btf.getaktiviert(buffer, btf.e3aktiviert.ma)) {
-                receiver.qwiicMotorChipPower(receiver.eQwiicMotorChip.ab, true) // Q Power nur beim ersten mal an schalten, aber nicht aus
-               // receiver.qwiicMotor128(receiver.eQwiicMotor.ma, btf.getByte(buffer, btf.eBufferPointer.ma, btf.eBufferOffset.b0_Motor))
-            }
-            if (btf.getaktiviert(buffer, btf.e3aktiviert.mb)) {
-                receiver.qwiicMotorChipPower(receiver.eQwiicMotorChip.ab, true)
-               // receiver.qwiicMotor128(receiver.eQwiicMotor.mb, btf.getByte(buffer, btf.eBufferPointer.mb, btf.eBufferOffset.b0_Motor))
-            } */
-            if (qwiicMotorChipConnected(eQwiicMotorChip.ab))
-                if (btf.getaktiviert(buffer, btf.e3aktiviert.ma) || btf.getaktiviert(buffer, btf.e3aktiviert.mb)) {
+                // Qwiic Motor A B
+                /* if (btf.getaktiviert(buffer, btf.e3aktiviert.ma)) {
+                    receiver.qwiicMotorChipPower(receiver.eQwiicMotorChip.ab, true) // Q Power nur beim ersten mal an schalten, aber nicht aus
+                   // receiver.qwiicMotor128(receiver.eQwiicMotor.ma, btf.getByte(buffer, btf.eBufferPointer.ma, btf.eBufferOffset.b0_Motor))
+                }
+                if (btf.getaktiviert(buffer, btf.e3aktiviert.mb)) {
                     receiver.qwiicMotorChipPower(receiver.eQwiicMotorChip.ab, true)
+                   // receiver.qwiicMotor128(receiver.eQwiicMotor.mb, btf.getByte(buffer, btf.eBufferPointer.mb, btf.eBufferOffset.b0_Motor))
+                } */
+                if (qwiicMotorChipConnected(eQwiicMotorChip.ab))
+                    if (btf.getaktiviert(buffer, btf.e3aktiviert.ma) || btf.getaktiviert(buffer, btf.e3aktiviert.mb)) {
+                        receiver.qwiicMotorChipPower(receiver.eQwiicMotorChip.ab, true)
+                        receiver.qwiicMotor128(receiver.eQwiicMotor.ma, btf.getByte(buffer, btf.eBufferPointer.ma, btf.eBufferOffset.b0_Motor))
+                        receiver.qwiicMotor128(receiver.eQwiicMotor.mb, btf.getByte(buffer, btf.eBufferPointer.mb, btf.eBufferOffset.b0_Motor))
+                    }
+                    else /* if (qwiicMotorChipConnected(eQwiicMotorChip.ab)) */ {
+                        receiver.qwiicMotor128(receiver.eQwiicMotor.ma, 0)
+                        receiver.qwiicMotor128(receiver.eQwiicMotor.mb, 0)
+                        receiver.qwiicMotorChipPower(receiver.eQwiicMotorChip.ab, false)
+                    }
+                /* if (a_QwiicMotorChipPower[receiver.eQwiicMotorChip.ab]) {
+                    // wenn Power irgendwann an geschaltet wurde, dann Motor Buffer immer anwenden
                     receiver.qwiicMotor128(receiver.eQwiicMotor.ma, btf.getByte(buffer, btf.eBufferPointer.ma, btf.eBufferOffset.b0_Motor))
                     receiver.qwiicMotor128(receiver.eQwiicMotor.mb, btf.getByte(buffer, btf.eBufferPointer.mb, btf.eBufferOffset.b0_Motor))
-                }
-                else /* if (qwiicMotorChipConnected(eQwiicMotorChip.ab)) */ {
-                    receiver.qwiicMotor128(receiver.eQwiicMotor.ma, 0)
-                    receiver.qwiicMotor128(receiver.eQwiicMotor.mb, 0)
-                    receiver.qwiicMotorChipPower(receiver.eQwiicMotorChip.ab, false)
-                }
-            /* if (a_QwiicMotorChipPower[receiver.eQwiicMotorChip.ab]) {
-                // wenn Power irgendwann an geschaltet wurde, dann Motor Buffer immer anwenden
-                receiver.qwiicMotor128(receiver.eQwiicMotor.ma, btf.getByte(buffer, btf.eBufferPointer.ma, btf.eBufferOffset.b0_Motor))
-                receiver.qwiicMotor128(receiver.eQwiicMotor.mb, btf.getByte(buffer, btf.eBufferPointer.mb, btf.eBufferOffset.b0_Motor))
-            } */
+                } */
 
-            // Qwiic Motor C D
-            /* if (btf.getaktiviert(buffer, btf.e3aktiviert.mc)) {
-                receiver.qwiicMotorChipPower(receiver.eQwiicMotorChip.cd, true) // Q Power nur beim ersten mal an schalten, aber nicht aus
-               // receiver.qwiicMotor128(receiver.eQwiicMotor.mc, btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b0_Motor))
-            }
-            if (btf.getaktiviert(buffer, btf.e3aktiviert.md)) {
-                receiver.qwiicMotorChipPower(receiver.eQwiicMotorChip.cd, true)
-                // receiver.qwiicMotor128(receiver.eQwiicMotor.md, btf.getByte(buffer, btf.eBufferPointer.md, btf.eBufferOffset.b0_Motor))
-            } */
-            if (qwiicMotorChipConnected(eQwiicMotorChip.cd))
-                if (btf.getaktiviert(buffer, btf.e3aktiviert.mc) || btf.getaktiviert(buffer, btf.e3aktiviert.md)) {
+                // Qwiic Motor C D
+                /* if (btf.getaktiviert(buffer, btf.e3aktiviert.mc)) {
+                    receiver.qwiicMotorChipPower(receiver.eQwiicMotorChip.cd, true) // Q Power nur beim ersten mal an schalten, aber nicht aus
+                   // receiver.qwiicMotor128(receiver.eQwiicMotor.mc, btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b0_Motor))
+                }
+                if (btf.getaktiviert(buffer, btf.e3aktiviert.md)) {
                     receiver.qwiicMotorChipPower(receiver.eQwiicMotorChip.cd, true)
-                    receiver.qwiicMotor128(receiver.eQwiicMotor.mc, btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b0_Motor))
-                    receiver.qwiicMotor128(receiver.eQwiicMotor.md, btf.getByte(buffer, btf.eBufferPointer.md, btf.eBufferOffset.b0_Motor))
-                }
-                else /* if (qwiicMotorChipConnected(eQwiicMotorChip.cd)) */ {
-                    receiver.qwiicMotor128(receiver.eQwiicMotor.mc, 0)
-                    receiver.qwiicMotor128(receiver.eQwiicMotor.md, 0)
-                    receiver.qwiicMotorChipPower(receiver.eQwiicMotorChip.cd, false)
-                }
-            /*  if (a_QwiicMotorChipPower[receiver.eQwiicMotorChip.cd]) {
-                 // wenn Power irgendwann an geschaltet wurde, dann Motor Buffer immer anwenden
-                 receiver.qwiicMotor128(receiver.eQwiicMotor.mc, btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b0_Motor))
-                 receiver.qwiicMotor128(receiver.eQwiicMotor.md, btf.getByte(buffer, btf.eBufferPointer.md, btf.eBufferOffset.b0_Motor))
-             } */
+                    // receiver.qwiicMotor128(receiver.eQwiicMotor.md, btf.getByte(buffer, btf.eBufferPointer.md, btf.eBufferOffset.b0_Motor))
+                } */
+                if (qwiicMotorChipConnected(eQwiicMotorChip.cd))
+                    if (btf.getaktiviert(buffer, btf.e3aktiviert.mc) || btf.getaktiviert(buffer, btf.e3aktiviert.md)) {
+                        receiver.qwiicMotorChipPower(receiver.eQwiicMotorChip.cd, true)
+                        receiver.qwiicMotor128(receiver.eQwiicMotor.mc, btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b0_Motor))
+                        receiver.qwiicMotor128(receiver.eQwiicMotor.md, btf.getByte(buffer, btf.eBufferPointer.md, btf.eBufferOffset.b0_Motor))
+                    }
+                    else /* if (qwiicMotorChipConnected(eQwiicMotorChip.cd)) */ {
+                        receiver.qwiicMotor128(receiver.eQwiicMotor.mc, 0)
+                        receiver.qwiicMotor128(receiver.eQwiicMotor.md, 0)
+                        receiver.qwiicMotorChipPower(receiver.eQwiicMotorChip.cd, false)
+                    }
+                /*  if (a_QwiicMotorChipPower[receiver.eQwiicMotorChip.cd]) {
+                     // wenn Power irgendwann an geschaltet wurde, dann Motor Buffer immer anwenden
+                     receiver.qwiicMotor128(receiver.eQwiicMotor.mc, btf.getByte(buffer, btf.eBufferPointer.mc, btf.eBufferOffset.b0_Motor))
+                     receiver.qwiicMotor128(receiver.eQwiicMotor.md, btf.getByte(buffer, btf.eBufferPointer.md, btf.eBufferOffset.b0_Motor))
+                 } */
+            }
         }
     }
 
