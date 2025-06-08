@@ -140,9 +140,9 @@ namespace receiver { // r-sensorevents.ts
     export function selectAbstand_cm(read: boolean) {
         if (btf.n_Namespace == btf.eNamespace.cb2)
             return cb2.readUltraschallAbstand()
-        else if (n_Hardware == eHardware.v3 && qwiicUltrasonicConnected())
+        else if (qwiicUltrasonicConnected()) // n_Hardware == eHardware.v3 && 
             return getQwiicUltrasonic(read) // in r-qwiic.ts i2c einlesen
-        else if (n_Hardware == eHardware.v3 && laserSensorConnected())
+        else if (laserSensorConnected()) // n_Hardware == eHardware.v3 && 
             return laserAbstand_cm(read, true)
         else if (n_Hardware == eHardware.car4)
             return pinGroveUltraschall_cm() // in r-advanced.ts
