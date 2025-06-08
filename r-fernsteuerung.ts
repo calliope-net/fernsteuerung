@@ -202,10 +202,13 @@ namespace receiver { // r-fernsteuerung.ts
                         btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo),
                         lenkenProzent
                     )
-                    // selectMotor(btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor))
-                    // pinServo16(btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo))
                 } else {
-                    selectMotorStop() // selectMotor(c_MotorStop)
+                    //selectMotorStop()
+                    selectMotor128Servo16(
+                        c_MotorStop,
+                        btf.getByte(buffer, btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo),
+                        lenkenProzent
+                    )
                 }
                 // if (ledb != Colors.Off)
                 btf.setLedColors(btf.eRgbLed.b, ledb)
