@@ -112,15 +112,15 @@ namespace receiver { // r-sensorevents.ts
     export function selectAbstandSensorConnected() {
         if (btf.n_Namespace == btf.eNamespace.cb2)
             return true
-        else if (n_Hardware == eHardware.v3) {
-            //if (n_QwiicUltrasonicConnected == undefined)
-            //    selectAbstand(true)
+        else
+            return qwiicUltrasonicConnected() || laserSensorConnected()
+        /* else if (n_Hardware == eHardware.v3) {
             return qwiicUltrasonicConnected() || laserSensorConnected()
         }
         else if (n_Hardware == eHardware.car4)
             return true
         else
-            return false
+            return false */
     }
 
     //% group="Ultraschall oder Laser Distance Sensor" subcategory="Sensoren"
@@ -144,8 +144,8 @@ namespace receiver { // r-sensorevents.ts
             return getQwiicUltrasonic(read) // in r-qwiic.ts i2c einlesen
         else if (laserSensorConnected()) // n_Hardware == eHardware.v3 && 
             return laserAbstand_cm(read, true)
-        else if (n_Hardware == eHardware.car4)
-            return pinGroveUltraschall_cm() // in r-advanced.ts
+        ///else if (n_Hardware == eHardware.car4)
+        //    return pinGroveUltraschall_cm() // in r-advanced.ts
         else
             return 0
     }
