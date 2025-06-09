@@ -10,9 +10,10 @@ namespace receiver { // r-qwiicmotor.ts
     let a_QwiicMotorChipPower = [false, false] // Index eQwiicMotorChip
     export let a_QwiicMotorSpeed = [c_MotorStop, c_MotorStop, c_MotorStop, c_MotorStop] // Index eQwiicMotor
 
-    /* export function qwiicMotorChipPowerOn(pMotorChip: eQwiicMotorChip) { // r-fernsteuerung.ts
-        return a_QwiicMotorChipPower[pMotorChip]
-    } */
+    // von fernsteuerung-CaR-e41 benutzt
+    export function qwiicMotorChipStatus(pMotorChip: eQwiicMotorChip) { // r-fernsteuerung.ts
+        return (a_QwiicMotorChipConnected[pMotorChip] ? 1 : 0) + (a_QwiicMotorChipReady[pMotorChip] ? 2 : 0) + (a_QwiicMotorChipPower[pMotorChip] ? 4 : 0)
+    }
 
     export function qwiicMotorChipConnected(pMotorChip: eQwiicMotorChip) { // r-fernsteuerung.ts
         return a_QwiicMotorChipConnected[pMotorChip]
@@ -64,9 +65,9 @@ namespace receiver { // r-qwiicmotor.ts
         poweroff_violet = Colors.Violet,
         poweron_blue = Colors.Blue
     }
-   /*  function qwiicMotorRGBLEDs(pMotorChip: eQwiicMotorChip, color: eQwiicMotorRGBColor) {
-        btf.setLedColors(pMotorChip == eQwiicMotorChip.cd ? btf.eRgbLed.c : btf.eRgbLed.b, color, true)
-    } */
+    /*  function qwiicMotorRGBLEDs(pMotorChip: eQwiicMotorChip, color: eQwiicMotorRGBColor) {
+         btf.setLedColors(pMotorChip == eQwiicMotorChip.cd ? btf.eRgbLed.c : btf.eRgbLed.b, color, true)
+     } */
 
     function qwiicMotorRGBLEDs(pMotorChip: eQwiicMotorChip, color: eQwiicMotorRGBColor) {
         if (n_Hardware == eHardware.car4 && pMotorChip == eQwiicMotorChip.ab)

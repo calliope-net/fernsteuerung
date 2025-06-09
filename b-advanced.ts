@@ -14,10 +14,19 @@ namespace btf { // b-advanced.ts
     export function comment(text: any): void { }
 
     //% group="Funktionen" advanced=true
-    //% block="Simulator" weight=7
+    //% block="Simulator" weight=8
     export function simulator() {
         return "€".charCodeAt(0) == 8364
     }
+
+    //% group="Funktionen" advanced=true
+    //% block="HEX (1 Byte) %n" weight=7
+    export function hex(n: number) {
+        let bu = Buffer.create(1)
+        bu[0] = n
+        return bu.toHex()
+    }
+
 
     //% group="Funktionen" advanced=true
     //% block="%i0 zwischen %i1 und %i2" weight=6
@@ -40,7 +49,7 @@ namespace btf { // b-advanced.ts
 
     //% blockId=btf_motorProzent
     //% group="Funktionen" advanced=true
-    //% block="Fahren (1↓128↑255) %value * Prozent %prozent \\%" weight=4
+    //% block="Fahren (1↓128↑255) %value * Prozent %prozent \\%" weight=3
     //% value.min=1 value.max=255 value.defl=128
     //% prozent.min=10 prozent.max=100 prozent.defl=100
     export function btf_motorProzent(value: number, prozent: number) {
@@ -49,7 +58,7 @@ namespace btf { // b-advanced.ts
 
 
     //% group="Funktionen" advanced=true
-    //% block="mapInt32 %value|from low %fromLow|high %fromHigh|to low %toLow|high %toHigh" weight=3
+    //% block="mapInt32 %value|from low %fromLow|high %fromHigh|to low %toLow|high %toHigh" weight=2
     //% fromLow.defl=1 fromHigh.defl=255 toLow.defl=-100 toHigh.defl=100
     //% inlineInputMode=inline
     export function mapInt32(value: number, fromLow: number, fromHigh: number, toLow: number, toHigh: number): number {
