@@ -303,23 +303,12 @@ namespace btf { // b-fernsteuerung.ts
     export function isFunkgruppe(funkgruppe: eFunkgruppe) {
         return a_StorageBuffer[eStorageBuffer.funkgruppe] == funkgruppe
     }
-
-    /* 
-        // group="Bluetooth Einstellungen"
-        // block="Timeout deaktivieren %timeoutDisbled" weight=3
-        // timeoutDisbled.shadow="toggleYesNo"
-        export function set_timeoutDisbled_(timeoutDisbled: boolean) {
-            n_timeoutDisbled = timeoutDisbled
-            n_lastConnectedTime = input.runningTime()  // startet das lange timeout (abschalten) neu
-        }
-    
-        // group="Bluetooth Einstellungen"
-        // block="Timeout deaktiviert" weight=2
-        export function get_timeoutDisbled_() {
-            return n_timeoutDisbled
-        }
-     */
-
+  
+    //% group="Bluetooth Einstellungen"
+    //% block="Funkgruppe" weight=3
+    export function getStorageFunkgruppe(): eFunkgruppe {
+        return a_StorageBuffer[eStorageBuffer.funkgruppe]
+    }
 
 
 
@@ -347,10 +336,6 @@ namespace btf { // b-fernsteuerung.ts
 
 
     // ========== StorageFunkgruppe offset 0
-
-    export function getStorageFunkgruppe(): eFunkgruppe {
-        return a_StorageBuffer[eStorageBuffer.funkgruppe]
-    }
 
 
     // ========== StorageModell offset 1 (nur einmal in s-sender.ts aufgerufen)

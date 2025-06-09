@@ -37,6 +37,14 @@ namespace receiver { // r-advanced.ts
         return Math.idiv(n_Servo90Winkel, 3) - 14
     }
 
+    //% group="aktuelle Werte (vom gewählten Modell)" advanced=true
+    //% block="Servo Korrektur (↖ 90 ↗)" weight=4
+    export function pinServoKorrektur() {
+        return n_Servo90KorrekturFaktor * c_Servo90_geradeaus
+    }
+
+
+
     // group="aktuelle Werte (vom gewählten Modell)" advanced=true
     // block="Encoder angeschlossen" weight=3
     /* export function encoderConnected() {
